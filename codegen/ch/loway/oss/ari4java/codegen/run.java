@@ -22,14 +22,14 @@ public class run {
         DefMapper dm = new DefMapper();
 
         dm.load( new File(SOURCES + "applications.json"), "ari_0_0_1" );
-//        dm.load( new File(SOURCES + "asterisk.json") );
-//        dm.load( new File(SOURCES + "bridges.json") );
-//        dm.load( new File(SOURCES + "channels.json") );
-//        dm.load( new File(SOURCES + "endpoints.json") );
-//        dm.load( new File(SOURCES + "events.json") );
-//        dm.load( new File(SOURCES + "playback.json") );
-//        dm.load( new File(SOURCES + "recordings.json") );
-//        dm.load( new File(SOURCES + "sounds.json") );
+        dm.load( new File(SOURCES + "asterisk.json"), "ari_0_0_1" );
+        dm.load( new File(SOURCES + "bridges.json"), "ari_0_0_1" );
+        dm.load( new File(SOURCES + "channels.json"), "ari_0_0_1" );
+        dm.load( new File(SOURCES + "endpoints.json"), "ari_0_0_1" );
+        dm.load( new File(SOURCES + "events.json"), "ari_0_0_1" );
+        dm.load( new File(SOURCES + "playback.json"), "ari_0_0_1" );
+        dm.load( new File(SOURCES + "recordings.json"), "ari_0_0_1" );
+        dm.load( new File(SOURCES + "sounds.json"), "ari_0_0_1" );
     }
 
 

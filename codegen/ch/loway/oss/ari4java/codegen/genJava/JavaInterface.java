@@ -44,10 +44,6 @@ public class JavaInterface {
             "ch.loway.oss.ari4java.tools.RestException"
         }));
 
-        JavaGen.addBanner(sb,
-                "Interface for " + pkgName + "\n"
-              + "Please do not edit."
-        );
 
         sb.append( "public interface ").append(className).append(" {\n");
 

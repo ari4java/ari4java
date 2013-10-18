@@ -1,6 +1,8 @@
 
 package ch.loway.oss.ari4java.codegen.models;
 
+import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
+
 /**
  *
  *
@@ -35,16 +37,13 @@ public class ModelField implements Comparable {
 
 
     private String getterName( String field ) {
-        return gsName( "get", field );
+        return JavaGen.addPrefixAndCapitalize( "get", field );
     }
 
     private String setterName( String field ) {
-        return gsName( "set", field );
+        return JavaGen.addPrefixAndCapitalize( "set", field );
     }
 
-    private String gsName( String prefix, String field ) {
-        return prefix + field.substring(0,1).toUpperCase() + field.substring(1);
-    }
 
 
 

@@ -11,8 +11,8 @@ public class JavaPkgInfo {
 
     String base = "ch.loway.oss.ari4java.generated";
 
-    String className = "";    
-    String apiVersion = "";
+    public String className = "";
+    public String apiVersion = "";
 
     public void setPackageInfo( String classN, String apiV ) {
         className = classN;
@@ -32,8 +32,9 @@ public class JavaPkgInfo {
         return base + "." + apiVersion + "." + "actions";
     }
 
-    public String getInterfaceName() {
-        return className;
+    public String getInterfaceName() {        
+        String s = className.substring(0, 1).toUpperCase() + className.substring(1);
+        return s;
     }
 
     public String getImplName() {

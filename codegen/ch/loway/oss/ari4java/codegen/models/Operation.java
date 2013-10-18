@@ -1,6 +1,7 @@
 
 package ch.loway.oss.ari4java.codegen.models;
 
+import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,8 @@ public class Operation {
     public String method = "";
     public String nickname = "";
     public String responseClass = "";
-    
+
+    public String description = "";
     
     public List<Param> parms = new ArrayList<Param>();
     public List<ErrorResp> errorCodes = new ArrayList<ErrorResp>();
@@ -23,6 +25,8 @@ public class Operation {
     public String toJava( Action parent ) {
 
         StringBuilder sb = new StringBuilder();
+
+        JavaGen.addBanner(sb, parent.description + "\n\n" + description );
 
         sb.append( getDefinition() );
         sb.append( " {\n");
@@ -52,11 +56,20 @@ public class Operation {
         }
 
         sb.append( "String json = httpAction( url, \"").append( method ).append( "\", lP, lE);\n");
-        sb.append( "return (" )
-                .append( responseClass )
-                .append( ") deserializeJson( json, ")
-                .append(responseClass)
-                .append(".class); \n");
+
+        if ( !responseClass.equalsIgnoreCase("void")) {
+
+            String responseObj = responseClass;
+            if (responseObj.startsWith("List<") ) {
+                responseObj = "List";
+            }
+
+            sb.append( "return (" )
+                    .append( responseClass )
+                    .append( ") deserializeJson( json, ")
+                    .append(responseObj)
+                    .append(".class); \n");
+        }
 
 
         // String url = "/aaa/" + bbb + "/ccc";

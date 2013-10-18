@@ -1,6 +1,7 @@
 
 package ch.loway.oss.ari4java.codegen;
 
+import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
 import ch.loway.oss.ari4java.codegen.genJava.JavaInterface;
 import ch.loway.oss.ari4java.codegen.models.Action;
 import ch.loway.oss.ari4java.codegen.models.Apis;
@@ -82,6 +83,17 @@ public class DefMapper {
 
     }
 
+    /**
+     *
+     * @param f
+     * @return
+     */
+
+    private String genActionClassName(File f) {
+        String fileName = f.getName().replace(".json", "");
+        return JavaGen.addPrefixAndCapitalize( "Action", fileName );
+    }
+
     private void loadModels(JsonNode models, File f, String apiVersion) throws IOException {
         
         for (JsonNode modelName : models) {
@@ -107,7 +119,7 @@ public class DefMapper {
                 mf.field = field;
                 mf.type = javaType;
                 mf.comment = comment;
-                currentModel.fileds.add(mf);
+                currentModel.fields.add(mf);
             }
             mymodels.add(currentModel);
             System.out.println(currentModel.toString());
@@ -121,7 +133,7 @@ public class DefMapper {
 
         Apis api = new Apis();
 
-        api.setPackageInfo( f.getName().replace(".json", ""), apiVersion);
+        api.setPackageInfo( genActionClassName(f), apiVersion);
 
 
         for (JsonNode apiEntry : apis) {
@@ -137,6 +149,7 @@ public class DefMapper {
                 op.method = txt(operation.get("httpMethod"));
                 op.nickname = txt(operation.get("nickname"));
                 op.responseClass = remapType(txt(operation.get("responseClass")));
+                op.description = txt(operation.get("summary") ) + "\n" + txt(operation.get("notes") );
 
                 JsonNode parameters = operation.get("parameters");
                 if (parameters != null) {

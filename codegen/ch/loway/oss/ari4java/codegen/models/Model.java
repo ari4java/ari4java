@@ -25,7 +25,7 @@ public class Model extends JavaPkgInfo {
     public List<String> implementsInterafaces = new ArrayList<String>();
     
     public List<String> imports = new ArrayList<String>();
-    public List<ModelField> fileds = new ArrayList<ModelField>();
+    public List<ModelField> fields = new ArrayList<ModelField>();
 
     public Model() {
         imports.add( "java.util.Date" );
@@ -39,7 +39,7 @@ public class Model extends JavaPkgInfo {
     public String toString() {
 
         Collections.sort(imports);
-        Collections.sort( fileds );
+        Collections.sort( fields );
         Collections.sort( implementsInterafaces );
 
 
@@ -52,8 +52,13 @@ public class Model extends JavaPkgInfo {
 
         sb.append(  "public class " ).append(  getImplName() );
 
+        // concrete implementation for the model to be extended
         if ( extendsModel.length() > 0 ) {
-            sb.append( " extends " ).append( extendsModel );
+
+            JavaPkgInfo jpi = new JavaPkgInfo();
+            jpi.setPackageInfo(extendsModel, apiVersion);
+
+            sb.append( " extends " ).append( jpi.getImplName() );
         }
 
         sb.append( " implements " );
@@ -66,7 +71,7 @@ public class Model extends JavaPkgInfo {
         sb.append( getInterfaceName() ).append( ", ");
         sb.append( "java.io.Serializable {\n" );
 
-        for ( ModelField mf: fileds) {
+        for ( ModelField mf: fields) {
             sb.append( mf.toString() );
         }
 
@@ -79,7 +84,7 @@ public class Model extends JavaPkgInfo {
 
     public void registerInterfaces( JavaInterface j ) {
 
-        for ( ModelField mf: fileds) {
+        for ( ModelField mf: fields) {
             String signature = mf.getSignatureGet();
             String declaration = mf.getDeclarationGet();
             String comment = mf.comment;
@@ -87,8 +92,8 @@ public class Model extends JavaPkgInfo {
             j.iKnow(signature, declaration, comment);
         }
 
-        for ( ModelField mf: fileds) {
-            String signature = mf.getSignatureGet();
+        for ( ModelField mf: fields) {
+            String signature = mf.getSignatureSet();
             String declaration = mf.getDeclarationSet();
             String comment = mf.comment;
 

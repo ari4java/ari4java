@@ -35,7 +35,7 @@ public class Action {
             String javaSignature = o.getSignature();
             String definition = o.getDefinition();
 
-            j.iKnow(javaSignature, definition, "unknown comment" );
+            j.iKnow(javaSignature, definition, o.description );
         }
     }
 
