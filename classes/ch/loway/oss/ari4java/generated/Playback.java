@@ -10,69 +10,85 @@ import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 
-public interface Application {
+public interface Playback {
 
-// void setEndpoint_ids List<String>
+// String getLanguage
 /** =====================================================
- * {tech}/{resource} for endpoints subscribed to.
+ * For media types that support multiple languages, the language requested for playback.
  * ====================================================== */
- public void setEndpoint_ids(List<String> val );
+ public String getLanguage();
 
 
 
-// void setBridge_ids List<String>
+// void setState String
 /** =====================================================
- * Id's for bridges subscribed to.
+ * Current state of the playback operation.
  * ====================================================== */
- public void setBridge_ids(List<String> val );
+ public void setState(String val );
 
 
 
-// List<String> getChannel_ids
+// void setLanguage String
 /** =====================================================
- * Id's for channels subscribed to.
+ * For media types that support multiple languages, the language requested for playback.
  * ====================================================== */
- public List<String> getChannel_ids();
+ public void setLanguage(String val );
 
 
 
-// List<String> getBridge_ids
+// String getId
 /** =====================================================
- * Id's for bridges subscribed to.
+ * ID for this playback operation
  * ====================================================== */
- public List<String> getBridge_ids();
+ public String getId();
 
 
 
-// void setName String
+// void setTarget_uri String
 /** =====================================================
- * Name of this application
+ * URI for the channel or bridge to play the media on
  * ====================================================== */
- public void setName(String val );
+ public void setTarget_uri(String val );
 
 
 
-// List<String> getEndpoint_ids
+// void setMedia_uri String
 /** =====================================================
- * {tech}/{resource} for endpoints subscribed to.
+ * URI for the media to play back.
  * ====================================================== */
- public List<String> getEndpoint_ids();
+ public void setMedia_uri(String val );
 
 
 
-// void setChannel_ids List<String>
+// String getTarget_uri
 /** =====================================================
- * Id's for channels subscribed to.
+ * URI for the channel or bridge to play the media on
  * ====================================================== */
- public void setChannel_ids(List<String> val );
+ public String getTarget_uri();
 
 
 
-// String getName
+// void setId String
 /** =====================================================
- * Name of this application
+ * ID for this playback operation
  * ====================================================== */
- public String getName();
+ public void setId(String val );
+
+
+
+// String getMedia_uri
+/** =====================================================
+ * URI for the media to play back.
+ * ====================================================== */
+ public String getMedia_uri();
+
+
+
+// String getState
+/** =====================================================
+ * Current state of the playback operation.
+ * ====================================================== */
+ public String getState();
 
 
 }

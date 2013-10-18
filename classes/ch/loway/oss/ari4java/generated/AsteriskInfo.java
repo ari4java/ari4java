@@ -10,69 +10,69 @@ import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 
-public interface Application {
+public interface AsteriskInfo {
 
-// void setEndpoint_ids List<String>
+// void setConfig ConfigInfo
 /** =====================================================
- * {tech}/{resource} for endpoints subscribed to.
+ * Info about Asterisk configuration
  * ====================================================== */
- public void setEndpoint_ids(List<String> val );
+ public void setConfig(ConfigInfo val );
 
 
 
-// void setBridge_ids List<String>
+// void setStatus StatusInfo
 /** =====================================================
- * Id's for bridges subscribed to.
+ * Info about Asterisk status
  * ====================================================== */
- public void setBridge_ids(List<String> val );
+ public void setStatus(StatusInfo val );
 
 
 
-// List<String> getChannel_ids
+// StatusInfo getStatus
 /** =====================================================
- * Id's for channels subscribed to.
+ * Info about Asterisk status
  * ====================================================== */
- public List<String> getChannel_ids();
+ public StatusInfo getStatus();
 
 
 
-// List<String> getBridge_ids
+// void setBuild BuildInfo
 /** =====================================================
- * Id's for bridges subscribed to.
+ * Info about how Asterisk was built
  * ====================================================== */
- public List<String> getBridge_ids();
+ public void setBuild(BuildInfo val );
 
 
 
-// void setName String
+// BuildInfo getBuild
 /** =====================================================
- * Name of this application
+ * Info about how Asterisk was built
  * ====================================================== */
- public void setName(String val );
+ public BuildInfo getBuild();
 
 
 
-// List<String> getEndpoint_ids
+// ConfigInfo getConfig
 /** =====================================================
- * {tech}/{resource} for endpoints subscribed to.
+ * Info about Asterisk configuration
  * ====================================================== */
- public List<String> getEndpoint_ids();
+ public ConfigInfo getConfig();
 
 
 
-// void setChannel_ids List<String>
+// void setSystem SystemInfo
 /** =====================================================
- * Id's for channels subscribed to.
+ * Info about the system running Asterisk
  * ====================================================== */
- public void setChannel_ids(List<String> val );
+ public void setSystem(SystemInfo val );
 
 
 
-// String getName
+// SystemInfo getSystem
 /** =====================================================
- * Name of this application
+ * Info about the system running Asterisk
  * ====================================================== */
- public String getName();
+ public SystemInfo getSystem();
 
 
 }

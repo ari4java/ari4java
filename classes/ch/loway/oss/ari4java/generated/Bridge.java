@@ -10,69 +10,85 @@ import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 
-public interface Application {
+public interface Bridge {
 
-// void setEndpoint_ids List<String>
+// void setBridge_type String
 /** =====================================================
- * {tech}/{resource} for endpoints subscribed to.
+ * Type of bridge technology
  * ====================================================== */
- public void setEndpoint_ids(List<String> val );
+ public void setBridge_type(String val );
 
 
 
-// void setBridge_ids List<String>
+// void setBridge_class String
 /** =====================================================
- * Id's for bridges subscribed to.
+ * Bridging class
  * ====================================================== */
- public void setBridge_ids(List<String> val );
+ public void setBridge_class(String val );
 
 
 
-// List<String> getChannel_ids
+// String getId
 /** =====================================================
- * Id's for channels subscribed to.
+ * Unique identifier for this bridge
  * ====================================================== */
- public List<String> getChannel_ids();
+ public String getId();
 
 
 
-// List<String> getBridge_ids
+// void setId String
 /** =====================================================
- * Id's for bridges subscribed to.
+ * Unique identifier for this bridge
  * ====================================================== */
- public List<String> getBridge_ids();
+ public void setId(String val );
 
 
 
-// void setName String
+// String getBridge_type
 /** =====================================================
- * Name of this application
+ * Type of bridge technology
  * ====================================================== */
- public void setName(String val );
+ public String getBridge_type();
 
 
 
-// List<String> getEndpoint_ids
+// void setTechnology String
 /** =====================================================
- * {tech}/{resource} for endpoints subscribed to.
+ * Name of the current bridging technology
  * ====================================================== */
- public List<String> getEndpoint_ids();
+ public void setTechnology(String val );
 
 
 
-// void setChannel_ids List<String>
+// String getBridge_class
 /** =====================================================
- * Id's for channels subscribed to.
+ * Bridging class
  * ====================================================== */
- public void setChannel_ids(List<String> val );
+ public String getBridge_class();
 
 
 
-// String getName
+// String getTechnology
 /** =====================================================
- * Name of this application
+ * Name of the current bridging technology
  * ====================================================== */
- public String getName();
+ public String getTechnology();
+
+
+
+// List<String> getChannels
+/** =====================================================
+ * Ids of channels participating in this bridge
+ * ====================================================== */
+ public List<String> getChannels();
+
+
+
+// void setChannels List<String>
+/** =====================================================
+ * Ids of channels participating in this bridge
+ * ====================================================== */
+ public void setChannels(List<String> val );
 
 
 }

@@ -1,14 +1,19 @@
 package ch.loway.oss.ari4java.generated.ari_0_0_1.models;
 
+// ----------------------------------------------------
+//      THIS CLASS WAS GENERATED AUTOMATICALLY         
+//               PLEASE DO NOT EDIT                    
+// ----------------------------------------------------
+
 import ch.loway.oss.ari4java.generated.*;
 import java.util.Date;
 import java.util.List;
 
-/*** ====================================================
+/** =====================================================
  * Details of a Stasis application
  * 
  * Defined in file :applications.json
- * ================================================= */
+ * ====================================================== */
 public class Application_impl_ari_0_0_1 implements Application, java.io.Serializable {
   /**  Id's for bridges subscribed to.  */
   private List<String> bridge_ids;
