@@ -2,20 +2,36 @@ package ch.loway.oss.ari4java.generated;
 
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
+import ch.loway.oss.ari4java.tools.RestException;
 
-/** ----------------------------------------------------
-  * Details of a Stasis application
-  * Defined in file: applications.json
-  * ------------------------------------------------- */
+/*** ====================================================
+ * Interface for ch.loway.oss.ari4java.generated
+ * Please do not edit.
+ * ================================================= */
+public interface Application {
 
-public class Application implements java.io.Serializable {
-  /**  Id's for bridges subscribed to.  */
-  public List<String> bridge_ids;
-  /**  Id's for channels subscribed to.  */
-  public List<String> channel_ids;
-  /**  {tech}/{resource} for endpoints subscribed to.  */
-  public List<String> endpoint_ids;
-  /**  Name of this application  */
-  public String name;
-}
+// List<String> getChannel_ids
+    /*** ====================================================
+     * Id's for channels subscribed to.
+     * ================================================= */
+    public void setChannel_ids(List<String> val);
 
+// List<String> getBridge_ids
+    /*** ====================================================
+     * Id's for bridges subscribed to.
+     * ================================================= */
+    public void setBridge_ids(List<String> val);
+
+// List<String> getEndpoint_ids
+    /*** ====================================================
+     * {tech}/{resource} for endpoints subscribed to.
+     * ================================================= */
+    public void setEndpoint_ids(List<String> val);
+
+// String getName
+    /*** ====================================================
+     * Name of this application
+     * ================================================= */
+    public void setName(String val);
+};

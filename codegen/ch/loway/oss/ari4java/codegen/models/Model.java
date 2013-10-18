@@ -1,7 +1,9 @@
 
 package ch.loway.oss.ari4java.codegen.models;
 
-import java.io.File;
+import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
+import ch.loway.oss.ari4java.codegen.genJava.JavaInterface;
+import ch.loway.oss.ari4java.codegen.genJava.JavaPkgInfo;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,10 +17,8 @@ import java.util.List;
  * $Id$
  * @author lenz
  */
-public class Model {
+public class Model extends JavaPkgInfo {
 
-    public String pkgName = "ch.loway.oss.ari4java.generated";
-    public String className = "";
     public String description = "";
     public String extendsModel = "";
     public String comesFromFile = "";
@@ -30,6 +30,7 @@ public class Model {
     public Model() {
         imports.add( "java.util.Date" );
         imports.add( "java.util.List" );
+        imports.add( "ch.loway.oss.ari4java.generated.*");
     }
 
 
@@ -44,21 +45,12 @@ public class Model {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append( "package " ).append( pkgName ).append( ";\n\n" );
+        JavaGen.importClasses(sb, getModelPackage(), imports);
+
+        JavaGen.addBanner(sb, description + "\n\n"  + "Defined in file :" + comesFromFile );
 
 
-
-        for ( String myImport: imports ) {
-            sb.append( "import ").append( myImport ).append(";\n");
-        }
-
-        sb.append( "\n/** ----------------------------------------------------\n")
-          .append( "  * " ).append( description ).append( "\n")
-          .append( "  * Defined in file: " ).append( comesFromFile ).append( "\n")
-          .append( "  * ------------------------------------------------- */\n\n");
-
-
-        sb.append(  "public class " ).append(  className );
+        sb.append(  "public class " ).append(  getImplName() );
 
         if ( extendsModel.length() > 0 ) {
             sb.append( " extends " ).append( extendsModel );
@@ -71,6 +63,7 @@ public class Model {
             sb.append( inf ).append( ", " );
         }
 
+        sb.append( getInterfaceName() ).append( ", ");
         sb.append( "java.io.Serializable {\n" );
 
         for ( ModelField mf: fileds) {
@@ -84,20 +77,29 @@ public class Model {
     }
 
 
-    public void toFile( String baseJavaClasses ) throws IOException {
+    public void registerInterfaces( JavaInterface j ) {
 
-        String fName = baseJavaClasses 
-                     + pkgName.replace(".", "/" )
-                     + "/"
-                     + className + ".java";
-        
-        FileWriter outFile = new FileWriter( fName );
-        PrintWriter out = new PrintWriter(outFile);
-        out.println( toString() );
-        out.close();
+        for ( ModelField mf: fileds) {
+            String signature = mf.getSignatureGet();
+            String declaration = mf.getDeclarationGet();
+            String comment = mf.comment;
+
+            j.iKnow(signature, declaration, comment);
+        }
+
+        for ( ModelField mf: fileds) {
+            String signature = mf.getSignatureGet();
+            String declaration = mf.getDeclarationSet();
+            String comment = mf.comment;
+
+            j.iKnow(signature, declaration, comment);
+        }
+
+
+
+
 
     }
-
 
 
 }
