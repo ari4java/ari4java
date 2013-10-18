@@ -4,3 +4,12 @@
 *.jar
 *.war
 *.ear
+
+ari4java/*
+build/*
+dist/*
+nbproject/*
+
+manifest.mf
+build.xml
+
