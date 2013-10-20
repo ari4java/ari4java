@@ -113,11 +113,15 @@ public class DefMapper {
             while (propNames.hasNext()) {
                 String field = propNames.next();
                 JsonNode property = properties.get(field);
-                String javaType = remapType(txt(property.get("type")));
+
+                String javaType = remapAbstractType(txt(property.get("type")));
+                String javaConcreteType = remapConcreteType(txt(property.get("type")), apiVersion);
+
                 String comment = txt(property.get("description"));
                 ModelField mf = new ModelField();
                 mf.field = field;
-                mf.type = javaType;
+                mf.typeInterface = javaType;
+                mf.typeConcrete = javaConcreteType;
                 mf.comment = comment;
                 currentModel.fields.add(mf);
             }
@@ -147,18 +151,19 @@ public class DefMapper {
                 Operation op = new Operation();
                 action.operations.add(op);
                 op.method = txt(operation.get("httpMethod"));
-                op.nickname = txt(operation.get("nickname"));
-                op.responseClass = remapType(txt(operation.get("responseClass")));
+                op.nickname = txt(operation.get("nickname"));                
+                op.responseInterface = remapAbstractType(txt(operation.get("responseClass")));
+                op.responseConcreteClass = remapConcreteType(txt(operation.get("responseClass")), apiVersion);
                 op.description = txt(operation.get("summary") ) + "\n" + txt(operation.get("notes") );
 
                 JsonNode parameters = operation.get("parameters");
                 if (parameters != null) {
                     for (JsonNode parameter : parameters) {
                         Operation.Param p = new Operation.Param();
-                        p.javaType = remapType(txt(parameter.get("dataType")));
+                        p.javaType = remapAbstractType(txt(parameter.get("dataType")));
                         p.name = txt(parameter.get("name"));
                         p.required = txt(parameter.get("required")).equalsIgnoreCase("true");
-                        p.inUri = txt(parameter.get("paramType")).equalsIgnoreCase( "path");
+                        p.type =  Operation.ParamType.build( txt(parameter.get("paramType")));
 
                         op.parms.add(p);
 
@@ -225,18 +230,27 @@ public class DefMapper {
 
     public String extendsObject( JsonNode model ) {
         if ( model.get( "extends" ) != null ) {
-            return remapType( model.get("extends").asText() );
+            return remapAbstractType( model.get("extends").asText() );
         }
         return "";
 
     }
 
-    public String remapType( String jsonType ) {
+    public String remapAbstractType( String jsonType ) {
+        return innerRemapType(jsonType, false, "");
+    }
+
+    public String remapConcreteType( String jsonType, String apiVersion ) {
+        return innerRemapType(jsonType, true, apiVersion);
+    }
+
+
+    public String innerRemapType( String jsonType, boolean concrete, String apiVersion ) {
 
         String listAry = "List[";
 
         if ( jsonType.startsWith( listAry ) ) {
-            return "List<" + remapType( jsonType.substring(listAry.length(), jsonType.length()-1 )) + ">";
+            return "List<" + innerRemapType( jsonType.substring(listAry.length(), jsonType.length()-1 ), concrete, apiVersion ) + ">";
         }
         if ( jsonType.equalsIgnoreCase("string") ) {
             return "String";
@@ -257,7 +271,7 @@ public class DefMapper {
             return "boolean";
         } else
         {
-            return jsonType;
+            return jsonType + ( concrete ? "_impl_" + apiVersion : "" );
         }
 
 //        if ( knownModels.contains(jsonType) ) {
@@ -265,11 +279,9 @@ public class DefMapper {
 //        }
 //        else
 //        {
-//            throw new IllegalArgumentException("Unknown type: " + jsonType );
+//            throw new IllegalArgumentException("Unknown typeInterface: " + jsonType );
 //        }
     }
-
-
 
 
 

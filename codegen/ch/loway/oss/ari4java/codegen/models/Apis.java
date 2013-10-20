@@ -1,9 +1,11 @@
 
 package ch.loway.oss.ari4java.codegen.models;
 
+import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
 import ch.loway.oss.ari4java.codegen.genJava.JavaInterface;
 import ch.loway.oss.ari4java.codegen.genJava.JavaPkgInfo;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,13 +23,17 @@ public class Apis extends JavaPkgInfo {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append( "package " ).append( getActionsPackage() ).append( ";\n");
-        sb.append( "import ch.loway.oss.ari4java.generated.*;\n");        
-        sb.append( "import ").append( getModelPackage() ).append( ".*;\n");
-        sb.append( "import java.util.Date;\n");
-        sb.append( "import java.util.List;\n");
-        sb.append( "import java.util.ArrayList;\n");
-        sb.append( "import ch.loway.oss.ari4java.tools.*;\n");
+        JavaGen.importClasses(sb, getActionsPackage(), Arrays.asList( new String[] {
+            "ch.loway.oss.ari4java.generated.*",
+            "java.util.Date",
+            "java.util.List",
+            "java.util.ArrayList",
+            "ch.loway.oss.ari4java.tools.BaseAriAction",
+            "ch.loway.oss.ari4java.tools.RestException",
+            "com.fasterxml.jackson.core.type.TypeReference",
+            getModelPackage() + ".*"
+        } ));
+
 
         sb.append( "public class " ).append( getImplName() )
                 .append(" extends BaseAriAction ")

@@ -1,6 +1,9 @@
 
 package ch.loway.oss.ari4java.tools;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -10,15 +13,61 @@ import java.util.List;
  */
 public class BaseAriAction {
 
+    private String forcedResponse = null;
 
-    public String httpAction( String uri, String method, List<HttpParam> parameters, List<HttpResponse> errors ) throws RestException {
-        return "";
+    public void forceResponse( String r ) {
+        forcedResponse = r;
     }
 
-    public Object deserializeJson( String json, Class klazz) {
-        return null;
+
+
+    public String httpAction( String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpResponse> errors ) throws RestException {
+
+        if ( forcedResponse != null ) {
+            return forcedResponse;
+        } else {
+            throw new RestException("Not really implemented yet. ");
+        }
+
+
     }
 
+    /**
+     * Deserialize a type
+     *
+     * @param json
+     * @param klazz
+     * @return
+     */
+    public Object deserializeJson( String json, Class klazz) throws RestException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue( json , klazz);
+        } catch ( IOException e ) {
+            e.printStackTrace( System.err );
+            throw new RestException( "Decoding JSON: " + e.getMessage() );
+        }
+    }
+
+    /**
+     * Deserialize a list
+     * 
+     * @param json
+     * @param klazzType
+     * @return
+     */
+
+    public Object deserializeJson( String json, TypeReference klazzType ) throws RestException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue( json , klazzType);
+        } catch ( IOException e ) {
+            throw new RestException( "Decoding JSON list: " + e.toString() );
+        }
+
+    }
 
 
     public static class HttpParam {

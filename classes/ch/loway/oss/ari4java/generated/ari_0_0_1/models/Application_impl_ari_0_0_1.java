@@ -6,6 +6,7 @@ package ch.loway.oss.ari4java.generated.ari_0_0_1.models;
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class Application_impl_ari_0_0_1 implements Application, java.io.Serializ
    return bridge_ids;
  }
 
+ @JsonDeserialize( contentAs=String.class )
  public void setBridge_ids(List<String> val ) {
    bridge_ids = val;
  }
@@ -31,6 +33,7 @@ public class Application_impl_ari_0_0_1 implements Application, java.io.Serializ
    return channel_ids;
  }
 
+ @JsonDeserialize( contentAs=String.class )
  public void setChannel_ids(List<String> val ) {
    channel_ids = val;
  }
@@ -41,6 +44,7 @@ public class Application_impl_ari_0_0_1 implements Application, java.io.Serializ
    return endpoint_ids;
  }
 
+ @JsonDeserialize( contentAs=String.class )
  public void setEndpoint_ids(List<String> val ) {
    endpoint_ids = val;
  }

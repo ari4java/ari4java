@@ -6,6 +6,7 @@ package ch.loway.oss.ari4java.generated.ari_0_0_1.models;
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class MissingParams_impl_ari_0_0_1 extends Message_impl_ari_0_0_1 impleme
    return params;
  }
 
+ @JsonDeserialize( contentAs=String.class )
  public void setParams(List<String> val ) {
    params = val;
  }

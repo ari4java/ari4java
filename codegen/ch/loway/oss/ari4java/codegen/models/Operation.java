@@ -15,7 +15,8 @@ public class Operation {
 
     public String method = "";
     public String nickname = "";
-    public String responseClass = "";
+    public String responseConcreteClass = "";
+    public String responseInterface = "";
 
     public String description = "";
     
@@ -34,20 +35,26 @@ public class Operation {
         // search and replace URI parameters
         String stUri = parent.path;
         for ( Param p: parms ) {
-            if ( p.inUri ) {
+            if ( p.type == ParamType.PATH ) {
                 stUri = stUri.replace("{" + p.name + "}", "\" + " + p.name + " + \"" );
             }
         }
 
         sb.append( "String url = \"").append( stUri ).append( "\";\n");
-        sb.append( "List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();\n");
+        sb.append( "List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();\n");
+        sb.append( "List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();\n");
         sb.append( "List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();\n");
 
         for ( Param p: parms ) {
-            if ( !p.inUri ) {
-                sb.append( "lP.add( BaseAriAction.HttpParam.build( \"").append( p.name)
+            if ( p.type == ParamType.QUERY ) {
+                sb.append( "lParamQuery.add( BaseAriAction.HttpParam.build( \"").append( p.name)
                         .append( "\", ").append( p.name ).append( ") );\n");
-            }
+            } else
+            if ( p.type == ParamType.FORM ) {
+                sb.append( "lParamForm.add( BaseAriAction.HttpParam.build( \"").append( p.name)
+                        .append( "\", ").append( p.name ).append( ") );\n");
+            };
+
         }
 
         for ( ErrorResp er: errorCodes ) {
@@ -55,20 +62,23 @@ public class Operation {
                     .append( ", \"").append( er.reason ).append( "\") );\n");
         }
 
-        sb.append( "String json = httpAction( url, \"").append( method ).append( "\", lP, lE);\n");
+        sb.append( "String json = httpAction( url, \"").append( method ).append( "\", lParamQuery, lParamForm, lE);\n");
 
-        if ( !responseClass.equalsIgnoreCase("void")) {
+        if ( !responseInterface.equalsIgnoreCase("void")) {
+            
+            String deserializationType = responseConcreteClass + ".class";
 
-            String responseObj = responseClass;
-            if (responseObj.startsWith("List<") ) {
-                responseObj = "List";
+            if (responseConcreteClass.startsWith("List<") ) {
+                //  (List<Interface>) mapper.readValue( string, new TypeReference<List<Concrete>>() {});                
+                deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
             }
 
             sb.append( "return (" )
-                    .append( responseClass )
+                    .append( responseInterface )
                     .append( ") deserializeJson( json, ")
-                    .append(responseObj)
-                    .append(".class); \n");
+                    .append( deserializationType )
+                    .append(" ); \n");
+
         }
 
 
@@ -91,7 +101,7 @@ public class Operation {
 
     public String getSignature() {
         StringBuilder sb = new StringBuilder();
-        sb.append( responseClass )
+        sb.append( responseInterface )
            .append( " ")
            .append( nickname );
 
@@ -108,7 +118,7 @@ public class Operation {
     public String getDefinition() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append( "public " ).append( responseClass )
+        sb.append( "public " ).append( responseInterface )
            .append( " " ).append( nickname )
            .append( "(");
 
@@ -129,14 +139,41 @@ public class Operation {
 
 
 
+    /**
+     * A parameter as defined in Swagger
+     */
 
     public static class Param {
         public String name = "";
-        public String type = "";
+        public ParamType type = ParamType.PATH;
         public String javaType = "";
-        public boolean required = true;
-        public boolean inUri = false;
+        public boolean required = true;        
     }
+
+    public static enum ParamType {
+        PATH,
+        QUERY,
+        BODY,
+        HEADER,
+        FORM;
+
+        public static ParamType build( String s ) {
+            if ( s.equalsIgnoreCase("path") ) {
+                return PATH;
+            } else
+            if ( s.equalsIgnoreCase("query") ) {
+                return QUERY;
+            } else
+            if ( s.equalsIgnoreCase("form") ) {
+                return FORM;
+            } else
+            {
+                throw new IllegalArgumentException("Would not know how to handle parameter of type " + s);
+            }
+        }
+
+    }
+
 
     public static class ErrorResp {
         public int code = 0;

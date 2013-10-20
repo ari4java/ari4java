@@ -12,7 +12,8 @@ import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
 public class ModelField implements Comparable {
 
     public String field = "";
-    public String type = "";
+    public String typeInterface = "";
+    public String typeConcrete = "";
     public boolean required = false;    
     public String comment = "";
 
@@ -23,16 +24,23 @@ public class ModelField implements Comparable {
         sb.append( "  /**  " )
           .append( comment )
           .append("  */\n");
-        sb.append( "  private ").append( type ).append( " ").append( field ).append( ";\n" );
+        sb.append( "  private ").append( typeInterface ).append( " ").append( field ).append( ";\n" );
 
         sb.append( getDeclarationGet() ).append(" {\n");
         sb.append( "   return ").append(field).append(";\n }\n\n");
 
+        if ( typeConcrete.startsWith("List") ) {
+            String innerType = typeConcrete.substring(5, typeConcrete.length()-1);
+            sb.append(" @JsonDeserialize( contentAs=").append(innerType).append(".class )\n");
+        }
         sb.append( getDeclarationSet() ).append( " {\n");
         sb.append( "   ").append( field).append(" = val;\n }\n\n");
 
         return sb.toString();
     }
+
+
+
 
 
 
@@ -50,22 +58,22 @@ public class ModelField implements Comparable {
 
 
     public String getSignatureGet() {
-        return type + " " + getterName(field);
+        return typeInterface + " " + getterName(field);
     }
 
     public String getSignatureSet() {
-        return "void " + setterName(field) + " " + type;
+        return "void " + setterName(field) + " " + typeInterface;
     }
 
     public String getDeclarationGet() {
         StringBuilder sb = new StringBuilder();
-        sb.append( " public ").append(type).append(" ").append( getterName(field) ).append("()" );
+        sb.append( " public ").append(typeInterface).append(" ").append( getterName(field) ).append("()" );
         return sb.toString();
     }
 
     public String getDeclarationSet() {
         StringBuilder sb = new StringBuilder();
-        sb.append( " public void ").append( setterName(field) ).append("(") .append( type ).append(" val )" );
+        sb.append( " public void ").append( setterName(field) ).append("(") .append( typeInterface ).append(" val )" );
         return sb.toString();
     }
 

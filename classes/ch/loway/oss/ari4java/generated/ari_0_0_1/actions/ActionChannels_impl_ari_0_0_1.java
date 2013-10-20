@@ -1,10 +1,19 @@
 package ch.loway.oss.ari4java.generated.ari_0_0_1.actions;
+
+// ----------------------------------------------------
+//      THIS CLASS WAS GENERATED AUTOMATICALLY         
+//               PLEASE DO NOT EDIT                    
+// ----------------------------------------------------
+
 import ch.loway.oss.ari4java.generated.*;
-import ch.loway.oss.ari4java.generated.ari_0_0_1.models.*;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
-import ch.loway.oss.ari4java.tools.*;
+import ch.loway.oss.ari4java.tools.BaseAriAction;
+import ch.loway.oss.ari4java.tools.RestException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import ch.loway.oss.ari4java.generated.ari_0_0_1.models.*;
+
 public class ActionChannels_impl_ari_0_0_1 extends BaseAriAction  implements ActionChannels {
 /** =====================================================
  * Active channels
@@ -13,10 +22,11 @@ public class ActionChannels_impl_ari_0_0_1 extends BaseAriAction  implements Act
  * ====================================================== */
 public List<Channel> getChannels() throws RestException {
 String url = "/channels";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
-String json = httpAction( url, "GET", lP, lE);
-return (List<Channel>) deserializeJson( json, List.class); 
+String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
+return (List<Channel>) deserializeJson( json, new TypeReference<List<Channel_impl_ari_0_0_1>>() {} ); 
 }
 
 /** =====================================================
@@ -27,18 +37,19 @@ return (List<Channel>) deserializeJson( json, List.class);
  * ====================================================== */
 public void originate(String endpoint, String extension, String context, long priority, String app, String appArgs, String callerId, int timeout) throws RestException {
 String url = "/channels";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
-lP.add( BaseAriAction.HttpParam.build( "endpoint", endpoint) );
-lP.add( BaseAriAction.HttpParam.build( "extension", extension) );
-lP.add( BaseAriAction.HttpParam.build( "context", context) );
-lP.add( BaseAriAction.HttpParam.build( "priority", priority) );
-lP.add( BaseAriAction.HttpParam.build( "app", app) );
-lP.add( BaseAriAction.HttpParam.build( "appArgs", appArgs) );
-lP.add( BaseAriAction.HttpParam.build( "callerId", callerId) );
-lP.add( BaseAriAction.HttpParam.build( "timeout", timeout) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "endpoint", endpoint) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "extension", extension) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "context", context) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "priority", priority) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "app", app) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "appArgs", appArgs) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "callerId", callerId) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "timeout", timeout) );
 lE.add( BaseAriAction.HttpResponse.build( 400, "Invalid parameters for originating a channel.") );
-String json = httpAction( url, "POST", lP, lE);
+String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
 }
 
 /** =====================================================
@@ -48,11 +59,12 @@ String json = httpAction( url, "POST", lP, lE);
  * ====================================================== */
 public Channel getChannel(String channelId) throws RestException {
 String url = "/channels/" + channelId + "";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-String json = httpAction( url, "GET", lP, lE);
-return (Channel) deserializeJson( json, Channel.class); 
+String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
+return (Channel) deserializeJson( json, Channel_impl_ari_0_0_1.class ); 
 }
 
 /** =====================================================
@@ -62,10 +74,11 @@ return (Channel) deserializeJson( json, Channel.class);
  * ====================================================== */
 public void deleteChannel(String channelId) throws RestException {
 String url = "/channels/" + channelId + "";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-String json = httpAction( url, "DELETE", lP, lE);
+String json = httpAction( url, "DELETE", lParamQuery, lParamForm, lE);
 }
 
 /** =====================================================
@@ -75,16 +88,17 @@ String json = httpAction( url, "DELETE", lP, lE);
  * ====================================================== */
 public Dialed dial(String channelId, String endpoint, String extension, String context, int timeout) throws RestException {
 String url = "/channels/" + channelId + "/dial";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
-lP.add( BaseAriAction.HttpParam.build( "endpoint", endpoint) );
-lP.add( BaseAriAction.HttpParam.build( "extension", extension) );
-lP.add( BaseAriAction.HttpParam.build( "context", context) );
-lP.add( BaseAriAction.HttpParam.build( "timeout", timeout) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "endpoint", endpoint) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "extension", extension) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "context", context) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "timeout", timeout) );
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
-String json = httpAction( url, "POST", lP, lE);
-return (Dialed) deserializeJson( json, Dialed.class); 
+String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
+return (Dialed) deserializeJson( json, Dialed_impl_ari_0_0_1.class ); 
 }
 
 /** =====================================================
@@ -94,14 +108,15 @@ return (Dialed) deserializeJson( json, Dialed.class);
  * ====================================================== */
 public void continueInDialplan(String channelId, String context, String extension, int priority) throws RestException {
 String url = "/channels/" + channelId + "/continue";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
-lP.add( BaseAriAction.HttpParam.build( "context", context) );
-lP.add( BaseAriAction.HttpParam.build( "extension", extension) );
-lP.add( BaseAriAction.HttpParam.build( "priority", priority) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "context", context) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "extension", extension) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "priority", priority) );
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
-String json = httpAction( url, "POST", lP, lE);
+String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
 }
 
 /** =====================================================
@@ -111,11 +126,12 @@ String json = httpAction( url, "POST", lP, lE);
  * ====================================================== */
 public void answerChannel(String channelId) throws RestException {
 String url = "/channels/" + channelId + "/answer";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
-String json = httpAction( url, "POST", lP, lE);
+String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
 }
 
 /** =====================================================
@@ -125,12 +141,13 @@ String json = httpAction( url, "POST", lP, lE);
  * ====================================================== */
 public void muteChannel(String channelId, String direction) throws RestException {
 String url = "/channels/" + channelId + "/mute";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
-lP.add( BaseAriAction.HttpParam.build( "direction", direction) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "direction", direction) );
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
-String json = httpAction( url, "POST", lP, lE);
+String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
 }
 
 /** =====================================================
@@ -140,12 +157,13 @@ String json = httpAction( url, "POST", lP, lE);
  * ====================================================== */
 public void unmuteChannel(String channelId, String direction) throws RestException {
 String url = "/channels/" + channelId + "/unmute";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
-lP.add( BaseAriAction.HttpParam.build( "direction", direction) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "direction", direction) );
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
-String json = httpAction( url, "POST", lP, lE);
+String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
 }
 
 /** =====================================================
@@ -155,11 +173,12 @@ String json = httpAction( url, "POST", lP, lE);
  * ====================================================== */
 public void holdChannel(String channelId) throws RestException {
 String url = "/channels/" + channelId + "/hold";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
-String json = httpAction( url, "POST", lP, lE);
+String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
 }
 
 /** =====================================================
@@ -169,11 +188,12 @@ String json = httpAction( url, "POST", lP, lE);
  * ====================================================== */
 public void unholdChannel(String channelId) throws RestException {
 String url = "/channels/" + channelId + "/unhold";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
-String json = httpAction( url, "POST", lP, lE);
+String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
 }
 
 /** =====================================================
@@ -184,12 +204,13 @@ String json = httpAction( url, "POST", lP, lE);
  * ====================================================== */
 public void mohStartChannel(String channelId, String mohClass) throws RestException {
 String url = "/channels/" + channelId + "/mohstart";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
-lP.add( BaseAriAction.HttpParam.build( "mohClass", mohClass) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "mohClass", mohClass) );
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
-String json = httpAction( url, "POST", lP, lE);
+String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
 }
 
 /** =====================================================
@@ -199,11 +220,12 @@ String json = httpAction( url, "POST", lP, lE);
  * ====================================================== */
 public void mohStopChannel(String channelId) throws RestException {
 String url = "/channels/" + channelId + "/mohstop";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
-String json = httpAction( url, "POST", lP, lE);
+String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
 }
 
 /** =====================================================
@@ -214,16 +236,17 @@ String json = httpAction( url, "POST", lP, lE);
  * ====================================================== */
 public Playback playOnChannel(String channelId, String media, String lang, int offsetms, int skipms) throws RestException {
 String url = "/channels/" + channelId + "/play";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
-lP.add( BaseAriAction.HttpParam.build( "media", media) );
-lP.add( BaseAriAction.HttpParam.build( "lang", lang) );
-lP.add( BaseAriAction.HttpParam.build( "offsetms", offsetms) );
-lP.add( BaseAriAction.HttpParam.build( "skipms", skipms) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "media", media) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "lang", lang) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "offsetms", offsetms) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "skipms", skipms) );
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
-String json = httpAction( url, "POST", lP, lE);
-return (Playback) deserializeJson( json, Playback.class); 
+String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
+return (Playback) deserializeJson( json, Playback_impl_ari_0_0_1.class ); 
 }
 
 /** =====================================================
@@ -234,20 +257,21 @@ return (Playback) deserializeJson( json, Playback.class);
  * ====================================================== */
 public LiveRecording recordChannel(String channelId, String name, String format, int maxDurationSeconds, int maxSilenceSeconds, String ifExists, boolean beep, String terminateOn) throws RestException {
 String url = "/channels/" + channelId + "/record";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
-lP.add( BaseAriAction.HttpParam.build( "name", name) );
-lP.add( BaseAriAction.HttpParam.build( "format", format) );
-lP.add( BaseAriAction.HttpParam.build( "maxDurationSeconds", maxDurationSeconds) );
-lP.add( BaseAriAction.HttpParam.build( "maxSilenceSeconds", maxSilenceSeconds) );
-lP.add( BaseAriAction.HttpParam.build( "ifExists", ifExists) );
-lP.add( BaseAriAction.HttpParam.build( "beep", beep) );
-lP.add( BaseAriAction.HttpParam.build( "terminateOn", terminateOn) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "name", name) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "format", format) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "maxDurationSeconds", maxDurationSeconds) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "maxSilenceSeconds", maxSilenceSeconds) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "ifExists", ifExists) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "beep", beep) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "terminateOn", terminateOn) );
 lE.add( BaseAriAction.HttpResponse.build( 400, "Invalid parameters") );
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel is not in a Stasis application; the channel is currently bridged with other channels; A recording with the same name is currently in progress.") );
-String json = httpAction( url, "POST", lP, lE);
-return (LiveRecording) deserializeJson( json, LiveRecording.class); 
+String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
+return (LiveRecording) deserializeJson( json, LiveRecording_impl_ari_0_0_1.class ); 
 }
 
 /** =====================================================
@@ -257,14 +281,15 @@ return (LiveRecording) deserializeJson( json, LiveRecording.class);
  * ====================================================== */
 public Variable getChannelVar(String channelId, String variable) throws RestException {
 String url = "/channels/" + channelId + "/variable";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
-lP.add( BaseAriAction.HttpParam.build( "variable", variable) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "variable", variable) );
 lE.add( BaseAriAction.HttpResponse.build( 400, "Missing variable parameter.") );
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
-String json = httpAction( url, "GET", lP, lE);
-return (Variable) deserializeJson( json, Variable.class); 
+String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
+return (Variable) deserializeJson( json, Variable_impl_ari_0_0_1.class ); 
 }
 
 /** =====================================================
@@ -274,14 +299,15 @@ return (Variable) deserializeJson( json, Variable.class);
  * ====================================================== */
 public void setChannelVar(String channelId, String variable, String value) throws RestException {
 String url = "/channels/" + channelId + "/variable";
-List<BaseAriAction.HttpParam> lP = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
+List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
-lP.add( BaseAriAction.HttpParam.build( "variable", variable) );
-lP.add( BaseAriAction.HttpParam.build( "value", value) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "variable", variable) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "value", value) );
 lE.add( BaseAriAction.HttpResponse.build( 400, "Missing variable parameter.") );
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
-String json = httpAction( url, "POST", lP, lE);
+String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
 }
 
 };

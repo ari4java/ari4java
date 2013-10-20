@@ -31,6 +31,7 @@ public class Model extends JavaPkgInfo {
         imports.add( "java.util.Date" );
         imports.add( "java.util.List" );
         imports.add( "ch.loway.oss.ari4java.generated.*");
+        imports.add( "com.fasterxml.jackson.databind.annotation.JsonDeserialize" );
     }
 
 
