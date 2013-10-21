@@ -39,6 +39,20 @@ Status
 ------
 
 * 13.10.18 - Auto-generates all classes and compiles them.
+* 13.10.21 - All objects are deserializable right out of JSON. Mesages can be deserialzed automatically.
+
+
+Using
+-----
+
+You'll have to roll your own HTTP client implementation.
+
+In order to deserialze a Websocket event, you call:
+
+   Message msg = action.deserializeEvent( jsonEvent, Message_impl_ari_0_0_1.class );
+
+And then check the actual class of the event (too bad Java cannot use types in switch statements).
+Make sure you use a concrete Message class as the root deserialization object.
 
 
 To be done
@@ -47,8 +61,6 @@ To be done
 Parameters that could be multiple are handled as only one item. I would like to have 
 both ways, so that you do not have to create a List in the very common case that 
 you need to pass only one parameter.
-
-JSON deserializer is still missing. I am unsure of the way to deserialize a list of things in Jackson.
 
 HTTP interface is still missing.
 
@@ -61,4 +73,10 @@ Factory to build objects is missing.
 Events returning Object are handled as a String. 
 
 
+Licensing
+---------
+
+The library is released under the GNU LGPL (see LICENSE file).
+Files under codegen-data come from teh Asterisk project and are licensed under the GPLv2 (see LICENSE file therein).
+They are only used to build the classes and are not distribuited in any form with Ari4Java.
 
