@@ -90,11 +90,11 @@ public class EventBuilderTest {
     public void generateStatsiStartOutOfData() throws RestException {
 
         BaseAriAction action = new BaseAriAction();
-        Event e = action.deserializeEvent(jsonStasisStartEvent, Message_impl_ari_0_0_1.class );
+        Message msg = action.deserializeEvent(jsonStasisStartEvent, Message_impl_ari_0_0_1.class );
 
-        assertTrue("Type: StasisStart", e instanceof StasisStart );
+        assertTrue("Type: StasisStart", msg instanceof StasisStart );
 
-        StasisStart ss = (StasisStart) e;
+        StasisStart ss = (StasisStart) msg;
 
         assertEquals( "Caller ID", "blink", ss.getChannel().getCaller().getName() );
 
