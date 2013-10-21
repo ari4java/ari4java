@@ -13,9 +13,9 @@ import ch.loway.oss.ari4java.tools.RestException;
 public interface ActionEvents {
 
 // Message eventWebsocket String
-/** =====================================================
+/**********************************************************
  * WebSocket connection for events.
- * ====================================================== */
+ *********************************************************/
 public Message eventWebsocket(String app) throws RestException;
 
 

@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Channel changed location in the dialplan.
  * 
- * Defined in file :events.json
- * ====================================================== */
+ * Defined in file: events.json
+ *********************************************************/
+
 public class ChannelDialplan_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements ChannelDialplan, java.io.Serializable {
   /**  The channel that changed dialplan location.  */
   private Channel channel;
@@ -22,6 +23,7 @@ public class ChannelDialplan_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 impleme
    return channel;
  }
 
+ @JsonDeserialize( as=Channel_impl_ari_0_0_1.class )
  public void setChannel(Channel val ) {
    channel = val;
  }
@@ -32,6 +34,7 @@ public class ChannelDialplan_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 impleme
    return dialplan_app;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setDialplan_app(String val ) {
    dialplan_app = val;
  }
@@ -42,6 +45,7 @@ public class ChannelDialplan_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 impleme
    return dialplan_app_data;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setDialplan_app_data(String val ) {
    dialplan_app_data = val;
  }

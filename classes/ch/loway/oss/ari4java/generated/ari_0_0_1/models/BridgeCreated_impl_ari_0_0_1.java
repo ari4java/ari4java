@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Notification that a bridge has been created.
  * 
- * Defined in file :events.json
- * ====================================================== */
+ * Defined in file: events.json
+ *********************************************************/
+
 public class BridgeCreated_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements BridgeCreated, java.io.Serializable {
   /**    */
   private Bridge bridge;
@@ -22,6 +23,7 @@ public class BridgeCreated_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implement
    return bridge;
  }
 
+ @JsonDeserialize( as=Bridge_impl_ari_0_0_1.class )
  public void setBridge(Bridge val ) {
    bridge = val;
  }

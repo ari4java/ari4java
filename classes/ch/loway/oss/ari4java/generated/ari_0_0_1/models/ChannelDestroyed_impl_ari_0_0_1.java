@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Notification that a channel has been destroyed.
  * 
- * Defined in file :events.json
- * ====================================================== */
+ * Defined in file: events.json
+ *********************************************************/
+
 public class ChannelDestroyed_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements ChannelDestroyed, java.io.Serializable {
   /**  Integer representation of the cause of the hangup  */
   private int cause;
@@ -22,6 +23,7 @@ public class ChannelDestroyed_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implem
    return cause;
  }
 
+ @JsonDeserialize( as=int.class )
  public void setCause(int val ) {
    cause = val;
  }
@@ -32,6 +34,7 @@ public class ChannelDestroyed_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implem
    return cause_txt;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setCause_txt(String val ) {
    cause_txt = val;
  }
@@ -42,6 +45,7 @@ public class ChannelDestroyed_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implem
    return channel;
  }
 
+ @JsonDeserialize( as=Channel_impl_ari_0_0_1.class )
  public void setChannel(Channel val ) {
    channel = val;
  }

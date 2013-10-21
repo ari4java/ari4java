@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Info about Asterisk configuration
  * 
- * Defined in file :asterisk.json
- * ====================================================== */
+ * Defined in file: asterisk.json
+ *********************************************************/
+
 public class ConfigInfo_impl_ari_0_0_1 implements ConfigInfo, java.io.Serializable {
   /**  Default language for media playback.  */
   private String default_language;
@@ -22,6 +23,7 @@ public class ConfigInfo_impl_ari_0_0_1 implements ConfigInfo, java.io.Serializab
    return default_language;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setDefault_language(String val ) {
    default_language = val;
  }
@@ -32,6 +34,7 @@ public class ConfigInfo_impl_ari_0_0_1 implements ConfigInfo, java.io.Serializab
    return max_channels;
  }
 
+ @JsonDeserialize( as=int.class )
  public void setMax_channels(int val ) {
    max_channels = val;
  }
@@ -42,6 +45,7 @@ public class ConfigInfo_impl_ari_0_0_1 implements ConfigInfo, java.io.Serializab
    return max_load;
  }
 
+ @JsonDeserialize( as=double.class )
  public void setMax_load(double val ) {
    max_load = val;
  }
@@ -52,6 +56,7 @@ public class ConfigInfo_impl_ari_0_0_1 implements ConfigInfo, java.io.Serializab
    return max_open_files;
  }
 
+ @JsonDeserialize( as=int.class )
  public void setMax_open_files(int val ) {
    max_open_files = val;
  }
@@ -62,6 +67,7 @@ public class ConfigInfo_impl_ari_0_0_1 implements ConfigInfo, java.io.Serializab
    return name;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setName(String val ) {
    name = val;
  }
@@ -72,6 +78,7 @@ public class ConfigInfo_impl_ari_0_0_1 implements ConfigInfo, java.io.Serializab
    return setid;
  }
 
+ @JsonDeserialize( as=SetId_impl_ari_0_0_1.class )
  public void setSetid(SetId val ) {
    setid = val;
  }

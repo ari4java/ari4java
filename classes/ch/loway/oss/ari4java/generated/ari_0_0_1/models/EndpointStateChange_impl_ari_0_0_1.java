@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Endpoint state changed.
  * 
- * Defined in file :events.json
- * ====================================================== */
+ * Defined in file: events.json
+ *********************************************************/
+
 public class EndpointStateChange_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements EndpointStateChange, java.io.Serializable {
   /**    */
   private Endpoint endpoint;
@@ -22,6 +23,7 @@ public class EndpointStateChange_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 imp
    return endpoint;
  }
 
+ @JsonDeserialize( as=Endpoint_impl_ari_0_0_1.class )
  public void setEndpoint(Endpoint val ) {
    endpoint = val;
  }

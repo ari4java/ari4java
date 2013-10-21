@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Error event sent when required params are missing.
  * 
- * Defined in file :events.json
- * ====================================================== */
+ * Defined in file: events.json
+ *********************************************************/
+
 public class MissingParams_impl_ari_0_0_1 extends Message_impl_ari_0_0_1 implements MissingParams, java.io.Serializable {
   /**  A list of the missing parameters  */
   private List<String> params;

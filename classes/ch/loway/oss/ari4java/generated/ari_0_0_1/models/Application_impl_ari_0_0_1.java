@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Details of a Stasis application
  * 
- * Defined in file :applications.json
- * ====================================================== */
+ * Defined in file: applications.json
+ *********************************************************/
+
 public class Application_impl_ari_0_0_1 implements Application, java.io.Serializable {
   /**  Id's for bridges subscribed to.  */
   private List<String> bridge_ids;
@@ -55,6 +56,7 @@ public class Application_impl_ari_0_0_1 implements Application, java.io.Serializ
    return name;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setName(String val ) {
    name = val;
  }

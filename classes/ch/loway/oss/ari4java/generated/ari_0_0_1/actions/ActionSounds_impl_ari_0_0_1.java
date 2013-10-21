@@ -15,11 +15,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.models.*;
 
 public class ActionSounds_impl_ari_0_0_1 extends BaseAriAction  implements ActionSounds {
-/** =====================================================
+/**********************************************************
  * Sounds
  * 
  * List all sounds.
- * ====================================================== */
+ *********************************************************/
 public List<Sound> getSounds(String lang, String format) throws RestException {
 String url = "/sounds";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
@@ -31,11 +31,11 @@ String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
 return (List<Sound>) deserializeJson( json, new TypeReference<List<Sound_impl_ari_0_0_1>>() {} ); 
 }
 
-/** =====================================================
+/**********************************************************
  * Individual sound
  * 
  * Get a sound's details.
- * ====================================================== */
+ *********************************************************/
 public Sound getStoredSound(String soundId) throws RestException {
 String url = "/sounds/" + soundId + "";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();

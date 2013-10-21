@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Dialed channel information.
  * 
- * Defined in file :channels.json
- * ====================================================== */
+ * Defined in file: channels.json
+ *********************************************************/
+
 public class Dialed_impl_ari_0_0_1 implements Dialed, java.io.Serializable {
 }
 

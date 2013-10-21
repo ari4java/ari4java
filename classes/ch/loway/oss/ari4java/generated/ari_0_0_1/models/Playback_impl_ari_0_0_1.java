@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Object representing the playback of media to a channel
  * 
- * Defined in file :playback.json
- * ====================================================== */
+ * Defined in file: playback.json
+ *********************************************************/
+
 public class Playback_impl_ari_0_0_1 implements Playback, java.io.Serializable {
   /**  ID for this playback operation  */
   private String id;
@@ -22,6 +23,7 @@ public class Playback_impl_ari_0_0_1 implements Playback, java.io.Serializable {
    return id;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setId(String val ) {
    id = val;
  }
@@ -32,6 +34,7 @@ public class Playback_impl_ari_0_0_1 implements Playback, java.io.Serializable {
    return language;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setLanguage(String val ) {
    language = val;
  }
@@ -42,6 +45,7 @@ public class Playback_impl_ari_0_0_1 implements Playback, java.io.Serializable {
    return media_uri;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setMedia_uri(String val ) {
    media_uri = val;
  }
@@ -52,6 +56,7 @@ public class Playback_impl_ari_0_0_1 implements Playback, java.io.Serializable {
    return state;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setState(String val ) {
    state = val;
  }
@@ -62,6 +67,7 @@ public class Playback_impl_ari_0_0_1 implements Playback, java.io.Serializable {
    return target_uri;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setTarget_uri(String val ) {
    target_uri = val;
  }

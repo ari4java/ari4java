@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * A recording that is in progress
  * 
- * Defined in file :recordings.json
- * ====================================================== */
+ * Defined in file: recordings.json
+ *********************************************************/
+
 public class LiveRecording_impl_ari_0_0_1 implements LiveRecording, java.io.Serializable {
   /**    */
   private String format;
@@ -22,6 +23,7 @@ public class LiveRecording_impl_ari_0_0_1 implements LiveRecording, java.io.Seri
    return format;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setFormat(String val ) {
    format = val;
  }
@@ -32,6 +34,7 @@ public class LiveRecording_impl_ari_0_0_1 implements LiveRecording, java.io.Seri
    return name;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setName(String val ) {
    name = val;
  }
@@ -42,6 +45,7 @@ public class LiveRecording_impl_ari_0_0_1 implements LiveRecording, java.io.Seri
    return state;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setState(String val ) {
    state = val;
  }

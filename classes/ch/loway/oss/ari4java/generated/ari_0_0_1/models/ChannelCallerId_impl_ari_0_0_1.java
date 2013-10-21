@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Channel changed Caller ID.
  * 
- * Defined in file :events.json
- * ====================================================== */
+ * Defined in file: events.json
+ *********************************************************/
+
 public class ChannelCallerId_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements ChannelCallerId, java.io.Serializable {
   /**  The integer representation of the Caller Presentation value.  */
   private int caller_presentation;
@@ -22,6 +23,7 @@ public class ChannelCallerId_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 impleme
    return caller_presentation;
  }
 
+ @JsonDeserialize( as=int.class )
  public void setCaller_presentation(int val ) {
    caller_presentation = val;
  }
@@ -32,6 +34,7 @@ public class ChannelCallerId_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 impleme
    return caller_presentation_txt;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setCaller_presentation_txt(String val ) {
    caller_presentation_txt = val;
  }
@@ -42,6 +45,7 @@ public class ChannelCallerId_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 impleme
    return channel;
  }
 
+ @JsonDeserialize( as=Channel_impl_ari_0_0_1.class )
  public void setChannel(Channel val ) {
    channel = val;
  }

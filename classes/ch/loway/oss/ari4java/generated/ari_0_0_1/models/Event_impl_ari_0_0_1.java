@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Base type for asynchronous events from Asterisk.
  * 
- * Defined in file :events.json
- * ====================================================== */
+ * Defined in file: events.json
+ *********************************************************/
+
 public class Event_impl_ari_0_0_1 extends Message_impl_ari_0_0_1 implements Event, java.io.Serializable {
   /**  Name of the application receiving the event.  */
   private String application;
@@ -22,6 +23,7 @@ public class Event_impl_ari_0_0_1 extends Message_impl_ari_0_0_1 implements Even
    return application;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setApplication(String val ) {
    application = val;
  }
@@ -32,6 +34,7 @@ public class Event_impl_ari_0_0_1 extends Message_impl_ari_0_0_1 implements Even
    return timestamp;
  }
 
+ @JsonDeserialize( as=Date.class )
  public void setTimestamp(Date val ) {
    timestamp = val;
  }

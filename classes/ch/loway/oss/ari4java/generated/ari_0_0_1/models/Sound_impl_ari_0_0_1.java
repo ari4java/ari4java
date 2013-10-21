@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * A media file that may be played back.
  * 
- * Defined in file :sounds.json
- * ====================================================== */
+ * Defined in file: sounds.json
+ *********************************************************/
+
 public class Sound_impl_ari_0_0_1 implements Sound, java.io.Serializable {
   /**  The formats and languages in which this sound is available.  */
   private List<FormatLangPair> formats;
@@ -33,6 +34,7 @@ public class Sound_impl_ari_0_0_1 implements Sound, java.io.Serializable {
    return id;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setId(String val ) {
    id = val;
  }
@@ -43,6 +45,7 @@ public class Sound_impl_ari_0_0_1 implements Sound, java.io.Serializable {
    return text;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setText(String val ) {
    text = val;
  }

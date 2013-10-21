@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * User-generated event with additional user-defined fields in the object.
  * 
- * Defined in file :events.json
- * ====================================================== */
+ * Defined in file: events.json
+ *********************************************************/
+
 public class ChannelUserevent_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements ChannelUserevent, java.io.Serializable {
   /**  The channel that signaled the user event.  */
   private Channel channel;
@@ -22,6 +23,7 @@ public class ChannelUserevent_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implem
    return channel;
  }
 
+ @JsonDeserialize( as=Channel_impl_ari_0_0_1.class )
  public void setChannel(Channel val ) {
    channel = val;
  }
@@ -32,6 +34,7 @@ public class ChannelUserevent_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implem
    return eventname;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setEventname(String val ) {
    eventname = val;
  }
@@ -42,6 +45,7 @@ public class ChannelUserevent_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implem
    return userevent;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setUserevent(String val ) {
    userevent = val;
  }

@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * A specific communication connection between Asterisk and an Endpoint.
  * 
- * Defined in file :channels.json
- * ====================================================== */
+ * Defined in file: channels.json
+ *********************************************************/
+
 public class Channel_impl_ari_0_0_1 implements Channel, java.io.Serializable {
   /**    */
   private String accountcode;
@@ -22,6 +23,7 @@ public class Channel_impl_ari_0_0_1 implements Channel, java.io.Serializable {
    return accountcode;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setAccountcode(String val ) {
    accountcode = val;
  }
@@ -32,6 +34,7 @@ public class Channel_impl_ari_0_0_1 implements Channel, java.io.Serializable {
    return caller;
  }
 
+ @JsonDeserialize( as=CallerID_impl_ari_0_0_1.class )
  public void setCaller(CallerID val ) {
    caller = val;
  }
@@ -42,6 +45,7 @@ public class Channel_impl_ari_0_0_1 implements Channel, java.io.Serializable {
    return connected;
  }
 
+ @JsonDeserialize( as=CallerID_impl_ari_0_0_1.class )
  public void setConnected(CallerID val ) {
    connected = val;
  }
@@ -52,6 +56,7 @@ public class Channel_impl_ari_0_0_1 implements Channel, java.io.Serializable {
    return creationtime;
  }
 
+ @JsonDeserialize( as=Date.class )
  public void setCreationtime(Date val ) {
    creationtime = val;
  }
@@ -62,6 +67,7 @@ public class Channel_impl_ari_0_0_1 implements Channel, java.io.Serializable {
    return dialplan;
  }
 
+ @JsonDeserialize( as=DialplanCEP_impl_ari_0_0_1.class )
  public void setDialplan(DialplanCEP val ) {
    dialplan = val;
  }
@@ -74,6 +80,7 @@ This is the same as the Uniqueid field in AMI.  */
    return id;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setId(String val ) {
    id = val;
  }
@@ -84,6 +91,7 @@ This is the same as the Uniqueid field in AMI.  */
    return name;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setName(String val ) {
    name = val;
  }
@@ -94,6 +102,7 @@ This is the same as the Uniqueid field in AMI.  */
    return state;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setState(String val ) {
    state = val;
  }

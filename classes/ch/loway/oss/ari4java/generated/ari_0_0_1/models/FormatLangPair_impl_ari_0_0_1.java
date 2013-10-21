@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Identifies the format and language of a sound file
  * 
- * Defined in file :sounds.json
- * ====================================================== */
+ * Defined in file: sounds.json
+ *********************************************************/
+
 public class FormatLangPair_impl_ari_0_0_1 implements FormatLangPair, java.io.Serializable {
   /**    */
   private String format;
@@ -22,6 +23,7 @@ public class FormatLangPair_impl_ari_0_0_1 implements FormatLangPair, java.io.Se
    return format;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setFormat(String val ) {
    format = val;
  }
@@ -32,6 +34,7 @@ public class FormatLangPair_impl_ari_0_0_1 implements FormatLangPair, java.io.Se
    return language;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setLanguage(String val ) {
    language = val;
  }

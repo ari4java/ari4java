@@ -1,6 +1,7 @@
 
 package ch.loway.oss.ari4java.tools;
 
+import ch.loway.oss.ari4java.generated.Event;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -37,7 +38,7 @@ public class BaseAriAction {
      *
      * @param json
      * @param klazz
-     * @return
+     * @return Deserialized  type
      */
     public Object deserializeJson( String json, Class klazz) throws RestException {
 
@@ -55,7 +56,7 @@ public class BaseAriAction {
      * 
      * @param json
      * @param klazzType
-     * @return
+     * @return Deserialized list
      */
 
     public Object deserializeJson( String json, TypeReference klazzType ) throws RestException {
@@ -69,6 +70,27 @@ public class BaseAriAction {
 
     }
 
+    /**
+     * Deserialize the event.
+     *
+     * @param json
+     * @param klazz
+     * @return The event deserialized.
+     * @throws RestException
+     */
+
+    public Event deserializeEvent( String json, Class klazz ) throws RestException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return (Event) mapper.readValue( json , klazz);
+        } catch ( IOException e ) {
+            e.printStackTrace( System.err );
+            throw new RestException( "Decoding JSON event: " + e.toString() );
+        }
+
+
+    }
 
     public static class HttpParam {
         public String name = "";

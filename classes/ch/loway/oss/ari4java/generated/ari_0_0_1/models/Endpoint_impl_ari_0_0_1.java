@@ -10,13 +10,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * An external device that may offer/accept calls to/from Asterisk.
  * 
  * Unlike most resources, which have a single unique identifier, an endpoint is uniquely identified by the technology/resource pair.
  * 
- * Defined in file :endpoints.json
- * ====================================================== */
+ * Defined in file: endpoints.json
+ *********************************************************/
+
 public class Endpoint_impl_ari_0_0_1 implements Endpoint, java.io.Serializable {
   /**  Id's of channels associated with this endpoint  */
   private List<String> channel_ids;
@@ -35,6 +36,7 @@ public class Endpoint_impl_ari_0_0_1 implements Endpoint, java.io.Serializable {
    return resource;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setResource(String val ) {
    resource = val;
  }
@@ -45,6 +47,7 @@ public class Endpoint_impl_ari_0_0_1 implements Endpoint, java.io.Serializable {
    return state;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setState(String val ) {
    state = val;
  }
@@ -55,6 +58,7 @@ public class Endpoint_impl_ari_0_0_1 implements Endpoint, java.io.Serializable {
    return technology;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setTechnology(String val ) {
    technology = val;
  }

@@ -15,11 +15,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.models.*;
 
 public class ActionPlayback_impl_ari_0_0_1 extends BaseAriAction  implements ActionPlayback {
-/** =====================================================
+/**********************************************************
  * Control object for a playback operation.
  * 
  * Get a playback's details.
- * ====================================================== */
+ *********************************************************/
 public Playback getPlayback(String playbackId) throws RestException {
 String url = "/playback/" + playbackId + "";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
@@ -29,11 +29,11 @@ String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
 return (Playback) deserializeJson( json, Playback_impl_ari_0_0_1.class ); 
 }
 
-/** =====================================================
+/**********************************************************
  * Control object for a playback operation.
  * 
  * Stop a playback.
- * ====================================================== */
+ *********************************************************/
 public void stopPlayback(String playbackId) throws RestException {
 String url = "/playback/" + playbackId + "";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
@@ -42,11 +42,11 @@ List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>(
 String json = httpAction( url, "DELETE", lParamQuery, lParamForm, lE);
 }
 
-/** =====================================================
+/**********************************************************
  * Control object for a playback operation.
  * 
  * Get a playback's details.
- * ====================================================== */
+ *********************************************************/
 public void controlPlayback(String playbackId, String operation) throws RestException {
 String url = "/playback/" + playbackId + "/control";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();

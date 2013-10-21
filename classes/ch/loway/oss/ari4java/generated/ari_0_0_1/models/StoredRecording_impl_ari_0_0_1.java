@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * A past recording that may be played back.
  * 
- * Defined in file :recordings.json
- * ====================================================== */
+ * Defined in file: recordings.json
+ *********************************************************/
+
 public class StoredRecording_impl_ari_0_0_1 implements StoredRecording, java.io.Serializable {
   /**    */
   private String format;
@@ -22,6 +23,7 @@ public class StoredRecording_impl_ari_0_0_1 implements StoredRecording, java.io.
    return format;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setFormat(String val ) {
    format = val;
  }
@@ -32,6 +34,7 @@ public class StoredRecording_impl_ari_0_0_1 implements StoredRecording, java.io.
    return name;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setName(String val ) {
    name = val;
  }

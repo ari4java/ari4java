@@ -10,13 +10,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * The merging of media from one or more channels.
  * 
  * Everyone on the bridge receives the same audio.
  * 
- * Defined in file :bridges.json
- * ====================================================== */
+ * Defined in file: bridges.json
+ *********************************************************/
+
 public class Bridge_impl_ari_0_0_1 implements Bridge, java.io.Serializable {
   /**  Bridging class  */
   private String bridge_class;
@@ -24,6 +25,7 @@ public class Bridge_impl_ari_0_0_1 implements Bridge, java.io.Serializable {
    return bridge_class;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setBridge_class(String val ) {
    bridge_class = val;
  }
@@ -34,6 +36,7 @@ public class Bridge_impl_ari_0_0_1 implements Bridge, java.io.Serializable {
    return bridge_type;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setBridge_type(String val ) {
    bridge_type = val;
  }
@@ -55,6 +58,7 @@ public class Bridge_impl_ari_0_0_1 implements Bridge, java.io.Serializable {
    return id;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setId(String val ) {
    id = val;
  }
@@ -65,6 +69,7 @@ public class Bridge_impl_ari_0_0_1 implements Bridge, java.io.Serializable {
    return technology;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setTechnology(String val ) {
    technology = val;
  }

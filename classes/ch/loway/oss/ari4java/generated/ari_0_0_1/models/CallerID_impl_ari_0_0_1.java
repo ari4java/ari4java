@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Caller identification
  * 
- * Defined in file :channels.json
- * ====================================================== */
+ * Defined in file: channels.json
+ *********************************************************/
+
 public class CallerID_impl_ari_0_0_1 implements CallerID, java.io.Serializable {
   /**    */
   private String name;
@@ -22,6 +23,7 @@ public class CallerID_impl_ari_0_0_1 implements CallerID, java.io.Serializable {
    return name;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setName(String val ) {
    name = val;
  }
@@ -32,6 +34,7 @@ public class CallerID_impl_ari_0_0_1 implements CallerID, java.io.Serializable {
    return number;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setNumber(String val ) {
    number = val;
  }

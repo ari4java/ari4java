@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Info about Asterisk
  * 
- * Defined in file :asterisk.json
- * ====================================================== */
+ * Defined in file: asterisk.json
+ *********************************************************/
+
 public class SystemInfo_impl_ari_0_0_1 implements SystemInfo, java.io.Serializable {
   /**    */
   private String entity_id;
@@ -22,6 +23,7 @@ public class SystemInfo_impl_ari_0_0_1 implements SystemInfo, java.io.Serializab
    return entity_id;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setEntity_id(String val ) {
    entity_id = val;
  }
@@ -32,6 +34,7 @@ public class SystemInfo_impl_ari_0_0_1 implements SystemInfo, java.io.Serializab
    return version;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setVersion(String val ) {
    version = val;
  }

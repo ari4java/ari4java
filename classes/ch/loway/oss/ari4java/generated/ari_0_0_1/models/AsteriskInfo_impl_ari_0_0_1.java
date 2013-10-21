@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Asterisk system information
  * 
- * Defined in file :asterisk.json
- * ====================================================== */
+ * Defined in file: asterisk.json
+ *********************************************************/
+
 public class AsteriskInfo_impl_ari_0_0_1 implements AsteriskInfo, java.io.Serializable {
   /**  Info about how Asterisk was built  */
   private BuildInfo build;
@@ -22,6 +23,7 @@ public class AsteriskInfo_impl_ari_0_0_1 implements AsteriskInfo, java.io.Serial
    return build;
  }
 
+ @JsonDeserialize( as=BuildInfo_impl_ari_0_0_1.class )
  public void setBuild(BuildInfo val ) {
    build = val;
  }
@@ -32,6 +34,7 @@ public class AsteriskInfo_impl_ari_0_0_1 implements AsteriskInfo, java.io.Serial
    return config;
  }
 
+ @JsonDeserialize( as=ConfigInfo_impl_ari_0_0_1.class )
  public void setConfig(ConfigInfo val ) {
    config = val;
  }
@@ -42,6 +45,7 @@ public class AsteriskInfo_impl_ari_0_0_1 implements AsteriskInfo, java.io.Serial
    return status;
  }
 
+ @JsonDeserialize( as=StatusInfo_impl_ari_0_0_1.class )
  public void setStatus(StatusInfo val ) {
    status = val;
  }
@@ -52,6 +56,7 @@ public class AsteriskInfo_impl_ari_0_0_1 implements AsteriskInfo, java.io.Serial
    return system;
  }
 
+ @JsonDeserialize( as=SystemInfo_impl_ari_0_0_1.class )
  public void setSystem(SystemInfo val ) {
    system = val;
  }

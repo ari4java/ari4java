@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Dialplan location (context/extension/priority)
  * 
- * Defined in file :channels.json
- * ====================================================== */
+ * Defined in file: channels.json
+ *********************************************************/
+
 public class DialplanCEP_impl_ari_0_0_1 implements DialplanCEP, java.io.Serializable {
   /**  Context in the dialplan  */
   private String context;
@@ -22,6 +23,7 @@ public class DialplanCEP_impl_ari_0_0_1 implements DialplanCEP, java.io.Serializ
    return context;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setContext(String val ) {
    context = val;
  }
@@ -32,6 +34,7 @@ public class DialplanCEP_impl_ari_0_0_1 implements DialplanCEP, java.io.Serializ
    return exten;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setExten(String val ) {
    exten = val;
  }
@@ -42,6 +45,7 @@ public class DialplanCEP_impl_ari_0_0_1 implements DialplanCEP, java.io.Serializ
    return priority;
  }
 
+ @JsonDeserialize( as=long.class )
  public void setPriority(long val ) {
    priority = val;
  }

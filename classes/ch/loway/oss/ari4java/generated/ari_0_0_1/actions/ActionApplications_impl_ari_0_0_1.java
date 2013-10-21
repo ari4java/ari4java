@@ -15,11 +15,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.models.*;
 
 public class ActionApplications_impl_ari_0_0_1 extends BaseAriAction  implements ActionApplications {
-/** =====================================================
+/**********************************************************
  * Stasis applications
  * 
  * List all applications.
- * ====================================================== */
+ *********************************************************/
 public List<Application> getApplications() throws RestException {
 String url = "/applications";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
@@ -29,11 +29,11 @@ String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
 return (List<Application>) deserializeJson( json, new TypeReference<List<Application_impl_ari_0_0_1>>() {} ); 
 }
 
-/** =====================================================
+/**********************************************************
  * Stasis application
  * 
  * Get details of an application.
- * ====================================================== */
+ *********************************************************/
 public Application getApplication(String applicationName) throws RestException {
 String url = "/applications/" + applicationName + "";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
@@ -44,12 +44,12 @@ String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
 return (Application) deserializeJson( json, Application_impl_ari_0_0_1.class ); 
 }
 
-/** =====================================================
+/**********************************************************
  * Stasis application
  * 
  * Subscribe an application to a event source.
  * Returns the state of the application after the subscriptions have changed
- * ====================================================== */
+ *********************************************************/
 public Application applicationSubscribe(String applicationName, String eventSource) throws RestException {
 String url = "/applications/" + applicationName + "/subscription";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
@@ -63,12 +63,12 @@ String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
 return (Application) deserializeJson( json, Application_impl_ari_0_0_1.class ); 
 }
 
-/** =====================================================
+/**********************************************************
  * Stasis application
  * 
  * Unsubscribe an application from an event source.
  * Returns the state of the application after the subscriptions have changed
- * ====================================================== */
+ *********************************************************/
 public Application applicationUnsubscribe(String applicationName, String eventSource) throws RestException {
 String url = "/applications/" + applicationName + "/subscription";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();

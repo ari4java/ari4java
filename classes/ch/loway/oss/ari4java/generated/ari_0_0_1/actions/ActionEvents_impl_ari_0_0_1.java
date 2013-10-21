@@ -15,11 +15,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.models.*;
 
 public class ActionEvents_impl_ari_0_0_1 extends BaseAriAction  implements ActionEvents {
-/** =====================================================
+/**********************************************************
  * Events from Asterisk to applications
  * 
  * WebSocket connection for events.
- * ====================================================== */
+ *********************************************************/
 public Message eventWebsocket(String app) throws RestException {
 String url = "/events";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();

@@ -13,25 +13,25 @@ import ch.loway.oss.ari4java.tools.RestException;
 public interface ActionAsterisk {
 
 // AsteriskInfo getAsteriskInfo String
-/** =====================================================
+/**********************************************************
  * Gets Asterisk system information.
- * ====================================================== */
+ *********************************************************/
 public AsteriskInfo getAsteriskInfo(String only) throws RestException;
 
 
 
 // Variable getGlobalVar String
-/** =====================================================
+/**********************************************************
  * Get the value of a global variable.
- * ====================================================== */
+ *********************************************************/
 public Variable getGlobalVar(String variable) throws RestException;
 
 
 
 // void setGlobalVar String String
-/** =====================================================
+/**********************************************************
  * Set the value of a global variable.
- * ====================================================== */
+ *********************************************************/
 public void setGlobalVar(String variable, String value) throws RestException;
 
 

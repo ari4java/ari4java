@@ -10,11 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 
-/** =====================================================
+/**********************************************************
  * Info about how Asterisk was built
  * 
- * Defined in file :asterisk.json
- * ====================================================== */
+ * Defined in file: asterisk.json
+ *********************************************************/
+
 public class BuildInfo_impl_ari_0_0_1 implements BuildInfo, java.io.Serializable {
   /**  Date and time when Asterisk was built.  */
   private String date;
@@ -22,6 +23,7 @@ public class BuildInfo_impl_ari_0_0_1 implements BuildInfo, java.io.Serializable
    return date;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setDate(String val ) {
    date = val;
  }
@@ -32,6 +34,7 @@ public class BuildInfo_impl_ari_0_0_1 implements BuildInfo, java.io.Serializable
    return kernel;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setKernel(String val ) {
    kernel = val;
  }
@@ -42,6 +45,7 @@ public class BuildInfo_impl_ari_0_0_1 implements BuildInfo, java.io.Serializable
    return machine;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setMachine(String val ) {
    machine = val;
  }
@@ -52,6 +56,7 @@ public class BuildInfo_impl_ari_0_0_1 implements BuildInfo, java.io.Serializable
    return options;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setOptions(String val ) {
    options = val;
  }
@@ -62,6 +67,7 @@ public class BuildInfo_impl_ari_0_0_1 implements BuildInfo, java.io.Serializable
    return os;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setOs(String val ) {
    os = val;
  }
@@ -72,6 +78,7 @@ public class BuildInfo_impl_ari_0_0_1 implements BuildInfo, java.io.Serializable
    return user;
  }
 
+ @JsonDeserialize( as=String.class )
  public void setUser(String val ) {
    user = val;
  }

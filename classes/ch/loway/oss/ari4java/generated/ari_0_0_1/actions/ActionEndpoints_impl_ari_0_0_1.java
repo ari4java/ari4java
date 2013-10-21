@@ -15,11 +15,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.models.*;
 
 public class ActionEndpoints_impl_ari_0_0_1 extends BaseAriAction  implements ActionEndpoints {
-/** =====================================================
+/**********************************************************
  * Asterisk endpoints
  * 
  * List all endpoints.
- * ====================================================== */
+ *********************************************************/
 public List<Endpoint> getEndpoints() throws RestException {
 String url = "/endpoints";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
@@ -29,11 +29,11 @@ String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
 return (List<Endpoint>) deserializeJson( json, new TypeReference<List<Endpoint_impl_ari_0_0_1>>() {} ); 
 }
 
-/** =====================================================
+/**********************************************************
  * Asterisk endpoints
  * 
  * List available endoints for a given endpoint technology.
- * ====================================================== */
+ *********************************************************/
 public List<Endpoint> getEndpointsByTech(String tech) throws RestException {
 String url = "/endpoints/" + tech + "";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
@@ -43,11 +43,11 @@ String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
 return (List<Endpoint>) deserializeJson( json, new TypeReference<List<Endpoint_impl_ari_0_0_1>>() {} ); 
 }
 
-/** =====================================================
+/**********************************************************
  * Single endpoint
  * 
  * Details for an endpoint.
- * ====================================================== */
+ *********************************************************/
 public Endpoint getEndpoint(String tech, String resource) throws RestException {
 String url = "/endpoints/" + tech + "/" + resource + "";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
