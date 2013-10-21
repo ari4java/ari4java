@@ -77,6 +77,6 @@ Licensing
 ---------
 
 The library is released under the GNU LGPL (see LICENSE file).
-Files under codegen-data come from teh Asterisk project and are licensed under the GPLv2 (see LICENSE file therein).
+Files under codegen-data come from the Asterisk project and are licensed under the GPLv2 (see LICENSE.asterisk file therein).
 They are only used to build the classes and are not distribuited in any form with Ari4Java.
 
