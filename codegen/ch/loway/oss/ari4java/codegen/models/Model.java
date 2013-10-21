@@ -27,6 +27,9 @@ public class Model extends JavaPkgInfo {
     public List<String> imports = new ArrayList<String>();
     public List<ModelField> fields = new ArrayList<ModelField>();
 
+    public String additionalPreambleText = "";
+
+
     public Model() {
         imports.add( "java.util.Date" );
         imports.add( "java.util.List" );
@@ -48,8 +51,9 @@ public class Model extends JavaPkgInfo {
 
         JavaGen.importClasses(sb, getModelPackage(), imports);
 
-        JavaGen.addBanner(sb, description + "\n\n"  + "Defined in file :" + comesFromFile );
+        JavaGen.addBanner(sb, description + "\n\n"  + "Defined in file: " + comesFromFile );
 
+        sb.append(additionalPreambleText).append( "\n" );
 
         sb.append(  "public class " ).append(  getImplName() );
 

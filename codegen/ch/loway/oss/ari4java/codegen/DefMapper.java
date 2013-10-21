@@ -3,6 +3,7 @@ package ch.loway.oss.ari4java.codegen;
 
 import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
 import ch.loway.oss.ari4java.codegen.genJava.JavaInterface;
+import ch.loway.oss.ari4java.codegen.genJava.JavaPkgInfo;
 import ch.loway.oss.ari4java.codegen.models.Action;
 import ch.loway.oss.ari4java.codegen.models.Apis;
 import ch.loway.oss.ari4java.codegen.models.Operation;
@@ -35,14 +36,61 @@ public class DefMapper {
 
     Map<String, JavaInterface> interfaces = new HashMap<String, JavaInterface>();
 
-    public void load( File f, String apiVersion ) throws IOException {
+    public void load( File f, String apiVersion, boolean modelHasEvents ) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         System.out.println( "Loading as: " + f.getAbsolutePath() );
 
         JsonNode rootNode = om.readTree(f);
-        loadModels(rootNode.get("models"), f, apiVersion );
-        loadApis( rootNode.get("apis"), f, apiVersion );
+        List<Model> lModels = loadModels(rootNode.get("models"), f, apiVersion );
+        Apis api1 = loadApis( rootNode.get("apis"), f, apiVersion );
+
+        mymodels.addAll(lModels);
+        myAPIs.add(api1);
+
+
+        if ( modelHasEvents ) {
+        
+            Model typeMessage = null;
+            List<Model> otherModels = new ArrayList<Model>();
+
+            for ( Model m: lModels ) {
+                if ( m.className.equalsIgnoreCase("Message") ) {
+                    typeMessage = m;
+                } else {
+                    otherModels.add(m);
+                }
+            }
+
+            String defs = "";
+            for ( Model m: otherModels ) {
+                if ( defs.length() > 0 ) {
+                    defs += ", ";
+                }
+                defs += "@Type(value = " + m.getImplName() + ".class, name = \"" + m.getInterfaceName() + "\")\n";
+            }
+
+            typeMessage.additionalPreambleText = ""
+                 + " @JsonTypeInfo(  "
+                 + "     use = JsonTypeInfo.Id.NAME,  "
+                 + "     include = JsonTypeInfo.As.PROPERTY,  "
+                 + "     property = \"type\") \n "
+                 + " @JsonSubTypes({  "
+                 + defs
+                 + " })  \n\n";
+
+            typeMessage.imports.add("com.fasterxml.jackson.annotation.JsonSubTypes");
+            typeMessage.imports.add("com.fasterxml.jackson.annotation.JsonSubTypes.Type");
+            typeMessage.imports.add("com.fasterxml.jackson.annotation.JsonTypeInfo");
+
+        }
+
+        // ora salva su disco
+        saveToDisk(api1);
+        for ( Model m: lModels ) {
+            saveToDisk(m);
+        }
+        
 
         // Now generate common APIs
         for ( Model m: mymodels ) {
@@ -94,8 +142,10 @@ public class DefMapper {
         return JavaGen.addPrefixAndCapitalize( "Action", fileName );
     }
 
-    private void loadModels(JsonNode models, File f, String apiVersion) throws IOException {
-        
+    private List<Model> loadModels(JsonNode models, File f, String apiVersion) throws IOException {
+
+        List<Model> lModelsAdded = new ArrayList<Model>();
+
         for (JsonNode modelName : models) {
             // Creazione di un modello
             Model currentModel = new Model();
@@ -125,15 +175,16 @@ public class DefMapper {
                 mf.comment = comment;
                 currentModel.fields.add(mf);
             }
-            mymodels.add(currentModel);
-            System.out.println(currentModel.toString());
 
-            saveToDisk( currentModel);
+            lModelsAdded.add(currentModel);
+            
         }
+
+        return lModelsAdded;
     }
 
 
-    private void loadApis(JsonNode apis, File f, String apiVersion ) throws IOException {
+    private Apis loadApis(JsonNode apis, File f, String apiVersion ) throws IOException {
 
         Apis api = new Apis();
 
@@ -188,8 +239,8 @@ public class DefMapper {
         }
 
         myAPIs.add(api);
-        // salva su disco
-        saveToDisk(api);
+        
+        return api;
 
     }
 
@@ -252,35 +303,14 @@ public class DefMapper {
         if ( jsonType.startsWith( listAry ) ) {
             return "List<" + innerRemapType( jsonType.substring(listAry.length(), jsonType.length()-1 ), concrete, apiVersion ) + ">";
         }
-        if ( jsonType.equalsIgnoreCase("string") ) {
-            return "String";
-        } else
-        if ( jsonType.equalsIgnoreCase("long") ) {
-            return "long";
-        } else
-        if ( jsonType.equalsIgnoreCase("int") ) {
-            return "int";
-        } else
-        if ( jsonType.equalsIgnoreCase("Date") ) {
-            return "Date";
-        } else
-        if ( jsonType.equalsIgnoreCase("object") ) {
-            return "String";
-        } else
-        if ( jsonType.equalsIgnoreCase("boolean") ) {
-            return "boolean";
-        } else
+        else
+        if ( JavaPkgInfo.TypeMap.containsKey( jsonType.toLowerCase() ) ) {
+            return JavaPkgInfo.TypeMap.get( jsonType.toLowerCase() );
+        }
+        else
         {
             return jsonType + ( concrete ? "_impl_" + apiVersion : "" );
         }
-
-//        if ( knownModels.contains(jsonType) ) {
-//            return jsonType;
-//        }
-//        else
-//        {
-//            throw new IllegalArgumentException("Unknown typeInterface: " + jsonType );
-//        }
     }
 
 

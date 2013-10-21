@@ -1,13 +1,31 @@
 
 package ch.loway.oss.ari4java.codegen.genJava;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
- *
- * $Id$
+ * 
  * @author lenz
  */
 public class JavaPkgInfo {
+
+    public final static Map<String,String> TypeMap;
+
+    static {
+        TypeMap = new HashMap<String, String>();
+
+        TypeMap.put( "string", "String" );
+        TypeMap.put( "long", "long" );
+        TypeMap.put( "int", "int" );
+        TypeMap.put( "double", "double" );
+        TypeMap.put( "date", "Date" );
+        TypeMap.put( "object", "String" );
+        TypeMap.put( "boolean", "boolean" );
+
+    }
+
 
     String base = "ch.loway.oss.ari4java.generated";
 
@@ -40,8 +58,6 @@ public class JavaPkgInfo {
     public String getImplName() {
         return className + "_impl_" + apiVersion;
     }
-
-
 
 }
 
