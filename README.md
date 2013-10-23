@@ -58,19 +58,15 @@ Make sure you use a concrete Message class as the root deserialization object.
 To be done
 ----------
 
-Parameters that could be multiple are handled as only one item. I would like to have 
-both ways, so that you do not have to create a List in the very common case that 
-you need to pass only one parameter.
-
-HTTP interface is still missing.
-
-WebSocket interface is still missing.
-
-Tests are still missing.
-
-Factory to build objects is missing.
-
-Events returning Object are handled as a String. 
+* Parameters that could be multiple are handled as only one item. I would like to have 
+  both ways, so that you do not have to create a List in the very common case that 
+  you need to pass only one parameter.
+* HTTP client interface is still missing.
+* WebSocket interface is still missing.
+* Tests are still missing.
+* Factory to build objects is missing.
+* Events returning Object are handled as a String. 
+* New Swagger 1.3 format - see https://reviewboard.asterisk.org/r/2909/diff/
 
 
 Licensing
