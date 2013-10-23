@@ -68,6 +68,11 @@ To be done
 * Events returning Object are handled as a String. 
 * New Swagger 1.3 format - see https://reviewboard.asterisk.org/r/2909/diff/
 
+Useful links
+------------
+
+
+
 
 Licensing
 ---------
