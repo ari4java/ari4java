@@ -71,6 +71,8 @@ To be done
 Useful links
 ------------
 
+* Asterisk 12 docs: https://wiki.asterisk.org/wiki/display/AST/Asterisk+12+Documentation
+
 
 
 
