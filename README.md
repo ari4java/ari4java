@@ -72,7 +72,7 @@ Useful links
 ------------
 
 * Asterisk 12 docs: https://wiki.asterisk.org/wiki/display/AST/Asterisk+12+Documentation
-
+* ari4java community on Google+ https://plus.google.com/u/0/communities/116130645492865479649
 
 
 
