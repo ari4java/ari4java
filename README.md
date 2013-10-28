@@ -76,6 +76,12 @@ Useful links
 * Asterisk-app-dev archives: http://lists.digium.com/pipermail/asterisk-app-dev/
 
 
+Similar & Interesting projects
+------------------------------
+
+* AstAryPy - a Python library - https://github.com/asterisk/ast-ari-py
+
+
 
 Licensing
 ---------
