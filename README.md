@@ -49,7 +49,7 @@ You'll have to roll your own HTTP client implementation.
 
 In order to deserialze a Websocket event, you call:
 
-   Message msg = action.deserializeEvent( jsonEvent, Message_impl_ari_0_0_1.class );
+    Message msg = action.deserializeEvent( jsonEvent, Message_impl_ari_0_0_1.class );
 
 And then check the actual class of the event (too bad Java cannot use types in switch statements).
 Make sure you use a concrete Message class as the root deserialization object.
