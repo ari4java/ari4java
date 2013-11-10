@@ -12,11 +12,11 @@ import ch.loway.oss.ari4java.tools.RestException;
 
 public interface ActionSounds {
 
-// List<Sound> getSounds String String
+// List<? extends Sound> getSounds String String
 /**********************************************************
  * List all sounds.
  *********************************************************/
-public List<Sound> getSounds(String lang, String format) throws RestException;
+public List<? extends Sound> getSounds(String lang, String format) throws RestException;
 
 
 

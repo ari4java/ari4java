@@ -12,19 +12,11 @@ import ch.loway.oss.ari4java.tools.RestException;
 
 public interface ActionEndpoints {
 
-// List<Endpoint> getEndpoints
+// List<? extends Endpoint> getEndpoints
 /**********************************************************
  * List all endpoints.
  *********************************************************/
-public List<Endpoint> getEndpoints() throws RestException;
-
-
-
-// List<Endpoint> getEndpointsByTech String
-/**********************************************************
- * List available endoints for a given endpoint technology.
- *********************************************************/
-public List<Endpoint> getEndpointsByTech(String tech) throws RestException;
+public List<? extends Endpoint> getEndpoints() throws RestException;
 
 
 
@@ -33,6 +25,14 @@ public List<Endpoint> getEndpointsByTech(String tech) throws RestException;
  * Details for an endpoint.
  *********************************************************/
 public Endpoint getEndpoint(String tech, String resource) throws RestException;
+
+
+
+// List<? extends Endpoint> getEndpointsByTech String
+/**********************************************************
+ * List available endoints for a given endpoint technology.
+ *********************************************************/
+public List<? extends Endpoint> getEndpointsByTech(String tech) throws RestException;
 
 
 }

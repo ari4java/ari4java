@@ -9,8 +9,9 @@ import java.io.IOException;
  * @author lenz
  */
 public class RestException extends IOException {
+	private static final long serialVersionUID = 1L;
 
-    public RestException( String s ) {
+	public RestException( String s ) {
         super();
     }
 }

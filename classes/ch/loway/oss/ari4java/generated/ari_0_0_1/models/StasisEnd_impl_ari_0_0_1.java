@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class StasisEnd_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements StasisEnd, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**    */
   private Channel channel;
  public Channel getChannel() {

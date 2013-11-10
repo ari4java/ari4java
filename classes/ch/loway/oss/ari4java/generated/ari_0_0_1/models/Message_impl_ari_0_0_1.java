@@ -45,6 +45,7 @@ import java.util.List;
 
 
 public class Message_impl_ari_0_0_1 implements Message, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  Indicates the type of this message.  */
   private String type;
  public String getType() {

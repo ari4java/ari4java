@@ -37,14 +37,6 @@ public LiveRecording getLiveRecording(String recordingName) throws RestException
 
 
 
-// List<StoredRecording> getStoredRecordings
-/**********************************************************
- * List recordings that are complete.
- *********************************************************/
-public List<StoredRecording> getStoredRecordings() throws RestException;
-
-
-
 // StoredRecording getStoredRecording String
 /**********************************************************
  * Get a stored recording's details.
@@ -91,6 +83,14 @@ public void stopRecording(String recordingName) throws RestException;
  * Unpause a live recording.
  *********************************************************/
 public void unpauseRecording(String recordingName) throws RestException;
+
+
+
+// List<? extends StoredRecording> getStoredRecordings
+/**********************************************************
+ * List recordings that are complete.
+ *********************************************************/
+public List<? extends StoredRecording> getStoredRecordings() throws RestException;
 
 
 }

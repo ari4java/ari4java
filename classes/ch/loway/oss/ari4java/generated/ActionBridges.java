@@ -30,14 +30,6 @@ public void mohStopBridge(String bridgeId) throws RestException;
 
 
 
-// List<Bridge> getBridges
-/**********************************************************
- * List active bridges.
- *********************************************************/
-public List<Bridge> getBridges() throws RestException;
-
-
-
 // LiveRecording recordBridge String String String int int String boolean String
 /**********************************************************
  * Start a recording.
@@ -78,6 +70,14 @@ public Bridge getBridge(String bridgeId) throws RestException;
  * This bridge persists until it has been shut down, or Asterisk has been shut down.
  *********************************************************/
 public Bridge newBridge(String type) throws RestException;
+
+
+
+// List<? extends Bridge> getBridges
+/**********************************************************
+ * List active bridges.
+ *********************************************************/
+public List<? extends Bridge> getBridges() throws RestException;
 
 
 

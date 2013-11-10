@@ -20,7 +20,7 @@ public class ActionSounds_impl_ari_0_0_1 extends BaseAriAction  implements Actio
  * 
  * List all sounds.
  *********************************************************/
-public List<Sound> getSounds(String lang, String format) throws RestException {
+public List<? extends Sound> getSounds(String lang, String format) throws RestException {
 String url = "/sounds";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
@@ -28,7 +28,7 @@ List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>(
 lParamQuery.add( BaseAriAction.HttpParam.build( "lang", lang) );
 lParamQuery.add( BaseAriAction.HttpParam.build( "format", format) );
 String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
-return (List<Sound>) deserializeJson( json, new TypeReference<List<Sound_impl_ari_0_0_1>>() {} ); 
+return (List<? extends Sound>) deserializeJson( json, new TypeReference<List<Sound_impl_ari_0_0_1>>() {} ); 
 }
 
 /**********************************************************

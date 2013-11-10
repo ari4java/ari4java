@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class ChannelHangupRequest_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements ChannelHangupRequest, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  Integer representation of the cause of the hangup.  */
   private int cause;
  public int getCause() {

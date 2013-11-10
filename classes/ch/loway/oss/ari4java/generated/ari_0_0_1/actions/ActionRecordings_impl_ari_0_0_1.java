@@ -20,13 +20,13 @@ public class ActionRecordings_impl_ari_0_0_1 extends BaseAriAction  implements A
  * 
  * List recordings that are complete.
  *********************************************************/
-public List<StoredRecording> getStoredRecordings() throws RestException {
+public List<? extends StoredRecording> getStoredRecordings() throws RestException {
 String url = "/recordings/stored";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
 String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
-return (List<StoredRecording>) deserializeJson( json, new TypeReference<List<StoredRecording_impl_ari_0_0_1>>() {} ); 
+return (List<? extends StoredRecording>) deserializeJson( json, new TypeReference<List<StoredRecording_impl_ari_0_0_1>>() {} ); 
 }
 
 /**********************************************************

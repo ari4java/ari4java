@@ -75,6 +75,7 @@ public class Model extends JavaPkgInfo {
 
         sb.append( getInterfaceName() ).append( ", ");
         sb.append( "java.io.Serializable {\n" );
+        sb.append( "private static final long serialVersionUID = 1L;\n");
 
         for ( ModelField mf: fields) {
             sb.append( mf.toString() );

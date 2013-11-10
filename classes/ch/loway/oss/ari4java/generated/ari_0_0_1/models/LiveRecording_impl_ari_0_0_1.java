@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class LiveRecording_impl_ari_0_0_1 implements LiveRecording, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**    */
   private String format;
  public String getFormat() {

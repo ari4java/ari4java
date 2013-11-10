@@ -36,6 +36,14 @@ public void continueInDialplan(String channelId, String context, String extensio
 
 
 
+// List<? extends Channel> getChannels
+/**********************************************************
+ * List active channels.
+ *********************************************************/
+public List<? extends Channel> getChannels() throws RestException;
+
+
+
 // void deleteChannel String
 /**********************************************************
  * Delete (i.e. hangup) a channel.
@@ -74,14 +82,6 @@ public void answerChannel(String channelId) throws RestException;
  * Remove a channel from hold.
  *********************************************************/
 public void unholdChannel(String channelId) throws RestException;
-
-
-
-// List<Channel> getChannels
-/**********************************************************
- * List active channels.
- *********************************************************/
-public List<Channel> getChannels() throws RestException;
 
 
 

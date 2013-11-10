@@ -12,14 +12,6 @@ import ch.loway.oss.ari4java.tools.RestException;
 
 public interface Endpoint {
 
-// List<String> getChannel_ids
-/**********************************************************
- * Id's of channels associated with this endpoint
- *********************************************************/
- public List<String> getChannel_ids();
-
-
-
 // void setState String
 /**********************************************************
  * Endpoint's state
@@ -28,11 +20,11 @@ public interface Endpoint {
 
 
 
-// void setChannel_ids List<String>
+// void setChannel_ids List<? extends String>
 /**********************************************************
  * Id's of channels associated with this endpoint
  *********************************************************/
- public void setChannel_ids(List<String> val );
+ public void setChannel_ids(List<? extends String> val );
 
 
 
@@ -73,6 +65,14 @@ public interface Endpoint {
  * Endpoint's state
  *********************************************************/
  public String getState();
+
+
+
+// List<? extends String> getChannel_ids
+/**********************************************************
+ * Id's of channels associated with this endpoint
+ *********************************************************/
+ public List<? extends String> getChannel_ids();
 
 
 }

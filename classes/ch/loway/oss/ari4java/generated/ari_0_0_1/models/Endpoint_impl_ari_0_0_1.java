@@ -19,14 +19,15 @@ import java.util.List;
  *********************************************************/
 
 public class Endpoint_impl_ari_0_0_1 implements Endpoint, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  Id's of channels associated with this endpoint  */
-  private List<String> channel_ids;
- public List<String> getChannel_ids() {
+  private List<? extends String> channel_ids;
+ public List<? extends String> getChannel_ids() {
    return channel_ids;
  }
 
  @JsonDeserialize( contentAs=String.class )
- public void setChannel_ids(List<String> val ) {
+ public void setChannel_ids(List<? extends String> val ) {
    channel_ids = val;
  }
 

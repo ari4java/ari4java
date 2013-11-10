@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class Channel_impl_ari_0_0_1 implements Channel, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**    */
   private String accountcode;
  public String getAccountcode() {

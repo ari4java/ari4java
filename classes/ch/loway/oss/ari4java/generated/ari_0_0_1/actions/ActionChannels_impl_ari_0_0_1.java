@@ -20,13 +20,13 @@ public class ActionChannels_impl_ari_0_0_1 extends BaseAriAction  implements Act
  * 
  * List active channels.
  *********************************************************/
-public List<Channel> getChannels() throws RestException {
+public List<? extends Channel> getChannels() throws RestException {
 String url = "/channels";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
 String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
-return (List<Channel>) deserializeJson( json, new TypeReference<List<Channel_impl_ari_0_0_1>>() {} ); 
+return (List<? extends Channel>) deserializeJson( json, new TypeReference<List<Channel_impl_ari_0_0_1>>() {} ); 
 }
 
 /**********************************************************

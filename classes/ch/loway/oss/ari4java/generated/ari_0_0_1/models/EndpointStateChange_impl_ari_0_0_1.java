@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class EndpointStateChange_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements EndpointStateChange, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**    */
   private Endpoint endpoint;
  public Endpoint getEndpoint() {

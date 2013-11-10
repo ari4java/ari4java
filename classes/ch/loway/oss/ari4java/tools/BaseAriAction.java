@@ -1,7 +1,6 @@
 
 package ch.loway.oss.ari4java.tools;
 
-import ch.loway.oss.ari4java.generated.Event;
 import ch.loway.oss.ari4java.generated.Message;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,11 +40,11 @@ public class BaseAriAction {
      * @param klazz
      * @return Deserialized  type
      */
-    public Object deserializeJson( String json, Class klazz) throws RestException {
+    public <T> T deserializeJson( String json, Class<T> klazz) throws RestException {
 
         ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.readValue( json , klazz);
+            return mapper.readValue(json , klazz);
         } catch ( IOException e ) {
             e.printStackTrace( System.err );
             throw new RestException( "Decoding JSON: " + e.getMessage() );
@@ -60,7 +59,7 @@ public class BaseAriAction {
      * @return Deserialized list
      */
 
-    public Object deserializeJson( String json, TypeReference klazzType ) throws RestException {
+    public <T> T deserializeJson( String json, TypeReference<T> klazzType ) throws RestException {
 
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -80,7 +79,7 @@ public class BaseAriAction {
      * @throws RestException
      */
 
-    public Message deserializeEvent( String json, Class klazz ) throws RestException {
+    public Message deserializeEvent( String json, Class<?> klazz ) throws RestException {
 
         ObjectMapper mapper = new ObjectMapper();
         try {

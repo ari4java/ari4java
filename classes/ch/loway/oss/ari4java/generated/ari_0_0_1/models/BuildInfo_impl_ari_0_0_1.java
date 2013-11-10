@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class BuildInfo_impl_ari_0_0_1 implements BuildInfo, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  Date and time when Asterisk was built.  */
   private String date;
  public String getDate() {

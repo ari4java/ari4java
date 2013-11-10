@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class Variable_impl_ari_0_0_1 implements Variable, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  The value of the variable requested  */
   private String value;
  public String getValue() {

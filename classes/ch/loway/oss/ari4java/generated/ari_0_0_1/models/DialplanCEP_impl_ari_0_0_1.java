@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class DialplanCEP_impl_ari_0_0_1 implements DialplanCEP, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  Context in the dialplan  */
   private String context;
  public String getContext() {

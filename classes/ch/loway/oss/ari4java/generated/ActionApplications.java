@@ -21,11 +21,11 @@ public Application applicationUnsubscribe(String applicationName, String eventSo
 
 
 
-// List<Application> getApplications
+// List<? extends Application> getApplications
 /**********************************************************
  * List all applications.
  *********************************************************/
-public List<Application> getApplications() throws RestException;
+public List<? extends Application> getApplications() throws RestException;
 
 
 

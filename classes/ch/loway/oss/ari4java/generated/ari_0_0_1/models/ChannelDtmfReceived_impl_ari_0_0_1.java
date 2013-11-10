@@ -19,6 +19,7 @@ import java.util.List;
  *********************************************************/
 
 public class ChannelDtmfReceived_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements ChannelDtmfReceived, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  The channel on which DTMF was received  */
   private Channel channel;
  public Channel getChannel() {

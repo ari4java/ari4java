@@ -20,13 +20,13 @@ public class ActionApplications_impl_ari_0_0_1 extends BaseAriAction  implements
  * 
  * List all applications.
  *********************************************************/
-public List<Application> getApplications() throws RestException {
+public List<? extends Application> getApplications() throws RestException {
 String url = "/applications";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
 String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
-return (List<Application>) deserializeJson( json, new TypeReference<List<Application_impl_ari_0_0_1>>() {} ); 
+return (List<? extends Application>) deserializeJson( json, new TypeReference<List<Application_impl_ari_0_0_1>>() {} ); 
 }
 
 /**********************************************************

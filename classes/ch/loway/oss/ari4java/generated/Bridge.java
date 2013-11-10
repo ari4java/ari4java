@@ -36,6 +36,22 @@ public interface Bridge {
 
 
 
+// List<? extends String> getChannels
+/**********************************************************
+ * Ids of channels participating in this bridge
+ *********************************************************/
+ public List<? extends String> getChannels();
+
+
+
+// void setChannels List<? extends String>
+/**********************************************************
+ * Ids of channels participating in this bridge
+ *********************************************************/
+ public void setChannels(List<? extends String> val );
+
+
+
 // void setId String
 /**********************************************************
  * Unique identifier for this bridge
@@ -73,22 +89,6 @@ public interface Bridge {
  * Name of the current bridging technology
  *********************************************************/
  public String getTechnology();
-
-
-
-// List<String> getChannels
-/**********************************************************
- * Ids of channels participating in this bridge
- *********************************************************/
- public List<String> getChannels();
-
-
-
-// void setChannels List<String>
-/**********************************************************
- * Ids of channels participating in this bridge
- *********************************************************/
- public void setChannels(List<String> val );
 
 
 }

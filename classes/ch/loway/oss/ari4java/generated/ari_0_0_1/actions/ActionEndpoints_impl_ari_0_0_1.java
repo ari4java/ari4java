@@ -20,13 +20,13 @@ public class ActionEndpoints_impl_ari_0_0_1 extends BaseAriAction  implements Ac
  * 
  * List all endpoints.
  *********************************************************/
-public List<Endpoint> getEndpoints() throws RestException {
+public List<? extends Endpoint> getEndpoints() throws RestException {
 String url = "/endpoints";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
 String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
-return (List<Endpoint>) deserializeJson( json, new TypeReference<List<Endpoint_impl_ari_0_0_1>>() {} ); 
+return (List<? extends Endpoint>) deserializeJson( json, new TypeReference<List<Endpoint_impl_ari_0_0_1>>() {} ); 
 }
 
 /**********************************************************
@@ -34,13 +34,13 @@ return (List<Endpoint>) deserializeJson( json, new TypeReference<List<Endpoint_i
  * 
  * List available endoints for a given endpoint technology.
  *********************************************************/
-public List<Endpoint> getEndpointsByTech(String tech) throws RestException {
+public List<? extends Endpoint> getEndpointsByTech(String tech) throws RestException {
 String url = "/endpoints/" + tech + "";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
 String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
-return (List<Endpoint>) deserializeJson( json, new TypeReference<List<Endpoint_impl_ari_0_0_1>>() {} ); 
+return (List<? extends Endpoint>) deserializeJson( json, new TypeReference<List<Endpoint_impl_ari_0_0_1>>() {} ); 
 }
 
 /**********************************************************

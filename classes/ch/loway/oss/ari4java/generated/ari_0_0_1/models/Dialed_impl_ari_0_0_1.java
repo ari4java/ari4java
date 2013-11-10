@@ -17,5 +17,6 @@ import java.util.List;
  *********************************************************/
 
 public class Dialed_impl_ari_0_0_1 implements Dialed, java.io.Serializable {
+private static final long serialVersionUID = 1L;
 }
 

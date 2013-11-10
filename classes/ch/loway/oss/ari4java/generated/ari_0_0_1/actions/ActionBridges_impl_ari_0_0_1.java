@@ -20,13 +20,13 @@ public class ActionBridges_impl_ari_0_0_1 extends BaseAriAction  implements Acti
  * 
  * List active bridges.
  *********************************************************/
-public List<Bridge> getBridges() throws RestException {
+public List<? extends Bridge> getBridges() throws RestException {
 String url = "/bridges";
 List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
 List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
 String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
-return (List<Bridge>) deserializeJson( json, new TypeReference<List<Bridge_impl_ari_0_0_1>>() {} ); 
+return (List<? extends Bridge>) deserializeJson( json, new TypeReference<List<Bridge_impl_ari_0_0_1>>() {} ); 
 }
 
 /**********************************************************
