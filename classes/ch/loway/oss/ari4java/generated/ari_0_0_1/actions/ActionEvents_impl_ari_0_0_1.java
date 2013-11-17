@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
+import ch.loway.oss.ari4java.tools.AriCallback;
 import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.models.*;
 
@@ -20,14 +21,23 @@ public class ActionEvents_impl_ari_0_0_1 extends BaseAriAction  implements Actio
  * 
  * WebSocket connection for events.
  *********************************************************/
-public Message eventWebsocket(String app) throws RestException {
-String url = "/events";
-List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
+private void buildEventWebsocket(String app) {
+reset();
+url = "/events";
 lParamQuery.add( BaseAriAction.HttpParam.build( "app", app) );
-String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
-return (Message) deserializeJson( json, Message_impl_ari_0_0_1.class ); 
+}
+
+@Override
+public Message eventWebsocket(String app) throws RestException {
+buildEventWebsocket(app);
+String json = httpActionSync();
+return deserializeJson( json, Message_impl_ari_0_0_1.class ); 
+}
+
+@Override
+public void eventWebsocket(String app, AriCallback<Message> callback) {
+buildEventWebsocket(app);
+httpActionAsync(callback, Message_impl_ari_0_0_1.class);
 }
 
 };

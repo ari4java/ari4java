@@ -41,7 +41,8 @@ public class JavaInterface {
             "java.util.Date",
             "java.util.List",
             "java.util.ArrayList",
-            "ch.loway.oss.ari4java.tools.RestException"
+            "ch.loway.oss.ari4java.tools.RestException",
+            "ch.loway.oss.ari4java.tools.AriCallback"
         }));
 
 

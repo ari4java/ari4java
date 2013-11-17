@@ -9,8 +9,33 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
+import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface ActionAsterisk {
+
+// void getAsteriskInfo String AriCallback<AsteriskInfo> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void getAsteriskInfo(String only, AriCallback<AsteriskInfo> callback);
+
+
+
+// void getGlobalVar String AriCallback<Variable> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void getGlobalVar(String variable, AriCallback<Variable> callback);
+
+
+
+// void setGlobalVar String String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void setGlobalVar(String variable, String value, AriCallback<Void> callback);
+
+
 
 // AsteriskInfo getAsteriskInfo String
 /**********************************************************

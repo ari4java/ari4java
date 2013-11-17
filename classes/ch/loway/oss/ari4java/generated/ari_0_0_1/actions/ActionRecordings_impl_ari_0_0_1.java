@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
+import ch.loway.oss.ari4java.tools.AriCallback;
 import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.models.*;
 
@@ -20,13 +21,22 @@ public class ActionRecordings_impl_ari_0_0_1 extends BaseAriAction  implements A
  * 
  * List recordings that are complete.
  *********************************************************/
+private void buildGetStoredRecordings() {
+reset();
+url = "/recordings/stored";
+}
+
+@Override
 public List<? extends StoredRecording> getStoredRecordings() throws RestException {
-String url = "/recordings/stored";
-List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
-String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
-return (List<? extends StoredRecording>) deserializeJson( json, new TypeReference<List<StoredRecording_impl_ari_0_0_1>>() {} ); 
+buildGetStoredRecordings();
+String json = httpActionSync();
+return deserializeJson( json, new TypeReference<List<StoredRecording_impl_ari_0_0_1>>() {} ); 
+}
+
+@Override
+public void getStoredRecordings(AriCallback<List<? extends StoredRecording>> callback) {
+buildGetStoredRecordings();
+httpActionAsync(callback, new TypeReference<List<StoredRecording_impl_ari_0_0_1>>() {});
 }
 
 /**********************************************************
@@ -34,14 +44,23 @@ return (List<? extends StoredRecording>) deserializeJson( json, new TypeReferenc
  * 
  * Get a stored recording's details.
  *********************************************************/
-public StoredRecording getStoredRecording(String recordingName) throws RestException {
-String url = "/recordings/stored/" + recordingName + "";
-List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
+private void buildGetStoredRecording(String recordingName) {
+reset();
+url = "/recordings/stored/" + recordingName + "";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
-String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
-return (StoredRecording) deserializeJson( json, StoredRecording_impl_ari_0_0_1.class ); 
+}
+
+@Override
+public StoredRecording getStoredRecording(String recordingName) throws RestException {
+buildGetStoredRecording(recordingName);
+String json = httpActionSync();
+return deserializeJson( json, StoredRecording_impl_ari_0_0_1.class ); 
+}
+
+@Override
+public void getStoredRecording(String recordingName, AriCallback<StoredRecording> callback) {
+buildGetStoredRecording(recordingName);
+httpActionAsync(callback, StoredRecording_impl_ari_0_0_1.class);
 }
 
 /**********************************************************
@@ -49,13 +68,22 @@ return (StoredRecording) deserializeJson( json, StoredRecording_impl_ari_0_0_1.c
  * 
  * Delete a stored recording.
  *********************************************************/
-public void deleteStoredRecording(String recordingName) throws RestException {
-String url = "/recordings/stored/" + recordingName + "";
-List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
+private void buildDeleteStoredRecording(String recordingName) {
+reset();
+url = "/recordings/stored/" + recordingName + "";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
-String json = httpAction( url, "DELETE", lParamQuery, lParamForm, lE);
+}
+
+@Override
+public void deleteStoredRecording(String recordingName) throws RestException {
+buildDeleteStoredRecording(recordingName);
+String json = httpActionSync();
+}
+
+@Override
+public void deleteStoredRecording(String recordingName, AriCallback<Void> callback) {
+buildDeleteStoredRecording(recordingName);
+httpActionAsync(callback);
 }
 
 /**********************************************************
@@ -63,14 +91,23 @@ String json = httpAction( url, "DELETE", lParamQuery, lParamForm, lE);
  * 
  * List live recordings.
  *********************************************************/
-public LiveRecording getLiveRecording(String recordingName) throws RestException {
-String url = "/recordings/live/" + recordingName + "";
-List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
+private void buildGetLiveRecording(String recordingName) {
+reset();
+url = "/recordings/live/" + recordingName + "";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
-String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
-return (LiveRecording) deserializeJson( json, LiveRecording_impl_ari_0_0_1.class ); 
+}
+
+@Override
+public LiveRecording getLiveRecording(String recordingName) throws RestException {
+buildGetLiveRecording(recordingName);
+String json = httpActionSync();
+return deserializeJson( json, LiveRecording_impl_ari_0_0_1.class ); 
+}
+
+@Override
+public void getLiveRecording(String recordingName, AriCallback<LiveRecording> callback) {
+buildGetLiveRecording(recordingName);
+httpActionAsync(callback, LiveRecording_impl_ari_0_0_1.class);
 }
 
 /**********************************************************
@@ -78,13 +115,22 @@ return (LiveRecording) deserializeJson( json, LiveRecording_impl_ari_0_0_1.class
  * 
  * Stop a live recording and discard it.
  *********************************************************/
-public void cancelRecording(String recordingName) throws RestException {
-String url = "/recordings/live/" + recordingName + "";
-List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
+private void buildCancelRecording(String recordingName) {
+reset();
+url = "/recordings/live/" + recordingName + "";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
-String json = httpAction( url, "DELETE", lParamQuery, lParamForm, lE);
+}
+
+@Override
+public void cancelRecording(String recordingName) throws RestException {
+buildCancelRecording(recordingName);
+String json = httpActionSync();
+}
+
+@Override
+public void cancelRecording(String recordingName, AriCallback<Void> callback) {
+buildCancelRecording(recordingName);
+httpActionAsync(callback);
 }
 
 /**********************************************************
@@ -92,13 +138,22 @@ String json = httpAction( url, "DELETE", lParamQuery, lParamForm, lE);
  * 
  * Stop a live recording and store it.
  *********************************************************/
-public void stopRecording(String recordingName) throws RestException {
-String url = "/recordings/live/" + recordingName + "/stop";
-List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
+private void buildStopRecording(String recordingName) {
+reset();
+url = "/recordings/live/" + recordingName + "/stop";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
-String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
+}
+
+@Override
+public void stopRecording(String recordingName) throws RestException {
+buildStopRecording(recordingName);
+String json = httpActionSync();
+}
+
+@Override
+public void stopRecording(String recordingName, AriCallback<Void> callback) {
+buildStopRecording(recordingName);
+httpActionAsync(callback);
 }
 
 /**********************************************************
@@ -107,14 +162,23 @@ String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
  * Pause a live recording.
  * Pausing a recording suspends silence detection, which will be restarted when the recording is unpaused. Paused time is not included in the accounting for maxDurationSeconds.
  *********************************************************/
-public void pauseRecording(String recordingName) throws RestException {
-String url = "/recordings/live/" + recordingName + "/pause";
-List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
+private void buildPauseRecording(String recordingName) {
+reset();
+url = "/recordings/live/" + recordingName + "/pause";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Recording not in session") );
-String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
+}
+
+@Override
+public void pauseRecording(String recordingName) throws RestException {
+buildPauseRecording(recordingName);
+String json = httpActionSync();
+}
+
+@Override
+public void pauseRecording(String recordingName, AriCallback<Void> callback) {
+buildPauseRecording(recordingName);
+httpActionAsync(callback);
 }
 
 /**********************************************************
@@ -122,14 +186,23 @@ String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
  * 
  * Unpause a live recording.
  *********************************************************/
-public void unpauseRecording(String recordingName) throws RestException {
-String url = "/recordings/live/" + recordingName + "/unpause";
-List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
+private void buildUnpauseRecording(String recordingName) {
+reset();
+url = "/recordings/live/" + recordingName + "/unpause";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Recording not in session") );
-String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
+}
+
+@Override
+public void unpauseRecording(String recordingName) throws RestException {
+buildUnpauseRecording(recordingName);
+String json = httpActionSync();
+}
+
+@Override
+public void unpauseRecording(String recordingName, AriCallback<Void> callback) {
+buildUnpauseRecording(recordingName);
+httpActionAsync(callback);
 }
 
 /**********************************************************
@@ -138,14 +211,23 @@ String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
  * Mute a live recording.
  * Muting a recording suspends silence detection, which will be restarted when the recording is unmuted.
  *********************************************************/
-public void muteRecording(String recordingName) throws RestException {
-String url = "/recordings/live/" + recordingName + "/mute";
-List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
+private void buildMuteRecording(String recordingName) {
+reset();
+url = "/recordings/live/" + recordingName + "/mute";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Recording not in session") );
-String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
+}
+
+@Override
+public void muteRecording(String recordingName) throws RestException {
+buildMuteRecording(recordingName);
+String json = httpActionSync();
+}
+
+@Override
+public void muteRecording(String recordingName, AriCallback<Void> callback) {
+buildMuteRecording(recordingName);
+httpActionAsync(callback);
 }
 
 /**********************************************************
@@ -153,14 +235,23 @@ String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
  * 
  * Unmute a live recording.
  *********************************************************/
-public void unmuteRecording(String recordingName) throws RestException {
-String url = "/recordings/live/" + recordingName + "/unmute";
-List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
+private void buildUnmuteRecording(String recordingName) {
+reset();
+url = "/recordings/live/" + recordingName + "/unmute";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Recording not in session") );
-String json = httpAction( url, "POST", lParamQuery, lParamForm, lE);
+}
+
+@Override
+public void unmuteRecording(String recordingName) throws RestException {
+buildUnmuteRecording(recordingName);
+String json = httpActionSync();
+}
+
+@Override
+public void unmuteRecording(String recordingName, AriCallback<Void> callback) {
+buildUnmuteRecording(recordingName);
+httpActionAsync(callback);
 }
 
 };

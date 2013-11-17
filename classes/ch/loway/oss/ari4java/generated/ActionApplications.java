@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
+import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface ActionApplications {
 
@@ -21,11 +22,43 @@ public Application applicationUnsubscribe(String applicationName, String eventSo
 
 
 
+// void applicationUnsubscribe String String AriCallback<Application> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void applicationUnsubscribe(String applicationName, String eventSource, AriCallback<Application> callback);
+
+
+
+// void getApplications AriCallback<List<? extends Application>> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void getApplications(AriCallback<List<? extends Application>> callback);
+
+
+
 // List<? extends Application> getApplications
 /**********************************************************
  * List all applications.
  *********************************************************/
 public List<? extends Application> getApplications() throws RestException;
+
+
+
+// void applicationSubscribe String String AriCallback<Application> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void applicationSubscribe(String applicationName, String eventSource, AriCallback<Application> callback);
+
+
+
+// void getApplication String AriCallback<Application> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void getApplication(String applicationName, AriCallback<Application> callback);
 
 
 

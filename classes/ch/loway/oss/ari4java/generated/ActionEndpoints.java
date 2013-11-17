@@ -9,8 +9,33 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
+import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface ActionEndpoints {
+
+// void getEndpoint String String AriCallback<Endpoint> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void getEndpoint(String tech, String resource, AriCallback<Endpoint> callback);
+
+
+
+// void getEndpointsByTech String AriCallback<List<? extends Endpoint>> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void getEndpointsByTech(String tech, AriCallback<List<? extends Endpoint>> callback);
+
+
+
+// void getEndpoints AriCallback<List<? extends Endpoint>> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void getEndpoints(AriCallback<List<? extends Endpoint>> callback);
+
+
 
 // List<? extends Endpoint> getEndpoints
 /**********************************************************
