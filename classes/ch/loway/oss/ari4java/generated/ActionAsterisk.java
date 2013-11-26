@@ -13,11 +13,11 @@ import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface ActionAsterisk {
 
-// void getAsteriskInfo String AriCallback<AsteriskInfo> callback
+// void getInfo String AriCallback<AsteriskInfo> callback
 /**********************************************************
  * 
  *********************************************************/
-public void getAsteriskInfo(String only, AriCallback<AsteriskInfo> callback);
+public void getInfo(String only, AriCallback<AsteriskInfo> callback);
 
 
 
@@ -37,14 +37,6 @@ public void setGlobalVar(String variable, String value, AriCallback<Void> callba
 
 
 
-// AsteriskInfo getAsteriskInfo String
-/**********************************************************
- * Gets Asterisk system information.
- *********************************************************/
-public AsteriskInfo getAsteriskInfo(String only) throws RestException;
-
-
-
 // Variable getGlobalVar String
 /**********************************************************
  * Get the value of a global variable.
@@ -58,6 +50,14 @@ public Variable getGlobalVar(String variable) throws RestException;
  * Set the value of a global variable.
  *********************************************************/
 public void setGlobalVar(String variable, String value) throws RestException;
+
+
+
+// AsteriskInfo getInfo String
+/**********************************************************
+ * Gets Asterisk system information.
+ *********************************************************/
+public AsteriskInfo getInfo(String only) throws RestException;
 
 
 }

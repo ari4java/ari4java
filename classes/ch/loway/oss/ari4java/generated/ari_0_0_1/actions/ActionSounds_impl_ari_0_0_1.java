@@ -21,23 +21,24 @@ public class ActionSounds_impl_ari_0_0_1 extends BaseAriAction  implements Actio
  * 
  * List all sounds.
  *********************************************************/
-private void buildGetSounds(String lang, String format) {
+private void buildList(String lang, String format) {
 reset();
 url = "/sounds";
+method = "GET";
 lParamQuery.add( BaseAriAction.HttpParam.build( "lang", lang) );
 lParamQuery.add( BaseAriAction.HttpParam.build( "format", format) );
 }
 
 @Override
-public List<? extends Sound> getSounds(String lang, String format) throws RestException {
-buildGetSounds(lang, format);
+public List<? extends Sound> list(String lang, String format) throws RestException {
+buildList(lang, format);
 String json = httpActionSync();
 return deserializeJson( json, new TypeReference<List<Sound_impl_ari_0_0_1>>() {} ); 
 }
 
 @Override
-public void getSounds(String lang, String format, AriCallback<List<? extends Sound>> callback) {
-buildGetSounds(lang, format);
+public void list(String lang, String format, AriCallback<List<? extends Sound>> callback) {
+buildList(lang, format);
 httpActionAsync(callback, new TypeReference<List<Sound_impl_ari_0_0_1>>() {});
 }
 
@@ -46,21 +47,22 @@ httpActionAsync(callback, new TypeReference<List<Sound_impl_ari_0_0_1>>() {});
  * 
  * Get a sound's details.
  *********************************************************/
-private void buildGetStoredSound(String soundId) {
+private void buildGet(String soundId) {
 reset();
 url = "/sounds/" + soundId + "";
+method = "GET";
 }
 
 @Override
-public Sound getStoredSound(String soundId) throws RestException {
-buildGetStoredSound(soundId);
+public Sound get(String soundId) throws RestException {
+buildGet(soundId);
 String json = httpActionSync();
 return deserializeJson( json, Sound_impl_ari_0_0_1.class ); 
 }
 
 @Override
-public void getStoredSound(String soundId, AriCallback<Sound> callback) {
-buildGetStoredSound(soundId);
+public void get(String soundId, AriCallback<Sound> callback) {
+buildGet(soundId);
 httpActionAsync(callback, Sound_impl_ari_0_0_1.class);
 }
 

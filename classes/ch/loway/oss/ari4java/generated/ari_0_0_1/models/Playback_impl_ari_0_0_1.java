@@ -13,7 +13,7 @@ import java.util.List;
 /**********************************************************
  * Object representing the playback of media to a channel
  * 
- * Defined in file: playback.json
+ * Defined in file: playbacks.json
  *********************************************************/
 
 public class Playback_impl_ari_0_0_1 implements Playback, java.io.Serializable {

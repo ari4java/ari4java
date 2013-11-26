@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 /**********************************************************
- * Notification that a channel has entered a Stasis appliction.
+ * Notification that a channel has entered a Stasis application.
  * 
  * Defined in file: events.json
  *********************************************************/

@@ -24,14 +24,14 @@ public class ActionEvents_impl_ari_0_0_1 extends BaseAriAction  implements Actio
 private void buildEventWebsocket(String app) {
 reset();
 url = "/events";
+method = "GET";
 lParamQuery.add( BaseAriAction.HttpParam.build( "app", app) );
+wsUpgrade = true;
 }
 
 @Override
 public Message eventWebsocket(String app) throws RestException {
-buildEventWebsocket(app);
-String json = httpActionSync();
-return deserializeJson( json, Message_impl_ari_0_0_1.class ); 
+throw new RestException("No synchronous operation on WebSocket");
 }
 
 @Override

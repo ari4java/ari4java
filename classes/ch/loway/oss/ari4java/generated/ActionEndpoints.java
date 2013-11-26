@@ -13,51 +13,51 @@ import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface ActionEndpoints {
 
-// void getEndpoint String String AriCallback<Endpoint> callback
-/**********************************************************
- * 
- *********************************************************/
-public void getEndpoint(String tech, String resource, AriCallback<Endpoint> callback);
-
-
-
-// void getEndpointsByTech String AriCallback<List<? extends Endpoint>> callback
-/**********************************************************
- * 
- *********************************************************/
-public void getEndpointsByTech(String tech, AriCallback<List<? extends Endpoint>> callback);
-
-
-
-// void getEndpoints AriCallback<List<? extends Endpoint>> callback
-/**********************************************************
- * 
- *********************************************************/
-public void getEndpoints(AriCallback<List<? extends Endpoint>> callback);
-
-
-
-// List<? extends Endpoint> getEndpoints
-/**********************************************************
- * List all endpoints.
- *********************************************************/
-public List<? extends Endpoint> getEndpoints() throws RestException;
-
-
-
-// Endpoint getEndpoint String String
+// Endpoint get String String
 /**********************************************************
  * Details for an endpoint.
  *********************************************************/
-public Endpoint getEndpoint(String tech, String resource) throws RestException;
+public Endpoint get(String tech, String resource) throws RestException;
 
 
 
-// List<? extends Endpoint> getEndpointsByTech String
+// void list AriCallback<List<? extends Endpoint>> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void list(AriCallback<List<? extends Endpoint>> callback);
+
+
+
+// List<? extends Endpoint> listByTech String
 /**********************************************************
  * List available endoints for a given endpoint technology.
  *********************************************************/
-public List<? extends Endpoint> getEndpointsByTech(String tech) throws RestException;
+public List<? extends Endpoint> listByTech(String tech) throws RestException;
+
+
+
+// void get String String AriCallback<Endpoint> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void get(String tech, String resource, AriCallback<Endpoint> callback);
+
+
+
+// void listByTech String AriCallback<List<? extends Endpoint>> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void listByTech(String tech, AriCallback<List<? extends Endpoint>> callback);
+
+
+
+// List<? extends Endpoint> list
+/**********************************************************
+ * List all endpoints.
+ *********************************************************/
+public List<? extends Endpoint> list() throws RestException;
 
 
 }

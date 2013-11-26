@@ -15,27 +15,29 @@ import ch.loway.oss.ari4java.tools.AriCallback;
 import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.models.*;
 
-public class ActionPlayback_impl_ari_0_0_1 extends BaseAriAction  implements ActionPlayback {
+public class ActionPlaybacks_impl_ari_0_0_1 extends BaseAriAction  implements ActionPlaybacks {
 /**********************************************************
  * Control object for a playback operation.
  * 
  * Get a playback's details.
  *********************************************************/
-private void buildGetPlayback(String playbackId) {
+private void buildGet(String playbackId) {
 reset();
-url = "/playback/" + playbackId + "";
+url = "/playbacks/" + playbackId + "";
+method = "GET";
+lE.add( BaseAriAction.HttpResponse.build( 404, "The playback cannot be found") );
 }
 
 @Override
-public Playback getPlayback(String playbackId) throws RestException {
-buildGetPlayback(playbackId);
+public Playback get(String playbackId) throws RestException {
+buildGet(playbackId);
 String json = httpActionSync();
 return deserializeJson( json, Playback_impl_ari_0_0_1.class ); 
 }
 
 @Override
-public void getPlayback(String playbackId, AriCallback<Playback> callback) {
-buildGetPlayback(playbackId);
+public void get(String playbackId, AriCallback<Playback> callback) {
+buildGet(playbackId);
 httpActionAsync(callback, Playback_impl_ari_0_0_1.class);
 }
 
@@ -44,31 +46,34 @@ httpActionAsync(callback, Playback_impl_ari_0_0_1.class);
  * 
  * Stop a playback.
  *********************************************************/
-private void buildStopPlayback(String playbackId) {
+private void buildStop(String playbackId) {
 reset();
-url = "/playback/" + playbackId + "";
+url = "/playbacks/" + playbackId + "";
+method = "DELETE";
+lE.add( BaseAriAction.HttpResponse.build( 404, "The playback cannot be found") );
 }
 
 @Override
-public void stopPlayback(String playbackId) throws RestException {
-buildStopPlayback(playbackId);
+public void stop(String playbackId) throws RestException {
+buildStop(playbackId);
 String json = httpActionSync();
 }
 
 @Override
-public void stopPlayback(String playbackId, AriCallback<Void> callback) {
-buildStopPlayback(playbackId);
+public void stop(String playbackId, AriCallback<Void> callback) {
+buildStop(playbackId);
 httpActionAsync(callback);
 }
 
 /**********************************************************
  * Control object for a playback operation.
  * 
- * Get a playback's details.
+ * Control a playback.
  *********************************************************/
-private void buildControlPlayback(String playbackId, String operation) {
+private void buildControl(String playbackId, String operation) {
 reset();
-url = "/playback/" + playbackId + "/control";
+url = "/playbacks/" + playbackId + "/control";
+method = "POST";
 lParamQuery.add( BaseAriAction.HttpParam.build( "operation", operation) );
 lE.add( BaseAriAction.HttpResponse.build( 400, "The provided operation parameter was invalid") );
 lE.add( BaseAriAction.HttpResponse.build( 404, "The playback cannot be found") );
@@ -76,14 +81,14 @@ lE.add( BaseAriAction.HttpResponse.build( 409, "The operation cannot be performe
 }
 
 @Override
-public void controlPlayback(String playbackId, String operation) throws RestException {
-buildControlPlayback(playbackId, operation);
+public void control(String playbackId, String operation) throws RestException {
+buildControl(playbackId, operation);
 String json = httpActionSync();
 }
 
 @Override
-public void controlPlayback(String playbackId, String operation, AriCallback<Void> callback) {
-buildControlPlayback(playbackId, operation);
+public void control(String playbackId, String operation, AriCallback<Void> callback) {
+buildControl(playbackId, operation);
 httpActionAsync(callback);
 }
 

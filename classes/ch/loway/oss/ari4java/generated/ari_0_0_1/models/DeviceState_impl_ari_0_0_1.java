@@ -11,22 +11,33 @@ import java.util.Date;
 import java.util.List;
 
 /**********************************************************
- * Notification that a channel has left a Stasis application.
+ * Represents the state of a device.
  * 
- * Defined in file: events.json
+ * Defined in file: deviceStates.json
  *********************************************************/
 
-public class StasisEnd_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements StasisEnd, java.io.Serializable {
+public class DeviceState_impl_ari_0_0_1 implements DeviceState, java.io.Serializable {
 private static final long serialVersionUID = 1L;
-  /**    */
-  private Channel channel;
- public Channel getChannel() {
-   return channel;
+  /**  Name of the device.  */
+  private String name;
+ public String getName() {
+   return name;
  }
 
- @JsonDeserialize( as=Channel_impl_ari_0_0_1.class )
- public void setChannel(Channel val ) {
-   channel = val;
+ @JsonDeserialize( as=String.class )
+ public void setName(String val ) {
+   name = val;
+ }
+
+  /**  Device's state  */
+  private String state;
+ public String getState() {
+   return state;
+ }
+
+ @JsonDeserialize( as=String.class )
+ public void setState(String val ) {
+   state = val;
  }
 
 }

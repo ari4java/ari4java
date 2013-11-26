@@ -13,35 +13,19 @@ import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface ActionChannels {
 
-// void originate String String String long String String String int AriCallback<Void> callback
+// void ring String
+/**********************************************************
+ * Indicate ringing to a channel.
+ *********************************************************/
+public void ring(String channelId) throws RestException;
+
+
+
+// void stopSilence String AriCallback<Void> callback
 /**********************************************************
  * 
  *********************************************************/
-public void originate(String endpoint, String extension, String context, long priority, String app, String appArgs, String callerId, int timeout, AriCallback<Void> callback);
-
-
-
-// void deleteChannel String AriCallback<Void> callback
-/**********************************************************
- * 
- *********************************************************/
-public void deleteChannel(String channelId, AriCallback<Void> callback);
-
-
-
-// void deleteChannel String
-/**********************************************************
- * Delete (i.e. hangup) a channel.
- *********************************************************/
-public void deleteChannel(String channelId) throws RestException;
-
-
-
-// void getChannels AriCallback<List<? extends Channel>> callback
-/**********************************************************
- * 
- *********************************************************/
-public void getChannels(AriCallback<List<? extends Channel>> callback);
+public void stopSilence(String channelId, AriCallback<Void> callback);
 
 
 
@@ -53,19 +37,11 @@ public Variable getChannelVar(String channelId, String variable) throws RestExce
 
 
 
-// void unholdChannel String
-/**********************************************************
- * Remove a channel from hold.
- *********************************************************/
-public void unholdChannel(String channelId) throws RestException;
-
-
-
-// void answerChannel String AriCallback<Void> callback
+// void snoopChannel String String String String String AriCallback<Channel> callback
 /**********************************************************
  * 
  *********************************************************/
-public void answerChannel(String channelId, AriCallback<Void> callback);
+public void snoopChannel(String channelId, String spy, String whisper, String app, String appArgs, AriCallback<Channel> callback);
 
 
 
@@ -77,28 +53,43 @@ public void getChannelVar(String channelId, String variable, AriCallback<Variabl
 
 
 
-// void mohStartChannel String String
+// void ringStop String
 /**********************************************************
- * Play music on hold to a channel.
- * Using media operations such as playOnChannel on a channel playing MOH in this manner will suspend MOH without resuming automatically. If continuing music on hold is desired, the stasis application must reinitiate music on hold.
+ * Stop ringing indication on a channel if locally generated.
  *********************************************************/
-public void mohStartChannel(String channelId, String mohClass) throws RestException;
+public void ringStop(String channelId) throws RestException;
 
 
 
-// void unmuteChannel String String
+// void sendDTMF String String int int int int
+/**********************************************************
+ * Send provided DTMF to a given channel.
+ *********************************************************/
+public void sendDTMF(String channelId, String dtmf, int before, int between, int duration, int after) throws RestException;
+
+
+
+// void answer String
+/**********************************************************
+ * Answer a channel.
+ *********************************************************/
+public void answer(String channelId) throws RestException;
+
+
+
+// void unmute String String
 /**********************************************************
  * Unmute a channel.
  *********************************************************/
-public void unmuteChannel(String channelId, String direction) throws RestException;
+public void unmute(String channelId, String direction) throws RestException;
 
 
 
-// void holdChannel String AriCallback<Void> callback
+// void hold String
 /**********************************************************
- * 
+ * Hold a channel.
  *********************************************************/
-public void holdChannel(String channelId, AriCallback<Void> callback);
+public void hold(String channelId) throws RestException;
 
 
 
@@ -110,12 +101,11 @@ public void setChannelVar(String channelId, String variable, String value, AriCa
 
 
 
-// Playback playOnChannel String String String int int
+// void ringStop String AriCallback<Void> callback
 /**********************************************************
- * Start playback of media.
- * The media URI may be any of a number of URI's. You may use http: and https: URI's, as well as sound: and recording: URI's. This operation creates a playback resource that can be used to control the playback of media (pause, rewind, fast forward, etc.)
+ * 
  *********************************************************/
-public Playback playOnChannel(String channelId, String media, String lang, int offsetms, int skipms) throws RestException;
+public void ringStop(String channelId, AriCallback<Void> callback);
 
 
 
@@ -127,20 +117,35 @@ public void continueInDialplan(String channelId, String context, String extensio
 
 
 
-// LiveRecording recordChannel String String String int int String boolean String
-/**********************************************************
- * Start a recording.
- * Record audio from a channel. Note that this will not capture audio sent to the channel. The bridge itself has a record feature if that's what you want.
- *********************************************************/
-public LiveRecording recordChannel(String channelId, String name, String format, int maxDurationSeconds, int maxSilenceSeconds, String ifExists, boolean beep, String terminateOn) throws RestException;
-
-
-
-// void dial String String String String int AriCallback<Dialed> callback
+// void list AriCallback<List<? extends Channel>> callback
 /**********************************************************
  * 
  *********************************************************/
-public void dial(String channelId, String endpoint, String extension, String context, int timeout, AriCallback<Dialed> callback);
+public void list(AriCallback<List<? extends Channel>> callback);
+
+
+
+// void hangup String String
+/**********************************************************
+ * Delete (i.e. hangup) a channel.
+ *********************************************************/
+public void hangup(String channelId, String reason) throws RestException;
+
+
+
+// void unmute String String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void unmute(String channelId, String direction, AriCallback<Void> callback);
+
+
+
+// void stopMoh String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void stopMoh(String channelId, AriCallback<Void> callback);
 
 
 
@@ -152,27 +157,68 @@ public void setChannelVar(String channelId, String variable, String value) throw
 
 
 
-// Dialed dial String String String String int
-/**********************************************************
- * Create a new channel (originate) and bridge to this channel.
- *********************************************************/
-public Dialed dial(String channelId, String endpoint, String extension, String context, int timeout) throws RestException;
-
-
-
-// void holdChannel String
-/**********************************************************
- * Hold a channel.
- *********************************************************/
-public void holdChannel(String channelId) throws RestException;
-
-
-
-// void muteChannel String String AriCallback<Void> callback
+// void get String AriCallback<Channel> callback
 /**********************************************************
  * 
  *********************************************************/
-public void muteChannel(String channelId, String direction, AriCallback<Void> callback);
+public void get(String channelId, AriCallback<Channel> callback);
+
+
+
+// void ring String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void ring(String channelId, AriCallback<Void> callback);
+
+
+
+// void startSilence String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void startSilence(String channelId, AriCallback<Void> callback);
+
+
+
+// void unhold String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void unhold(String channelId, AriCallback<Void> callback);
+
+
+
+// void record String String String int int String boolean String AriCallback<LiveRecording> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void record(String channelId, String name, String format, int maxDurationSeconds, int maxSilenceSeconds, String ifExists, boolean beep, String terminateOn, AriCallback<LiveRecording> callback);
+
+
+
+// void play String String String int int AriCallback<Playback> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void play(String channelId, String media, String lang, int offsetms, int skipms, AriCallback<Playback> callback);
+
+
+
+// Playback play String String String int int
+/**********************************************************
+ * Start playback of media.
+ * The media URI may be any of a number of URI's. Currently sound: and recording: URI's are supported. This operation creates a playback resource that can be used to control the playback of media (pause, rewind, fast forward, etc.)
+ *********************************************************/
+public Playback play(String channelId, String media, String lang, int offsetms, int skipms) throws RestException;
+
+
+
+// void hangup String String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void hangup(String channelId, String reason, AriCallback<Void> callback);
 
 
 
@@ -184,108 +230,144 @@ public void continueInDialplan(String channelId, String context, String extensio
 
 
 
-// void mohStartChannel String String AriCallback<Void> callback
+// void answer String AriCallback<Void> callback
 /**********************************************************
  * 
  *********************************************************/
-public void mohStartChannel(String channelId, String mohClass, AriCallback<Void> callback);
+public void answer(String channelId, AriCallback<Void> callback);
 
 
 
-// List<? extends Channel> getChannels
-/**********************************************************
- * List active channels.
- *********************************************************/
-public List<? extends Channel> getChannels() throws RestException;
-
-
-
-// void unmuteChannel String String AriCallback<Void> callback
+// void mute String String AriCallback<Void> callback
 /**********************************************************
  * 
  *********************************************************/
-public void unmuteChannel(String channelId, String direction, AriCallback<Void> callback);
+public void mute(String channelId, String direction, AriCallback<Void> callback);
 
 
 
-// void getChannel String AriCallback<Channel> callback
-/**********************************************************
- * 
- *********************************************************/
-public void getChannel(String channelId, AriCallback<Channel> callback);
-
-
-
-// void originate String String String long String String String int
-/**********************************************************
- * Create a new channel (originate).
- * The new channel is not created until the dialed party picks up. Not wanting to block this request indefinitely, this request returns immediately with a 204 No Content. When the channel is created, a StasisStart event is sent with the provided app and appArgs. In the event of a failure (timeout, busy, etc.), an OriginationFailed event is sent.
- *********************************************************/
-public void originate(String endpoint, String extension, String context, long priority, String app, String appArgs, String callerId, int timeout) throws RestException;
-
-
-
-// void answerChannel String
-/**********************************************************
- * Answer a channel.
- *********************************************************/
-public void answerChannel(String channelId) throws RestException;
-
-
-
-// void recordChannel String String String int int String boolean String AriCallback<LiveRecording> callback
-/**********************************************************
- * 
- *********************************************************/
-public void recordChannel(String channelId, String name, String format, int maxDurationSeconds, int maxSilenceSeconds, String ifExists, boolean beep, String terminateOn, AriCallback<LiveRecording> callback);
-
-
-
-// void unholdChannel String AriCallback<Void> callback
-/**********************************************************
- * 
- *********************************************************/
-public void unholdChannel(String channelId, AriCallback<Void> callback);
-
-
-
-// void muteChannel String String
-/**********************************************************
- * Mute a channel.
- *********************************************************/
-public void muteChannel(String channelId, String direction) throws RestException;
-
-
-
-// void mohStopChannel String AriCallback<Void> callback
-/**********************************************************
- * 
- *********************************************************/
-public void mohStopChannel(String channelId, AriCallback<Void> callback);
-
-
-
-// void playOnChannel String String String int int AriCallback<Playback> callback
-/**********************************************************
- * 
- *********************************************************/
-public void playOnChannel(String channelId, String media, String lang, int offsetms, int skipms, AriCallback<Playback> callback);
-
-
-
-// Channel getChannel String
+// Channel get String
 /**********************************************************
  * Channel details.
  *********************************************************/
-public Channel getChannel(String channelId) throws RestException;
+public Channel get(String channelId) throws RestException;
 
 
 
-// void mohStopChannel String
+// void originate String String String long String String String int AriCallback<Channel> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void originate(String endpoint, String extension, String context, long priority, String app, String appArgs, String callerId, int timeout, AriCallback<Channel> callback);
+
+
+
+// void stopSilence String
+/**********************************************************
+ * Stop playing silence to a channel.
+ *********************************************************/
+public void stopSilence(String channelId) throws RestException;
+
+
+
+// void startSilence String
+/**********************************************************
+ * Play silence to a channel.
+ * Using media operations such as /play on a channel playing silence in this manner will suspend silence without resuming automatically.
+ *********************************************************/
+public void startSilence(String channelId) throws RestException;
+
+
+
+// void mute String String
+/**********************************************************
+ * Mute a channel.
+ *********************************************************/
+public void mute(String channelId, String direction) throws RestException;
+
+
+
+// void stopMoh String
 /**********************************************************
  * Stop playing music on hold to a channel.
  *********************************************************/
-public void mohStopChannel(String channelId) throws RestException;
+public void stopMoh(String channelId) throws RestException;
+
+
+
+// List<? extends Channel> list
+/**********************************************************
+ * List all active channels in Asterisk.
+ *********************************************************/
+public List<? extends Channel> list() throws RestException;
+
+
+
+// void sendDTMF String String int int int int AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void sendDTMF(String channelId, String dtmf, int before, int between, int duration, int after, AriCallback<Void> callback);
+
+
+
+// Channel snoopChannel String String String String String
+/**********************************************************
+ * Start snooping.
+ * Snoop (spy/whisper) on a specific channel.
+ *********************************************************/
+public Channel snoopChannel(String channelId, String spy, String whisper, String app, String appArgs) throws RestException;
+
+
+
+// void startMoh String String
+/**********************************************************
+ * Play music on hold to a channel.
+ * Using media operations such as /play on a channel playing MOH in this manner will suspend MOH without resuming automatically. If continuing music on hold is desired, the stasis application must reinitiate music on hold.
+ *********************************************************/
+public void startMoh(String channelId, String mohClass) throws RestException;
+
+
+
+// void unhold String
+/**********************************************************
+ * Remove a channel from hold.
+ *********************************************************/
+public void unhold(String channelId) throws RestException;
+
+
+
+// void hold String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void hold(String channelId, AriCallback<Void> callback);
+
+
+
+// void startMoh String String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void startMoh(String channelId, String mohClass, AriCallback<Void> callback);
+
+
+
+// LiveRecording record String String String int int String boolean String
+/**********************************************************
+ * Start a recording.
+ * Record audio from a channel. Note that this will not capture audio sent to the channel. The bridge itself has a record feature if that's what you want.
+ *********************************************************/
+public LiveRecording record(String channelId, String name, String format, int maxDurationSeconds, int maxSilenceSeconds, String ifExists, boolean beep, String terminateOn) throws RestException;
+
+
+
+// Channel originate String String String long String String String int
+/**********************************************************
+ * Create a new channel (originate).
+ * The new channel is created immediately and a snapshot of it returned. If a Stasis application is provided it will be automatically subscribed to the originated channel for further events and updates.
+ *********************************************************/
+public Channel originate(String endpoint, String extension, String context, long priority, String app, String appArgs, String callerId, int timeout) throws RestException;
 
 
 }

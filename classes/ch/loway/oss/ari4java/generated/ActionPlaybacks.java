@@ -11,53 +11,53 @@ import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
 
-public interface ActionPlayback {
+public interface ActionPlaybacks {
 
-// void stopPlayback String AriCallback<Void> callback
+// void get String AriCallback<Playback> callback
 /**********************************************************
  * 
  *********************************************************/
-public void stopPlayback(String playbackId, AriCallback<Void> callback);
+public void get(String playbackId, AriCallback<Playback> callback);
 
 
 
-// Playback getPlayback String
+// void control String String
 /**********************************************************
- * Get a playback's details.
+ * Control a playback.
  *********************************************************/
-public Playback getPlayback(String playbackId) throws RestException;
+public void control(String playbackId, String operation) throws RestException;
 
 
 
-// void controlPlayback String String
-/**********************************************************
- * Get a playback's details.
- *********************************************************/
-public void controlPlayback(String playbackId, String operation) throws RestException;
-
-
-
-// void controlPlayback String String AriCallback<Void> callback
-/**********************************************************
- * 
- *********************************************************/
-public void controlPlayback(String playbackId, String operation, AriCallback<Void> callback);
-
-
-
-// void getPlayback String AriCallback<Playback> callback
-/**********************************************************
- * 
- *********************************************************/
-public void getPlayback(String playbackId, AriCallback<Playback> callback);
-
-
-
-// void stopPlayback String
+// void stop String
 /**********************************************************
  * Stop a playback.
  *********************************************************/
-public void stopPlayback(String playbackId) throws RestException;
+public void stop(String playbackId) throws RestException;
+
+
+
+// Playback get String
+/**********************************************************
+ * Get a playback's details.
+ *********************************************************/
+public Playback get(String playbackId) throws RestException;
+
+
+
+// void control String String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void control(String playbackId, String operation, AriCallback<Void> callback);
+
+
+
+// void stop String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void stop(String playbackId, AriCallback<Void> callback);
 
 
 }

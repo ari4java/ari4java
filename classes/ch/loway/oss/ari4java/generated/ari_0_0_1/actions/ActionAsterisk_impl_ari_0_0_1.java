@@ -21,22 +21,23 @@ public class ActionAsterisk_impl_ari_0_0_1 extends BaseAriAction  implements Act
  * 
  * Gets Asterisk system information.
  *********************************************************/
-private void buildGetAsteriskInfo(String only) {
+private void buildGetInfo(String only) {
 reset();
 url = "/asterisk/info";
+method = "GET";
 lParamQuery.add( BaseAriAction.HttpParam.build( "only", only) );
 }
 
 @Override
-public AsteriskInfo getAsteriskInfo(String only) throws RestException {
-buildGetAsteriskInfo(only);
+public AsteriskInfo getInfo(String only) throws RestException {
+buildGetInfo(only);
 String json = httpActionSync();
 return deserializeJson( json, AsteriskInfo_impl_ari_0_0_1.class ); 
 }
 
 @Override
-public void getAsteriskInfo(String only, AriCallback<AsteriskInfo> callback) {
-buildGetAsteriskInfo(only);
+public void getInfo(String only, AriCallback<AsteriskInfo> callback) {
+buildGetInfo(only);
 httpActionAsync(callback, AsteriskInfo_impl_ari_0_0_1.class);
 }
 
@@ -48,6 +49,7 @@ httpActionAsync(callback, AsteriskInfo_impl_ari_0_0_1.class);
 private void buildGetGlobalVar(String variable) {
 reset();
 url = "/asterisk/variable";
+method = "GET";
 lParamQuery.add( BaseAriAction.HttpParam.build( "variable", variable) );
 lE.add( BaseAriAction.HttpResponse.build( 400, "Missing variable parameter.") );
 }
@@ -73,6 +75,7 @@ httpActionAsync(callback, Variable_impl_ari_0_0_1.class);
 private void buildSetGlobalVar(String variable, String value) {
 reset();
 url = "/asterisk/variable";
+method = "POST";
 lParamQuery.add( BaseAriAction.HttpParam.build( "variable", variable) );
 lParamQuery.add( BaseAriAction.HttpParam.build( "value", value) );
 lE.add( BaseAriAction.HttpResponse.build( 400, "Missing variable parameter.") );

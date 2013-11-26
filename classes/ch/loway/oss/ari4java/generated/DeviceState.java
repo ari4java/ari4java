@@ -11,19 +11,11 @@ import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
 
-public interface LiveRecording {
-
-// String getFormat
-/**********************************************************
- * 
- *********************************************************/
- public String getFormat();
-
-
+public interface DeviceState {
 
 // void setState String
 /**********************************************************
- * 
+ * Device's state
  *********************************************************/
  public void setState(String val );
 
@@ -31,47 +23,23 @@ public interface LiveRecording {
 
 // void setName String
 /**********************************************************
- * Base name for the recording
+ * Name of the device.
  *********************************************************/
  public void setName(String val );
 
 
 
-// String getCause
-/**********************************************************
- * Cause for recording failure if failed
- *********************************************************/
- public String getCause();
-
-
-
 // String getName
 /**********************************************************
- * Base name for the recording
+ * Name of the device.
  *********************************************************/
  public String getName();
 
 
 
-// void setFormat String
-/**********************************************************
- * 
- *********************************************************/
- public void setFormat(String val );
-
-
-
-// void setCause String
-/**********************************************************
- * Cause for recording failure if failed
- *********************************************************/
- public void setCause(String val );
-
-
-
 // String getState
 /**********************************************************
- * 
+ * Device's state
  *********************************************************/
  public String getState();
 

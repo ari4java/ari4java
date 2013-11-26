@@ -21,21 +21,22 @@ public class ActionApplications_impl_ari_0_0_1 extends BaseAriAction  implements
  * 
  * List all applications.
  *********************************************************/
-private void buildGetApplications() {
+private void buildList() {
 reset();
 url = "/applications";
+method = "GET";
 }
 
 @Override
-public List<? extends Application> getApplications() throws RestException {
-buildGetApplications();
+public List<? extends Application> list() throws RestException {
+buildList();
 String json = httpActionSync();
 return deserializeJson( json, new TypeReference<List<Application_impl_ari_0_0_1>>() {} ); 
 }
 
 @Override
-public void getApplications(AriCallback<List<? extends Application>> callback) {
-buildGetApplications();
+public void list(AriCallback<List<? extends Application>> callback) {
+buildList();
 httpActionAsync(callback, new TypeReference<List<Application_impl_ari_0_0_1>>() {});
 }
 
@@ -44,22 +45,23 @@ httpActionAsync(callback, new TypeReference<List<Application_impl_ari_0_0_1>>() 
  * 
  * Get details of an application.
  *********************************************************/
-private void buildGetApplication(String applicationName) {
+private void buildGet(String applicationName) {
 reset();
 url = "/applications/" + applicationName + "";
+method = "GET";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Application does not exist.") );
 }
 
 @Override
-public Application getApplication(String applicationName) throws RestException {
-buildGetApplication(applicationName);
+public Application get(String applicationName) throws RestException {
+buildGet(applicationName);
 String json = httpActionSync();
 return deserializeJson( json, Application_impl_ari_0_0_1.class ); 
 }
 
 @Override
-public void getApplication(String applicationName, AriCallback<Application> callback) {
-buildGetApplication(applicationName);
+public void get(String applicationName, AriCallback<Application> callback) {
+buildGet(applicationName);
 httpActionAsync(callback, Application_impl_ari_0_0_1.class);
 }
 
@@ -69,9 +71,10 @@ httpActionAsync(callback, Application_impl_ari_0_0_1.class);
  * Subscribe an application to a event source.
  * Returns the state of the application after the subscriptions have changed
  *********************************************************/
-private void buildApplicationSubscribe(String applicationName, String eventSource) {
+private void buildSubscribe(String applicationName, String eventSource) {
 reset();
 url = "/applications/" + applicationName + "/subscription";
+method = "POST";
 lParamQuery.add( BaseAriAction.HttpParam.build( "eventSource", eventSource) );
 lE.add( BaseAriAction.HttpResponse.build( 400, "Missing parameter.") );
 lE.add( BaseAriAction.HttpResponse.build( 404, "Application does not exist.") );
@@ -79,15 +82,15 @@ lE.add( BaseAriAction.HttpResponse.build( 422, "Event source does not exist.") )
 }
 
 @Override
-public Application applicationSubscribe(String applicationName, String eventSource) throws RestException {
-buildApplicationSubscribe(applicationName, eventSource);
+public Application subscribe(String applicationName, String eventSource) throws RestException {
+buildSubscribe(applicationName, eventSource);
 String json = httpActionSync();
 return deserializeJson( json, Application_impl_ari_0_0_1.class ); 
 }
 
 @Override
-public void applicationSubscribe(String applicationName, String eventSource, AriCallback<Application> callback) {
-buildApplicationSubscribe(applicationName, eventSource);
+public void subscribe(String applicationName, String eventSource, AriCallback<Application> callback) {
+buildSubscribe(applicationName, eventSource);
 httpActionAsync(callback, Application_impl_ari_0_0_1.class);
 }
 
@@ -97,9 +100,10 @@ httpActionAsync(callback, Application_impl_ari_0_0_1.class);
  * Unsubscribe an application from an event source.
  * Returns the state of the application after the subscriptions have changed
  *********************************************************/
-private void buildApplicationUnsubscribe(String applicationName, String eventSource) {
+private void buildUnsubscribe(String applicationName, String eventSource) {
 reset();
 url = "/applications/" + applicationName + "/subscription";
+method = "DELETE";
 lParamQuery.add( BaseAriAction.HttpParam.build( "eventSource", eventSource) );
 lE.add( BaseAriAction.HttpResponse.build( 400, "Missing parameter; event source scheme not recognized.") );
 lE.add( BaseAriAction.HttpResponse.build( 404, "Application does not exist.") );
@@ -108,15 +112,15 @@ lE.add( BaseAriAction.HttpResponse.build( 422, "Event source does not exist.") )
 }
 
 @Override
-public Application applicationUnsubscribe(String applicationName, String eventSource) throws RestException {
-buildApplicationUnsubscribe(applicationName, eventSource);
+public Application unsubscribe(String applicationName, String eventSource) throws RestException {
+buildUnsubscribe(applicationName, eventSource);
 String json = httpActionSync();
 return deserializeJson( json, Application_impl_ari_0_0_1.class ); 
 }
 
 @Override
-public void applicationUnsubscribe(String applicationName, String eventSource, AriCallback<Application> callback) {
-buildApplicationUnsubscribe(applicationName, eventSource);
+public void unsubscribe(String applicationName, String eventSource, AriCallback<Application> callback) {
+buildUnsubscribe(applicationName, eventSource);
 httpActionAsync(callback, Application_impl_ari_0_0_1.class);
 }
 

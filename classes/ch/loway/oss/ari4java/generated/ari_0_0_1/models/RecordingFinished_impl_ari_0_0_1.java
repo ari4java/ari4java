@@ -11,22 +11,22 @@ import java.util.Date;
 import java.util.List;
 
 /**********************************************************
- * Notification that a channel has left a Stasis application.
+ * Event showing the completion of a recording operation.
  * 
  * Defined in file: events.json
  *********************************************************/
 
-public class StasisEnd_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements StasisEnd, java.io.Serializable {
+public class RecordingFinished_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements RecordingFinished, java.io.Serializable {
 private static final long serialVersionUID = 1L;
-  /**    */
-  private Channel channel;
- public Channel getChannel() {
-   return channel;
+  /**  Recording control object  */
+  private LiveRecording recording;
+ public LiveRecording getRecording() {
+   return recording;
  }
 
- @JsonDeserialize( as=Channel_impl_ari_0_0_1.class )
- public void setChannel(Channel val ) {
-   channel = val;
+ @JsonDeserialize( as=LiveRecording_impl_ari_0_0_1.class )
+ public void setRecording(LiveRecording val ) {
+   recording = val;
  }
 
 }

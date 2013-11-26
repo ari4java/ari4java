@@ -13,69 +13,69 @@ import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface ActionApplications {
 
-// Application applicationUnsubscribe String String
+// void unsubscribe String String AriCallback<Application> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void unsubscribe(String applicationName, String eventSource, AriCallback<Application> callback);
+
+
+
+// List<? extends Application> list
+/**********************************************************
+ * List all applications.
+ *********************************************************/
+public List<? extends Application> list() throws RestException;
+
+
+
+// void subscribe String String AriCallback<Application> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void subscribe(String applicationName, String eventSource, AriCallback<Application> callback);
+
+
+
+// void get String AriCallback<Application> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void get(String applicationName, AriCallback<Application> callback);
+
+
+
+// Application get String
+/**********************************************************
+ * Get details of an application.
+ *********************************************************/
+public Application get(String applicationName) throws RestException;
+
+
+
+// Application unsubscribe String String
 /**********************************************************
  * Unsubscribe an application from an event source.
  * Returns the state of the application after the subscriptions have changed
  *********************************************************/
-public Application applicationUnsubscribe(String applicationName, String eventSource) throws RestException;
+public Application unsubscribe(String applicationName, String eventSource) throws RestException;
 
 
 
-// void applicationUnsubscribe String String AriCallback<Application> callback
+// void list AriCallback<List<? extends Application>> callback
 /**********************************************************
  * 
  *********************************************************/
-public void applicationUnsubscribe(String applicationName, String eventSource, AriCallback<Application> callback);
+public void list(AriCallback<List<? extends Application>> callback);
 
 
 
-// void getApplications AriCallback<List<? extends Application>> callback
-/**********************************************************
- * 
- *********************************************************/
-public void getApplications(AriCallback<List<? extends Application>> callback);
-
-
-
-// List<? extends Application> getApplications
-/**********************************************************
- * List all applications.
- *********************************************************/
-public List<? extends Application> getApplications() throws RestException;
-
-
-
-// void applicationSubscribe String String AriCallback<Application> callback
-/**********************************************************
- * 
- *********************************************************/
-public void applicationSubscribe(String applicationName, String eventSource, AriCallback<Application> callback);
-
-
-
-// void getApplication String AriCallback<Application> callback
-/**********************************************************
- * 
- *********************************************************/
-public void getApplication(String applicationName, AriCallback<Application> callback);
-
-
-
-// Application applicationSubscribe String String
+// Application subscribe String String
 /**********************************************************
  * Subscribe an application to a event source.
  * Returns the state of the application after the subscriptions have changed
  *********************************************************/
-public Application applicationSubscribe(String applicationName, String eventSource) throws RestException;
-
-
-
-// Application getApplication String
-/**********************************************************
- * Get details of an application.
- *********************************************************/
-public Application getApplication(String applicationName) throws RestException;
+public Application subscribe(String applicationName, String eventSource) throws RestException;
 
 
 }

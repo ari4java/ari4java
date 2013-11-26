@@ -40,6 +40,17 @@ private static final long serialVersionUID = 1L;
    channel_ids = val;
  }
 
+  /**  Names of the devices subscribed to.  */
+  private List<? extends String> device_names;
+ public List<? extends String> getDevice_names() {
+   return device_names;
+ }
+
+ @JsonDeserialize( contentAs=String.class )
+ public void setDevice_names(List<? extends String> val ) {
+   device_names = val;
+ }
+
   /**  {tech}/{resource} for endpoints subscribed to.  */
   private List<? extends String> endpoint_ids;
  public List<? extends String> getEndpoint_ids() {

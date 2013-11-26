@@ -13,6 +13,14 @@ import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface Application {
 
+// void setDevice_names List<? extends String>
+/**********************************************************
+ * Names of the devices subscribed to.
+ *********************************************************/
+ public void setDevice_names(List<? extends String> val );
+
+
+
 // void setName String
 /**********************************************************
  * Name of this application
@@ -34,6 +42,14 @@ public interface Application {
  * {tech}/{resource} for endpoints subscribed to.
  *********************************************************/
  public List<? extends String> getEndpoint_ids();
+
+
+
+// List<? extends String> getDevice_names
+/**********************************************************
+ * Names of the devices subscribed to.
+ *********************************************************/
+ public List<? extends String> getDevice_names();
 
 
 

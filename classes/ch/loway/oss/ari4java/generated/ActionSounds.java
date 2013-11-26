@@ -13,35 +13,35 @@ import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface ActionSounds {
 
-// void getSounds String String AriCallback<List<? extends Sound>> callback
+// void get String AriCallback<Sound> callback
 /**********************************************************
  * 
  *********************************************************/
-public void getSounds(String lang, String format, AriCallback<List<? extends Sound>> callback);
+public void get(String soundId, AriCallback<Sound> callback);
 
 
 
-// List<? extends Sound> getSounds String String
-/**********************************************************
- * List all sounds.
- *********************************************************/
-public List<? extends Sound> getSounds(String lang, String format) throws RestException;
-
-
-
-// Sound getStoredSound String
+// Sound get String
 /**********************************************************
  * Get a sound's details.
  *********************************************************/
-public Sound getStoredSound(String soundId) throws RestException;
+public Sound get(String soundId) throws RestException;
 
 
 
-// void getStoredSound String AriCallback<Sound> callback
+// List<? extends Sound> list String String
+/**********************************************************
+ * List all sounds.
+ *********************************************************/
+public List<? extends Sound> list(String lang, String format) throws RestException;
+
+
+
+// void list String String AriCallback<List<? extends Sound>> callback
 /**********************************************************
  * 
  *********************************************************/
-public void getStoredSound(String soundId, AriCallback<Sound> callback);
+public void list(String lang, String format, AriCallback<List<? extends Sound>> callback);
 
 
 }

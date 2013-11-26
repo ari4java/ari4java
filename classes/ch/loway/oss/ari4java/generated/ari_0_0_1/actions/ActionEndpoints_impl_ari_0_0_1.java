@@ -21,21 +21,22 @@ public class ActionEndpoints_impl_ari_0_0_1 extends BaseAriAction  implements Ac
  * 
  * List all endpoints.
  *********************************************************/
-private void buildGetEndpoints() {
+private void buildList() {
 reset();
 url = "/endpoints";
+method = "GET";
 }
 
 @Override
-public List<? extends Endpoint> getEndpoints() throws RestException {
-buildGetEndpoints();
+public List<? extends Endpoint> list() throws RestException {
+buildList();
 String json = httpActionSync();
 return deserializeJson( json, new TypeReference<List<Endpoint_impl_ari_0_0_1>>() {} ); 
 }
 
 @Override
-public void getEndpoints(AriCallback<List<? extends Endpoint>> callback) {
-buildGetEndpoints();
+public void list(AriCallback<List<? extends Endpoint>> callback) {
+buildList();
 httpActionAsync(callback, new TypeReference<List<Endpoint_impl_ari_0_0_1>>() {});
 }
 
@@ -44,21 +45,23 @@ httpActionAsync(callback, new TypeReference<List<Endpoint_impl_ari_0_0_1>>() {})
  * 
  * List available endoints for a given endpoint technology.
  *********************************************************/
-private void buildGetEndpointsByTech(String tech) {
+private void buildListByTech(String tech) {
 reset();
 url = "/endpoints/" + tech + "";
+method = "GET";
+lE.add( BaseAriAction.HttpResponse.build( 404, "Endpoints not found") );
 }
 
 @Override
-public List<? extends Endpoint> getEndpointsByTech(String tech) throws RestException {
-buildGetEndpointsByTech(tech);
+public List<? extends Endpoint> listByTech(String tech) throws RestException {
+buildListByTech(tech);
 String json = httpActionSync();
 return deserializeJson( json, new TypeReference<List<Endpoint_impl_ari_0_0_1>>() {} ); 
 }
 
 @Override
-public void getEndpointsByTech(String tech, AriCallback<List<? extends Endpoint>> callback) {
-buildGetEndpointsByTech(tech);
+public void listByTech(String tech, AriCallback<List<? extends Endpoint>> callback) {
+buildListByTech(tech);
 httpActionAsync(callback, new TypeReference<List<Endpoint_impl_ari_0_0_1>>() {});
 }
 
@@ -67,21 +70,23 @@ httpActionAsync(callback, new TypeReference<List<Endpoint_impl_ari_0_0_1>>() {})
  * 
  * Details for an endpoint.
  *********************************************************/
-private void buildGetEndpoint(String tech, String resource) {
+private void buildGet(String tech, String resource) {
 reset();
 url = "/endpoints/" + tech + "/" + resource + "";
+method = "GET";
+lE.add( BaseAriAction.HttpResponse.build( 404, "Endpoints not found") );
 }
 
 @Override
-public Endpoint getEndpoint(String tech, String resource) throws RestException {
-buildGetEndpoint(tech, resource);
+public Endpoint get(String tech, String resource) throws RestException {
+buildGet(tech, resource);
 String json = httpActionSync();
 return deserializeJson( json, Endpoint_impl_ari_0_0_1.class ); 
 }
 
 @Override
-public void getEndpoint(String tech, String resource, AriCallback<Endpoint> callback) {
-buildGetEndpoint(tech, resource);
+public void get(String tech, String resource, AriCallback<Endpoint> callback) {
+buildGet(tech, resource);
 httpActionAsync(callback, Endpoint_impl_ari_0_0_1.class);
 }
 

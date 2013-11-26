@@ -11,69 +11,69 @@ import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
 
-public interface LiveRecording {
+public interface ActionDeviceStates {
 
-// String getFormat
+// void list AriCallback<List<? extends DeviceState>> callback
 /**********************************************************
  * 
  *********************************************************/
- public String getFormat();
+public void list(AriCallback<List<? extends DeviceState>> callback);
 
 
 
-// void setState String
+// void get String AriCallback<DeviceState> callback
 /**********************************************************
  * 
  *********************************************************/
- public void setState(String val );
+public void get(String deviceName, AriCallback<DeviceState> callback);
 
 
 
-// void setName String
-/**********************************************************
- * Base name for the recording
- *********************************************************/
- public void setName(String val );
-
-
-
-// String getCause
-/**********************************************************
- * Cause for recording failure if failed
- *********************************************************/
- public String getCause();
-
-
-
-// String getName
-/**********************************************************
- * Base name for the recording
- *********************************************************/
- public String getName();
-
-
-
-// void setFormat String
+// void delete String AriCallback<Void> callback
 /**********************************************************
  * 
  *********************************************************/
- public void setFormat(String val );
+public void delete(String deviceName, AriCallback<Void> callback);
 
 
 
-// void setCause String
+// void delete String
 /**********************************************************
- * Cause for recording failure if failed
+ * Destroy a device-state controlled by ARI.
  *********************************************************/
- public void setCause(String val );
+public void delete(String deviceName) throws RestException;
 
 
 
-// String getState
+// List<? extends DeviceState> list
+/**********************************************************
+ * List all ARI controlled device states.
+ *********************************************************/
+public List<? extends DeviceState> list() throws RestException;
+
+
+
+// void update String String AriCallback<Void> callback
 /**********************************************************
  * 
  *********************************************************/
- public String getState();
+public void update(String deviceName, String deviceState, AriCallback<Void> callback);
+
+
+
+// void update String String
+/**********************************************************
+ * Change the state of a device controlled by ARI. (Note - implicitly creates the device state).
+ *********************************************************/
+public void update(String deviceName, String deviceState) throws RestException;
+
+
+
+// DeviceState get String
+/**********************************************************
+ * Retrieve the current state of a device.
+ *********************************************************/
+public DeviceState get(String deviceName) throws RestException;
 
 
 }

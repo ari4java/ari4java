@@ -19,23 +19,24 @@ public class ActionBridges_impl_ari_0_0_1 extends BaseAriAction  implements Acti
 /**********************************************************
  * Active bridges
  * 
- * List active bridges.
+ * List all active bridges in Asterisk.
  *********************************************************/
-private void buildGetBridges() {
+private void buildList() {
 reset();
 url = "/bridges";
+method = "GET";
 }
 
 @Override
-public List<? extends Bridge> getBridges() throws RestException {
-buildGetBridges();
+public List<? extends Bridge> list() throws RestException {
+buildList();
 String json = httpActionSync();
 return deserializeJson( json, new TypeReference<List<Bridge_impl_ari_0_0_1>>() {} ); 
 }
 
 @Override
-public void getBridges(AriCallback<List<? extends Bridge>> callback) {
-buildGetBridges();
+public void list(AriCallback<List<? extends Bridge>> callback) {
+buildList();
 httpActionAsync(callback, new TypeReference<List<Bridge_impl_ari_0_0_1>>() {});
 }
 
@@ -45,22 +46,23 @@ httpActionAsync(callback, new TypeReference<List<Bridge_impl_ari_0_0_1>>() {});
  * Create a new bridge.
  * This bridge persists until it has been shut down, or Asterisk has been shut down.
  *********************************************************/
-private void buildNewBridge(String type) {
+private void buildCreate(String type) {
 reset();
 url = "/bridges";
+method = "POST";
 lParamQuery.add( BaseAriAction.HttpParam.build( "type", type) );
 }
 
 @Override
-public Bridge newBridge(String type) throws RestException {
-buildNewBridge(type);
+public Bridge create(String type) throws RestException {
+buildCreate(type);
 String json = httpActionSync();
 return deserializeJson( json, Bridge_impl_ari_0_0_1.class ); 
 }
 
 @Override
-public void newBridge(String type, AriCallback<Bridge> callback) {
-buildNewBridge(type);
+public void create(String type, AriCallback<Bridge> callback) {
+buildCreate(type);
 httpActionAsync(callback, Bridge_impl_ari_0_0_1.class);
 }
 
@@ -69,22 +71,23 @@ httpActionAsync(callback, Bridge_impl_ari_0_0_1.class);
  * 
  * Get bridge details.
  *********************************************************/
-private void buildGetBridge(String bridgeId) {
+private void buildGet(String bridgeId) {
 reset();
 url = "/bridges/" + bridgeId + "";
+method = "GET";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Bridge not found") );
 }
 
 @Override
-public Bridge getBridge(String bridgeId) throws RestException {
-buildGetBridge(bridgeId);
+public Bridge get(String bridgeId) throws RestException {
+buildGet(bridgeId);
 String json = httpActionSync();
 return deserializeJson( json, Bridge_impl_ari_0_0_1.class ); 
 }
 
 @Override
-public void getBridge(String bridgeId, AriCallback<Bridge> callback) {
-buildGetBridge(bridgeId);
+public void get(String bridgeId, AriCallback<Bridge> callback) {
+buildGet(bridgeId);
 httpActionAsync(callback, Bridge_impl_ari_0_0_1.class);
 }
 
@@ -94,21 +97,22 @@ httpActionAsync(callback, Bridge_impl_ari_0_0_1.class);
  * Shut down a bridge.
  * If any channels are in this bridge, they will be removed and resume whatever they were doing beforehand.
  *********************************************************/
-private void buildDeleteBridge(String bridgeId) {
+private void buildDestroy(String bridgeId) {
 reset();
 url = "/bridges/" + bridgeId + "";
+method = "DELETE";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Bridge not found") );
 }
 
 @Override
-public void deleteBridge(String bridgeId) throws RestException {
-buildDeleteBridge(bridgeId);
+public void destroy(String bridgeId) throws RestException {
+buildDestroy(bridgeId);
 String json = httpActionSync();
 }
 
 @Override
-public void deleteBridge(String bridgeId, AriCallback<Void> callback) {
-buildDeleteBridge(bridgeId);
+public void destroy(String bridgeId, AriCallback<Void> callback) {
+buildDestroy(bridgeId);
 httpActionAsync(callback);
 }
 
@@ -117,9 +121,10 @@ httpActionAsync(callback);
  * 
  * Add a channel to a bridge.
  *********************************************************/
-private void buildAddChannelToBridge(String bridgeId, String channel, String role) {
+private void buildAddChannel(String bridgeId, String channel, String role) {
 reset();
 url = "/bridges/" + bridgeId + "/addChannel";
+method = "POST";
 lParamQuery.add( BaseAriAction.HttpParam.build( "channel", channel) );
 lParamQuery.add( BaseAriAction.HttpParam.build( "role", role) );
 lE.add( BaseAriAction.HttpResponse.build( 400, "Channel not found") );
@@ -129,14 +134,14 @@ lE.add( BaseAriAction.HttpResponse.build( 422, "Channel not in Stasis applicatio
 }
 
 @Override
-public void addChannelToBridge(String bridgeId, String channel, String role) throws RestException {
-buildAddChannelToBridge(bridgeId, channel, role);
+public void addChannel(String bridgeId, String channel, String role) throws RestException {
+buildAddChannel(bridgeId, channel, role);
 String json = httpActionSync();
 }
 
 @Override
-public void addChannelToBridge(String bridgeId, String channel, String role, AriCallback<Void> callback) {
-buildAddChannelToBridge(bridgeId, channel, role);
+public void addChannel(String bridgeId, String channel, String role, AriCallback<Void> callback) {
+buildAddChannel(bridgeId, channel, role);
 httpActionAsync(callback);
 }
 
@@ -145,9 +150,10 @@ httpActionAsync(callback);
  * 
  * Remove a channel from a bridge.
  *********************************************************/
-private void buildRemoveChannelFromBridge(String bridgeId, String channel) {
+private void buildRemoveChannel(String bridgeId, String channel) {
 reset();
 url = "/bridges/" + bridgeId + "/removeChannel";
+method = "POST";
 lParamQuery.add( BaseAriAction.HttpParam.build( "channel", channel) );
 lE.add( BaseAriAction.HttpResponse.build( 400, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 404, "Bridge not found") );
@@ -156,14 +162,14 @@ lE.add( BaseAriAction.HttpResponse.build( 422, "Channel not in this bridge") );
 }
 
 @Override
-public void removeChannelFromBridge(String bridgeId, String channel) throws RestException {
-buildRemoveChannelFromBridge(bridgeId, channel);
+public void removeChannel(String bridgeId, String channel) throws RestException {
+buildRemoveChannel(bridgeId, channel);
 String json = httpActionSync();
 }
 
 @Override
-public void removeChannelFromBridge(String bridgeId, String channel, AriCallback<Void> callback) {
-buildRemoveChannelFromBridge(bridgeId, channel);
+public void removeChannel(String bridgeId, String channel, AriCallback<Void> callback) {
+buildRemoveChannel(bridgeId, channel);
 httpActionAsync(callback);
 }
 
@@ -172,48 +178,50 @@ httpActionAsync(callback);
  * 
  * Play music on hold to a bridge or change the MOH class that is playing.
  *********************************************************/
-private void buildMohStartBridge(String bridgeId, String mohClass) {
+private void buildStartMoh(String bridgeId, String mohClass) {
 reset();
-url = "/bridges/" + bridgeId + "/mohStart";
+url = "/bridges/" + bridgeId + "/moh";
+method = "POST";
 lParamQuery.add( BaseAriAction.HttpParam.build( "mohClass", mohClass) );
 lE.add( BaseAriAction.HttpResponse.build( 404, "Bridge not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Bridge not in Stasis application") );
 }
 
 @Override
-public void mohStartBridge(String bridgeId, String mohClass) throws RestException {
-buildMohStartBridge(bridgeId, mohClass);
+public void startMoh(String bridgeId, String mohClass) throws RestException {
+buildStartMoh(bridgeId, mohClass);
 String json = httpActionSync();
 }
 
 @Override
-public void mohStartBridge(String bridgeId, String mohClass, AriCallback<Void> callback) {
-buildMohStartBridge(bridgeId, mohClass);
+public void startMoh(String bridgeId, String mohClass, AriCallback<Void> callback) {
+buildStartMoh(bridgeId, mohClass);
 httpActionAsync(callback);
 }
 
 /**********************************************************
- * Stop music on hold for a bridge
+ * Play music on hold to a bridge
  * 
  * Stop playing music on hold to a bridge.
- * This will only stop music on hold being played via bridges/{bridgeId}/mohStart.
+ * This will only stop music on hold being played via POST bridges/{bridgeId}/moh.
  *********************************************************/
-private void buildMohStopBridge(String bridgeId) {
+private void buildStopMoh(String bridgeId) {
 reset();
-url = "/bridges/" + bridgeId + "/mohStop";
+url = "/bridges/" + bridgeId + "/moh";
+method = "DELETE";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Bridge not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Bridge not in Stasis application") );
 }
 
 @Override
-public void mohStopBridge(String bridgeId) throws RestException {
-buildMohStopBridge(bridgeId);
+public void stopMoh(String bridgeId) throws RestException {
+buildStopMoh(bridgeId);
 String json = httpActionSync();
 }
 
 @Override
-public void mohStopBridge(String bridgeId, AriCallback<Void> callback) {
-buildMohStopBridge(bridgeId);
+public void stopMoh(String bridgeId, AriCallback<Void> callback) {
+buildStopMoh(bridgeId);
 httpActionAsync(callback);
 }
 
@@ -221,11 +229,12 @@ httpActionAsync(callback);
  * Play media to the participants of a bridge
  * 
  * Start playback of media on a bridge.
- * The media URI may be any of a number of URI's. You may use http: and https: URI's, as well as sound: and recording: URI's. This operation creates a playback resource that can be used to control the playback of media (pause, rewind, fast forward, etc.)
+ * The media URI may be any of a number of URI's. Currently sound: and recording: URI's are supported. This operation creates a playback resource that can be used to control the playback of media (pause, rewind, fast forward, etc.)
  *********************************************************/
-private void buildPlayOnBridge(String bridgeId, String media, String lang, int offsetms, int skipms) {
+private void buildPlay(String bridgeId, String media, String lang, int offsetms, int skipms) {
 reset();
 url = "/bridges/" + bridgeId + "/play";
+method = "POST";
 lParamQuery.add( BaseAriAction.HttpParam.build( "media", media) );
 lParamQuery.add( BaseAriAction.HttpParam.build( "lang", lang) );
 lParamQuery.add( BaseAriAction.HttpParam.build( "offsetms", offsetms) );
@@ -235,15 +244,15 @@ lE.add( BaseAriAction.HttpResponse.build( 409, "Bridge not in a Stasis applicati
 }
 
 @Override
-public Playback playOnBridge(String bridgeId, String media, String lang, int offsetms, int skipms) throws RestException {
-buildPlayOnBridge(bridgeId, media, lang, offsetms, skipms);
+public Playback play(String bridgeId, String media, String lang, int offsetms, int skipms) throws RestException {
+buildPlay(bridgeId, media, lang, offsetms, skipms);
 String json = httpActionSync();
 return deserializeJson( json, Playback_impl_ari_0_0_1.class ); 
 }
 
 @Override
-public void playOnBridge(String bridgeId, String media, String lang, int offsetms, int skipms, AriCallback<Playback> callback) {
-buildPlayOnBridge(bridgeId, media, lang, offsetms, skipms);
+public void play(String bridgeId, String media, String lang, int offsetms, int skipms, AriCallback<Playback> callback) {
+buildPlay(bridgeId, media, lang, offsetms, skipms);
 httpActionAsync(callback, Playback_impl_ari_0_0_1.class);
 }
 
@@ -253,9 +262,10 @@ httpActionAsync(callback, Playback_impl_ari_0_0_1.class);
  * Start a recording.
  * This records the mixed audio from all channels participating in this bridge.
  *********************************************************/
-private void buildRecordBridge(String bridgeId, String name, String format, int maxDurationSeconds, int maxSilenceSeconds, String ifExists, boolean beep, String terminateOn) {
+private void buildRecord(String bridgeId, String name, String format, int maxDurationSeconds, int maxSilenceSeconds, String ifExists, boolean beep, String terminateOn) {
 reset();
 url = "/bridges/" + bridgeId + "/record";
+method = "POST";
 lParamQuery.add( BaseAriAction.HttpParam.build( "name", name) );
 lParamQuery.add( BaseAriAction.HttpParam.build( "format", format) );
 lParamQuery.add( BaseAriAction.HttpParam.build( "maxDurationSeconds", maxDurationSeconds) );
@@ -263,18 +273,22 @@ lParamQuery.add( BaseAriAction.HttpParam.build( "maxSilenceSeconds", maxSilenceS
 lParamQuery.add( BaseAriAction.HttpParam.build( "ifExists", ifExists) );
 lParamQuery.add( BaseAriAction.HttpParam.build( "beep", beep) );
 lParamQuery.add( BaseAriAction.HttpParam.build( "terminateOn", terminateOn) );
+lE.add( BaseAriAction.HttpResponse.build( 400, "Invalid parameters") );
+lE.add( BaseAriAction.HttpResponse.build( 404, "Bridge not found") );
+lE.add( BaseAriAction.HttpResponse.build( 409, "Bridge is not in a Stasis application; A recording with the same name already exists on the system and can not be overwritten because it is in progress or ifExists=fail") );
+lE.add( BaseAriAction.HttpResponse.build( 422, "The format specified is unknown on this system") );
 }
 
 @Override
-public LiveRecording recordBridge(String bridgeId, String name, String format, int maxDurationSeconds, int maxSilenceSeconds, String ifExists, boolean beep, String terminateOn) throws RestException {
-buildRecordBridge(bridgeId, name, format, maxDurationSeconds, maxSilenceSeconds, ifExists, beep, terminateOn);
+public LiveRecording record(String bridgeId, String name, String format, int maxDurationSeconds, int maxSilenceSeconds, String ifExists, boolean beep, String terminateOn) throws RestException {
+buildRecord(bridgeId, name, format, maxDurationSeconds, maxSilenceSeconds, ifExists, beep, terminateOn);
 String json = httpActionSync();
 return deserializeJson( json, LiveRecording_impl_ari_0_0_1.class ); 
 }
 
 @Override
-public void recordBridge(String bridgeId, String name, String format, int maxDurationSeconds, int maxSilenceSeconds, String ifExists, boolean beep, String terminateOn, AriCallback<LiveRecording> callback) {
-buildRecordBridge(bridgeId, name, format, maxDurationSeconds, maxSilenceSeconds, ifExists, beep, terminateOn);
+public void record(String bridgeId, String name, String format, int maxDurationSeconds, int maxSilenceSeconds, String ifExists, boolean beep, String terminateOn, AriCallback<LiveRecording> callback) {
+buildRecord(bridgeId, name, format, maxDurationSeconds, maxSilenceSeconds, ifExists, beep, terminateOn);
 httpActionAsync(callback, LiveRecording_impl_ari_0_0_1.class);
 }
 
