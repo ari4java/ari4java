@@ -1,1 +1,1 @@
-Snapshot taken from Asterisk 12 beta 1 - October 16, 2013
+Snapshot taken from Asterisk 12 beta 2 - November 25, 2013

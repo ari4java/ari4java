@@ -1,7 +1,7 @@
 {
 	"_copyright": "Copyright (C) 2013, Digium, Inc.",
 	"_author": "David M. Lee, II <dlee@digium.com>",
-	"_svn_revision": "$Revision: 400552 $",
+	"_svn_revision": "$Revision: 403134 $",
 	"apiVersion": "0.0.1",
 	"swaggerVersion": "1.1",
 	"basePath": "http://localhost:8088/stasis",
@@ -14,7 +14,7 @@
 				{
 					"httpMethod": "GET",
 					"summary": "List all applications.",
-					"nickname": "getApplications",
+					"nickname": "list",
 					"responseClass": "List[Application]"
 				}
 			]
@@ -26,7 +26,7 @@
 				{
 					"httpMethod": "GET",
 					"summary": "Get details of an application.",
-					"nickname": "getApplication",
+					"nickname": "get",
 					"responseClass": "Application",
 					"parameters": [
 						{
@@ -55,7 +55,7 @@
 					"httpMethod": "POST",
 					"summary": "Subscribe an application to a event source.",
 					"notes": "Returns the state of the application after the subscriptions have changed",
-					"nickname": "applicationSubscribe",
+					"nickname": "subscribe",
 					"responseClass": "Application",
 					"parameters": [
 						{
@@ -68,7 +68,7 @@
 						},
 						{
 							"name": "eventSource",
-							"description": "URI for event source (channel:{channelId}, bridge:{bridgeId}, endpoint:{tech}/{resource}",
+							"description": "URI for event source (channel:{channelId}, bridge:{bridgeId}, endpoint:{tech}/{resource}, deviceState:{deviceName}",
 							"paramType": "query",
 							"required": true,
 							"allowMultiple": true,
@@ -94,7 +94,7 @@
 					"httpMethod": "DELETE",
 					"summary": "Unsubscribe an application from an event source.",
 					"notes": "Returns the state of the application after the subscriptions have changed",
-					"nickname": "applicationUnsubscribe",
+					"nickname": "unsubscribe",
 					"responseClass": "Application",
 					"parameters": [
 						{
@@ -107,7 +107,7 @@
 						},
 						{
 							"name": "eventSource",
-							"description": "URI for event source (channel:{channelId}, bridge:{bridgeId}, endpoint:{tech}/{resource}",
+							"description": "URI for event source (channel:{channelId}, bridge:{bridgeId}, endpoint:{tech}/{resource}, device_state:{deviceName}",
 							"paramType": "query",
 							"required": true,
 							"allowMultiple": true,
@@ -159,6 +159,11 @@
 				"endpoint_ids": {
 					"type": "List[string]",
 					"description": "{tech}/{resource} for endpoints subscribed to.",
+					"required": true
+				},
+				"device_names": {
+					"type": "List[string]",
+					"description": "Names of the devices subscribed to.",
 					"required": true
 				}
 			}
