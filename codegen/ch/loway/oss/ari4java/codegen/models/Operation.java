@@ -14,6 +14,7 @@ import java.util.List;
 public class Operation {
 
     public String method = "";
+    public boolean wsUpgrade = false;
     public String nickname = "";
     public String responseConcreteClass = "";
     public String responseInterface = "";
@@ -59,6 +60,7 @@ public class Operation {
         sb.append("("+toParmList(true)+") {\n");
         sb.append( "reset();\n");
         sb.append( "url = \"").append( stUri ).append( "\";\n");
+        sb.append( "method = \"").append( method ).append( "\";\n");
         for ( Param p: parms ) {
             if ( p.type == ParamType.QUERY ) {
                 sb.append( "lParamQuery.add( BaseAriAction.HttpParam.build( \"").append( p.name)
@@ -73,50 +75,84 @@ public class Operation {
             sb.append( "lE.add( BaseAriAction.HttpResponse.build( ").append( er.code)
                     .append( ", \"").append( er.reason ).append( "\") );\n");
         }
-        sb.append( "}\n\n");
-        
-        // 2. Synchronous method
-        sb.append( "@Override\n");
-        sb.append( getDefinition() );
-        sb.append( " {\n");
-        // call helper
-        sb.append( helperName+"("+toParmList(false)+");\n");
-        sb.append( "String json = httpActionSync();\n");
-        if ( !responseInterface.equalsIgnoreCase("void")) {
-            
-            String deserializationType = responseConcreteClass + ".class";
-
-            if (responseConcreteClass.startsWith("List<") ) {
-                //  (List<Interface>) mapper.readValue( string, new TypeReference<List<Concrete>>() {});                
-                deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
-            }
-
-            sb.append( "return deserializeJson( json, ")
-                    .append( deserializationType )
-                    .append(" ); \n");
-
+        if (wsUpgrade) {
+        	sb.append( "wsUpgrade = true;\n");
         }
         sb.append( "}\n\n");
         
-        // 3. Asynchronous method
-        sb.append( "@Override\n");
-        sb.append( getDefinitionAsync() );
-        sb.append( " {\n");
-        // call helper
-        sb.append( helperName+"("+toParmList(false)+");\n");
-        sb.append( "httpActionAsync(callback");
-        
-        if (responseInterface.equalsIgnoreCase("void")) {
-        	
-        } else {
-        	String deserializationType = responseConcreteClass + ".class";
-	        if (responseConcreteClass.startsWith("List<") ) {
-	            //  (List<Interface>) mapper.readValue( string, new TypeReference<List<Concrete>>() {});                
-	            deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
+        if (!wsUpgrade) {
+	        // 2. Synchronous method
+	        sb.append( "@Override\n");
+	        sb.append( getDefinition() );
+	        sb.append( " {\n");
+	        // call helper
+	        sb.append( helperName+"("+toParmList(false)+");\n");
+	        sb.append( "String json = httpActionSync();\n");
+	        if ( !responseInterface.equalsIgnoreCase("void")) {
+	            
+	            String deserializationType = responseConcreteClass + ".class";
+	
+	            if (responseConcreteClass.startsWith("List<") ) {
+	                //  (List<Interface>) mapper.readValue( string, new TypeReference<List<Concrete>>() {});                
+	                deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
+	            }
+	
+	            sb.append( "return deserializeJson( json, ")
+	                    .append( deserializationType )
+	                    .append(" ); \n");
+	
 	        }
-	        sb.append( ", "+deserializationType );
+	        sb.append( "}\n\n");
+        } else {
+        	// Websocket dummy sync method
+	        sb.append( "@Override\n");
+	        sb.append( getDefinition() );
+	        sb.append( " {\n");
+	        sb.append( "throw new RestException(\"No synchronous operation on WebSocket\");\n");
+	        sb.append( "}\n\n");
         }
-        sb.append( ");\n");
+        
+        if (!wsUpgrade) {
+	        // 3. Asynchronous method
+	        sb.append( "@Override\n");
+	        sb.append( getDefinitionAsync() );
+	        sb.append( " {\n");
+	        // call helper
+	        sb.append( helperName+"("+toParmList(false)+");\n");
+	        sb.append( "httpActionAsync(callback");
+	        
+	        if (responseInterface.equalsIgnoreCase("void")) {
+	        	
+	        } else {
+	        	String deserializationType = responseConcreteClass + ".class";
+		        if (responseConcreteClass.startsWith("List<") ) {
+		            //  (List<Interface>) mapper.readValue( string, new TypeReference<List<Concrete>>() {});                
+		            deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
+		        }
+		        sb.append( ", "+deserializationType );
+	        }
+	        sb.append( ");\n");
+        } else {
+        	// Websocket async method
+	        sb.append( "@Override\n");
+	        sb.append( getDefinitionAsync() );
+	        sb.append( " {\n");
+	        // call helper
+	        sb.append( helperName+"("+toParmList(false)+");\n");
+	        sb.append( "httpActionAsync(callback");
+	        
+	        if (responseInterface.equalsIgnoreCase("void")) {
+	        	
+	        } else {
+	        	String deserializationType = responseConcreteClass + ".class";
+		        if (responseConcreteClass.startsWith("List<") ) {
+		            //  (List<Interface>) mapper.readValue( string, new TypeReference<List<Concrete>>() {});                
+		            deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
+		        }
+		        sb.append( ", "+deserializationType );
+	        }
+	        sb.append( ");\n");
+        }
 
         // String url = "/aaa/" + bbb + "/ccc";
         // List<HttpParms> lP = new ArrayList<HttpParms>();

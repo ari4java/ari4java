@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -21,6 +22,7 @@ public class Model extends JavaPkgInfo {
 
     public String description = "";
     public String extendsModel = "";
+    public Set<String> subTypes;
     public String comesFromFile = "";
     public List<String> implementsInterafaces = new ArrayList<String>();
     

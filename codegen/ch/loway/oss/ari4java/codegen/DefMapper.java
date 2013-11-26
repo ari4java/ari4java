@@ -11,15 +11,19 @@ import ch.loway.oss.ari4java.codegen.models.Model;
 import ch.loway.oss.ari4java.codegen.models.ModelField;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -46,8 +50,6 @@ public class DefMapper {
         Apis api1 = loadApis( rootNode.get("apis"), f, apiVersion );
 
         mymodels.addAll(lModels);
-        myAPIs.add(api1);
-
 
         if ( modelHasEvents ) {
         
@@ -84,7 +86,7 @@ public class DefMapper {
             typeMessage.imports.add("com.fasterxml.jackson.annotation.JsonTypeInfo");
 
         }
-
+        
         // ora salva su disco
         saveToDisk(api1);
         for ( Model m: lModels ) {
@@ -156,6 +158,7 @@ public class DefMapper {
             currentModel.description = thisModelDesc;
             currentModel.comesFromFile = f.getName();
             currentModel.extendsModel = extendsObject(modelName);
+            currentModel.subTypes = subTypes(modelName);
             knownModels.add(thisModel);
 
             JsonNode properties = modelName.get("properties");
@@ -178,6 +181,15 @@ public class DefMapper {
 
             lModelsAdded.add(currentModel);
             
+        }
+        for (Model m : lModelsAdded) {
+        	if (m.subTypes != null) {
+        		for (Model mm : lModelsAdded) {
+        			if (m.subTypes.contains(mm.className)) {
+        				mm.extendsModel = remapAbstractType(m.className);
+        			}
+        		}
+        	}
         }
 
         return lModelsAdded;
@@ -202,6 +214,9 @@ public class DefMapper {
                 Operation op = new Operation();
                 action.operations.add(op);
                 op.method = txt(operation.get("httpMethod"));
+                if ("websocket".equalsIgnoreCase(txt(operation.get("upgrade")))) {
+                	op.wsUpgrade = true;
+                }
                 op.nickname = txt(operation.get("nickname"));                
                 op.responseInterface = remapAbstractType(txt(operation.get("responseClass")));
                 op.responseConcreteClass = remapConcreteType(txt(operation.get("responseClass")), apiVersion);
@@ -269,6 +284,23 @@ public class DefMapper {
     public void saveToDisk( JavaInterface ji ) throws IOException {
         saveToDisk( "classes/", "ch.loway.oss.ari4java.generated", ji.className, ji.toString() );
     }
+    
+    public void clean(String apiVersion) throws IOException {
+    	String base = "classes/ch/loway/oss/ari4java/generated";
+    	cleanPath(base+"/"+apiVersion+"/actions");
+    	cleanPath(base+"/"+apiVersion+"/models");
+    }
+    
+    private void cleanPath(String path) throws IOException {
+    	System.out.println("clean: "+path);
+    	File p = new File(path);
+    	p.mkdirs();
+    	for (File f : p.listFiles()) {
+    		if (f.isFile()) {
+    			f.delete();
+    		}
+    	}
+    }
 
 
     private String txt( JsonNode n ) {
@@ -284,7 +316,20 @@ public class DefMapper {
             return remapAbstractType( model.get("extends").asText() );
         }
         return "";
-
+    }
+    
+    public Set<String> subTypes( JsonNode model ) {
+    	Set<String> result = new HashSet<String>();
+    	if (model.get("subTypes") != null) {
+    		JsonNode st = model.get("subTypes");
+    		if (st instanceof ArrayNode) {
+    			ArrayNode sta = (ArrayNode) st;
+    			for (int i = 0; i < sta.size(); i++) {
+    				result.add(sta.get(i).asText());
+    			}
+    		}
+    	}
+    	return result;
     }
 
     public String remapAbstractType( String jsonType ) {
@@ -311,6 +356,27 @@ public class DefMapper {
         {
             return jsonType + ( concrete ? "_impl_" + apiVersion : "" );
         }
+    }
+    
+    public void writeProperties(String apiVersion) throws IOException {
+    	String base = "classes/ch/loway/oss/ari4java/generated";
+        String fName = base + "/" + apiVersion + ".properties";
+        FileWriter outFile = new FileWriter(fName);
+        PrintWriter out = new PrintWriter(outFile);
+        out.println("# Implementation mapping for "+apiVersion);
+        for (Apis api : myAPIs) {
+        	String prop = "ch.loway.oss.ari4java.generated."
+        		+ api.getInterfaceName() 
+        		+ " = " + api.getActionsPackage()+"."+api.getImplName();
+        	out.println(prop);
+        }
+        for (Model m : mymodels) {
+        	String prop = "ch.loway.oss.ari4java.generated."
+            	+ m.getInterfaceName() 
+            	+ " = " + m.getModelPackage()+"."+m.getImplName();
+            	out.println(prop);
+        }
+        out.close();
     }
 
 
