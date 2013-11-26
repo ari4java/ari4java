@@ -76,7 +76,7 @@ public class ActonBridgesTest {
     public void generateABridge() throws RestException {
         ActionBridges aa = createWForcedResponse(jsonBridge);
 
-        Bridge b = aa.getBridge("abcd");
+        Bridge b = aa.get("abcd");
 
         assertEquals("Id", "aaa", b.getId() );
         assertEquals("N channels", 3, b.getChannels().size() );
@@ -99,7 +99,7 @@ public class ActonBridgesTest {
         boolean exceptionRaised = false;
 
         try {
-            Playback pb = aa.playOnBridge("aaa", "sss", "en", 0, 0);
+            Playback pb = aa.play("aaa", "sss", "en", 0, 0);
         } catch ( RestException e ) {
             exceptionRaised = true;
         }
