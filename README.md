@@ -40,20 +40,60 @@ Status
 
 * 13.10.18 - Auto-generates all classes and compiles them.
 * 13.10.21 - All objects are deserializable right out of JSON. Mesages can be deserialzed automatically.
+* 13.11.26 - Netty.io based HTTP and WebSocket implementation, factory, sync and async methods
 
 
 Using
 -----
 
-You'll have to roll your own HTTP client implementation.
+To use the Netty.io HTTP+WS implementation, include netty-all-4.0.12.Final.jar or newer in your classpath.
 
-In order to deserialze a Websocket event, you call:
+To initialize:
 
-    Message msg = action.deserializeEvent( jsonEvent, Message_impl_ari_0_0_1.class );
+		ARI ari = new ARI();
+		NettyHttpClient hc = new NettyHttpClient();
+		hc.initialize("http://my-pbx-ip:8088/", "admin", "admin");
+		ari.setHttpClient(hc);
+		ari.setWsClient(hc);
+		ari.setVersion(AriVersion.ARI_0_0_1);
+		
+Sample synchronous call:
 
-And then check the actual class of the event (too bad Java cannot use types in switch statements).
-Make sure you use a concrete Message class as the root deserialization object.
+		ActionApplications ac = ari.getActionImpl(ActionApplications.class);
+		List<? extends Application> alist = ac.list();
 
+Sample asynchronous call:
+
+		ActionAsterisk aa = ari.getActionImpl(ActionAsterisk.class);
+		aa.getGlobalVar("AMPMGRPASS", new AriCallback<Variable>() {
+			@Override
+			public void onSuccess(Variable result) {
+				// Let's do something with the returned value
+			}
+			@Override
+			public void onFailure(RestException e) {
+				e.printStackTrace();
+			}
+		});
+		
+Sample WebSocket connection, waiting for events on hello and goodbye apps:
+
+		ActionEvents ae = ari.getActionImpl(ActionEvents.class);
+		ae.eventWebsocket("hello,goodbye", new AriCallback<Message>() {
+			@Override
+			public void onSuccess(Message result) {
+				// Let's do something with the event
+			}
+			@Override
+			public void onFailure(RestException e) {
+				e.printStackTrace();
+			}
+		});
+		Thread.sleep(5000); // Wait 5 seconds for events
+		ari.closeAction(ae); // Now close the websocket
+ 
+The Message object in the code above will be one of the message subtypes, 
+you will have to introspect to find out which. 
 
 To be done
 ----------
@@ -61,10 +101,7 @@ To be done
 * Parameters that could be multiple are handled as only one item. I would like to have 
   both ways, so that you do not have to create a List in the very common case that 
   you need to pass only one parameter.
-* HTTP client interface is still missing.
-* WebSocket interface is still missing.
 * Tests are still missing.
-* Factory to build objects is missing.
 * Events returning Object are handled as a String. 
 * New Swagger 1.3 format - see https://reviewboard.asterisk.org/r/2909/diff/
 
@@ -80,7 +117,6 @@ Similar & Interesting projects
 ------------------------------
 
 * AstAryPy - a Python library - https://github.com/asterisk/ast-ari-py
-
 
 
 Licensing
