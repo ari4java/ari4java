@@ -12,8 +12,8 @@ across different versions.
 
 
 
-Buiding/testing
----------------
+Buiding
+=======
 
 The code here is partially hand-written and partially generated out of Swagger definitions.
 
@@ -26,12 +26,17 @@ generated classes are under "ch.loway.oss.ari4vaja.generated". They should not b
 
 "codegen-data/" contains Swagger models from different versions of the interface (copied from Asterisk).
 
+Creating Java code out of Swagger definitions
+---------------------------------------------
+
 In order to run codegen (class ch.loway.oss.ari4java.codegen.run), you need the following libraries:
 
 - jackson-core-2.2.2
 - jackson-databind-2.2.2
 - jackson-annotations-2.2.2
 
+Testing and packaging
+---------------------
 
 The easiest tway to build is simply using the Gradle script supplied.
 
@@ -39,8 +44,6 @@ The easiest tway to build is simply using the Gradle script supplied.
 
 This will compile, test and package the current version. It will not run the code generator (for the moment at least).
 You'll find the resulting jar file under 'build/libs'.
-
-
 
 Running
 -------
@@ -50,7 +53,7 @@ The project requires:
 - jackson-core-2.2.2
 - jackson-databind-2.2.2
 - jackson-annotations-2.2.2
-
+- netty-all-4.0.11-Final
 
 Status
 ------
@@ -58,7 +61,7 @@ Status
 * 13.10.18 - Auto-generates all classes and compiles them.
 * 13.10.21 - All objects are deserializable right out of JSON. Mesages can be deserialzed automatically.
 * 13.11.26 - Netty.io based HTTP and WebSocket implementation, factory, sync and async methods
-* 13.12.29 - Imported the definitions for Asterisk 12.0.0 - ARI 1.0.0 - a bit of code changes in the code generator
+* 13.12.29 - Imported the definitions for Asterisk 12.0.0 - ARI 1.0.0 - a bit of code changes in the code generator - Added the Gradle build script.
 
 Using
 -----
