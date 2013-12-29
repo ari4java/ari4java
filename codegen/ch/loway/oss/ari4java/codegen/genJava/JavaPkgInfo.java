@@ -31,6 +31,7 @@ public class JavaPkgInfo {
 
     public String className = "";
     public String apiVersion = "";
+    public JavaInterface minimalIf = null;
 
     public void setPackageInfo( String classN, String apiV ) {
         className = classN;
@@ -57,6 +58,31 @@ public class JavaPkgInfo {
 
     public String getImplName() {
         return className + "_impl_" + apiVersion;
+    }
+
+    /**
+     * This is a "minimal" interface that has to be implemented at all costs.
+     *
+     * @param i
+     */
+
+    public void setMinimalInterface( JavaInterface i ) {
+        minimalIf = i;
+    }
+
+    /**
+     * Gets a copy of the current base interface.
+     * This is meant to have signatures removed as they are written.
+     * 
+     * @return
+     */
+
+    public JavaInterface getBaseInterface() {
+        if ( minimalIf == null ) {
+            return new JavaInterface();
+        } else {
+            return minimalIf.createScratchCopy();
+        }
     }
 
 }

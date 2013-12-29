@@ -15,18 +15,30 @@ public class JavaInterface {
 
     public String pkgName = "";
     public String className = "";
+    public String since = "";
 
     Map<String,String> definitions = new HashMap<String, String>();
 
-    public void iKnow( String signature, String method, String comment ) {
+    public void iKnow( String signature, String method, String comment, String sinceVersion ) {
 
         StringBuilder sb = new StringBuilder();
-        JavaGen.addBanner(sb, comment);
+        JavaGen.addBanner(sb, comment, sinceVersion);
         sb.append( method ).append(";\n\n");
 
-        definitions.put( signature, sb.toString() );
+        if ( !definitions.containsKey(signature) ) {
+            definitions.put( signature, sb.toString() );
+        }
     }
 
+
+    public JavaInterface createScratchCopy() {
+        JavaInterface ji = new JavaInterface();
+        ji.pkgName = pkgName;
+        ji.className = className;
+        ji.since = since;
+        ji.definitions = new HashMap<String, String>(definitions);
+        return ji;
+    }
 
 
 
@@ -56,19 +68,50 @@ public class JavaInterface {
 
 
         sb.append( "}\n;");
-
-
-
-
         return sb.toString();
-
-
 
     }
 
+    /**
+     * Removes a signature.
+     * When you serialize an object, you remove all required signatures.
+     *
+     * @param signature
+     */
 
+    public void removeSignature( String signature ) {
+        if ( definitions.containsKey(signature) ) {
+            definitions.remove(signature);
+        } else {
+            throw new IllegalArgumentException( "Signature not found: " + signature );
+        }
+    }
     
 
+    public String getCodeToImplementMissingSignatures() {
+        if ( definitions.isEmpty() ) {
+            return "/** No missing signatures from interface */\n";
+        } else {
+
+            StringBuilder sb = new StringBuilder();
+
+            // generate empty methods that just throw an UnsupportedOperationException
+            for ( String s: definitions.values() ) {
+
+                String replaceTo = "{\n"
+                        + "  throw new UnsupportedOperationException(\"Method availble from ...\");\n"
+                        + "};";
+
+                s = s.replace(";", replaceTo);
+
+                sb.append( s );
+            }
+
+            return sb.toString();
+
+        }
+    }
+    
 }
 
 // $Log$

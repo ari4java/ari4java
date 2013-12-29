@@ -22,6 +22,7 @@ public class Apis extends JavaPkgInfo {
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
+        JavaInterface ji = getBaseInterface();
 
         JavaGen.importClasses(sb, getActionsPackage(), Arrays.asList( new String[] {
             "ch.loway.oss.ari4java.generated.*",
@@ -43,17 +44,25 @@ public class Apis extends JavaPkgInfo {
                 .append( " {\n" );
 
         for ( Action a: actions ) {
+
+            for ( Operation o: a.operations ) {
+                ji.removeSignature( o.getSignature() );
+                ji.removeSignature( o.getSignatureAsync() );
+            }
+
             sb.append( a.toString() );
         }
+
+        sb.append( ji.getCodeToImplementMissingSignatures() );
 
         sb.append( "};\n");
         return sb.toString();
 
     }
 
-    public void registerInterfaces(JavaInterface j) {
+    public void registerInterfaces(JavaInterface j, String interfaceVersion) {
         for ( Action a: actions ) {
-            a.registerInterfaces( j );
+            a.registerInterfaces( j, interfaceVersion );
         }
     }
 

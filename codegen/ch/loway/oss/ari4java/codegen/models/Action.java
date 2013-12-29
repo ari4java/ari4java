@@ -30,13 +30,13 @@ public class Action {
 
     }
 
-    void registerInterfaces(JavaInterface j) {
+    void registerInterfaces(JavaInterface j, String apiVersion) {
         for ( Operation o: operations ) {
             String javaSignature = o.getSignature();
             String definition = o.getDefinition();
 
-            j.iKnow(javaSignature, definition, o.description );
-            j.iKnow(o.getSignatureAsync(), o.getDefinitionAsync(), "");
+            j.iKnow(javaSignature, definition, o.description, apiVersion );
+            j.iKnow(o.getSignatureAsync(), o.getDefinitionAsync(), "", apiVersion);
         }
     }
 

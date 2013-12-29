@@ -18,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -26,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
+ * The model mapper keeps a list of interfaces and actual implementations.
  *
  * $Id$
  * @author lenz
@@ -40,7 +41,17 @@ public class DefMapper {
 
     Map<String, JavaInterface> interfaces = new HashMap<String, JavaInterface>();
 
-    public void load( File f, String apiVersion, boolean modelHasEvents ) throws IOException {
+    /**
+     * Loads definitions from a module.
+     *
+     * @param f The source .json file
+     * @param apiVersion The version of the API we are working with
+     * @param modelHasEvents whether this file generates WS events
+     * @throws IOException
+     */
+
+
+    public void parseJsonDefinition( File f, String apiVersion, boolean modelHasEvents ) throws IOException {
 
         ObjectMapper om = new ObjectMapper();
         System.out.println( "Loading as: " + f.getAbsolutePath() );
@@ -50,6 +61,7 @@ public class DefMapper {
         Apis api1 = loadApis( rootNode.get("apis"), f, apiVersion );
 
         mymodels.addAll(lModels);
+        myAPIs.add(api1);
 
         if ( modelHasEvents ) {
         
@@ -85,16 +97,9 @@ public class DefMapper {
             typeMessage.imports.add("com.fasterxml.jackson.annotation.JsonSubTypes.Type");
             typeMessage.imports.add("com.fasterxml.jackson.annotation.JsonTypeInfo");
 
-        }
-        
-        // ora salva su disco
-        saveToDisk(api1);
-        for ( Model m: lModels ) {
-            saveToDisk(m);
-        }
-        
+        }                
 
-        // Now generate common APIs
+        // Now generate the interface
         for ( Model m: mymodels ) {
             JavaInterface j = interfaces.get(m.getInterfaceName());
             if ( j == null ) {
@@ -104,34 +109,126 @@ public class DefMapper {
                 interfaces.put(m.getInterfaceName(), j);
             }
 
-            m.registerInterfaces(j);
+            m.registerInterfaces(j, apiVersion);
         }
 
-        for ( Apis api: myAPIs ) {
-            JavaInterface j = interfaces.get(api.getInterfaceName());
+        //for ( Apis api: myAPIs ) {
+            JavaInterface j = interfaces.get(api1.getInterfaceName());
             if ( j == null ) {
                 j = new JavaInterface();
                 j.pkgName = "ch.loway.oss.ari4java.generated";
-                j.className = api.getInterfaceName();
-                interfaces.put(api.getInterfaceName(), j);
+                j.className = api1.getInterfaceName();
+                interfaces.put(api1.getInterfaceName(), j);
             }
 
-            api.registerInterfaces(j);
-        }
+            api1.registerInterfaces(j, apiVersion);
+        //}
 
+//        //
+//        for ( String ifName: interfaces.keySet() ) {
+//            JavaInterface ji = interfaces.get(ifName);
+////            saveToDisk(ji);
+//        }
 
+    }
 
+    /**
+     * Generate all files.
+     *
+     *
+     * @throws IOException
+     */
+
+    public void generateAllClasses() throws IOException {
+        generateInterfaces();
+        generateModels();
+        generateApis();
+        generateProperties();
+    }
+
+    /**
+     * Generate all interfaces.
+     * 
+     * @throws IOException
+     */
+
+    public void generateInterfaces() throws IOException {
         //
         for ( String ifName: interfaces.keySet() ) {
             JavaInterface ji = interfaces.get(ifName);
             saveToDisk(ji);
         }
 
-        
+    }
 
+    /**
+     * Generates a model.
+     * For each model. let's find out the minimal interface it should implement.
+     * 
+     * @throws IOException
+     */
 
+    public void generateModels() throws IOException {
+        for (Model m : mymodels) {
+            String minIf = m.getInterfaceName();
+            JavaInterface ji = interfaces.get(minIf);
+
+            m.setMinimalInterface(ji);
+            saveToDisk(m);
+        }
+    }
+
+    /**
+     * Save APIs to disk.
+     * 
+     * @throws IOException
+     */
+
+    public void generateApis() throws IOException {
+        for ( Apis api: myAPIs ) {
+            String minIf = api.getInterfaceName();
+            JavaInterface ji = interfaces.get(minIf);
+
+            api.setMinimalInterface(ji);           
+            saveToDisk(api);
+        }
+    }
+
+    /**
+     * Write a properties file for each API version.
+     *
+     * @throws IOException
+     */
+
+    public void generateProperties() throws IOException {
+
+        Map<String,Set<Model>> mM = new HashMap<String, Set<Model>>();
+        Map<String,Set<Apis>> mA = new HashMap<String, Set<Apis>>();
+
+        for ( Apis api: myAPIs ) {
+            String ver = api.apiVersion;
+            if ( !mA.containsKey(ver) ) {
+                mA.put( ver, new HashSet<Apis>() );
+            }
+
+            mA.get(ver).add(api);
+        }
+
+        for ( Model mod: mymodels ) {
+            String ver = mod.apiVersion;
+            if ( !mM.containsKey(ver) ) {
+                mM.put( ver, new HashSet<Model>() );
+            }
+
+            mM.get(ver).add(mod);
+        }
+
+        for ( String ver: mM.keySet() ) {
+            writeProperties(ver, mA.get(ver), mM.get(ver));
+        }
 
     }
+
 
     /**
      *
@@ -183,13 +280,13 @@ public class DefMapper {
             
         }
         for (Model m : lModelsAdded) {
-        	if (m.subTypes != null) {
-        		for (Model mm : lModelsAdded) {
-        			if (m.subTypes.contains(mm.className)) {
-        				mm.extendsModel = remapAbstractType(m.className);
-        			}
-        		}
-        	}
+            if (m.subTypes != null) {
+                for (Model mm : lModelsAdded) {
+                    if (m.subTypes.contains(mm.className)) {
+                        mm.extendsModel = remapAbstractType(m.className);
+                    }
+                }
+            }
         }
 
         return lModelsAdded;
@@ -357,20 +454,28 @@ public class DefMapper {
             return jsonType + ( concrete ? "_impl_" + apiVersion : "" );
         }
     }
-    
-    public void writeProperties(String apiVersion) throws IOException {
+
+    /**
+     * Writes implemenattion mappings.
+     *
+     *
+     * @param apiVersion
+     * @throws IOException
+     */
+
+    private void writeProperties( String apiVersion, Collection<Apis> apis, Collection<Model> models ) throws IOException {
     	String base = "classes/ch/loway/oss/ari4java/generated";
         String fName = base + "/" + apiVersion + ".properties";
         FileWriter outFile = new FileWriter(fName);
         PrintWriter out = new PrintWriter(outFile);
         out.println("# Implementation mapping for "+apiVersion);
-        for (Apis api : myAPIs) {
+        for (Apis api : apis) {
         	String prop = "ch.loway.oss.ari4java.generated."
         		+ api.getInterfaceName() 
         		+ " = " + api.getActionsPackage()+"."+api.getImplName();
         	out.println(prop);
         }
-        for (Model m : mymodels) {
+        for (Model m : models) {
         	String prop = "ch.loway.oss.ari4java.generated."
             	+ m.getInterfaceName() 
             	+ " = " + m.getModelPackage()+"."+m.getImplName();

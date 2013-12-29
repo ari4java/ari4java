@@ -12,7 +12,8 @@ import java.io.IOException;
  */
 public class run {
 
-    public static String SOURCES = "codegen-data/ari_0_0_1/";
+    public static String SOURCES = "codegen-data/";
+    public static String SRC_001 = SOURCES + "ari_0_0_1/";
     // D:\git\ari4java\codegen-data\ari_0_0_1
 
 
@@ -20,20 +21,36 @@ public class run {
         System.out.println("This is ARI4JAVA Code Generator version " + VERSION.VER );
 
         DefMapper dm = new DefMapper();
+
+        loadAsteriskDefs( dm, "ari_0_0_1" );
+        loadAsteriskDefs( dm, "ari_1_0_0" );
+
+        dm.generateAllClasses();
+
+
+//        dm.writeProperties("ari_0_0_1");
         
-        dm.clean("ari_0_0_1");
-        dm.load( new File(SOURCES + "applications.json"), "ari_0_0_1", false );
-        dm.load( new File(SOURCES + "asterisk.json"), "ari_0_0_1", false );
-        dm.load( new File(SOURCES + "bridges.json"), "ari_0_0_1", false );
-        dm.load( new File(SOURCES + "channels.json"), "ari_0_0_1", false );
-        dm.load( new File(SOURCES + "endpoints.json"), "ari_0_0_1", false );
-        dm.load( new File(SOURCES + "playbacks.json"), "ari_0_0_1", false );
-        dm.load( new File(SOURCES + "recordings.json"), "ari_0_0_1", false );
-        dm.load( new File(SOURCES + "sounds.json"), "ari_0_0_1", false );
-        dm.load( new File(SOURCES + "deviceStates.json"), "ari_0_0_1", false );
-        dm.load( new File(SOURCES + "events.json"), "ari_0_0_1", true );
-        dm.writeProperties("ari_0_0_1");
     }
+
+
+    private static void loadAsteriskDefs( DefMapper dm, String srcVer ) throws IOException {
+
+        String srcDir = SOURCES + srcVer + "/";
+
+        dm.clean( srcVer );
+        dm.parseJsonDefinition( new File(srcDir + "applications.json"), srcVer, false );
+        dm.parseJsonDefinition( new File(srcDir + "asterisk.json"), srcVer, false );
+        dm.parseJsonDefinition( new File(srcDir + "bridges.json"), srcVer, false );
+        dm.parseJsonDefinition( new File(srcDir + "channels.json"), srcVer, false );
+        dm.parseJsonDefinition( new File(srcDir + "endpoints.json"), srcVer, false );
+        dm.parseJsonDefinition( new File(srcDir + "playbacks.json"), srcVer, false );
+        dm.parseJsonDefinition( new File(srcDir + "recordings.json"), srcVer, false );
+        dm.parseJsonDefinition( new File(srcDir + "sounds.json"), srcVer, false );
+        dm.parseJsonDefinition( new File(srcDir + "deviceStates.json"), srcVer, false );
+        dm.parseJsonDefinition( new File(srcDir + "events.json"), srcVer, true );
+        
+    }
+
 
 
 }

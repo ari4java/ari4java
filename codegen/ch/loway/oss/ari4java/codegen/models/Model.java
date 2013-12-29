@@ -48,6 +48,7 @@ public class Model extends JavaPkgInfo {
         Collections.sort( fields );
         Collections.sort( implementsInterafaces );
 
+        JavaInterface ji = getBaseInterface();
 
         StringBuilder sb = new StringBuilder();
 
@@ -80,8 +81,13 @@ public class Model extends JavaPkgInfo {
         sb.append( "private static final long serialVersionUID = 1L;\n");
 
         for ( ModelField mf: fields) {
+            ji.removeSignature( mf.getSignatureGet() );
+            ji.removeSignature( mf.getSignatureSet() );
+            
             sb.append( mf.toString() );
         }
+        
+        sb.append( ji.getCodeToImplementMissingSignatures() );
 
         sb.append( "}\n" );
         return sb.toString();
@@ -90,14 +96,14 @@ public class Model extends JavaPkgInfo {
     }
 
 
-    public void registerInterfaces( JavaInterface j ) {
+    public void registerInterfaces( JavaInterface j, String apiVersion ) {
 
         for ( ModelField mf: fields) {
             String signature = mf.getSignatureGet();
             String declaration = mf.getDeclarationGet();
             String comment = mf.comment;
 
-            j.iKnow(signature, declaration, comment);
+            j.iKnow(signature, declaration, comment, apiVersion);
         }
 
         for ( ModelField mf: fields) {
@@ -105,7 +111,7 @@ public class Model extends JavaPkgInfo {
             String declaration = mf.getDeclarationSet();
             String comment = mf.comment;
 
-            j.iKnow(signature, declaration, comment);
+            j.iKnow(signature, declaration, comment, apiVersion);
         }
 
 

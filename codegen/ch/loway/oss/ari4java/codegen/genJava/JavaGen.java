@@ -40,6 +40,11 @@ public class JavaGen {
 
     }
 
+    public static void addBanner( StringBuilder sb, String multilineBanner, String sinceVersion ) {
+        multilineBanner += "\n\n@since: " + sinceVersion;
+        addBanner(sb, multilineBanner);
+    }
+
 
     public static String addPrefixAndCapitalize( String prefix, String field ) {
 
