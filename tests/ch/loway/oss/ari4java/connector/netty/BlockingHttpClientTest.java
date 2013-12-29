@@ -35,13 +35,13 @@ public class BlockingHttpClientTest {
     @Test
     public void testRunClient() throws InterruptedException, URISyntaxException {
 
-        BlockingHttpClient client = new BlockingHttpClient();
-        HttpClientHandler out = client.httpRequestViaNetty( new URI("http://10.10.5.49:8088/ari/channels/1234/answer"), HttpMethod.POST,  "lenz", "pippo", new ArrayList<HttpParam>() );
-
-        System.out.println( "--------" );
-        System.out.println( out.sb.toString() );
-
-        System.out.println( "Received: " + out.sb.length() + " chars");
+//        BlockingHttpClient client = new BlockingHttpClient();
+//        HttpClientHandler out = client.httpRequestViaNetty( new URI("http://10.10.5.49:8088/ari/channels/1234/answer"), HttpMethod.POST,  "lenz", "pippo", new ArrayList<HttpParam>() );
+//
+//        System.out.println( "--------" );
+//        System.out.println( out.sb.toString() );
+//
+//        System.out.println( "Received: " + out.sb.length() + " chars");
 
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");

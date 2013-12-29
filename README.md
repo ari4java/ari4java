@@ -32,7 +32,15 @@ In order to run codegen (class ch.loway.oss.ari4java.codegen.run), you need the 
 - jackson-databind-2.2.2
 - jackson-annotations-2.2.2
 
-I expect a Gradle build script soon.
+
+The easiest tway to build is simply using the Gradle script supplied.
+
+		gradle clean build
+
+This will compile, test and package the current version. It will not run the code generator (for the moment at least).
+You'll find the resulting jar file under 'build/libs'.
+
+
 
 Running
 -------
@@ -42,7 +50,7 @@ The project requires:
 - jackson-core-2.2.2
 - jackson-databind-2.2.2
 - jackson-annotations-2.2.2
-- netty-all-4.0.11-Final
+
 
 Status
 ------

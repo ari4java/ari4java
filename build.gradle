@@ -1,0 +1,80 @@
+apply plugin: 'java'
+def env = System.getenv()
+
+//
+// I defaults valgono per HUDSON
+//
+
+project.ext {
+  webapp_name    = 'ari4java'
+  app_version    = '0.1'
+  build_number   = env["BUILD_NUMBER"]  
+  version_class  = 'ch/loway/oss/ari4java/BUILD.java'
+  build_time     = "" + new Date()
+}
+
+
+sourceSets {
+		
+	main {
+		java {
+			srcDirs "$buildDir/classes_subst"
+		}
+	}
+
+	test {
+		java {
+			srcDirs "./tests"
+		}
+	}
+}
+
+jar {
+    manifest {
+        attributes("Implementation-Title": project.ext.webapp_name, "Implementation-Version": project.ext.app_version)
+    }
+    archiveName project.ext.webapp_name + "-" + project.ext.app_version + ".jar"
+}
+
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+	compile 'com.fasterxml.jackson.core:jackson-core:2.2.2'
+	compile 'com.fasterxml.jackson.core:jackson-databind:2.2.2'
+	compile 'com.fasterxml.jackson.core:jackson-annotations:2.2.2'
+	compile 'io.netty:netty-all:4.0.11.Final'
+
+	testCompile 'junit:junit:4.10'
+
+}
+
+task setVersionInSources() {
+	doLast {
+		def cjd = new File( "$buildDir/classes_subst" )
+		cjd.mkdirs();
+
+		def FileTree tree = fileTree( dir: "./classes" )	
+		//tree.each { File file -> 	println file }
+		
+		copy {
+        from './classes'
+        into "$buildDir/classes_subst"                
+    }
+
+    ant.replace( file: "$buildDir/classes_subst/" + project.ext.version_class, 
+    	           token: "VERSION",
+    	           value: "VERSION = \"" + project.ext.app_version + "\"; //"    	           
+    	           )
+    
+    ant.replace( file: "$buildDir/classes_subst/" + project.ext.version_class, 
+    	           token: "BUILD_N",
+    	           value: "BUILD_N = \"" + project.ext.build_number + " - "  + project.ext.build_time  + "\"; //"
+    	           )  	  	
+	}
+}
+compileJava.dependsOn setVersionInSources
+
