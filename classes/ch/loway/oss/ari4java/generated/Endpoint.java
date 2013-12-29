@@ -16,6 +16,8 @@ public interface Endpoint {
 // void setState String
 /**********************************************************
  * Endpoint's state
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setState(String val );
 
@@ -24,6 +26,8 @@ public interface Endpoint {
 // void setChannel_ids List<? extends String>
 /**********************************************************
  * Id's of channels associated with this endpoint
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setChannel_ids(List<? extends String> val );
 
@@ -32,6 +36,8 @@ public interface Endpoint {
 // String getResource
 /**********************************************************
  * Identifier of the endpoint, specific to the given technology.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getResource();
 
@@ -40,6 +46,8 @@ public interface Endpoint {
 // void setTechnology String
 /**********************************************************
  * Technology of the endpoint
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setTechnology(String val );
 
@@ -48,6 +56,8 @@ public interface Endpoint {
 // String getTechnology
 /**********************************************************
  * Technology of the endpoint
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getTechnology();
 
@@ -56,6 +66,8 @@ public interface Endpoint {
 // void setResource String
 /**********************************************************
  * Identifier of the endpoint, specific to the given technology.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setResource(String val );
 
@@ -64,6 +76,8 @@ public interface Endpoint {
 // String getState
 /**********************************************************
  * Endpoint's state
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getState();
 
@@ -72,6 +86,8 @@ public interface Endpoint {
 // List<? extends String> getChannel_ids
 /**********************************************************
  * Id's of channels associated with this endpoint
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public List<? extends String> getChannel_ids();
 

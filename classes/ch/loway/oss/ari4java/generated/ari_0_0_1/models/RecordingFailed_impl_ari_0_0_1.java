@@ -29,5 +29,6 @@ private static final long serialVersionUID = 1L;
    recording = val;
  }
 
+/** No missing signatures from interface */
 }
 

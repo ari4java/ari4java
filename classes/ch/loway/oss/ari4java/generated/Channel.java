@@ -16,6 +16,8 @@ public interface Channel {
 // void setState String
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setState(String val );
 
@@ -26,48 +28,48 @@ public interface Channel {
  * Unique identifier of the channel.
  * 
  * This is the same as the Uniqueid field in AMI.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getId();
-
-
-
-// CallerID getConnected
-/**********************************************************
- * 
- *********************************************************/
- public CallerID getConnected();
 
 
 
 // void setAccountcode String
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setAccountcode(String val );
+
+
+
+// CallerID getConnected
+/**********************************************************
+ * 
+ * 
+ * @since: ari_0_0_1
+ *********************************************************/
+ public CallerID getConnected();
 
 
 
 // String getAccountcode
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getAccountcode();
-
-
-
-// void setId String
-/**********************************************************
- * Unique identifier of the channel.
- * 
- * This is the same as the Uniqueid field in AMI.
- *********************************************************/
- public void setId(String val );
 
 
 
 // CallerID getCaller
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public CallerID getCaller();
 
@@ -76,14 +78,30 @@ public interface Channel {
 // DialplanCEP getDialplan
 /**********************************************************
  * Current location in the dialplan
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public DialplanCEP getDialplan();
+
+
+
+// void setId String
+/**********************************************************
+ * Unique identifier of the channel.
+ * 
+ * This is the same as the Uniqueid field in AMI.
+ * 
+ * @since: ari_0_0_1
+ *********************************************************/
+ public void setId(String val );
 
 
 
 // void setConnected CallerID
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setConnected(CallerID val );
 
@@ -92,6 +110,8 @@ public interface Channel {
 // String getState
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getState();
 
@@ -100,6 +120,8 @@ public interface Channel {
 // void setName String
 /**********************************************************
  * Name of the channel (i.e. SIP/foo-0000a7e3)
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setName(String val );
 
@@ -108,6 +130,8 @@ public interface Channel {
 // void setCaller CallerID
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setCaller(CallerID val );
 
@@ -116,6 +140,8 @@ public interface Channel {
 // Date getCreationtime
 /**********************************************************
  * Timestamp when channel was created
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Date getCreationtime();
 
@@ -124,6 +150,8 @@ public interface Channel {
 // String getName
 /**********************************************************
  * Name of the channel (i.e. SIP/foo-0000a7e3)
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getName();
 
@@ -132,6 +160,8 @@ public interface Channel {
 // void setCreationtime Date
 /**********************************************************
  * Timestamp when channel was created
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setCreationtime(Date val );
 
@@ -140,6 +170,8 @@ public interface Channel {
 // void setDialplan DialplanCEP
 /**********************************************************
  * Current location in the dialplan
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setDialplan(DialplanCEP val );
 

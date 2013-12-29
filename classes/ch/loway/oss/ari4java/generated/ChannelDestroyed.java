@@ -16,6 +16,8 @@ public interface ChannelDestroyed {
 // void setCause_txt String
 /**********************************************************
  * Text representation of the cause of the hangup
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setCause_txt(String val );
 
@@ -24,6 +26,8 @@ public interface ChannelDestroyed {
 // void setCause int
 /**********************************************************
  * Integer representation of the cause of the hangup
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setCause(int val );
 
@@ -32,6 +36,8 @@ public interface ChannelDestroyed {
 // int getCause
 /**********************************************************
  * Integer representation of the cause of the hangup
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public int getCause();
 
@@ -40,6 +46,8 @@ public interface ChannelDestroyed {
 // Channel getChannel
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Channel getChannel();
 
@@ -48,6 +56,8 @@ public interface ChannelDestroyed {
 // String getCause_txt
 /**********************************************************
  * Text representation of the cause of the hangup
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getCause_txt();
 
@@ -56,6 +66,8 @@ public interface ChannelDestroyed {
 // void setChannel Channel
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setChannel(Channel val );
 

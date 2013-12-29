@@ -16,6 +16,8 @@ public interface DialplanCEP {
 // void setContext String
 /**********************************************************
  * Context in the dialplan
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setContext(String val );
 
@@ -24,6 +26,8 @@ public interface DialplanCEP {
 // long getPriority
 /**********************************************************
  * Priority in the dialplan
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public long getPriority();
 
@@ -32,6 +36,8 @@ public interface DialplanCEP {
 // void setPriority long
 /**********************************************************
  * Priority in the dialplan
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setPriority(long val );
 
@@ -40,6 +46,8 @@ public interface DialplanCEP {
 // String getExten
 /**********************************************************
  * Extension in the dialplan
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getExten();
 
@@ -48,6 +56,8 @@ public interface DialplanCEP {
 // String getContext
 /**********************************************************
  * Context in the dialplan
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getContext();
 
@@ -56,6 +66,8 @@ public interface DialplanCEP {
 // void setExten String
 /**********************************************************
  * Extension in the dialplan
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setExten(String val );
 

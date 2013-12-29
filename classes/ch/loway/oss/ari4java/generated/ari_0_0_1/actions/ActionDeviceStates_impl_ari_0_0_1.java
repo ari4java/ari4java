@@ -115,5 +115,6 @@ buildDelete(deviceName);
 httpActionAsync(callback);
 }
 
+/** No missing signatures from interface */
 };
 

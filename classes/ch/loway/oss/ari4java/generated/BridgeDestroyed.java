@@ -16,6 +16,8 @@ public interface BridgeDestroyed {
 // void setBridge Bridge
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setBridge(Bridge val );
 
@@ -24,6 +26,8 @@ public interface BridgeDestroyed {
 // Bridge getBridge
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Bridge getBridge();
 

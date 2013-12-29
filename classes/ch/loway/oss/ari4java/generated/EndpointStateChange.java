@@ -16,6 +16,8 @@ public interface EndpointStateChange {
 // void setEndpoint Endpoint
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setEndpoint(Endpoint val );
 
@@ -24,6 +26,8 @@ public interface EndpointStateChange {
 // Endpoint getEndpoint
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Endpoint getEndpoint();
 

@@ -16,6 +16,8 @@ public interface SystemInfo {
 // String getEntity_id
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getEntity_id();
 
@@ -24,6 +26,8 @@ public interface SystemInfo {
 // void setVersion String
 /**********************************************************
  * Asterisk version.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setVersion(String val );
 
@@ -32,6 +36,8 @@ public interface SystemInfo {
 // void setEntity_id String
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setEntity_id(String val );
 
@@ -40,6 +46,8 @@ public interface SystemInfo {
 // String getVersion
 /**********************************************************
  * Asterisk version.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getVersion();
 

@@ -16,6 +16,8 @@ public interface RecordingStarted {
 // void setRecording LiveRecording
 /**********************************************************
  * Recording control object
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setRecording(LiveRecording val );
 
@@ -24,6 +26,8 @@ public interface RecordingStarted {
 // LiveRecording getRecording
 /**********************************************************
  * Recording control object
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public LiveRecording getRecording();
 

@@ -16,6 +16,8 @@ public interface StasisStart {
 // void setArgs List<? extends String>
 /**********************************************************
  * Arguments to the application
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setArgs(List<? extends String> val );
 
@@ -24,6 +26,8 @@ public interface StasisStart {
 // List<? extends String> getArgs
 /**********************************************************
  * Arguments to the application
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public List<? extends String> getArgs();
 
@@ -32,6 +36,8 @@ public interface StasisStart {
 // Channel getChannel
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Channel getChannel();
 
@@ -40,6 +46,8 @@ public interface StasisStart {
 // void setChannel Channel
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setChannel(Channel val );
 

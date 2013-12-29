@@ -16,6 +16,8 @@ public interface ChannelUserevent {
 // void setEventname String
 /**********************************************************
  * The name of the user event.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setEventname(String val );
 
@@ -24,6 +26,8 @@ public interface ChannelUserevent {
 // void setUserevent String
 /**********************************************************
  * Custom Userevent data
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setUserevent(String val );
 
@@ -32,6 +36,8 @@ public interface ChannelUserevent {
 // String getEventname
 /**********************************************************
  * The name of the user event.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getEventname();
 
@@ -40,6 +46,8 @@ public interface ChannelUserevent {
 // Channel getChannel
 /**********************************************************
  * The channel that signaled the user event.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Channel getChannel();
 
@@ -48,6 +56,8 @@ public interface ChannelUserevent {
 // String getUserevent
 /**********************************************************
  * Custom Userevent data
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getUserevent();
 
@@ -56,6 +66,8 @@ public interface ChannelUserevent {
 // void setChannel Channel
 /**********************************************************
  * The channel that signaled the user event.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setChannel(Channel val );
 

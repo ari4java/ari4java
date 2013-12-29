@@ -16,6 +16,8 @@ public interface LiveRecording {
 // String getFormat
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getFormat();
 
@@ -24,6 +26,8 @@ public interface LiveRecording {
 // void setState String
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setState(String val );
 
@@ -32,6 +36,8 @@ public interface LiveRecording {
 // void setName String
 /**********************************************************
  * Base name for the recording
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setName(String val );
 
@@ -40,6 +46,8 @@ public interface LiveRecording {
 // String getCause
 /**********************************************************
  * Cause for recording failure if failed
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getCause();
 
@@ -48,6 +56,8 @@ public interface LiveRecording {
 // String getName
 /**********************************************************
  * Base name for the recording
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getName();
 
@@ -56,6 +66,8 @@ public interface LiveRecording {
 // void setFormat String
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setFormat(String val );
 
@@ -64,6 +76,8 @@ public interface LiveRecording {
 // void setCause String
 /**********************************************************
  * Cause for recording failure if failed
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setCause(String val );
 
@@ -72,6 +86,8 @@ public interface LiveRecording {
 // String getState
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getState();
 

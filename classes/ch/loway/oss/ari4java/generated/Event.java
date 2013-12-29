@@ -16,6 +16,8 @@ public interface Event {
 // Date getTimestamp
 /**********************************************************
  * Time at which this event was created.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Date getTimestamp();
 
@@ -24,6 +26,8 @@ public interface Event {
 // void setTimestamp Date
 /**********************************************************
  * Time at which this event was created.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setTimestamp(Date val );
 
@@ -32,6 +36,8 @@ public interface Event {
 // String getApplication
 /**********************************************************
  * Name of the application receiving the event.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getApplication();
 
@@ -40,6 +46,8 @@ public interface Event {
 // void setApplication String
 /**********************************************************
  * Name of the application receiving the event.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setApplication(String val );
 

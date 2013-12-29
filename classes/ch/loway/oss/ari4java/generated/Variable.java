@@ -16,6 +16,8 @@ public interface Variable {
 // void setValue String
 /**********************************************************
  * The value of the variable requested
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setValue(String val );
 
@@ -24,6 +26,8 @@ public interface Variable {
 // String getValue
 /**********************************************************
  * The value of the variable requested
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getValue();
 

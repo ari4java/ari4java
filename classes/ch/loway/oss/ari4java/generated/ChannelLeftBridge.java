@@ -16,6 +16,8 @@ public interface ChannelLeftBridge {
 // void setBridge Bridge
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setBridge(Bridge val );
 
@@ -24,6 +26,8 @@ public interface ChannelLeftBridge {
 // Channel getChannel
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Channel getChannel();
 
@@ -32,6 +36,8 @@ public interface ChannelLeftBridge {
 // Bridge getBridge
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Bridge getBridge();
 
@@ -40,6 +46,8 @@ public interface ChannelLeftBridge {
 // void setChannel Channel
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setChannel(Channel val );
 

@@ -53,5 +53,6 @@ If missing, the variable is a global variable.  */
    variable = val;
  }
 
+/** No missing signatures from interface */
 }
 

@@ -16,6 +16,8 @@ public interface StoredRecording {
 // String getFormat
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getFormat();
 
@@ -24,6 +26,8 @@ public interface StoredRecording {
 // void setName String
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setName(String val );
 
@@ -32,6 +36,8 @@ public interface StoredRecording {
 // String getName
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getName();
 
@@ -40,6 +46,8 @@ public interface StoredRecording {
 // void setFormat String
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setFormat(String val );
 

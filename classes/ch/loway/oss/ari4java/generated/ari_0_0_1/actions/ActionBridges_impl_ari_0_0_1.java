@@ -292,5 +292,24 @@ buildRecord(bridgeId, name, format, maxDurationSeconds, maxSilenceSeconds, ifExi
 httpActionAsync(callback, LiveRecording_impl_ari_0_0_1.class);
 }
 
+/**********************************************************
+ * 
+ * 
+ * @since: ari_1_0_0
+ *********************************************************/
+public void create(String type, String name, AriCallback<Bridge> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Create a new bridge.
+ * This bridge persists until it has been shut down, or Asterisk has been shut down.
+ * 
+ * @since: ari_1_0_0
+ *********************************************************/
+public Bridge create(String type, String name) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
 };
 

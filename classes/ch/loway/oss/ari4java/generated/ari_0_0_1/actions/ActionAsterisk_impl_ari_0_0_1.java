@@ -93,5 +93,6 @@ buildSetGlobalVar(variable, value);
 httpActionAsync(callback);
 }
 
+/** No missing signatures from interface */
 };
 

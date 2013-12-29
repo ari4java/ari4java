@@ -264,5 +264,6 @@ buildUnmute(recordingName);
 httpActionAsync(callback);
 }
 
+/** No missing signatures from interface */
 };
 

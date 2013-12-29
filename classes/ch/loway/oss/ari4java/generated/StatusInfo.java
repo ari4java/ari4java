@@ -16,6 +16,8 @@ public interface StatusInfo {
 // void setLast_reload_time Date
 /**********************************************************
  * Time when Asterisk was last reloaded.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setLast_reload_time(Date val );
 
@@ -24,6 +26,8 @@ public interface StatusInfo {
 // Date getLast_reload_time
 /**********************************************************
  * Time when Asterisk was last reloaded.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Date getLast_reload_time();
 
@@ -32,6 +36,8 @@ public interface StatusInfo {
 // Date getStartup_time
 /**********************************************************
  * Time when Asterisk was started.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Date getStartup_time();
 
@@ -40,6 +46,8 @@ public interface StatusInfo {
 // void setStartup_time Date
 /**********************************************************
  * Time when Asterisk was started.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setStartup_time(Date val );
 

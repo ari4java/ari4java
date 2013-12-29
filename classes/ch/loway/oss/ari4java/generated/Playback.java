@@ -16,6 +16,8 @@ public interface Playback {
 // String getLanguage
 /**********************************************************
  * For media types that support multiple languages, the language requested for playback.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getLanguage();
 
@@ -24,6 +26,8 @@ public interface Playback {
 // void setState String
 /**********************************************************
  * Current state of the playback operation.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setState(String val );
 
@@ -32,6 +36,8 @@ public interface Playback {
 // void setLanguage String
 /**********************************************************
  * For media types that support multiple languages, the language requested for playback.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setLanguage(String val );
 
@@ -40,6 +46,8 @@ public interface Playback {
 // String getId
 /**********************************************************
  * ID for this playback operation
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getId();
 
@@ -48,6 +56,8 @@ public interface Playback {
 // void setTarget_uri String
 /**********************************************************
  * URI for the channel or bridge to play the media on
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setTarget_uri(String val );
 
@@ -56,6 +66,8 @@ public interface Playback {
 // void setMedia_uri String
 /**********************************************************
  * URI for the media to play back.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setMedia_uri(String val );
 
@@ -64,6 +76,8 @@ public interface Playback {
 // String getTarget_uri
 /**********************************************************
  * URI for the channel or bridge to play the media on
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getTarget_uri();
 
@@ -72,6 +86,8 @@ public interface Playback {
 // void setId String
 /**********************************************************
  * ID for this playback operation
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setId(String val );
 
@@ -80,6 +96,8 @@ public interface Playback {
 // String getMedia_uri
 /**********************************************************
  * URI for the media to play back.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getMedia_uri();
 
@@ -88,6 +106,8 @@ public interface Playback {
 // String getState
 /**********************************************************
  * Current state of the playback operation.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getState();
 

@@ -40,5 +40,6 @@ private static final long serialVersionUID = 1L;
    channel = val;
  }
 
+/** No missing signatures from interface */
 }
 

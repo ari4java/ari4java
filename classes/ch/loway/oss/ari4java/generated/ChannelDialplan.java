@@ -16,6 +16,8 @@ public interface ChannelDialplan {
 // String getDialplan_app
 /**********************************************************
  * The application about to be executed.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getDialplan_app();
 
@@ -24,6 +26,8 @@ public interface ChannelDialplan {
 // Channel getChannel
 /**********************************************************
  * The channel that changed dialplan location.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Channel getChannel();
 
@@ -32,6 +36,8 @@ public interface ChannelDialplan {
 // void setDialplan_app String
 /**********************************************************
  * The application about to be executed.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setDialplan_app(String val );
 
@@ -40,6 +46,8 @@ public interface ChannelDialplan {
 // String getDialplan_app_data
 /**********************************************************
  * The data to be passed to the application.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getDialplan_app_data();
 
@@ -48,6 +56,8 @@ public interface ChannelDialplan {
 // void setDialplan_app_data String
 /**********************************************************
  * The data to be passed to the application.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setDialplan_app_data(String val );
 
@@ -56,6 +66,8 @@ public interface ChannelDialplan {
 // void setChannel Channel
 /**********************************************************
  * The channel that changed dialplan location.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setChannel(Channel val );
 

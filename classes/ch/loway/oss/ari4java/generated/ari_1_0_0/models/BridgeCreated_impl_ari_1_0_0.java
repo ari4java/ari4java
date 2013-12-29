@@ -1,0 +1,34 @@
+package ch.loway.oss.ari4java.generated.ari_1_0_0.models;
+
+// ----------------------------------------------------
+//      THIS CLASS WAS GENERATED AUTOMATICALLY         
+//               PLEASE DO NOT EDIT                    
+// ----------------------------------------------------
+
+import ch.loway.oss.ari4java.generated.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Date;
+import java.util.List;
+
+/**********************************************************
+ * Notification that a bridge has been created.
+ * 
+ * Defined in file: events.json
+ *********************************************************/
+
+public class BridgeCreated_impl_ari_1_0_0 extends Event_impl_ari_1_0_0 implements BridgeCreated, java.io.Serializable {
+private static final long serialVersionUID = 1L;
+  /**    */
+  private Bridge bridge;
+ public Bridge getBridge() {
+   return bridge;
+ }
+
+ @JsonDeserialize( as=Bridge_impl_ari_1_0_0.class )
+ public void setBridge(Bridge val ) {
+   bridge = val;
+ }
+
+/** No missing signatures from interface */
+}
+

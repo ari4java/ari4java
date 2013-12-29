@@ -75,5 +75,41 @@ private static final long serialVersionUID = 1L;
    technology = val;
  }
 
+/**********************************************************
+ * Entity that created the bridge
+ * 
+ * @since: ari_1_0_0
+ *********************************************************/
+ public String getCreator(){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Name the creator gave the bridge
+ * 
+ * @since: ari_1_0_0
+ *********************************************************/
+ public void setName(String val ){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Name the creator gave the bridge
+ * 
+ * @since: ari_1_0_0
+ *********************************************************/
+ public String getName(){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Entity that created the bridge
+ * 
+ * @since: ari_1_0_0
+ *********************************************************/
+ public void setCreator(String val ){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
 }
 

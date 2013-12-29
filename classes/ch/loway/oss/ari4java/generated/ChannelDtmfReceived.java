@@ -16,6 +16,8 @@ public interface ChannelDtmfReceived {
 // String getDigit
 /**********************************************************
  * DTMF digit received (0-9, A-E, # or *)
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getDigit();
 
@@ -24,6 +26,8 @@ public interface ChannelDtmfReceived {
 // void setDuration_ms int
 /**********************************************************
  * Number of milliseconds DTMF was received
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setDuration_ms(int val );
 
@@ -32,6 +36,8 @@ public interface ChannelDtmfReceived {
 // int getDuration_ms
 /**********************************************************
  * Number of milliseconds DTMF was received
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public int getDuration_ms();
 
@@ -40,24 +46,30 @@ public interface ChannelDtmfReceived {
 // Channel getChannel
 /**********************************************************
  * The channel on which DTMF was received
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Channel getChannel();
-
-
-
-// void setDigit String
-/**********************************************************
- * DTMF digit received (0-9, A-E, # or *)
- *********************************************************/
- public void setDigit(String val );
 
 
 
 // void setChannel Channel
 /**********************************************************
  * The channel on which DTMF was received
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setChannel(Channel val );
+
+
+
+// void setDigit String
+/**********************************************************
+ * DTMF digit received (0-9, A-E, # or *)
+ * 
+ * @since: ari_0_0_1
+ *********************************************************/
+ public void setDigit(String val );
 
 
 }

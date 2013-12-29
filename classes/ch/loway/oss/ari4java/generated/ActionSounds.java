@@ -16,6 +16,8 @@ public interface ActionSounds {
 // void get String AriCallback<Sound> callback
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
 public void get(String soundId, AriCallback<Sound> callback);
 
@@ -24,6 +26,9 @@ public void get(String soundId, AriCallback<Sound> callback);
 // Sound get String
 /**********************************************************
  * Get a sound's details.
+ * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
 public Sound get(String soundId) throws RestException;
 
@@ -32,6 +37,9 @@ public Sound get(String soundId) throws RestException;
 // List<? extends Sound> list String String
 /**********************************************************
  * List all sounds.
+ * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
 public List<? extends Sound> list(String lang, String format) throws RestException;
 
@@ -40,6 +48,8 @@ public List<? extends Sound> list(String lang, String format) throws RestExcepti
 // void list String String AriCallback<List<? extends Sound>> callback
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
 public void list(String lang, String format, AriCallback<List<? extends Sound>> callback);
 

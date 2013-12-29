@@ -16,6 +16,8 @@ public interface AsteriskInfo {
 // void setConfig ConfigInfo
 /**********************************************************
  * Info about Asterisk configuration
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setConfig(ConfigInfo val );
 
@@ -24,6 +26,8 @@ public interface AsteriskInfo {
 // void setStatus StatusInfo
 /**********************************************************
  * Info about Asterisk status
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setStatus(StatusInfo val );
 
@@ -32,6 +36,8 @@ public interface AsteriskInfo {
 // StatusInfo getStatus
 /**********************************************************
  * Info about Asterisk status
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public StatusInfo getStatus();
 
@@ -40,6 +46,8 @@ public interface AsteriskInfo {
 // void setBuild BuildInfo
 /**********************************************************
  * Info about how Asterisk was built
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setBuild(BuildInfo val );
 
@@ -48,6 +56,8 @@ public interface AsteriskInfo {
 // BuildInfo getBuild
 /**********************************************************
  * Info about how Asterisk was built
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public BuildInfo getBuild();
 
@@ -56,6 +66,8 @@ public interface AsteriskInfo {
 // ConfigInfo getConfig
 /**********************************************************
  * Info about Asterisk configuration
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public ConfigInfo getConfig();
 
@@ -64,6 +76,8 @@ public interface AsteriskInfo {
 // void setSystem SystemInfo
 /**********************************************************
  * Info about the system running Asterisk
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setSystem(SystemInfo val );
 
@@ -72,6 +86,8 @@ public interface AsteriskInfo {
 // SystemInfo getSystem
 /**********************************************************
  * Info about the system running Asterisk
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public SystemInfo getSystem();
 

@@ -66,5 +66,6 @@ buildGet(soundId);
 httpActionAsync(callback, Sound_impl_ari_0_0_1.class);
 }
 
+/** No missing signatures from interface */
 };
 

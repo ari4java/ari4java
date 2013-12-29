@@ -20,5 +20,6 @@ import java.util.List;
 
 public class ApplicationReplaced_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements ApplicationReplaced, java.io.Serializable {
 private static final long serialVersionUID = 1L;
+/** No missing signatures from interface */
 }
 

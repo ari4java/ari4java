@@ -13,25 +13,31 @@ import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface FormatLangPair {
 
-// String getLanguage
-/**********************************************************
- * 
- *********************************************************/
- public String getLanguage();
-
-
-
 // String getFormat
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getFormat();
+
+
+
+// String getLanguage
+/**********************************************************
+ * 
+ * 
+ * @since: ari_0_0_1
+ *********************************************************/
+ public String getLanguage();
 
 
 
 // void setLanguage String
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setLanguage(String val );
 
@@ -40,6 +46,8 @@ public interface FormatLangPair {
 // void setFormat String
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setFormat(String val );
 

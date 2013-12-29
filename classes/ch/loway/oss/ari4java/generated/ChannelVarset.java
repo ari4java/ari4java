@@ -16,6 +16,8 @@ public interface ChannelVarset {
 // void setValue String
 /**********************************************************
  * The new value of the variable.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setValue(String val );
 
@@ -24,6 +26,8 @@ public interface ChannelVarset {
 // void setVariable String
 /**********************************************************
  * The variable that changed.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setVariable(String val );
 
@@ -34,24 +38,30 @@ public interface ChannelVarset {
  * The channel on which the variable was set.
  * 
  * If missing, the variable is a global variable.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Channel getChannel();
-
-
-
-// String getVariable
-/**********************************************************
- * The variable that changed.
- *********************************************************/
- public String getVariable();
 
 
 
 // String getValue
 /**********************************************************
  * The new value of the variable.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getValue();
+
+
+
+// String getVariable
+/**********************************************************
+ * The variable that changed.
+ * 
+ * @since: ari_0_0_1
+ *********************************************************/
+ public String getVariable();
 
 
 
@@ -60,6 +70,8 @@ public interface ChannelVarset {
  * The channel on which the variable was set.
  * 
  * If missing, the variable is a global variable.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setChannel(Channel val );
 

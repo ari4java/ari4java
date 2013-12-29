@@ -16,6 +16,8 @@ public interface SetId {
 // void setUser String
 /**********************************************************
  * Effective user id.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setUser(String val );
 
@@ -24,6 +26,8 @@ public interface SetId {
 // void setGroup String
 /**********************************************************
  * Effective group id.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setGroup(String val );
 
@@ -32,6 +36,8 @@ public interface SetId {
 // String getUser
 /**********************************************************
  * Effective user id.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getUser();
 
@@ -40,6 +46,8 @@ public interface SetId {
 // String getGroup
 /**********************************************************
  * Effective group id.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getGroup();
 

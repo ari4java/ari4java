@@ -16,6 +16,8 @@ public interface ChannelHangupRequest {
 // void setCause int
 /**********************************************************
  * Integer representation of the cause of the hangup.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setCause(int val );
 
@@ -24,6 +26,8 @@ public interface ChannelHangupRequest {
 // int getCause
 /**********************************************************
  * Integer representation of the cause of the hangup.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public int getCause();
 
@@ -32,6 +36,8 @@ public interface ChannelHangupRequest {
 // void setSoft boolean
 /**********************************************************
  * Whether the hangup request was a soft hangup request.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setSoft(boolean val );
 
@@ -40,6 +46,8 @@ public interface ChannelHangupRequest {
 // Channel getChannel
 /**********************************************************
  * The channel on which the hangup was requested.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Channel getChannel();
 
@@ -48,6 +56,8 @@ public interface ChannelHangupRequest {
 // void setChannel Channel
 /**********************************************************
  * The channel on which the hangup was requested.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setChannel(Channel val );
 
@@ -56,6 +66,8 @@ public interface ChannelHangupRequest {
 // boolean getSoft
 /**********************************************************
  * Whether the hangup request was a soft hangup request.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public boolean getSoft();
 

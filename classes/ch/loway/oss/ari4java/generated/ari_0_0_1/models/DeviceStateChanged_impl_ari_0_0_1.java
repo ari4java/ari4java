@@ -29,5 +29,6 @@ private static final long serialVersionUID = 1L;
    device_state = val;
  }
 
+/** No missing signatures from interface */
 }
 

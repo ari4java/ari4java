@@ -16,6 +16,8 @@ public interface PlaybackStarted {
 // void setPlayback Playback
 /**********************************************************
  * Playback control object
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setPlayback(Playback val );
 
@@ -24,6 +26,8 @@ public interface PlaybackStarted {
 // Playback getPlayback
 /**********************************************************
  * Playback control object
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Playback getPlayback();
 

@@ -16,6 +16,8 @@ public interface DeviceState {
 // void setState String
 /**********************************************************
  * Device's state
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setState(String val );
 
@@ -24,6 +26,8 @@ public interface DeviceState {
 // void setName String
 /**********************************************************
  * Name of the device.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setName(String val );
 
@@ -32,6 +36,8 @@ public interface DeviceState {
 // String getName
 /**********************************************************
  * Name of the device.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getName();
 
@@ -40,6 +46,8 @@ public interface DeviceState {
 // String getState
 /**********************************************************
  * Device's state
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getState();
 

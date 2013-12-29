@@ -16,6 +16,8 @@ public interface ConfigInfo {
 // void setMax_channels int
 /**********************************************************
  * Maximum number of simultaneous channels.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setMax_channels(int val );
 
@@ -24,6 +26,8 @@ public interface ConfigInfo {
 // int getMax_open_files
 /**********************************************************
  * Maximum number of open file handles (files, sockets).
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public int getMax_open_files();
 
@@ -32,6 +36,8 @@ public interface ConfigInfo {
 // void setName String
 /**********************************************************
  * Asterisk system name.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setName(String val );
 
@@ -40,6 +46,8 @@ public interface ConfigInfo {
 // void setSetid SetId
 /**********************************************************
  * Effective user/group id for running Asterisk.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setSetid(SetId val );
 
@@ -48,6 +56,8 @@ public interface ConfigInfo {
 // void setMax_load double
 /**********************************************************
  * Maximum load avg on system.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setMax_load(double val );
 
@@ -56,6 +66,8 @@ public interface ConfigInfo {
 // String getName
 /**********************************************************
  * Asterisk system name.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getName();
 
@@ -64,6 +76,8 @@ public interface ConfigInfo {
 // String getDefault_language
 /**********************************************************
  * Default language for media playback.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getDefault_language();
 
@@ -72,6 +86,8 @@ public interface ConfigInfo {
 // void setMax_open_files int
 /**********************************************************
  * Maximum number of open file handles (files, sockets).
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setMax_open_files(int val );
 
@@ -80,6 +96,8 @@ public interface ConfigInfo {
 // SetId getSetid
 /**********************************************************
  * Effective user/group id for running Asterisk.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public SetId getSetid();
 
@@ -88,6 +106,8 @@ public interface ConfigInfo {
 // void setDefault_language String
 /**********************************************************
  * Default language for media playback.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setDefault_language(String val );
 
@@ -96,6 +116,8 @@ public interface ConfigInfo {
 // double getMax_load
 /**********************************************************
  * Maximum load avg on system.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public double getMax_load();
 
@@ -104,6 +126,8 @@ public interface ConfigInfo {
 // int getMax_channels
 /**********************************************************
  * Maximum number of simultaneous channels.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public int getMax_channels();
 

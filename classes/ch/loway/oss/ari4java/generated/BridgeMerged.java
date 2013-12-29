@@ -16,6 +16,8 @@ public interface BridgeMerged {
 // void setBridge_from Bridge
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setBridge_from(Bridge val );
 
@@ -24,6 +26,8 @@ public interface BridgeMerged {
 // void setBridge Bridge
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setBridge(Bridge val );
 
@@ -32,6 +36,8 @@ public interface BridgeMerged {
 // Bridge getBridge_from
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Bridge getBridge_from();
 
@@ -40,6 +46,8 @@ public interface BridgeMerged {
 // Bridge getBridge
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Bridge getBridge();
 

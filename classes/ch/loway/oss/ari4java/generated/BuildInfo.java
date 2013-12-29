@@ -16,6 +16,8 @@ public interface BuildInfo {
 // void setUser String
 /**********************************************************
  * Username that build Asterisk
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setUser(String val );
 
@@ -24,6 +26,8 @@ public interface BuildInfo {
 // void setOptions String
 /**********************************************************
  * Compile time options, or empty string if default.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setOptions(String val );
 
@@ -32,6 +36,8 @@ public interface BuildInfo {
 // void setDate String
 /**********************************************************
  * Date and time when Asterisk was built.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setDate(String val );
 
@@ -40,6 +46,8 @@ public interface BuildInfo {
 // String getOptions
 /**********************************************************
  * Compile time options, or empty string if default.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getOptions();
 
@@ -48,6 +56,8 @@ public interface BuildInfo {
 // void setOs String
 /**********************************************************
  * OS Asterisk was built on.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setOs(String val );
 
@@ -56,6 +66,8 @@ public interface BuildInfo {
 // String getDate
 /**********************************************************
  * Date and time when Asterisk was built.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getDate();
 
@@ -64,6 +76,8 @@ public interface BuildInfo {
 // String getKernel
 /**********************************************************
  * Kernel version Asterisk was built on.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getKernel();
 
@@ -72,6 +86,8 @@ public interface BuildInfo {
 // void setMachine String
 /**********************************************************
  * Machine architecture (x86_64, i686, ppc, etc.)
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setMachine(String val );
 
@@ -80,30 +96,38 @@ public interface BuildInfo {
 // String getUser
 /**********************************************************
  * Username that build Asterisk
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getUser();
-
-
-
-// String getOs
-/**********************************************************
- * OS Asterisk was built on.
- *********************************************************/
- public String getOs();
 
 
 
 // String getMachine
 /**********************************************************
  * Machine architecture (x86_64, i686, ppc, etc.)
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getMachine();
+
+
+
+// String getOs
+/**********************************************************
+ * OS Asterisk was built on.
+ * 
+ * @since: ari_0_0_1
+ *********************************************************/
+ public String getOs();
 
 
 
 // void setKernel String
 /**********************************************************
  * Kernel version Asterisk was built on.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setKernel(String val );
 

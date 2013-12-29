@@ -16,6 +16,8 @@ public interface DeviceStateChanged {
 // void setDevice_state DeviceState
 /**********************************************************
  * Device state object
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setDevice_state(DeviceState val );
 
@@ -24,6 +26,8 @@ public interface DeviceStateChanged {
 // DeviceState getDevice_state
 /**********************************************************
  * Device state object
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public DeviceState getDevice_state();
 

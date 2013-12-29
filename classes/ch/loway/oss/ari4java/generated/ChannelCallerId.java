@@ -16,6 +16,8 @@ public interface ChannelCallerId {
 // void setCaller_presentation int
 /**********************************************************
  * The integer representation of the Caller Presentation value.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setCaller_presentation(int val );
 
@@ -24,6 +26,8 @@ public interface ChannelCallerId {
 // int getCaller_presentation
 /**********************************************************
  * The integer representation of the Caller Presentation value.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public int getCaller_presentation();
 
@@ -32,6 +36,8 @@ public interface ChannelCallerId {
 // void setCaller_presentation_txt String
 /**********************************************************
  * The text representation of the Caller Presentation value.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setCaller_presentation_txt(String val );
 
@@ -40,6 +46,8 @@ public interface ChannelCallerId {
 // Channel getChannel
 /**********************************************************
  * The channel that changed Caller ID.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Channel getChannel();
 
@@ -48,6 +56,8 @@ public interface ChannelCallerId {
 // String getCaller_presentation_txt
 /**********************************************************
  * The text representation of the Caller Presentation value.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getCaller_presentation_txt();
 
@@ -56,6 +66,8 @@ public interface ChannelCallerId {
 // void setChannel Channel
 /**********************************************************
  * The channel that changed Caller ID.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setChannel(Channel val );
 

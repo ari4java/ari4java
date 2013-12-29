@@ -53,5 +53,6 @@ private static final long serialVersionUID = 1L;
    duration_ms = val;
  }
 
+/** No missing signatures from interface */
 }
 

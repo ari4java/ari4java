@@ -16,6 +16,8 @@ public interface ChannelStateChange {
 // Channel getChannel
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public Channel getChannel();
 
@@ -24,6 +26,8 @@ public interface ChannelStateChange {
 // void setChannel Channel
 /**********************************************************
  * 
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setChannel(Channel val );
 

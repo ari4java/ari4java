@@ -16,6 +16,8 @@ public interface Sound {
 // void setFormats List<? extends FormatLangPair>
 /**********************************************************
  * The formats and languages in which this sound is available.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setFormats(List<? extends FormatLangPair> val );
 
@@ -24,6 +26,8 @@ public interface Sound {
 // String getId
 /**********************************************************
  * Sound's identifier.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getId();
 
@@ -32,6 +36,8 @@ public interface Sound {
 // void setId String
 /**********************************************************
  * Sound's identifier.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setId(String val );
 
@@ -40,6 +46,8 @@ public interface Sound {
 // String getText
 /**********************************************************
  * Text description of the sound, usually the words spoken.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public String getText();
 
@@ -48,6 +56,8 @@ public interface Sound {
 // List<? extends FormatLangPair> getFormats
 /**********************************************************
  * The formats and languages in which this sound is available.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public List<? extends FormatLangPair> getFormats();
 
@@ -56,6 +66,8 @@ public interface Sound {
 // void setText String
 /**********************************************************
  * Text description of the sound, usually the words spoken.
+ * 
+ * @since: ari_0_0_1
  *********************************************************/
  public void setText(String val );
 
