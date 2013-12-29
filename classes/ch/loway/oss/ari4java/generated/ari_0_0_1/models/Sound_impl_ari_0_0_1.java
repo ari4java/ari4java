@@ -17,14 +17,15 @@ import java.util.List;
  *********************************************************/
 
 public class Sound_impl_ari_0_0_1 implements Sound, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  The formats and languages in which this sound is available.  */
-  private List<FormatLangPair> formats;
- public List<FormatLangPair> getFormats() {
+  private List<? extends FormatLangPair> formats;
+ public List<? extends FormatLangPair> getFormats() {
    return formats;
  }
 
  @JsonDeserialize( contentAs=FormatLangPair_impl_ari_0_0_1.class )
- public void setFormats(List<FormatLangPair> val ) {
+ public void setFormats(List<? extends FormatLangPair> val ) {
    formats = val;
  }
 

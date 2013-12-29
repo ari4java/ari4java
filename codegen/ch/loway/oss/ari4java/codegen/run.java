@@ -20,17 +20,19 @@ public class run {
         System.out.println("This is ARI4JAVA Code Generator version " + VERSION.VER );
 
         DefMapper dm = new DefMapper();
-
+        
+        dm.clean("ari_0_0_1");
         dm.load( new File(SOURCES + "applications.json"), "ari_0_0_1", false );
         dm.load( new File(SOURCES + "asterisk.json"), "ari_0_0_1", false );
         dm.load( new File(SOURCES + "bridges.json"), "ari_0_0_1", false );
         dm.load( new File(SOURCES + "channels.json"), "ari_0_0_1", false );
         dm.load( new File(SOURCES + "endpoints.json"), "ari_0_0_1", false );
-        dm.load( new File(SOURCES + "playback.json"), "ari_0_0_1", false );
+        dm.load( new File(SOURCES + "playbacks.json"), "ari_0_0_1", false );
         dm.load( new File(SOURCES + "recordings.json"), "ari_0_0_1", false );
         dm.load( new File(SOURCES + "sounds.json"), "ari_0_0_1", false );
-        
+        dm.load( new File(SOURCES + "deviceStates.json"), "ari_0_0_1", false );
         dm.load( new File(SOURCES + "events.json"), "ari_0_0_1", true );
+        dm.writeProperties("ari_0_0_1");
     }
 
 

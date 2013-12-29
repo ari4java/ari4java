@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class PlaybackStarted_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements PlaybackStarted, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  Playback control object  */
   private Playback playback;
  public Playback getPlayback() {

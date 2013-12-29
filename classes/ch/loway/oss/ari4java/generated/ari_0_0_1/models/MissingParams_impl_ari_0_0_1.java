@@ -17,14 +17,15 @@ import java.util.List;
  *********************************************************/
 
 public class MissingParams_impl_ari_0_0_1 extends Message_impl_ari_0_0_1 implements MissingParams, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  A list of the missing parameters  */
-  private List<String> params;
- public List<String> getParams() {
+  private List<? extends String> params;
+ public List<? extends String> getParams() {
    return params;
  }
 
  @JsonDeserialize( contentAs=String.class )
- public void setParams(List<String> val ) {
+ public void setParams(List<? extends String> val ) {
    params = val;
  }
 

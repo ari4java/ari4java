@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class SystemInfo_impl_ari_0_0_1 implements SystemInfo, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**    */
   private String entity_id;
  public String getEntity_id() {

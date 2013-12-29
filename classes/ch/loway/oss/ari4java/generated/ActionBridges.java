@@ -9,91 +9,172 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
+import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface ActionBridges {
 
-// void deleteBridge String
+// void play String String String int int AriCallback<Playback> callback
 /**********************************************************
- * Shut down a bridge.
- * If any channels are in this bridge, they will be removed and resume whatever they were doing beforehand.
+ * 
  *********************************************************/
-public void deleteBridge(String bridgeId) throws RestException;
+public void play(String bridgeId, String media, String lang, int offsetms, int skipms, AriCallback<Playback> callback);
 
 
 
-// void mohStopBridge String
+// Playback play String String String int int
+/**********************************************************
+ * Start playback of media on a bridge.
+ * The media URI may be any of a number of URI's. Currently sound: and recording: URI's are supported. This operation creates a playback resource that can be used to control the playback of media (pause, rewind, fast forward, etc.)
+ *********************************************************/
+public Playback play(String bridgeId, String media, String lang, int offsetms, int skipms) throws RestException;
+
+
+
+// void addChannel String String String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void addChannel(String bridgeId, String channel, String role, AriCallback<Void> callback);
+
+
+
+// void create String AriCallback<Bridge> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void create(String type, AriCallback<Bridge> callback);
+
+
+
+// List<? extends Bridge> list
+/**********************************************************
+ * List all active bridges in Asterisk.
+ *********************************************************/
+public List<? extends Bridge> list() throws RestException;
+
+
+
+// void get String AriCallback<Bridge> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void get(String bridgeId, AriCallback<Bridge> callback);
+
+
+
+// void stopMoh String
 /**********************************************************
  * Stop playing music on hold to a bridge.
- * This will only stop music on hold being played via bridges/{bridgeId}/mohStart.
+ * This will only stop music on hold being played via POST bridges/{bridgeId}/moh.
  *********************************************************/
-public void mohStopBridge(String bridgeId) throws RestException;
+public void stopMoh(String bridgeId) throws RestException;
 
 
 
-// List<Bridge> getBridges
+// Bridge get String
 /**********************************************************
- * List active bridges.
+ * Get bridge details.
  *********************************************************/
-public List<Bridge> getBridges() throws RestException;
+public Bridge get(String bridgeId) throws RestException;
 
 
 
-// LiveRecording recordBridge String String String int int String boolean String
+// void removeChannel String String
+/**********************************************************
+ * Remove a channel from a bridge.
+ *********************************************************/
+public void removeChannel(String bridgeId, String channel) throws RestException;
+
+
+
+// void addChannel String String String
+/**********************************************************
+ * Add a channel to a bridge.
+ *********************************************************/
+public void addChannel(String bridgeId, String channel, String role) throws RestException;
+
+
+
+// void startMoh String String
+/**********************************************************
+ * Play music on hold to a bridge or change the MOH class that is playing.
+ *********************************************************/
+public void startMoh(String bridgeId, String mohClass) throws RestException;
+
+
+
+// void removeChannel String String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void removeChannel(String bridgeId, String channel, AriCallback<Void> callback);
+
+
+
+// void stopMoh String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void stopMoh(String bridgeId, AriCallback<Void> callback);
+
+
+
+// void startMoh String String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void startMoh(String bridgeId, String mohClass, AriCallback<Void> callback);
+
+
+
+// void destroy String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void destroy(String bridgeId, AriCallback<Void> callback);
+
+
+
+// LiveRecording record String String String int int String boolean String
 /**********************************************************
  * Start a recording.
  * This records the mixed audio from all channels participating in this bridge.
  *********************************************************/
-public LiveRecording recordBridge(String bridgeId, String name, String format, int maxDurationSeconds, int maxSilenceSeconds, String ifExists, boolean beep, String terminateOn) throws RestException;
+public LiveRecording record(String bridgeId, String name, String format, int maxDurationSeconds, int maxSilenceSeconds, String ifExists, boolean beep, String terminateOn) throws RestException;
 
 
 
-// Playback playOnBridge String String String int int
+// void destroy String
 /**********************************************************
- * Start playback of media on a bridge.
- * The media URI may be any of a number of URI's. You may use http: and https: URI's, as well as sound: and recording: URI's. This operation creates a playback resource that can be used to control the playback of media (pause, rewind, fast forward, etc.)
+ * Shut down a bridge.
+ * If any channels are in this bridge, they will be removed and resume whatever they were doing beforehand.
  *********************************************************/
-public Playback playOnBridge(String bridgeId, String media, String lang, int offsetms, int skipms) throws RestException;
+public void destroy(String bridgeId) throws RestException;
 
 
 
-// void mohStartBridge String String
+// void list AriCallback<List<? extends Bridge>> callback
 /**********************************************************
- * Play music on hold to a bridge or change the MOH class that is playing.
+ * 
  *********************************************************/
-public void mohStartBridge(String bridgeId, String mohClass) throws RestException;
+public void list(AriCallback<List<? extends Bridge>> callback);
 
 
 
-// Bridge getBridge String
-/**********************************************************
- * Get bridge details.
- *********************************************************/
-public Bridge getBridge(String bridgeId) throws RestException;
-
-
-
-// Bridge newBridge String
+// Bridge create String
 /**********************************************************
  * Create a new bridge.
  * This bridge persists until it has been shut down, or Asterisk has been shut down.
  *********************************************************/
-public Bridge newBridge(String type) throws RestException;
+public Bridge create(String type) throws RestException;
 
 
 
-// void removeChannelFromBridge String String
+// void record String String String int int String boolean String AriCallback<LiveRecording> callback
 /**********************************************************
- * Remove a channel from a bridge.
+ * 
  *********************************************************/
-public void removeChannelFromBridge(String bridgeId, String channel) throws RestException;
-
-
-
-// void addChannelToBridge String String String
-/**********************************************************
- * Add a channel to a bridge.
- *********************************************************/
-public void addChannelToBridge(String bridgeId, String channel, String role) throws RestException;
+public void record(String bridgeId, String name, String format, int maxDurationSeconds, int maxSilenceSeconds, String ifExists, boolean beep, String terminateOn, AriCallback<LiveRecording> callback);
 
 
 }

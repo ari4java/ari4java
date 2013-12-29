@@ -9,14 +9,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
+import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface Sound {
 
-// List<FormatLangPair> getFormats
+// void setFormats List<? extends FormatLangPair>
 /**********************************************************
  * The formats and languages in which this sound is available.
  *********************************************************/
- public List<FormatLangPair> getFormats();
+ public void setFormats(List<? extends FormatLangPair> val );
 
 
 
@@ -44,11 +45,11 @@ public interface Sound {
 
 
 
-// void setFormats List<FormatLangPair>
+// List<? extends FormatLangPair> getFormats
 /**********************************************************
  * The formats and languages in which this sound is available.
  *********************************************************/
- public void setFormats(List<FormatLangPair> val );
+ public List<? extends FormatLangPair> getFormats();
 
 
 

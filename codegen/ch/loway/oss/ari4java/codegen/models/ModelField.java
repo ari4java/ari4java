@@ -9,7 +9,7 @@ import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
  * $Id$
  * @author lenz
  */
-public class ModelField implements Comparable {
+public class ModelField implements Comparable<ModelField> {
 
     public String field = "";
     public String typeInterface = "";
@@ -79,8 +79,8 @@ public class ModelField implements Comparable {
         return sb.toString();
     }
 
-    public int compareTo(Object o) {
-        ModelField mf2 = (ModelField) o;
+    public int compareTo(ModelField o) {
+        ModelField mf2 = o;
         return field.compareTo( mf2.field );
     }
 

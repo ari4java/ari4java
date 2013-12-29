@@ -21,8 +21,12 @@ import java.util.List;
  @JsonTypeInfo(       use = JsonTypeInfo.Id.NAME,       include = JsonTypeInfo.As.PROPERTY,       property = "type") 
   @JsonSubTypes({  @Type(value = MissingParams_impl_ari_0_0_1.class, name = "MissingParams")
 , @Type(value = Event_impl_ari_0_0_1.class, name = "Event")
+, @Type(value = DeviceStateChanged_impl_ari_0_0_1.class, name = "DeviceStateChanged")
 , @Type(value = PlaybackStarted_impl_ari_0_0_1.class, name = "PlaybackStarted")
 , @Type(value = PlaybackFinished_impl_ari_0_0_1.class, name = "PlaybackFinished")
+, @Type(value = RecordingStarted_impl_ari_0_0_1.class, name = "RecordingStarted")
+, @Type(value = RecordingFinished_impl_ari_0_0_1.class, name = "RecordingFinished")
+, @Type(value = RecordingFailed_impl_ari_0_0_1.class, name = "RecordingFailed")
 , @Type(value = ApplicationReplaced_impl_ari_0_0_1.class, name = "ApplicationReplaced")
 , @Type(value = BridgeCreated_impl_ari_0_0_1.class, name = "BridgeCreated")
 , @Type(value = BridgeDestroyed_impl_ari_0_0_1.class, name = "BridgeDestroyed")
@@ -45,6 +49,7 @@ import java.util.List;
 
 
 public class Message_impl_ari_0_0_1 implements Message, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  Indicates the type of this message.  */
   private String type;
  public String getType() {

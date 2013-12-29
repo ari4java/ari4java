@@ -9,30 +9,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
+import ch.loway.oss.ari4java.tools.AriCallback;
 
-public interface ActionPlayback {
+public interface DeviceStateChanged {
 
-// Playback getPlayback String
+// void setDevice_state DeviceState
 /**********************************************************
- * Get a playback's details.
+ * Device state object
  *********************************************************/
-public Playback getPlayback(String playbackId) throws RestException;
+ public void setDevice_state(DeviceState val );
 
 
 
-// void controlPlayback String String
+// DeviceState getDevice_state
 /**********************************************************
- * Get a playback's details.
+ * Device state object
  *********************************************************/
-public void controlPlayback(String playbackId, String operation) throws RestException;
-
-
-
-// void stopPlayback String
-/**********************************************************
- * Stop a playback.
- *********************************************************/
-public void stopPlayback(String playbackId) throws RestException;
+ public DeviceState getDevice_state();
 
 
 }

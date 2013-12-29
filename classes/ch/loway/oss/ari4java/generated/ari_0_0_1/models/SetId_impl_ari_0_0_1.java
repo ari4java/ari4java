@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class SetId_impl_ari_0_0_1 implements SetId, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  Effective group id.  */
   private String group;
  public String getGroup() {

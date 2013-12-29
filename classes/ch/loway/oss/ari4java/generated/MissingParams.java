@@ -9,22 +9,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
+import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface MissingParams {
 
-// void setParams List<String>
+// List<? extends String> getParams
 /**********************************************************
  * A list of the missing parameters
  *********************************************************/
- public void setParams(List<String> val );
+ public List<? extends String> getParams();
 
 
 
-// List<String> getParams
+// void setParams List<? extends String>
 /**********************************************************
  * A list of the missing parameters
  *********************************************************/
- public List<String> getParams();
+ public void setParams(List<? extends String> val );
 
 
 }

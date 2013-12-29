@@ -9,14 +9,31 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
+import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface ActionAsterisk {
 
-// AsteriskInfo getAsteriskInfo String
+// void getInfo String AriCallback<AsteriskInfo> callback
 /**********************************************************
- * Gets Asterisk system information.
+ * 
  *********************************************************/
-public AsteriskInfo getAsteriskInfo(String only) throws RestException;
+public void getInfo(String only, AriCallback<AsteriskInfo> callback);
+
+
+
+// void getGlobalVar String AriCallback<Variable> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void getGlobalVar(String variable, AriCallback<Variable> callback);
+
+
+
+// void setGlobalVar String String AriCallback<Void> callback
+/**********************************************************
+ * 
+ *********************************************************/
+public void setGlobalVar(String variable, String value, AriCallback<Void> callback);
 
 
 
@@ -33,6 +50,14 @@ public Variable getGlobalVar(String variable) throws RestException;
  * Set the value of a global variable.
  *********************************************************/
 public void setGlobalVar(String variable, String value) throws RestException;
+
+
+
+// AsteriskInfo getInfo String
+/**********************************************************
+ * Gets Asterisk system information.
+ *********************************************************/
+public AsteriskInfo getInfo(String only) throws RestException;
 
 
 }

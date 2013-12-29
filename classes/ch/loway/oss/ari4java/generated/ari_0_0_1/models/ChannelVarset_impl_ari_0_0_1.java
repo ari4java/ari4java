@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class ChannelVarset_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements ChannelVarset, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  The channel on which the variable was set.
 
 If missing, the variable is a global variable.  */

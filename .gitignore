@@ -13,3 +13,6 @@ nbproject/*
 manifest.mf
 build.xml
 
+/.settings
+/.classpath
+/.project

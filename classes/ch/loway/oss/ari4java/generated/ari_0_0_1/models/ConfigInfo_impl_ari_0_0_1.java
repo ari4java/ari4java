@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class ConfigInfo_impl_ari_0_0_1 implements ConfigInfo, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  Default language for media playback.  */
   private String default_language;
  public String getDefault_language() {

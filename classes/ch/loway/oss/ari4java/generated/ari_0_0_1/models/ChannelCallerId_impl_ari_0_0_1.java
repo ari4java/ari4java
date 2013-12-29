@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class ChannelCallerId_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements ChannelCallerId, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  The integer representation of the Caller Presentation value.  */
   private int caller_presentation;
  public int getCaller_presentation() {

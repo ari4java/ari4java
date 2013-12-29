@@ -36,6 +36,7 @@ public class Action {
             String definition = o.getDefinition();
 
             j.iKnow(javaSignature, definition, o.description );
+            j.iKnow(o.getSignatureAsync(), o.getDefinitionAsync(), "");
         }
     }
 

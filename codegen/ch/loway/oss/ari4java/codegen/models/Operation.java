@@ -14,6 +14,7 @@ import java.util.List;
 public class Operation {
 
     public String method = "";
+    public boolean wsUpgrade = false;
     public String nickname = "";
     public String responseConcreteClass = "";
     public String responseInterface = "";
@@ -23,14 +24,27 @@ public class Operation {
     public List<Param> parms = new ArrayList<Param>();
     public List<ErrorResp> errorCodes = new ArrayList<ErrorResp>();
     
+    private String toParmList(boolean withType) {
+        StringBuilder sb = new StringBuilder();
+        boolean firstItem = true;
+        for ( Param p: parms ) {
+            if ( firstItem ) {
+                firstItem = false;
+            } else {
+                sb.append( ", ");
+            }
+            if (withType) 
+            	sb.append( p.javaType ).append( " " );
+            sb.append( p.name );
+        }
+        return sb.toString();
+    }
+    
     public String toJava( Action parent ) {
 
         StringBuilder sb = new StringBuilder();
 
         JavaGen.addBanner(sb, parent.description + "\n\n" + description );
-
-        sb.append( getDefinition() );
-        sb.append( " {\n");
 
         // search and replace URI parameters
         String stUri = parent.path;
@@ -39,12 +53,14 @@ public class Operation {
                 stUri = stUri.replace("{" + p.name + "}", "\" + " + p.name + " + \"" );
             }
         }
-
-        sb.append( "String url = \"").append( stUri ).append( "\";\n");
-        sb.append( "List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();\n");
-        sb.append( "List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();\n");
-        sb.append( "List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();\n");
-
+        // 1. Private helper method
+        String helperName = JavaGen.addPrefixAndCapitalize("build", nickname);
+        sb.append( "private void ");
+        sb.append(helperName);
+        sb.append("("+toParmList(true)+") {\n");
+        sb.append( "reset();\n");
+        sb.append( "url = \"").append( stUri ).append( "\";\n");
+        sb.append( "method = \"").append( method ).append( "\";\n");
         for ( Param p: parms ) {
             if ( p.type == ParamType.QUERY ) {
                 sb.append( "lParamQuery.add( BaseAriAction.HttpParam.build( \"").append( p.name)
@@ -54,33 +70,89 @@ public class Operation {
                 sb.append( "lParamForm.add( BaseAriAction.HttpParam.build( \"").append( p.name)
                         .append( "\", ").append( p.name ).append( ") );\n");
             };
-
         }
-
         for ( ErrorResp er: errorCodes ) {
             sb.append( "lE.add( BaseAriAction.HttpResponse.build( ").append( er.code)
                     .append( ", \"").append( er.reason ).append( "\") );\n");
         }
-
-        sb.append( "String json = httpAction( url, \"").append( method ).append( "\", lParamQuery, lParamForm, lE);\n");
-
-        if ( !responseInterface.equalsIgnoreCase("void")) {
-            
-            String deserializationType = responseConcreteClass + ".class";
-
-            if (responseConcreteClass.startsWith("List<") ) {
-                //  (List<Interface>) mapper.readValue( string, new TypeReference<List<Concrete>>() {});                
-                deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
-            }
-
-            sb.append( "return (" )
-                    .append( responseInterface )
-                    .append( ") deserializeJson( json, ")
-                    .append( deserializationType )
-                    .append(" ); \n");
-
+        if (wsUpgrade) {
+        	sb.append( "wsUpgrade = true;\n");
         }
-
+        sb.append( "}\n\n");
+        
+        if (!wsUpgrade) {
+	        // 2. Synchronous method
+	        sb.append( "@Override\n");
+	        sb.append( getDefinition() );
+	        sb.append( " {\n");
+	        // call helper
+	        sb.append( helperName+"("+toParmList(false)+");\n");
+	        sb.append( "String json = httpActionSync();\n");
+	        if ( !responseInterface.equalsIgnoreCase("void")) {
+	            
+	            String deserializationType = responseConcreteClass + ".class";
+	
+	            if (responseConcreteClass.startsWith("List<") ) {
+	                //  (List<Interface>) mapper.readValue( string, new TypeReference<List<Concrete>>() {});                
+	                deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
+	            }
+	
+	            sb.append( "return deserializeJson( json, ")
+	                    .append( deserializationType )
+	                    .append(" ); \n");
+	
+	        }
+	        sb.append( "}\n\n");
+        } else {
+        	// Websocket dummy sync method
+	        sb.append( "@Override\n");
+	        sb.append( getDefinition() );
+	        sb.append( " {\n");
+	        sb.append( "throw new RestException(\"No synchronous operation on WebSocket\");\n");
+	        sb.append( "}\n\n");
+        }
+        
+        if (!wsUpgrade) {
+	        // 3. Asynchronous method
+	        sb.append( "@Override\n");
+	        sb.append( getDefinitionAsync() );
+	        sb.append( " {\n");
+	        // call helper
+	        sb.append( helperName+"("+toParmList(false)+");\n");
+	        sb.append( "httpActionAsync(callback");
+	        
+	        if (responseInterface.equalsIgnoreCase("void")) {
+	        	
+	        } else {
+	        	String deserializationType = responseConcreteClass + ".class";
+		        if (responseConcreteClass.startsWith("List<") ) {
+		            //  (List<Interface>) mapper.readValue( string, new TypeReference<List<Concrete>>() {});                
+		            deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
+		        }
+		        sb.append( ", "+deserializationType );
+	        }
+	        sb.append( ");\n");
+        } else {
+        	// Websocket async method
+	        sb.append( "@Override\n");
+	        sb.append( getDefinitionAsync() );
+	        sb.append( " {\n");
+	        // call helper
+	        sb.append( helperName+"("+toParmList(false)+");\n");
+	        sb.append( "httpActionAsync(callback");
+	        
+	        if (responseInterface.equalsIgnoreCase("void")) {
+	        	
+	        } else {
+	        	String deserializationType = responseConcreteClass + ".class";
+		        if (responseConcreteClass.startsWith("List<") ) {
+		            //  (List<Interface>) mapper.readValue( string, new TypeReference<List<Concrete>>() {});                
+		            deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
+		        }
+		        sb.append( ", "+deserializationType );
+	        }
+	        sb.append( ");\n");
+        }
 
         // String url = "/aaa/" + bbb + "/ccc";
         // List<HttpParms> lP = new ArrayList<HttpParms>();
@@ -94,11 +166,9 @@ public class Operation {
         sb.append( "}\n\n");
 
         return sb.toString();
-
-
     }
-
-
+    
+    
     public String getSignature() {
         StringBuilder sb = new StringBuilder();
         sb.append( responseInterface )
@@ -114,6 +184,20 @@ public class Operation {
 
     }
 
+    public String getSignatureAsync() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("void ")
+           .append( nickname );
+
+        for ( Param p: parms ) {
+            sb.append( " " )
+               .append( p.javaType );
+        }
+        
+        sb.append(" "+JavaGen.addAsyncCallback(responseInterface));
+
+        return sb.toString();
+    }
 
     public String getDefinition() {
         StringBuilder sb = new StringBuilder();
@@ -121,6 +205,19 @@ public class Operation {
         sb.append( "public " ).append( responseInterface )
            .append( " " ).append( nickname )
            .append( "(");
+
+        sb.append(toParmList(true));
+
+        sb.append( ") throws RestException" );
+        return sb.toString();
+    }
+
+    public String getDefinitionAsync() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append( "public void " )
+           .append( nickname )
+           .append( "(" );
 
         boolean firstItem = true;
         for ( Param p: parms ) {
@@ -131,11 +228,13 @@ public class Operation {
             }
             sb.append( p.javaType ).append( " " ).append( p.name );
         }
+        if (!firstItem)
+        	sb.append(", ");
+        sb.append(JavaGen.addAsyncCallback(responseInterface));
 
-        sb.append( ") throws RestException" );
+        sb.append( ")" );
         return sb.toString();
     }
-
 
 
 

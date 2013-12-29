@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
+import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface Bridge {
 
@@ -33,6 +34,22 @@ public interface Bridge {
  * Unique identifier for this bridge
  *********************************************************/
  public String getId();
+
+
+
+// List<? extends String> getChannels
+/**********************************************************
+ * Ids of channels participating in this bridge
+ *********************************************************/
+ public List<? extends String> getChannels();
+
+
+
+// void setChannels List<? extends String>
+/**********************************************************
+ * Ids of channels participating in this bridge
+ *********************************************************/
+ public void setChannels(List<? extends String> val );
 
 
 
@@ -73,22 +90,6 @@ public interface Bridge {
  * Name of the current bridging technology
  *********************************************************/
  public String getTechnology();
-
-
-
-// List<String> getChannels
-/**********************************************************
- * Ids of channels participating in this bridge
- *********************************************************/
- public List<String> getChannels();
-
-
-
-// void setChannels List<String>
-/**********************************************************
- * Ids of channels participating in this bridge
- *********************************************************/
- public void setChannels(List<String> val );
 
 
 }

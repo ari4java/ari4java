@@ -79,7 +79,7 @@ public class deserializeJsonTest {
     public void testJacksonListOfStuff() throws IOException {
 
         ObjectMapper mapper = new ObjectMapper();
-        List<MyValue> lVals = (List<MyValue>) mapper.readValue("[ {\"name\":\"Leo\", \"age\":5}, {\"name\":\"Leda Sofia\", \"age\":3} ]",
+        List<MyValue> lVals = mapper.readValue("[ {\"name\":\"Leo\", \"age\":5}, {\"name\":\"Leda Sofia\", \"age\":3} ]",
                 new TypeReference<List<MyValue>>() {});
 
         Assert.assertEquals( "N items", 2, lVals.size() );

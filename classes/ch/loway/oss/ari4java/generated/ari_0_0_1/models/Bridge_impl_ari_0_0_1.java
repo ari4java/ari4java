@@ -19,6 +19,7 @@ import java.util.List;
  *********************************************************/
 
 public class Bridge_impl_ari_0_0_1 implements Bridge, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  Bridging class  */
   private String bridge_class;
  public String getBridge_class() {
@@ -42,13 +43,13 @@ public class Bridge_impl_ari_0_0_1 implements Bridge, java.io.Serializable {
  }
 
   /**  Ids of channels participating in this bridge  */
-  private List<String> channels;
- public List<String> getChannels() {
+  private List<? extends String> channels;
+ public List<? extends String> getChannels() {
    return channels;
  }
 
  @JsonDeserialize( contentAs=String.class )
- public void setChannels(List<String> val ) {
+ public void setChannels(List<? extends String> val ) {
    channels = val;
  }
 

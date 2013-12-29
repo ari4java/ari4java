@@ -1,6 +1,7 @@
 package ch.loway.oss.ari4java.generated;
 
 import ch.loway.oss.ari4java.generated.ari_0_0_1.actions.ActionSounds_impl_ari_0_0_1;
+import ch.loway.oss.ari4java.tools.AriCallback;
 import ch.loway.oss.ari4java.tools.RestException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -77,11 +78,26 @@ public class ActionSoundsTest {
     public void generateSound() throws RestException {
         ActionSounds aa = createWForcedResponse(jsonSounds);
 
-        Sound s = aa.getStoredSound("abcde");
+        Sound s = aa.get("abcde");
 
         assertEquals("Id", "abcde", s.getId() );
         assertEquals("Formats", 3, s.getFormats().size() );
         assertEquals("Language of format #2", "es", s.getFormats().get(1).getLanguage() );
+        
+        aa.get("abcde", new AriCallback<Sound>() {
+			
+			@Override
+			public void onSuccess(Sound result) {
+		        assertEquals("Id", "abcde", result.getId() );
+		        assertEquals("Formats", 3, result.getFormats().size() );
+		        assertEquals("Language of format #2", "es", result.getFormats().get(1).getLanguage() );
+			}
+			
+			@Override
+			public void onFailure(RestException e) {
+				e.printStackTrace();
+			}
+        });
 
     }
 

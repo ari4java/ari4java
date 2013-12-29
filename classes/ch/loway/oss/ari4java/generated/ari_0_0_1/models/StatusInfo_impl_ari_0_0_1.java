@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class StatusInfo_impl_ari_0_0_1 implements StatusInfo, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  Time when Asterisk was last reloaded.  */
   private Date last_reload_time;
  public Date getLast_reload_time() {

@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class Event_impl_ari_0_0_1 extends Message_impl_ari_0_0_1 implements Event, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  Name of the application receiving the event.  */
   private String application;
  public String getApplication() {

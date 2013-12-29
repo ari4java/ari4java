@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
+import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface LiveRecording {
 
@@ -36,6 +37,14 @@ public interface LiveRecording {
 
 
 
+// String getCause
+/**********************************************************
+ * Cause for recording failure if failed
+ *********************************************************/
+ public String getCause();
+
+
+
 // String getName
 /**********************************************************
  * Base name for the recording
@@ -49,6 +58,14 @@ public interface LiveRecording {
  * 
  *********************************************************/
  public void setFormat(String val );
+
+
+
+// void setCause String
+/**********************************************************
+ * Cause for recording failure if failed
+ *********************************************************/
+ public void setCause(String val );
 
 
 

@@ -47,6 +47,10 @@ public class JavaGen {
     
 
     }
+    
+    public static String addAsyncCallback(String response) {
+    	return "AriCallback<"+response.replaceAll("^void$",  "Void")+"> callback";
+    }
 
 
 }

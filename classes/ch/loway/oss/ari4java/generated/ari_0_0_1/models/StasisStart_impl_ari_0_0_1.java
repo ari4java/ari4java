@@ -11,20 +11,21 @@ import java.util.Date;
 import java.util.List;
 
 /**********************************************************
- * Notification that a channel has entered a Stasis appliction.
+ * Notification that a channel has entered a Stasis application.
  * 
  * Defined in file: events.json
  *********************************************************/
 
 public class StasisStart_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements StasisStart, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  Arguments to the application  */
-  private List<String> args;
- public List<String> getArgs() {
+  private List<? extends String> args;
+ public List<? extends String> getArgs() {
    return args;
  }
 
  @JsonDeserialize( contentAs=String.class )
- public void setArgs(List<String> val ) {
+ public void setArgs(List<? extends String> val ) {
    args = val;
  }
 

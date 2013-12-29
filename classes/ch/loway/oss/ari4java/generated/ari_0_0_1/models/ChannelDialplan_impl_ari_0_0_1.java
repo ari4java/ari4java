@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class ChannelDialplan_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements ChannelDialplan, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  The channel that changed dialplan location.  */
   private Channel channel;
  public Channel getChannel() {

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
+import ch.loway.oss.ari4java.tools.AriCallback;
 import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.models.*;
 
@@ -20,15 +21,25 @@ public class ActionSounds_impl_ari_0_0_1 extends BaseAriAction  implements Actio
  * 
  * List all sounds.
  *********************************************************/
-public List<Sound> getSounds(String lang, String format) throws RestException {
-String url = "/sounds";
-List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
+private void buildList(String lang, String format) {
+reset();
+url = "/sounds";
+method = "GET";
 lParamQuery.add( BaseAriAction.HttpParam.build( "lang", lang) );
 lParamQuery.add( BaseAriAction.HttpParam.build( "format", format) );
-String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
-return (List<Sound>) deserializeJson( json, new TypeReference<List<Sound_impl_ari_0_0_1>>() {} ); 
+}
+
+@Override
+public List<? extends Sound> list(String lang, String format) throws RestException {
+buildList(lang, format);
+String json = httpActionSync();
+return deserializeJson( json, new TypeReference<List<Sound_impl_ari_0_0_1>>() {} ); 
+}
+
+@Override
+public void list(String lang, String format, AriCallback<List<? extends Sound>> callback) {
+buildList(lang, format);
+httpActionAsync(callback, new TypeReference<List<Sound_impl_ari_0_0_1>>() {});
 }
 
 /**********************************************************
@@ -36,13 +47,23 @@ return (List<Sound>) deserializeJson( json, new TypeReference<List<Sound_impl_ar
  * 
  * Get a sound's details.
  *********************************************************/
-public Sound getStoredSound(String soundId) throws RestException {
-String url = "/sounds/" + soundId + "";
-List<BaseAriAction.HttpParam> lParamQuery = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpParam> lParamForm = new ArrayList<BaseAriAction.HttpParam>();
-List<BaseAriAction.HttpResponse> lE = new ArrayList<BaseAriAction.HttpResponse>();
-String json = httpAction( url, "GET", lParamQuery, lParamForm, lE);
-return (Sound) deserializeJson( json, Sound_impl_ari_0_0_1.class ); 
+private void buildGet(String soundId) {
+reset();
+url = "/sounds/" + soundId + "";
+method = "GET";
+}
+
+@Override
+public Sound get(String soundId) throws RestException {
+buildGet(soundId);
+String json = httpActionSync();
+return deserializeJson( json, Sound_impl_ari_0_0_1.class ); 
+}
+
+@Override
+public void get(String soundId, AriCallback<Sound> callback) {
+buildGet(soundId);
+httpActionAsync(callback, Sound_impl_ari_0_0_1.class);
 }
 
 };

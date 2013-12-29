@@ -9,30 +9,31 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
+import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface StasisStart {
+
+// void setArgs List<? extends String>
+/**********************************************************
+ * Arguments to the application
+ *********************************************************/
+ public void setArgs(List<? extends String> val );
+
+
+
+// List<? extends String> getArgs
+/**********************************************************
+ * Arguments to the application
+ *********************************************************/
+ public List<? extends String> getArgs();
+
+
 
 // Channel getChannel
 /**********************************************************
  * 
  *********************************************************/
  public Channel getChannel();
-
-
-
-// void setArgs List<String>
-/**********************************************************
- * Arguments to the application
- *********************************************************/
- public void setArgs(List<String> val );
-
-
-
-// List<String> getArgs
-/**********************************************************
- * Arguments to the application
- *********************************************************/
- public List<String> getArgs();
 
 
 

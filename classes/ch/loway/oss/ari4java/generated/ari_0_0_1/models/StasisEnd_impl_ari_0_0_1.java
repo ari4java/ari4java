@@ -11,12 +11,13 @@ import java.util.Date;
 import java.util.List;
 
 /**********************************************************
- * Notification that a channel has left a Stasis appliction.
+ * Notification that a channel has left a Stasis application.
  * 
  * Defined in file: events.json
  *********************************************************/
 
 public class StasisEnd_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements StasisEnd, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**    */
   private Channel channel;
  public Channel getChannel() {

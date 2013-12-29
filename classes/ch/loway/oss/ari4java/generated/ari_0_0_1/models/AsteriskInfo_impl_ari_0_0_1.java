@@ -17,6 +17,7 @@ import java.util.List;
  *********************************************************/
 
 public class AsteriskInfo_impl_ari_0_0_1 implements AsteriskInfo, java.io.Serializable {
+private static final long serialVersionUID = 1L;
   /**  Info about how Asterisk was built  */
   private BuildInfo build;
  public BuildInfo getBuild() {
