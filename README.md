@@ -50,7 +50,7 @@ Status
 * 13.10.18 - Auto-generates all classes and compiles them.
 * 13.10.21 - All objects are deserializable right out of JSON. Mesages can be deserialzed automatically.
 * 13.11.26 - Netty.io based HTTP and WebSocket implementation, factory, sync and async methods
-
+* 13.12.29 - Imported the definitions for Asterisk 12.0.0 - ARI 1.0.0 - a bit of code changes in the code generator
 
 Using
 -----
