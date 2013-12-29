@@ -34,6 +34,15 @@ In order to run codegen (class ch.loway.oss.ari4java.codegen.run), you need the 
 
 I expect a Gradle build script soon.
 
+Running
+-------
+
+The project requires:
+
+- jackson-core-2.2.2
+- jackson-databind-2.2.2
+- jackson-annotations-2.2.2
+- netty-all-4.0.11-Final
 
 Status
 ------
