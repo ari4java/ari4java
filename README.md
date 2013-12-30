@@ -10,6 +10,10 @@ In order to support different versions of the API, what we do is we maintain con
 for each version of the API, but we also have general interfaces that are used to work with objects
 across different versions.
 
+Downloads
+---------
+
+Pre-built JAR files are available for download at http://downloads.loway.ch/ari4java/
 
 
 Buiding
