@@ -33,9 +33,11 @@ sourceSets {
 
 jar {
     manifest {
-        attributes("Implementation-Title": project.ext.webapp_name, "Implementation-Version": project.ext.app_version)
+        attributes("Implementation-Title": project.ext.webapp_name, 
+                   "Implementation-Version": project.ext.app_version)
     }
     archiveName project.ext.webapp_name + "-" + project.ext.app_version + ".jar"
+    from( "$buildDir/classes_subst" )
 }
 
 
