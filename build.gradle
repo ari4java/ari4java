@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'findbugs'
 def env = System.getenv()
 
 //
@@ -12,6 +13,7 @@ project.ext {
   version_class  = 'ch/loway/oss/ari4java/BUILD.java'
   build_time     = "" + new Date()
 }
+
 
 
 sourceSets {
@@ -78,3 +80,12 @@ task setVersionInSources() {
 }
 compileJava.dependsOn setVersionInSources
 
+// decide what to see -only one can be enabled
+// get the HTML report from build/reports/findbugs/main.html
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+    ignoreFailures = true
+ }
