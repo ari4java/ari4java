@@ -6,6 +6,7 @@ import ch.loway.oss.ari4java.codegen.genJava.JavaInterface;
 import ch.loway.oss.ari4java.codegen.genJava.JavaPkgInfo;
 import ch.loway.oss.ari4java.codegen.models.Action;
 import ch.loway.oss.ari4java.codegen.models.Apis;
+import ch.loway.oss.ari4java.codegen.models.AriBuilderInterface;
 import ch.loway.oss.ari4java.codegen.models.Operation;
 import ch.loway.oss.ari4java.codegen.models.Model;
 import ch.loway.oss.ari4java.codegen.models.ModelField;
@@ -18,6 +19,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -140,10 +142,10 @@ public class DefMapper {
      */
 
     public void generateAllClasses() throws IOException {
-        generateInterfaces();
+        AriBuilderInterface abi = generateInterfaces();
         generateModels();
         generateApis();
-        generateProperties();
+        generateProperties( abi );
     }
 
     /**
@@ -152,13 +154,18 @@ public class DefMapper {
      * @throws IOException
      */
 
-    public void generateInterfaces() throws IOException {
+    public AriBuilderInterface generateInterfaces() throws IOException {
         //
+        AriBuilderInterface abi = new AriBuilderInterface();
         for ( String ifName: interfaces.keySet() ) {
             JavaInterface ji = interfaces.get(ifName);
+            abi.knownInterfaces.add(ifName);
             saveToDisk(ji);
         }
 
+        // generate the AriBuilder class
+        saveToDisk( "classes/", "ch.loway.oss.ari4java.generated", "AriBuilder", abi.toString() );
+        return abi;
     }
 
     /**
@@ -200,7 +207,7 @@ public class DefMapper {
      * @throws IOException
      */
 
-    public void generateProperties() throws IOException {
+    public void generateProperties( AriBuilderInterface abi ) throws IOException {
 
         Map<String,Set<Model>> mM = new HashMap<String, Set<Model>>();
         Map<String,Set<Apis>> mA = new HashMap<String, Set<Apis>>();
@@ -225,6 +232,7 @@ public class DefMapper {
 
         for ( String ver: mM.keySet() ) {
             writeProperties(ver, mA.get(ver), mM.get(ver));
+            writeAriBuilder(ver, abi, mA.get(ver), mM.get(ver));
         }
 
     }
@@ -482,6 +490,45 @@ public class DefMapper {
             	out.println(prop);
         }
         out.close();
+    }
+
+
+    private void writeAriBuilder( String apiVersion, AriBuilderInterface abi, Collection<Apis> apis, Collection<Model> models ) throws IOException {
+
+        String thisClass = "AriBuilder_impl_" + apiVersion;
+        List<String> ifToImplement = new ArrayList<String>( abi.knownInterfaces );
+
+        StringBuilder sb = new StringBuilder();
+        JavaGen.importClasses(sb, "ch.loway.oss.ari4java.generated." + apiVersion,
+                Arrays.asList( new String[] {
+                    "ch.loway.oss.ari4java.generated." + apiVersion + ".models.*" ,
+                    "ch.loway.oss.ari4java.generated." + apiVersion + ".actions.*",
+                    "ch.loway.oss.ari4java.generated.*"
+        }));
+
+        sb.append("public class ").append( thisClass ).append( " implements AriBuilder {\n\n");
+
+        for (Apis api : apis) {
+            String ifc = api.getInterfaceName();
+            ifToImplement.remove(ifc);
+            sb.append( AriBuilderInterface.getMethod( ifc, apiVersion) );
+        }
+
+        for (Model m : models) {
+            String ifc = m.getInterfaceName();
+            ifToImplement.remove(ifc);
+            sb.append( AriBuilderInterface.getMethod( ifc, apiVersion) );
+        }
+
+        // do we have any unimplemented interface?
+        for ( String ifc: ifToImplement ) {
+            sb.append( AriBuilderInterface.getUnimplemented(ifc) );
+        }
+
+        sb.append( "};");
+
+        saveToDisk( "classes/", "ch.loway.oss.ari4java.generated." + apiVersion, thisClass, sb.toString() );
+
     }
 
 
