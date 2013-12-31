@@ -1,10 +1,14 @@
 ari4java
 ========
 
-Asterisk ARI interface bindings for Java
+The Asterisk REST Interface (ARI) bindings for Java.
 
 Description
 -----------
+
+ARI is an interface available on Asterisk 12 that lets you write applications
+that run externally and control call flow through REST calls while receiving
+events on a websocket.
 
 In order to support different versions of the API, what we do is we maintain concrete implementations
 for each version of the API, but we also have general interfaces that are used to work with objects
@@ -16,8 +20,8 @@ Downloads
 Pre-built JAR files are available for download at http://downloads.loway.ch/ari4java/
 
 
-Buiding
-=======
+Building
+========
 
 The code here is partially hand-written and partially generated out of Swagger definitions.
 
@@ -134,6 +138,7 @@ Useful links
 ------------
 
 * Asterisk 12 docs: https://wiki.asterisk.org/wiki/display/AST/Asterisk+12+Documentation
+* Official ARI docs for Asterisk 12: https://wiki.asterisk.org/wiki/display/AST/Asterisk+12+ARI
 * ari4java community on Google+: https://plus.google.com/u/0/communities/116130645492865479649
 * Asterisk-app-dev archives: http://lists.digium.com/pipermail/asterisk-app-dev/
 
