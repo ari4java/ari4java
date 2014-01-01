@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.sandbox;
 import java.util.List;
 
 import ch.loway.oss.ari4java.ARI;
-import ch.loway.oss.ari4java.cfg.AriVersion;
+import ch.loway.oss.ari4java.AriVersion;
 import ch.loway.oss.ari4java.generated.ActionApplications;
 import ch.loway.oss.ari4java.generated.ActionAsterisk;
 import ch.loway.oss.ari4java.generated.ActionEvents;

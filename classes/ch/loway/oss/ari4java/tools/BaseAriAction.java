@@ -1,7 +1,6 @@
 package ch.loway.oss.ari4java.tools;
 
-import ch.loway.oss.ari4java.connector.AriConnector;
-import ch.loway.oss.ari4java.generated.Event;
+
 import ch.loway.oss.ari4java.generated.Message;
 import ch.loway.oss.ari4java.tools.WsClient.WsClientConnection;
 
@@ -107,11 +106,11 @@ public class BaseAriAction {
         }
     }
 
-            public AriConnector daddy = null;
-
-        public void configure(AriConnector connector) {
-            daddy = connector;
-        }
+//            public AriConnector daddy = null;
+//
+//        public void configure(AriConnector connector) {
+//            daddy = connector;
+//        }
 
 
     public static class HttpResponse {
@@ -217,9 +216,9 @@ public class BaseAriAction {
         httpActionAsync(new AriAsyncHandler<T>(callback, klazzType));
     }
 
-    private String httpActionImpl(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpResponse> errors) throws RestException {
-        return daddy.performHttp(uri, method, parametersQuery, parametersForm, errors);
-    }
+//    private String httpActionImpl(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpResponse> errors) throws RestException {
+//        return daddy.performHttp(uri, method, parametersQuery, parametersForm, errors);
+//    }
 
     /**
      * Deserialize a type

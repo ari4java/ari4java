@@ -1,5 +1,5 @@
 
-package ch.loway.oss.ari4java.cfg;
+package ch.loway.oss.ari4java;
 
 import ch.loway.oss.ari4java.generated.ActionApplications;
 import ch.loway.oss.ari4java.generated.ActionAsterisk;
@@ -64,7 +64,7 @@ import ch.loway.oss.ari4java.generated.ari_0_0_1.AriBuilder_impl_ari_0_0_1;
 import ch.loway.oss.ari4java.generated.ari_1_0_0.AriBuilder_impl_ari_1_0_0;
 
 /**
- * The version of ARI to be used
+ * The version of ARI to be used.
  * 
  * @author lenz
  */
@@ -79,6 +79,22 @@ public enum AriVersion {
 
     private AriVersion( AriBuilder ab ) {
         builder = ab;
+    }
+
+    /**
+     * You cannot get a builder for IM_FEELING_LUCKY or similar.
+     * If you try to do this, it s a logical error and you get an exception.
+     *
+     * @return the builder object
+     * @throws IllegalArgumentException
+     */
+
+    public AriBuilder builder() {
+        if ( builder == null ) {
+            throw new IllegalArgumentException("This version has no builder. Library error for :" + this.name());
+        } else {
+            return builder;
+        }
     }
 
 

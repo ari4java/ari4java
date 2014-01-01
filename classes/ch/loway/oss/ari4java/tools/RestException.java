@@ -1,37 +1,20 @@
-
 package ch.loway.oss.ari4java.tools;
 
-import java.io.IOException;
-
 /**
- * Errore REST.
+ * A REST error.
+ * Made it inherit from ARIException so that you can trap ony one exception.
  *
  * @author lenz
  */
-public class RestException extends IOException {
-	private static final long serialVersionUID = 1L;
-	private String message;
-	private Throwable cause;
+public class RestException extends ARIException {
 
-	public RestException(String s) {
-		this.message = s;
+    private static final long serialVersionUID = 1L;
+
+    public RestException(String s) {
+        super(s);
     }
-	
-	public RestException(Throwable cause) {
-		this.cause = cause;
-	}
-	
-	@Override
-	public String getMessage() {
-		if (cause != null)
-			return cause.getMessage();
-		return this.message;
-	}
-	
-	@Override
-	public synchronized Throwable getCause() {
-		if (cause != null)
-			return cause;
-		return super.getCause();
-	}
+
+    public RestException(Throwable cause) {
+        super(cause);
+    }
 }
