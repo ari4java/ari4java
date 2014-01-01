@@ -14,11 +14,6 @@ In order to support different versions of the API, what we do is we maintain con
 for each version of the API, but we also have general interfaces that are used to work with objects
 across different versions.
 
-Downloads
----------
-
-Pre-built JAR files are available for download at http://downloads.loway.ch/ari4java/
-
 
 Building
 ========
@@ -71,6 +66,7 @@ Status
 * 13.11.26 - Netty.io based HTTP and WebSocket implementation, factory, sync and async methods
 * 13.12.29 - Imported the definitions for Asterisk 12.0.0 - ARI 1.0.0 - a bit of code changes in the code generator - Added the Gradle build script.
 * 13.12.30 - Added AriBuilder interfaces
+* 14.01.01 - Added a minimal application under tests/ class ch.loway.oss.ari4java.sandbox.sample to be used as a style laboratory. Look for UGLY tags. Rel 0.1.2.
 
 Using
 -----
