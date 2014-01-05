@@ -66,7 +66,7 @@ public class ConnectAndDial {
 
     public void connect() throws ARIException {
 
-        ari = ARI.build("http://10.10.5.26:8088/", "aritest", "testme", AriVersion.ARI_1_0_0);
+        ari = ARI.build("http://10.10.5.26:8088/", "hello", "aritestx", "testme", AriVersion.IM_FEELING_LUCKY);
 
         // lets raise an exeption if the connection is not valid
         AsteriskInfo ai = ari.asterisk().getInfo("");

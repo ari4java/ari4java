@@ -22,7 +22,14 @@ import ch.loway.oss.ari4java.tools.HttpClient;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.WsClient;
 import ch.loway.oss.ari4java.tools.http.NettyHttpClient;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URLConnection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * ARI factory and helper class
@@ -32,6 +39,8 @@ import java.net.URISyntaxException;
  */
 public class ARI {
 
+
+    private String appName = "";
     private AriVersion version;
     private HttpClient httpClient;
     private WsClient wsClient;
@@ -211,18 +220,19 @@ public class ARI {
      * @throws ARIException If the url is invalid, or the version of ARI is not supported.
      */
 
-    public static ARI build(String url, String user, String pass, AriVersion version) throws ARIException {
+    public static ARI build(String url, String app, String user, String pass, AriVersion version) throws ARIException {
 
         if (version == AriVersion.IM_FEELING_LUCKY) {
 
             AriVersion currentVersion = detectAriVersion(url, user, pass);
-            return build(url, user, pass, currentVersion);
+            return build(url, app, user, pass, currentVersion);
 
         } else {
 
             try {
 
                 ARI ari = new ARI();
+                ari.appName = app;
                 NettyHttpClient hc = new NettyHttpClient();
                 hc.initialize(url, user, pass);
                 ari.setHttpClient(hc);
@@ -250,8 +260,96 @@ public class ARI {
      */
 
     protected static AriVersion detectAriVersion( String url, String user, String pass ) throws ARIException {
-        throw new ARIException("Feature not implemented. See GitHub issue #2");
+        
+        String response = doHttpGet( url + "ari/api-docs/resources.json", user, pass );
+        String version = findVersionString( response );
+        return AriVersion.fromVersionString(version);
+
     }
+
+    /**
+     * Runs an HTTP GET and returns the text downloaded.
+     *
+     * @param urlWithParms
+     * @param user
+     * @param pwd
+     * @return
+     * @throws ARIException
+     */
+
+    private static String doHttpGet(String urlWithParms, String user, String pwd) throws ARIException {
+        URL url = null;
+        try {
+            url = new URL(urlWithParms);
+        } catch (MalformedURLException e) {
+            throw new ARIException("MalformedUrlException: " + e.getMessage());
+        }
+
+        URLConnection uc = null;
+        try {
+            uc = url.openConnection();
+        } catch (IOException e) {
+            throw new ARIException("IOException: " + e.getMessage());
+        }
+
+
+        String userpass = user + ":" + pwd;
+        String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
+
+        uc.setRequestProperty("Authorization", basicAuth);
+        InputStream is = null;
+        try {
+            is = uc.getInputStream();
+        } catch (IOException e) {
+            throw new ARIException("Cannot connect: " + e.getMessage());
+        }
+
+        BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder response = new StringBuilder();
+
+        String line = null;
+        try {
+            line = buffReader.readLine();
+        } catch (IOException e) {
+            throw new ARIException("IOException: " + e.getMessage());
+        }
+        while (line != null) {
+            response.append(line);
+            response.append('\n');
+            try {
+                line = buffReader.readLine();
+            } catch (IOException e) {
+                throw new ARIException("IOException: " + e.getMessage());
+            }
+        }
+        try {
+            buffReader.close();
+        } catch (IOException e) {
+            throw new ARIException("IOException: " + e.getMessage());
+        }
+        //System.out.println("Response: " + response.toString());
+        return response.toString();
+    }
+
+    /**
+     * Matches the version string out of the resources.json file.
+     * 
+     * @param response
+     * @return
+     * @throws ARIException
+     */
+
+    private static String findVersionString(String response) throws ARIException {
+        Pattern p = Pattern.compile(".apiVersion.:\\s+\"(.+?)\"", Pattern.MULTILINE + Pattern.CASE_INSENSITIVE );
+
+        Matcher m = p.matcher(response);
+        if ( m.find()  ) {
+            return m.group(1);
+        } else {
+            throw new ARIException( "Cound not match apiVersion " );
+        }
+    }
+
 
     /**
      * This operation is the opposite of a build() - to be called in the final
