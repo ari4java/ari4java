@@ -11,6 +11,8 @@ import ch.loway.oss.ari4java.generated.ActionEvents;
 import ch.loway.oss.ari4java.generated.ActionPlaybacks;
 import ch.loway.oss.ari4java.generated.ActionRecordings;
 import ch.loway.oss.ari4java.generated.ActionSounds;
+import ch.loway.oss.ari4java.generated.Message;
+import ch.loway.oss.ari4java.tools.AriCallback;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import ch.loway.oss.ari4java.tools.BaseAriAction;
+import ch.loway.oss.ari4java.tools.MessageQueue;
 import ch.loway.oss.ari4java.tools.HttpClient;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.WsClient;
@@ -25,6 +28,7 @@ import ch.loway.oss.ari4java.tools.http.NettyHttpClient;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
@@ -44,6 +48,9 @@ public class ARI {
     private AriVersion version;
     private HttpClient httpClient;
     private WsClient wsClient;
+
+    private ActionEvents liveActionEvent = null;
+
     // Map of interfaces (key) and implementations (value) for actions
     private Map<Class<?>, Class<?>> actionMap = new HashMap<Class<?>, Class<?>>();
     // Map of interfaces (key) and implementations (value) for models
@@ -279,6 +286,7 @@ public class ARI {
 
     private static String doHttpGet(String urlWithParms, String user, String pwd) throws ARIException {
         URL url = null;
+        final String UTF8 = "UTF-8";
         try {
             url = new URL(urlWithParms);
         } catch (MalformedURLException e) {
@@ -292,41 +300,48 @@ public class ARI {
             throw new ARIException("IOException: " + e.getMessage());
         }
 
-
-        String userpass = user + ":" + pwd;
-        String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
-
-        uc.setRequestProperty("Authorization", basicAuth);
-        InputStream is = null;
-        try {
-            is = uc.getInputStream();
-        } catch (IOException e) {
-            throw new ARIException("Cannot connect: " + e.getMessage());
-        }
-
-        BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
         StringBuilder response = new StringBuilder();
 
-        String line = null;
         try {
-            line = buffReader.readLine();
-        } catch (IOException e) {
-            throw new ARIException("IOException: " + e.getMessage());
-        }
-        while (line != null) {
-            response.append(line);
-            response.append('\n');
+            String userpass = user + ":" + pwd;
+            String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes(UTF8));
+
+            uc.setRequestProperty("Authorization", basicAuth);
+            InputStream is = null;
+            try {
+                is = uc.getInputStream();
+            } catch (IOException e) {
+                throw new ARIException("Cannot connect: " + e.getMessage());
+            }
+
+
+
+            BufferedReader buffReader = new BufferedReader(new InputStreamReader(is, UTF8));
+
+            String line = null;
             try {
                 line = buffReader.readLine();
             } catch (IOException e) {
                 throw new ARIException("IOException: " + e.getMessage());
             }
+            while (line != null) {
+                response.append(line);
+                response.append('\n');
+                try {
+                    line = buffReader.readLine();
+                } catch (IOException e) {
+                    throw new ARIException("IOException: " + e.getMessage());
+                }
+            }
+            try {
+                buffReader.close();
+            } catch (IOException e) {
+                throw new ARIException("IOException: " + e.getMessage());
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new ARIException("Nobody is going to believe this: missing encoding UTF8 " + e.getMessage());
         }
-        try {
-            buffReader.close();
-        } catch (IOException e) {
-            throw new ARIException("IOException: " + e.getMessage());
-        }
+
         //System.out.println("Response: " + response.toString());
         return response.toString();
     }
@@ -359,8 +374,12 @@ public class ARI {
      * the websocket or any circular reference.
      */
 
-    public void cleanup() {        
-        
+    public void cleanup() throws ARIException {
+
+        if ( liveActionEvent != null ) {
+            closeAction( liveActionEvent );
+        }
+
         destroy( wsClient );
         destroy( httpClient );
 
@@ -385,6 +404,48 @@ public class ARI {
             }
         }
     }
+
+    /**
+     * In order to avoid multi-threading for users, you can get a
+     * MessageQueue object and poll on it for new messages.
+     * This makes sure you don't really need to synchonize or be worrided by
+     * threading issues.
+     * Another plus is that
+     *
+     * @return 
+     * @throws ARIException
+     */
+
+
+    public MessageQueue getWebsocketQueue() throws ARIException {
+
+        if ( liveActionEvent != null ) {
+            throw new ARIException( "Websocket already present" );
+        }
+
+        final MessageQueue q = new MessageQueue();
+
+        ActionEvents ae = events();
+        ae.eventWebsocket( appName, new AriCallback<Message>() {
+
+            @Override
+            public void onSuccess(Message result) {                
+                q.queue( result );
+            }
+
+            @Override
+            public void onFailure(RestException e) {
+                q.queueError("Err:" + e.getMessage());
+            }
+        });
+
+        // register the AE so we can close it when the erorr goes down
+        liveActionEvent = ae;
+        return q;
+
+    }
+
+
 
     /**
      * Gets us a ready to use object.

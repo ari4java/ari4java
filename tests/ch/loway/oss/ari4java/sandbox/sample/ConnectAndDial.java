@@ -1,5 +1,3 @@
-
-
 package ch.loway.oss.ari4java.sandbox.sample;
 
 import ch.loway.oss.ari4java.ARI;
@@ -10,11 +8,10 @@ import ch.loway.oss.ari4java.generated.AsteriskInfo;
 import ch.loway.oss.ari4java.generated.Bridge;
 import ch.loway.oss.ari4java.generated.Message;
 import ch.loway.oss.ari4java.generated.StasisStart;
-import ch.loway.oss.ari4java.generated.Variable;
 import ch.loway.oss.ari4java.tools.AriCallback;
+import ch.loway.oss.ari4java.tools.MessageQueue;
 import ch.loway.oss.ari4java.tools.RestException;
 import java.util.List;
-
 
 /**
  * This class opens up an ARI application that creates a bridge with MOH.
@@ -24,7 +21,6 @@ import java.util.List;
  * @author lenz
  */
 public class ConnectAndDial {
-
 
     ARI ari = null;
     Bridge b = null;
@@ -41,7 +37,6 @@ public class ConnectAndDial {
      * This is the app...
      * 
      */
-
     public void start() {
 
         try {
@@ -57,30 +52,31 @@ public class ConnectAndDial {
             e.printStackTrace();
         } finally {
             if (ari != null) {
-                ari.cleanup();
+                try {
+                    ari.cleanup();
+                } catch (Throwable t) {
+                }
             }
         }
 
     }
 
-
     public void connect() throws ARIException {
 
-        ari = ARI.build("http://10.10.5.26:8088/", "hello", "aritestx", "testme", AriVersion.IM_FEELING_LUCKY);
+        ari = ARI.build("http://10.10.5.26:8088/", "hello", "aritest", "testme", AriVersion.IM_FEELING_LUCKY);
 
         // lets raise an exeption if the connection is not valid
         AsteriskInfo ai = ari.asterisk().getInfo("");
-        System.out.println( "Hey! We're connected! Asterisk Version: " + ai.getSystem().getVersion() );
+        System.out.println("Hey! We're connected! Asterisk Version: " + ai.getSystem().getVersion());
 
     }
-
 
     public void createBridge() throws ARIException {
 
         // create a bridge and start playing MOH on it
         // UGLY: we should have a constant for the allowed bridge types
         b = ari.bridges().create("", "myBridge");
-        System.out.println( "Bridge ID:" + b.getId() + " Name:" + b.getName() + " Tech:" + b.getTechnology() + " Creator:" + b.getCreator() );
+        System.out.println("Bridge ID:" + b.getId() + " Name:" + b.getName() + " Tech:" + b.getTechnology() + " Creator:" + b.getCreator());
 
 
         // start MOH on the bridge
@@ -90,8 +86,8 @@ public class ConnectAndDial {
         // UGLY: why not a List<Bridges>? the cliens should not care....
         List<? extends Bridge> bridges = ari.bridges().list();
 
-        for ( Bridge bb: bridges ) {
-            printBridge(  bb  );
+        for (Bridge bb : bridges) {
+            printBridge(bb);
         }
 
     }
@@ -102,8 +98,7 @@ public class ConnectAndDial {
      * 
      * @throws ARIException
      */
-
-    public void processEvents() throws ARIException {
+    public void processEvents_old() throws ARIException {
 
         ActionEvents ae = ari.events();
         ae.eventWebsocket("hello", new AriCallback<Message>() {
@@ -147,9 +142,44 @@ public class ConnectAndDial {
 
     }
 
+    /**
+     * The new style of event processing...
+     *
+     * @throws ARIException
+     */
+
+
+    public void processEvents() throws ARIException {
+
+        System.out.println( "Starting events... " );
+        MessageQueue mq = ari.getWebsocketQueue();
+
+        long start = System.currentTimeMillis();
+
+        while ((System.currentTimeMillis() - start) < 5000) {
+
+            Message m = mq.dequeueMax( 100, 20 );
+            if (m != null) {
+
+                long now = System.currentTimeMillis() - start;
+                System.out.println(now + ": " + m);
+
+                if (m instanceof StasisStart) {
+                    StasisStart event = (StasisStart) m;
+                    System.out.println("Channel found: " + event.getChannel().getId() + " State:" + event.getChannel().getState());
+
+                    ari.bridges().addChannel(b.getId(), event.getChannel().getId(), "");
+                }
+            } 
+        }
+
+        System.out.println( "No more events... " );
+    }
+
+
     public void removeBridge() throws ARIException {
 
-        System.out.println( "Removing...." );
+        System.out.println("Removing....");
 
         ari.bridges().destroy(b.getId(), new AriCallback<Void>() {
 
@@ -172,20 +202,17 @@ public class ConnectAndDial {
      * 
      * @param b
      */
-
-    private void printBridge( Bridge b ) {
-        System.out.println( "Bridge ID:" + b.getId()
-                              + " Name:" + b.getName()
-                              + " Tech:" + b.getTechnology()
-                              + " Creator:" + b.getCreator()
-                              + " Class: " + b.getBridge_class()
-                              + " Type: " + b.getBridge_type()
-                              + " Chans: " + b.getChannels().size() );
-        for ( String s: b.getChannels() ) {
-            System.out.println( " - ID: " + s );
+    private void printBridge(Bridge b) {
+        System.out.println("Bridge ID:" + b.getId()
+                + " Name:" + b.getName()
+                + " Tech:" + b.getTechnology()
+                + " Creator:" + b.getCreator()
+                + " Class: " + b.getBridge_class()
+                + " Type: " + b.getBridge_type()
+                + " Chans: " + b.getChannels().size());
+        for (String s : b.getChannels()) {
+            System.out.println(" - ID: " + s);
         }
 
     }
-
-
 }
