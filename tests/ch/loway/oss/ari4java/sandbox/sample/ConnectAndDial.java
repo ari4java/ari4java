@@ -53,6 +53,7 @@ public class ConnectAndDial {
         } finally {
             if (ari != null) {
                 try {
+                    ARI.sleep(500);
                     ari.cleanup();
                 } catch (Throwable t) {
                 }
@@ -156,7 +157,7 @@ public class ConnectAndDial {
 
         long start = System.currentTimeMillis();
 
-        while ((System.currentTimeMillis() - start) < 5000) {
+        while ((System.currentTimeMillis() - start) < 2 * 1000L) {
 
             Message m = mq.dequeueMax( 100, 20 );
             if (m != null) {
@@ -191,6 +192,7 @@ public class ConnectAndDial {
 
             @Override
             public void onFailure(RestException e) {
+                System.out.println( "Failure removeBridge() ");
                 e.printStackTrace();
             }
         });

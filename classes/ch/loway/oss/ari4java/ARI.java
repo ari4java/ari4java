@@ -560,5 +560,19 @@ public class ARI {
         return a;
     }
 
+    /**
+     * Wrapper of the Thread.sleep() to avoid exception.
+     * 
+     * @param ms how long is it going to sleep.
+     */
+
+    public static void sleep( long ms ) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e ) {
+            System.err.println( "Interrupted: " + e.getMessage() );
+        }
+    }
+
 }
 

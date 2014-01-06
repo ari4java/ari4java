@@ -1,6 +1,7 @@
 
 package ch.loway.oss.ari4java.tools;
 
+import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.generated.Message;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,12 +72,7 @@ public class MessageQueue {
             if ( m != null ) {
                 return m;
             } else {
-                try {
-                    Thread.sleep( interval );
-                } catch ( InterruptedException  e ) {
-                    System.out.println( "Interrupted!");
-                    return null;
-                }
+                ARI.sleep(interval);
             }
         }
         return null;
