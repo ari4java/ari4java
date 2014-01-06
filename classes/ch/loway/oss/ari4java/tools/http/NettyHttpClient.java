@@ -257,9 +257,8 @@ public class NettyHttpClient implements HttpClient, WsClient {
 
     private RestException makeException(HttpResponseStatus status, String response, List<HttpResponse> errors) {
         
-        if (status == null ) {
-            System.out.println( "*** NULL status in makeExcpetion" );
-            return new RestException(response);
+        if (status == null ) {            
+            return new RestException("Shutdown: " + response);
         }
 
         for (HttpResponse hr : errors) {
