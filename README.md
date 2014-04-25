@@ -3,6 +3,8 @@ ari4java
 
 The Asterisk REST Interface (ARI) bindings for Java.
 
+ [ ![Download](https://api.bintray.com/packages/lenz/maven/ari4java/images/download.png) ](https://bintray.com/lenz/maven/ari4java/_latestVersion)
+
 Description
 -----------
 
