@@ -9,7 +9,7 @@ def env = System.getenv()
 
 project.ext {
   webapp_name    = 'ari4java'
-  app_version    = '0.1.3'
+  app_version    = '0.1.3.3'
   build_number   = env["BUILD_NUMBER"]  
   version_class  = 'ch/loway/oss/ari4java/BUILD.java'
   build_time     = "" + new Date()
@@ -32,6 +32,11 @@ sourceSets {
 	}
 }
 
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
 task writeNewPom << {
     pom {
         project {
@@ -44,7 +49,21 @@ task writeNewPom << {
                 }
             }
         }
-    }.writeTo("$buildDir/libs/ari4java.pom")
+    }.writeTo("$buildDir/libs/ari4java-" + project.ext.app_version + ".pom")
+}
+
+
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from "$buildDir/classes_subst"
+    archiveName project.ext.webapp_name + "-" + project.ext.app_version + "-source.jar"
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+    archiveName project.ext.webapp_name + "-" + project.ext.app_version + "-javadoc.jar"
 }
 
 
@@ -58,6 +77,10 @@ jar {
     from( "$buildDir/classes_subst" )
 }
 jar.dependsOn writeNewPom
+jar.dependsOn sourcesJar
+jar.dependsOn javadocJar
+
+
 
 repositories {
 	mavenCentral()
