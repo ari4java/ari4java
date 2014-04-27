@@ -9,7 +9,7 @@ def env = System.getenv()
 
 project.ext {
   webapp_name    = 'ari4java'
-  app_version    = '0.1.3.3'
+  app_version    = '0.1.3.4'
   build_number   = env["BUILD_NUMBER"]  
   version_class  = 'ch/loway/oss/ari4java/BUILD.java'
   build_time     = "" + new Date()
@@ -32,10 +32,10 @@ sourceSets {
 	}
 }
 
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
+//artifacts {
+//    archives sourcesJar
+//    archives javadocJar
+//}
 
 task writeNewPom << {
     pom {
@@ -57,7 +57,7 @@ task writeNewPom << {
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from "$buildDir/classes_subst"
-    archiveName project.ext.webapp_name + "-" + project.ext.app_version + "-source.jar"
+    archiveName project.ext.webapp_name + "-" + project.ext.app_version + "-sources.jar"
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
