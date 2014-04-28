@@ -43,9 +43,22 @@ task writeNewPom << {
             groupId 'ch.loway.oss.ari4java'
             version project.ext.app_version
             inceptionYear '2013'
+            packaging 'jar'
+            name 'ari4java'
+            description 'Asterisk ARI interface bindings for Java'
             licenses {
                 license {
                     name 'GNU LGPL v3'
+                }
+            }
+            scm {
+                url 'http://github.com/l3nz/ari4java'
+                connection 'http://github.com/l3nz/ari4java'
+            }
+            developers {
+                developer {
+                    name 'lenz e.'
+                    email 'nomail@home'
                 }
             }
         }

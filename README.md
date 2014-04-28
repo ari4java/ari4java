@@ -17,6 +17,24 @@ for each version of the API, but we also have general interfaces that are used t
 across different versions.
 
 
+Using the library
+=================
+
+If you use Gradle (or any tool using Maven dependencies) you can simply declare the lib as:
+
+
+	repositories {
+		mavenCentral()
+	    mavenRepo(url: 'http://dl.bintray.com/lenz/maven')       
+	}
+
+
+	dependencies {
+	    compile 'ch.loway.oss.ari4java:ari4java:0.1.3.4'
+	}
+
+This will download the package and all required dependencies.
+
 Building
 ========
 
