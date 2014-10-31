@@ -16,7 +16,7 @@ In order to support different versions of the API, what we do is we maintain con
 for each version of the API, but we also have general interfaces that are used to work with objects
 across different versions.
 
-**Tip:** using ari4java? join ![our ari4java Google+ group](https://plus.google.com/u/0/communities/116130645492865479649) for news, help and bouncing ideas around. 
+**Tip:** using ari4java? join [our ari4java Google+ group](https://plus.google.com/u/0/communities/116130645492865479649) for news, help and plain bouncing of ideas around. 
 
 Using the library
 =================
