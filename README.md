@@ -8,7 +8,7 @@ The Asterisk REST Interface (ARI) bindings for Java.
 Description
 -----------
 
-ARI is an interface available on Asterisk 12 that lets you write applications
+ARI is an interface available on Asterisk 12/13 that lets you write applications
 that run externally and control call flow through REST calls while receiving
 events on a websocket.
 
@@ -16,7 +16,7 @@ In order to support different versions of the API, what we do is we maintain con
 for each version of the API, but we also have general interfaces that are used to work with objects
 across different versions.
 
-**Tip:** using ari4java? join our Google+ group here https://plus.google.com/u/0/communities/116130645492865479649 
+**Tip:** using ari4java? join ![our ari4java Google+ group](https://plus.google.com/u/0/communities/116130645492865479649) for news, help and bouncing ideas around. 
 
 Using the library
 =================
@@ -149,13 +149,14 @@ To be done
 * Parameters that could be multiple are handled as only one item. I would like to have 
   both ways, so that you do not have to create a List in the very common case that 
   you need to pass only one parameter.
-* Tests are still missing.
-* Events returning Object are handled as a String. 
-* New Swagger 1.3 format - see https://reviewboard.asterisk.org/r/2909/diff/
+* Misc open bugs here: https://github.com/l3nz/ari4java/issues?q=is%3Aopen
+
 
 Useful links
 ------------
 
+* Asterisk 13 docs: https://wiki.asterisk.org/wiki/display/AST/Asterisk+13+Documentation
+* Asterisk 13 ARI docs: https://wiki.asterisk.org/wiki/display/AST/Asterisk+13+ARI
 * Asterisk 12 docs: https://wiki.asterisk.org/wiki/display/AST/Asterisk+12+Documentation
 * Official ARI docs for Asterisk 12: https://wiki.asterisk.org/wiki/display/AST/Asterisk+12+ARI
 * ari4java community on Google+: https://plus.google.com/u/0/communities/116130645492865479649
