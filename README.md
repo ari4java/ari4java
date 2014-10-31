@@ -146,9 +146,10 @@ you will have to introspect to find out which.
 To be done
 ----------
 
+* Support for Asterisk 13.0
 * Parameters that could be multiple are handled as only one item. I would like to have 
   both ways, so that you do not have to create a List in the very common case that 
-  you need to pass only one parameter.
+  you need to pass only one parameter - see https://github.com/l3nz/ari4java/issues/10
 * Misc open bugs here: https://github.com/l3nz/ari4java/issues?q=is%3Aopen
 
 
