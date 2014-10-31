@@ -16,6 +16,7 @@ In order to support different versions of the API, what we do is we maintain con
 for each version of the API, but we also have general interfaces that are used to work with objects
 across different versions.
 
+**Tip:** using ari4java? join our Google+ group here https://plus.google.com/u/0/communities/116130645492865479649 
 
 Using the library
 =================
@@ -81,13 +82,14 @@ The project requires:
 Status
 ------
 
-* 13.10.18 - Auto-generates all classes and compiles them.
-* 13.10.21 - All objects are deserializable right out of JSON. Mesages can be deserialzed automatically.
-* 13.11.26 - Netty.io based HTTP and WebSocket implementation, factory, sync and async methods
-* 13.12.29 - Imported the definitions for Asterisk 12.0.0 - ARI 1.0.0 - a bit of code changes in the code generator - Added the Gradle build script.
-* 13.12.30 - Added AriBuilder interfaces
-* 14.01.01 - Added a minimal application under tests/ class ch.loway.oss.ari4java.sandbox.sample to be used as a style laboratory. Look for UGLY tags. Rel 0.1.2.
 * 14.10.30 - Added ARI bindings for 1.5.0 as coming from the official Asterisk 13.0.0 release
+* 14.01.01 - Added a minimal application under tests/ class ch.loway.oss.ari4java.sandbox.sample to be used as a style laboratory. Look for UGLY tags. Rel 0.1.2.
+* 13.12.30 - Added AriBuilder interfaces
+* 13.12.29 - Imported the definitions for Asterisk 12.0.0 - ARI 1.0.0 - a bit of code changes in the code generator - Added the Gradle build script.
+* 13.11.26 - Netty.io based HTTP and WebSocket implementation, factory, sync and async methods
+* 13.10.21 - All objects are deserializable right out of JSON. Mesages can be deserialzed automatically.
+* 13.10.18 - Auto-generates all classes and compiles them.
+
 
 Using
 -----
@@ -164,6 +166,10 @@ Similar & Interesting projects
 ------------------------------
 
 * AstAryPy - a Python library - https://github.com/asterisk/ast-ari-py
+* AsterNET.ARI	- C# / .NET - https://asternetari.codeplex.com/
+* node-ari-client - JavaScript (node) - https://github.com/asterisk/node-ari-client
+* phpari - PHP - http://www.phpari.org/
+* asterisk-ari-client - Ruby - https://github.com/svoboda-jan/asterisk-ari
 
 
 Licensing
