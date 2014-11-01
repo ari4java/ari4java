@@ -147,7 +147,7 @@ public class BaseAriAction {
         wsUpgrade = false;
     }
 
-    public void forceResponse(String r) {
+    public synchronized void forceResponse(String r) {
         forcedResponse = r;
     }
 
