@@ -149,3 +149,11 @@ tasks.withType(FindBugs) {
 
 
 
+
+task downloadJars << {
+        copy {
+        from configurations.compile
+        into './libs'
+        include '**/*.jar'
+    }
+}
