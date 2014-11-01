@@ -18,6 +18,8 @@ across different versions.
 
 **Tip:** using ari4java? join [our ari4java Google+ group](https://plus.google.com/u/0/communities/116130645492865479649) for news, help and plain bouncing of ideas around. 
 
+**Getting started?** start from the "Hello ARI World" tutorial at https://github.com/l3nz/ari4java/blob/master/docs/HELLOWORLD.md
+
 Using the library
 =================
 
@@ -105,6 +107,8 @@ To initialize:
 		ari.setHttpClient(hc);
 		ari.setWsClient(hc);
 		ari.setVersion(AriVersion.ARI_0_0_1);
+
+or make your life easier by using the convenience method supplied in AriFactory.
 		
 Sample synchronous call:
 

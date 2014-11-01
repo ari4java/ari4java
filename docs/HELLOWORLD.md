@@ -39,8 +39,8 @@ downloading all libs to a "libs" folder to be added to your local project:
 
 	gradle downloadJars
 
-Now create a Java class. The plaines thing we can do is getting a list of
-all active channels on the server. This is plain to do and only requires
+Now create a Java class. The plainest thing we can do is getting a list of
+all active channels on the server. This is simple to do and only requires
 an HTTP round-trip, that for simplicty's sake will happen synchronously.
 
 So we first create an ARI object that acts as your master connector.
@@ -58,7 +58,15 @@ All commands we can send are organized into a set of Actions.
 Please note that what we get back is Java objects, not just JSON blobs.
 Everything is strongly typed.
 
-A working example can be found under examples, as in https://github.com/l3nz/ari4java/blob/master/examples/helloworld/HelloAriWorld.java
+A second thing to note is that this could be done in a non-blocking way as well,
+just by calling the method 
+
+	list(AriCallback<List<? extends Channel>> callback);
+
+instead of the plain list.
+
+A working example can be found under the examples tree, as 
+in https://github.com/l3nz/ari4java/blob/master/examples/helloworld/HelloAriWorld.java
 
 Happy hacking!
 
