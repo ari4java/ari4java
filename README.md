@@ -82,6 +82,7 @@ The project requires:
 Status
 ------
 
+* 14.11.01 - Added support for ARI 1.5 (bug #9)
 * 14.10.30 - Added ARI bindings for 1.5.0 as coming from the official Asterisk 13.0.0 release
 * 14.01.01 - Added a minimal application under tests/ class ch.loway.oss.ari4java.sandbox.sample to be used as a style laboratory. Look for UGLY tags. Rel 0.1.2.
 * 13.12.30 - Added AriBuilder interfaces
@@ -146,7 +147,6 @@ you will have to introspect to find out which.
 To be done
 ----------
 
-* Support for Asterisk 13.0
 * Parameters that could be multiple are handled as only one item. I would like to have 
   both ways, so that you do not have to create a List in the very common case that 
   you need to pass only one parameter - see https://github.com/l3nz/ari4java/issues/10
