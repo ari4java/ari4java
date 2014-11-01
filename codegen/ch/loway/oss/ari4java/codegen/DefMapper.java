@@ -42,7 +42,9 @@ public class DefMapper {
     List<Apis> myAPIs = new ArrayList<Apis>();
 
     Map<String, JavaInterface> interfaces = new HashMap<String, JavaInterface>();
-
+    String myAbsoluteProjectFolder = ".";
+    
+    
     /**
      * Loads definitions from a module.
      *
@@ -354,7 +356,7 @@ public class DefMapper {
 
             }
 
-            System.out.println( action.toString() );
+            //System.out.println( action.toString() );
             api.actions.add(action);
         }
 
@@ -366,7 +368,8 @@ public class DefMapper {
 
     public void saveToDisk( String baseJavaClasses, String pkgName, String className, String classText  ) throws IOException {
 
-        String fName = baseJavaClasses
+        String fName = myAbsoluteProjectFolder + "/" 
+                     + baseJavaClasses
                      + pkgName.replace(".", "/" )
                      + "/"
                      + className + ".java";
@@ -529,6 +532,15 @@ public class DefMapper {
 
         saveToDisk( "classes/", "ch.loway.oss.ari4java.generated." + apiVersion, thisClass, sb.toString() );
 
+    }
+
+    /**
+     * Where the ari4java project resides.
+     * 
+     * @param baseProjectFolder 
+     */
+    void setProjectFolder(String baseProjectFolder) {
+        myAbsoluteProjectFolder =baseProjectFolder;
     }
 
 

@@ -4,9 +4,6 @@ package ch.loway.oss.ari4java.codegen.models;
 import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
 import ch.loway.oss.ari4java.codegen.genJava.JavaInterface;
 import ch.loway.oss.ari4java.codegen.genJava.JavaPkgInfo;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +32,7 @@ public class Model extends JavaPkgInfo {
     public Model() {
         imports.add( "java.util.Date" );
         imports.add( "java.util.List" );
+        imports.add( "java.util.Map" );      
         imports.add( "ch.loway.oss.ari4java.generated.*");
         imports.add( "com.fasterxml.jackson.databind.annotation.JsonDeserialize" );
     }

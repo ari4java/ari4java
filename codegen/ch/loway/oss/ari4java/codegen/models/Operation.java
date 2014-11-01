@@ -266,6 +266,9 @@ public class Operation {
             if ( s.equalsIgnoreCase("form") ) {
                 return FORM;
             } else
+            if ( s.equalsIgnoreCase("body") ) {
+                return BODY;
+            } else
             {
                 throw new IllegalArgumentException("Would not know how to handle parameter of type " + s);
             }

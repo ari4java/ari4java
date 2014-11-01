@@ -52,6 +52,7 @@ public class JavaInterface {
         JavaGen.importClasses(sb, pkgName, Arrays.asList( new String[] {
             "java.util.Date",
             "java.util.List",
+            "java.util.Map",
             "java.util.ArrayList",
             "ch.loway.oss.ari4java.tools.RestException",
             "ch.loway.oss.ari4java.tools.AriCallback"

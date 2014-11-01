@@ -1,6 +1,7 @@
 
 package ch.loway.oss.ari4java.codegen.genJava;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,6 +18,7 @@ public class JavaGen {
         sb.append( "// ----------------------------------------------------\n")
           .append( "//      THIS CLASS WAS GENERATED AUTOMATICALLY         \n")
           .append( "//               PLEASE DO NOT EDIT                    \n")
+          .append( "//    Generated on: ").append( (new Date()).toString() ).append( "\n")
           .append( "// ----------------------------------------------------\n\n");
 
 

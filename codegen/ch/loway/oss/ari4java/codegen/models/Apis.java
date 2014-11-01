@@ -28,6 +28,7 @@ public class Apis extends JavaPkgInfo {
             "ch.loway.oss.ari4java.generated.*",
             "java.util.Date",
             "java.util.List",
+            "java.util.Map",
             "java.util.ArrayList",
             "ch.loway.oss.ari4java.tools.BaseAriAction",
             "ch.loway.oss.ari4java.tools.RestException",

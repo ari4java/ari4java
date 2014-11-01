@@ -12,7 +12,13 @@ import java.io.IOException;
  */
 public class run {
 
-    public static String SOURCES = "codegen-data/";
+    //public static String SOURCES = "codegen-data/";
+    
+    public static String PROJECT = "/Users/lenz/dev/github/ari4java";
+    
+    public static String SOURCES = PROJECT + "/codegen-data/";
+    
+
     public static String SRC_001 = SOURCES + "ari_0_0_1/";
     // D:\git\ari4java\codegen-data\ari_0_0_1
 
@@ -21,10 +27,12 @@ public class run {
         System.out.println("This is ARI4JAVA Code Generator version " + VERSION.VER );
 
         DefMapper dm = new DefMapper();
+        dm.setProjectFolder(PROJECT);
 
         loadAsteriskDefs( dm, "ari_0_0_1" );
         loadAsteriskDefs( dm, "ari_1_0_0" );
-
+        loadAsteriskDefs( dm, "ari_1_5_0" );
+        
         dm.generateAllClasses();
 
 
