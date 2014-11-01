@@ -3,10 +3,12 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
@@ -17,7 +19,7 @@ public interface ActionSounds {
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public void get(String soundId, AriCallback<Sound> callback);
 
@@ -28,7 +30,7 @@ public void get(String soundId, AriCallback<Sound> callback);
  * Get a sound's details.
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public Sound get(String soundId) throws RestException;
 
@@ -39,7 +41,7 @@ public Sound get(String soundId) throws RestException;
  * List all sounds.
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public List<? extends Sound> list(String lang, String format) throws RestException;
 
@@ -49,7 +51,7 @@ public List<? extends Sound> list(String lang, String format) throws RestExcepti
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public void list(String lang, String format, AriCallback<List<? extends Sound>> callback);
 

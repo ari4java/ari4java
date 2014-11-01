@@ -3,10 +3,12 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
@@ -17,7 +19,7 @@ public interface Application {
 /**********************************************************
  * Names of the devices subscribed to.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setDevice_names(List<? extends String> val );
 
@@ -27,7 +29,7 @@ public interface Application {
 /**********************************************************
  * Name of this application
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setName(String val );
 
@@ -37,7 +39,7 @@ public interface Application {
 /**********************************************************
  * Id's for bridges subscribed to.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setBridge_ids(List<? extends String> val );
 
@@ -47,7 +49,7 @@ public interface Application {
 /**********************************************************
  * Names of the devices subscribed to.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public List<? extends String> getDevice_names();
 
@@ -57,7 +59,7 @@ public interface Application {
 /**********************************************************
  * {tech}/{resource} for endpoints subscribed to.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public List<? extends String> getEndpoint_ids();
 
@@ -67,7 +69,7 @@ public interface Application {
 /**********************************************************
  * Id's for channels subscribed to.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setChannel_ids(List<? extends String> val );
 
@@ -77,7 +79,7 @@ public interface Application {
 /**********************************************************
  * Id's for bridges subscribed to.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public List<? extends String> getBridge_ids();
 
@@ -87,7 +89,7 @@ public interface Application {
 /**********************************************************
  * Name of this application
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getName();
 
@@ -97,7 +99,7 @@ public interface Application {
 /**********************************************************
  * {tech}/{resource} for endpoints subscribed to.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setEndpoint_ids(List<? extends String> val );
 
@@ -107,7 +109,7 @@ public interface Application {
 /**********************************************************
  * Id's for channels subscribed to.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public List<? extends String> getChannel_ids();
 

@@ -3,10 +3,12 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
@@ -17,7 +19,7 @@ public interface ChannelHangupRequest {
 /**********************************************************
  * Integer representation of the cause of the hangup.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setCause(int val );
 
@@ -27,7 +29,7 @@ public interface ChannelHangupRequest {
 /**********************************************************
  * Integer representation of the cause of the hangup.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public int getCause();
 
@@ -37,7 +39,7 @@ public interface ChannelHangupRequest {
 /**********************************************************
  * Whether the hangup request was a soft hangup request.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setSoft(boolean val );
 
@@ -47,7 +49,7 @@ public interface ChannelHangupRequest {
 /**********************************************************
  * The channel on which the hangup was requested.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public Channel getChannel();
 
@@ -57,7 +59,7 @@ public interface ChannelHangupRequest {
 /**********************************************************
  * The channel on which the hangup was requested.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setChannel(Channel val );
 
@@ -67,7 +69,7 @@ public interface ChannelHangupRequest {
 /**********************************************************
  * Whether the hangup request was a soft hangup request.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public boolean getSoft();
 

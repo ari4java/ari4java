@@ -3,11 +3,13 @@ package ch.loway.oss.ari4java.generated.ari_1_0_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
@@ -90,6 +92,43 @@ buildGet(tech, resource);
 httpActionAsync(callback, Endpoint_impl_ari_1_0_0.class);
 }
 
-/** No missing signatures from interface */
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+public void sendMessage(String to, String from, String body, Map<String,String> variables, AriCallback<Void> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+public void sendMessageToEndpoint(String tech, String resource, String from, String body, Map<String,String> variables, AriCallback<Void> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Send a message to some endpoint in a technology.
+ * 
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+public void sendMessageToEndpoint(String tech, String resource, String from, String body, Map<String,String> variables) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Send a message to some technology URI or endpoint.
+ * 
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+public void sendMessage(String to, String from, String body, Map<String,String> variables) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
 };
 

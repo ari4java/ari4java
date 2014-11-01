@@ -3,10 +3,12 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
@@ -17,7 +19,7 @@ public interface ActionAsterisk {
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public void getInfo(String only, AriCallback<AsteriskInfo> callback);
 
@@ -27,7 +29,7 @@ public void getInfo(String only, AriCallback<AsteriskInfo> callback);
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public void getGlobalVar(String variable, AriCallback<Variable> callback);
 
@@ -37,7 +39,7 @@ public void getGlobalVar(String variable, AriCallback<Variable> callback);
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public void setGlobalVar(String variable, String value, AriCallback<Void> callback);
 
@@ -48,7 +50,7 @@ public void setGlobalVar(String variable, String value, AriCallback<Void> callba
  * Get the value of a global variable.
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public Variable getGlobalVar(String variable) throws RestException;
 
@@ -59,7 +61,7 @@ public Variable getGlobalVar(String variable) throws RestException;
  * Set the value of a global variable.
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public void setGlobalVar(String variable, String value) throws RestException;
 
@@ -70,7 +72,7 @@ public void setGlobalVar(String variable, String value) throws RestException;
  * Gets Asterisk system information.
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public AsteriskInfo getInfo(String only) throws RestException;
 

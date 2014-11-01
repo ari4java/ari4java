@@ -3,10 +3,12 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
@@ -17,7 +19,7 @@ public interface AsteriskInfo {
 /**********************************************************
  * Info about Asterisk configuration
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setConfig(ConfigInfo val );
 
@@ -27,7 +29,7 @@ public interface AsteriskInfo {
 /**********************************************************
  * Info about Asterisk status
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setStatus(StatusInfo val );
 
@@ -37,7 +39,7 @@ public interface AsteriskInfo {
 /**********************************************************
  * Info about Asterisk status
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public StatusInfo getStatus();
 
@@ -47,7 +49,7 @@ public interface AsteriskInfo {
 /**********************************************************
  * Info about how Asterisk was built
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setBuild(BuildInfo val );
 
@@ -57,7 +59,7 @@ public interface AsteriskInfo {
 /**********************************************************
  * Info about how Asterisk was built
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public BuildInfo getBuild();
 
@@ -67,7 +69,7 @@ public interface AsteriskInfo {
 /**********************************************************
  * Info about Asterisk configuration
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public ConfigInfo getConfig();
 
@@ -77,7 +79,7 @@ public interface AsteriskInfo {
 /**********************************************************
  * Info about the system running Asterisk
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setSystem(SystemInfo val );
 
@@ -87,7 +89,7 @@ public interface AsteriskInfo {
 /**********************************************************
  * Info about the system running Asterisk
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public SystemInfo getSystem();
 

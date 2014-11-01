@@ -3,6 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 
@@ -21,6 +22,8 @@ public interface AriBuilder {
     public abstract ApplicationReplaced applicationReplaced();
     public abstract AsteriskInfo asteriskInfo();
     public abstract Bridge bridge();
+    public abstract BridgeAttendedTransfer bridgeAttendedTransfer();
+    public abstract BridgeBlindTransfer bridgeBlindTransfer();
     public abstract BridgeCreated bridgeCreated();
     public abstract BridgeDestroyed bridgeDestroyed();
     public abstract BridgeMerged bridgeMerged();
@@ -36,6 +39,8 @@ public interface AriBuilder {
     public abstract ChannelHangupRequest channelHangupRequest();
     public abstract ChannelLeftBridge channelLeftBridge();
     public abstract ChannelStateChange channelStateChange();
+    public abstract ChannelTalkingFinished channelTalkingFinished();
+    public abstract ChannelTalkingStarted channelTalkingStarted();
     public abstract ChannelUserevent channelUserevent();
     public abstract ChannelVarset channelVarset();
     public abstract ConfigInfo configInfo();
@@ -64,6 +69,9 @@ public interface AriBuilder {
     public abstract StatusInfo statusInfo();
     public abstract StoredRecording storedRecording();
     public abstract SystemInfo systemInfo();
+    public abstract TextMessage textMessage();
+    public abstract TextMessageReceived textMessageReceived();
+    public abstract TextMessageVariable textMessageVariable();
     public abstract Variable variable();
 
 }

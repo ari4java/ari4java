@@ -3,10 +3,12 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
@@ -17,7 +19,7 @@ public interface Endpoint {
 /**********************************************************
  * Endpoint's state
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setState(String val );
 
@@ -27,7 +29,7 @@ public interface Endpoint {
 /**********************************************************
  * Id's of channels associated with this endpoint
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setChannel_ids(List<? extends String> val );
 
@@ -37,7 +39,7 @@ public interface Endpoint {
 /**********************************************************
  * Identifier of the endpoint, specific to the given technology.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getResource();
 
@@ -47,7 +49,7 @@ public interface Endpoint {
 /**********************************************************
  * Technology of the endpoint
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setTechnology(String val );
 
@@ -57,7 +59,7 @@ public interface Endpoint {
 /**********************************************************
  * Technology of the endpoint
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getTechnology();
 
@@ -67,7 +69,7 @@ public interface Endpoint {
 /**********************************************************
  * Identifier of the endpoint, specific to the given technology.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setResource(String val );
 
@@ -77,7 +79,7 @@ public interface Endpoint {
 /**********************************************************
  * Endpoint's state
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getState();
 
@@ -87,7 +89,7 @@ public interface Endpoint {
 /**********************************************************
  * Id's of channels associated with this endpoint
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public List<? extends String> getChannel_ids();
 

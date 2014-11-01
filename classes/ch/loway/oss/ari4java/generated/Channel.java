@@ -3,10 +3,12 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
@@ -17,7 +19,7 @@ public interface Channel {
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setState(String val );
 
@@ -29,7 +31,7 @@ public interface Channel {
  * 
  * This is the same as the Uniqueid field in AMI.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getId();
 
@@ -39,7 +41,7 @@ public interface Channel {
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setAccountcode(String val );
 
@@ -49,7 +51,7 @@ public interface Channel {
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public CallerID getConnected();
 
@@ -59,9 +61,19 @@ public interface Channel {
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getAccountcode();
+
+
+
+// void setConnected CallerID
+/**********************************************************
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setConnected(CallerID val );
 
 
 
@@ -69,7 +81,7 @@ public interface Channel {
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public CallerID getCaller();
 
@@ -79,7 +91,7 @@ public interface Channel {
 /**********************************************************
  * Current location in the dialplan
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public DialplanCEP getDialplan();
 
@@ -91,19 +103,9 @@ public interface Channel {
  * 
  * This is the same as the Uniqueid field in AMI.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setId(String val );
-
-
-
-// void setConnected CallerID
-/**********************************************************
- * 
- * 
- * @since: ari_0_0_1
- *********************************************************/
- public void setConnected(CallerID val );
 
 
 
@@ -111,7 +113,7 @@ public interface Channel {
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getState();
 
@@ -121,7 +123,7 @@ public interface Channel {
 /**********************************************************
  * Name of the channel (i.e. SIP/foo-0000a7e3)
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setName(String val );
 
@@ -131,7 +133,7 @@ public interface Channel {
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setCaller(CallerID val );
 
@@ -141,7 +143,7 @@ public interface Channel {
 /**********************************************************
  * Timestamp when channel was created
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public Date getCreationtime();
 
@@ -151,7 +153,7 @@ public interface Channel {
 /**********************************************************
  * Name of the channel (i.e. SIP/foo-0000a7e3)
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getName();
 
@@ -161,7 +163,7 @@ public interface Channel {
 /**********************************************************
  * Timestamp when channel was created
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setCreationtime(Date val );
 
@@ -171,7 +173,7 @@ public interface Channel {
 /**********************************************************
  * Current location in the dialplan
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setDialplan(DialplanCEP val );
 

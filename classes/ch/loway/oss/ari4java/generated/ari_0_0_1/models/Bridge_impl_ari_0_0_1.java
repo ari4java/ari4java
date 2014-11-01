@@ -3,12 +3,14 @@ package ch.loway.oss.ari4java.generated.ari_0_0_1.models;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**********************************************************
  * The merging of media from one or more channels.
@@ -78,7 +80,7 @@ private static final long serialVersionUID = 1L;
 /**********************************************************
  * Entity that created the bridge
  * 
- * @since: ari_1_0_0
+ * @since ari_1_0_0
  *********************************************************/
  public String getCreator(){
   throw new UnsupportedOperationException("Method availble from ...");
@@ -87,7 +89,7 @@ private static final long serialVersionUID = 1L;
 /**********************************************************
  * Name the creator gave the bridge
  * 
- * @since: ari_1_0_0
+ * @since ari_1_0_0
  *********************************************************/
  public void setName(String val ){
   throw new UnsupportedOperationException("Method availble from ...");
@@ -96,7 +98,7 @@ private static final long serialVersionUID = 1L;
 /**********************************************************
  * Name the creator gave the bridge
  * 
- * @since: ari_1_0_0
+ * @since ari_1_0_0
  *********************************************************/
  public String getName(){
   throw new UnsupportedOperationException("Method availble from ...");
@@ -105,7 +107,7 @@ private static final long serialVersionUID = 1L;
 /**********************************************************
  * Entity that created the bridge
  * 
- * @since: ari_1_0_0
+ * @since ari_1_0_0
  *********************************************************/
  public void setCreator(String val ){
   throw new UnsupportedOperationException("Method availble from ...");

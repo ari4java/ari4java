@@ -3,10 +3,12 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
@@ -17,7 +19,7 @@ public interface ActionApplications {
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public void unsubscribe(String applicationName, String eventSource, AriCallback<Application> callback);
 
@@ -28,7 +30,7 @@ public void unsubscribe(String applicationName, String eventSource, AriCallback<
  * List all applications.
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public List<? extends Application> list() throws RestException;
 
@@ -38,7 +40,7 @@ public List<? extends Application> list() throws RestException;
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public void subscribe(String applicationName, String eventSource, AriCallback<Application> callback);
 
@@ -48,7 +50,7 @@ public void subscribe(String applicationName, String eventSource, AriCallback<Ap
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public void get(String applicationName, AriCallback<Application> callback);
 
@@ -59,7 +61,7 @@ public void get(String applicationName, AriCallback<Application> callback);
  * Get details of an application.
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public Application get(String applicationName) throws RestException;
 
@@ -70,7 +72,7 @@ public Application get(String applicationName) throws RestException;
  * Unsubscribe an application from an event source.
  * Returns the state of the application after the subscriptions have changed
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public Application unsubscribe(String applicationName, String eventSource) throws RestException;
 
@@ -80,7 +82,7 @@ public Application unsubscribe(String applicationName, String eventSource) throw
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public void list(AriCallback<List<? extends Application>> callback);
 
@@ -91,7 +93,7 @@ public void list(AriCallback<List<? extends Application>> callback);
  * Subscribe an application to a event source.
  * Returns the state of the application after the subscriptions have changed
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public Application subscribe(String applicationName, String eventSource) throws RestException;
 

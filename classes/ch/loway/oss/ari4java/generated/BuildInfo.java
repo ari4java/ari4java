@@ -3,10 +3,12 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
@@ -17,7 +19,7 @@ public interface BuildInfo {
 /**********************************************************
  * Username that build Asterisk
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setUser(String val );
 
@@ -27,7 +29,7 @@ public interface BuildInfo {
 /**********************************************************
  * Compile time options, or empty string if default.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setOptions(String val );
 
@@ -37,7 +39,7 @@ public interface BuildInfo {
 /**********************************************************
  * Date and time when Asterisk was built.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setDate(String val );
 
@@ -47,7 +49,7 @@ public interface BuildInfo {
 /**********************************************************
  * Compile time options, or empty string if default.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getOptions();
 
@@ -57,7 +59,7 @@ public interface BuildInfo {
 /**********************************************************
  * OS Asterisk was built on.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setOs(String val );
 
@@ -67,7 +69,7 @@ public interface BuildInfo {
 /**********************************************************
  * Date and time when Asterisk was built.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getDate();
 
@@ -77,7 +79,7 @@ public interface BuildInfo {
 /**********************************************************
  * Kernel version Asterisk was built on.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getKernel();
 
@@ -87,7 +89,7 @@ public interface BuildInfo {
 /**********************************************************
  * Machine architecture (x86_64, i686, ppc, etc.)
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setMachine(String val );
 
@@ -97,7 +99,7 @@ public interface BuildInfo {
 /**********************************************************
  * Username that build Asterisk
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getUser();
 
@@ -107,7 +109,7 @@ public interface BuildInfo {
 /**********************************************************
  * Machine architecture (x86_64, i686, ppc, etc.)
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getMachine();
 
@@ -117,7 +119,7 @@ public interface BuildInfo {
 /**********************************************************
  * OS Asterisk was built on.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getOs();
 
@@ -127,7 +129,7 @@ public interface BuildInfo {
 /**********************************************************
  * Kernel version Asterisk was built on.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setKernel(String val );
 

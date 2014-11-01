@@ -3,10 +3,12 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
@@ -17,7 +19,7 @@ public interface StatusInfo {
 /**********************************************************
  * Time when Asterisk was last reloaded.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setLast_reload_time(Date val );
 
@@ -27,7 +29,7 @@ public interface StatusInfo {
 /**********************************************************
  * Time when Asterisk was last reloaded.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public Date getLast_reload_time();
 
@@ -37,7 +39,7 @@ public interface StatusInfo {
 /**********************************************************
  * Time when Asterisk was started.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public Date getStartup_time();
 
@@ -47,7 +49,7 @@ public interface StatusInfo {
 /**********************************************************
  * Time when Asterisk was started.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setStartup_time(Date val );
 

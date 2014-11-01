@@ -3,10 +3,12 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
@@ -17,7 +19,7 @@ public interface ConfigInfo {
 /**********************************************************
  * Maximum number of simultaneous channels.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setMax_channels(int val );
 
@@ -27,7 +29,7 @@ public interface ConfigInfo {
 /**********************************************************
  * Maximum number of open file handles (files, sockets).
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public int getMax_open_files();
 
@@ -37,7 +39,7 @@ public interface ConfigInfo {
 /**********************************************************
  * Asterisk system name.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setName(String val );
 
@@ -47,7 +49,7 @@ public interface ConfigInfo {
 /**********************************************************
  * Effective user/group id for running Asterisk.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setSetid(SetId val );
 
@@ -57,7 +59,7 @@ public interface ConfigInfo {
 /**********************************************************
  * Maximum load avg on system.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setMax_load(double val );
 
@@ -67,7 +69,7 @@ public interface ConfigInfo {
 /**********************************************************
  * Asterisk system name.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getName();
 
@@ -77,7 +79,7 @@ public interface ConfigInfo {
 /**********************************************************
  * Default language for media playback.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getDefault_language();
 
@@ -87,7 +89,7 @@ public interface ConfigInfo {
 /**********************************************************
  * Maximum number of open file handles (files, sockets).
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setMax_open_files(int val );
 
@@ -97,7 +99,7 @@ public interface ConfigInfo {
 /**********************************************************
  * Effective user/group id for running Asterisk.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public SetId getSetid();
 
@@ -107,7 +109,7 @@ public interface ConfigInfo {
 /**********************************************************
  * Default language for media playback.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setDefault_language(String val );
 
@@ -117,7 +119,7 @@ public interface ConfigInfo {
 /**********************************************************
  * Maximum load avg on system.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public double getMax_load();
 
@@ -127,7 +129,7 @@ public interface ConfigInfo {
 /**********************************************************
  * Maximum number of simultaneous channels.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public int getMax_channels();
 

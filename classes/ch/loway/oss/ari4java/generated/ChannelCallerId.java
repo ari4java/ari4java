@@ -3,10 +3,12 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
@@ -17,7 +19,7 @@ public interface ChannelCallerId {
 /**********************************************************
  * The integer representation of the Caller Presentation value.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setCaller_presentation(int val );
 
@@ -27,7 +29,7 @@ public interface ChannelCallerId {
 /**********************************************************
  * The integer representation of the Caller Presentation value.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public int getCaller_presentation();
 
@@ -37,7 +39,7 @@ public interface ChannelCallerId {
 /**********************************************************
  * The text representation of the Caller Presentation value.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setCaller_presentation_txt(String val );
 
@@ -47,7 +49,7 @@ public interface ChannelCallerId {
 /**********************************************************
  * The channel that changed Caller ID.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public Channel getChannel();
 
@@ -57,7 +59,7 @@ public interface ChannelCallerId {
 /**********************************************************
  * The text representation of the Caller Presentation value.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public String getCaller_presentation_txt();
 
@@ -67,7 +69,7 @@ public interface ChannelCallerId {
 /**********************************************************
  * The channel that changed Caller ID.
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
  public void setChannel(Channel val );
 

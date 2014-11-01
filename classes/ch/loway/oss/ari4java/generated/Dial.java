@@ -3,10 +3,12 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
@@ -17,7 +19,7 @@ public interface Dial {
 /**********************************************************
  * The dialed channel.
  * 
- * @since: ari_1_0_0
+ * @since ari_1_0_0
  *********************************************************/
  public void setPeer(Channel val );
 
@@ -27,7 +29,7 @@ public interface Dial {
 /**********************************************************
  * Channel that the caller has been forwarded to.
  * 
- * @since: ari_1_0_0
+ * @since ari_1_0_0
  *********************************************************/
  public Channel getForwarded();
 
@@ -37,7 +39,7 @@ public interface Dial {
 /**********************************************************
  * Current status of the dialing attempt to the peer.
  * 
- * @since: ari_1_0_0
+ * @since ari_1_0_0
  *********************************************************/
  public String getDialstatus();
 
@@ -47,7 +49,7 @@ public interface Dial {
 /**********************************************************
  * Current status of the dialing attempt to the peer.
  * 
- * @since: ari_1_0_0
+ * @since ari_1_0_0
  *********************************************************/
  public void setDialstatus(String val );
 
@@ -57,7 +59,7 @@ public interface Dial {
 /**********************************************************
  * The dial string for calling the peer channel.
  * 
- * @since: ari_1_0_0
+ * @since ari_1_0_0
  *********************************************************/
  public void setDialstring(String val );
 
@@ -67,7 +69,7 @@ public interface Dial {
 /**********************************************************
  * The dial string for calling the peer channel.
  * 
- * @since: ari_1_0_0
+ * @since ari_1_0_0
  *********************************************************/
  public String getDialstring();
 
@@ -77,7 +79,7 @@ public interface Dial {
 /**********************************************************
  * The dialed channel.
  * 
- * @since: ari_1_0_0
+ * @since ari_1_0_0
  *********************************************************/
  public Channel getPeer();
 
@@ -87,7 +89,7 @@ public interface Dial {
 /**********************************************************
  * Forwarding target requested by the original dialed channel.
  * 
- * @since: ari_1_0_0
+ * @since ari_1_0_0
  *********************************************************/
  public void setForward(String val );
 
@@ -97,7 +99,7 @@ public interface Dial {
 /**********************************************************
  * Channel that the caller has been forwarded to.
  * 
- * @since: ari_1_0_0
+ * @since ari_1_0_0
  *********************************************************/
  public void setForwarded(Channel val );
 
@@ -107,7 +109,7 @@ public interface Dial {
 /**********************************************************
  * Forwarding target requested by the original dialed channel.
  * 
- * @since: ari_1_0_0
+ * @since ari_1_0_0
  *********************************************************/
  public String getForward();
 
@@ -117,7 +119,7 @@ public interface Dial {
 /**********************************************************
  * The calling channel.
  * 
- * @since: ari_1_0_0
+ * @since ari_1_0_0
  *********************************************************/
  public void setCaller(Channel val );
 
@@ -127,7 +129,7 @@ public interface Dial {
 /**********************************************************
  * The calling channel.
  * 
- * @since: ari_1_0_0
+ * @since ari_1_0_0
  *********************************************************/
  public Channel getCaller();
 

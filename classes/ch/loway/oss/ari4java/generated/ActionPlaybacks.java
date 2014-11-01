@@ -3,10 +3,12 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
@@ -17,7 +19,7 @@ public interface ActionPlaybacks {
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public void get(String playbackId, AriCallback<Playback> callback);
 
@@ -28,7 +30,7 @@ public void get(String playbackId, AriCallback<Playback> callback);
  * Control a playback.
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public void control(String playbackId, String operation) throws RestException;
 
@@ -39,7 +41,7 @@ public void control(String playbackId, String operation) throws RestException;
  * Stop a playback.
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public void stop(String playbackId) throws RestException;
 
@@ -50,7 +52,7 @@ public void stop(String playbackId) throws RestException;
  * Get a playback's details.
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public Playback get(String playbackId) throws RestException;
 
@@ -60,7 +62,7 @@ public Playback get(String playbackId) throws RestException;
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public void control(String playbackId, String operation, AriCallback<Void> callback);
 
@@ -70,7 +72,7 @@ public void control(String playbackId, String operation, AriCallback<Void> callb
 /**********************************************************
  * 
  * 
- * @since: ari_0_0_1
+ * @since ari_0_0_1
  *********************************************************/
 public void stop(String playbackId, AriCallback<Void> callback);
 

@@ -3,11 +3,13 @@ package ch.loway.oss.ari4java.generated.ari_0_0_1.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
+//    Generated on: Sat Nov 01 15:52:13 CET 2014
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
@@ -264,6 +266,24 @@ buildUnmute(recordingName);
 httpActionAsync(callback);
 }
 
-/** No missing signatures from interface */
+/**********************************************************
+ * Copy a stored recording.
+ * 
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+public StoredRecording copyStored(String recordingName, String destinationRecordingName) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+public void copyStored(String recordingName, String destinationRecordingName, AriCallback<StoredRecording> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
 };
 
