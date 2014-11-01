@@ -475,7 +475,9 @@ public class DefMapper {
      */
 
     private void writeProperties( String apiVersion, Collection<Apis> apis, Collection<Model> models ) throws IOException {
-    	String base = "classes/ch/loway/oss/ari4java/generated";
+    	String base = myAbsoluteProjectFolder 
+                + "/classes"
+                + "/ch/loway/oss/ari4java/generated";
         String fName = base + "/" + apiVersion + ".properties";
         FileWriter outFile = new FileWriter(fName);
         PrintWriter out = new PrintWriter(outFile);
