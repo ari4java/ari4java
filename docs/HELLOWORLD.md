@@ -1,5 +1,15 @@
-Hello World in ari4java
-=======================
+Hello ARI World with ari4java
+=============================
+
+This tutorial aims at showing a number of things:
+
+* Setting up Asterisk for working with ARI
+* Connecting to ARI
+* Running a simple call
+* Showing how you could make it all non-blocking
+
+Enought to get us started!
+
 
 Create an ARI account on Asterisk
 ---------------------------------
@@ -63,7 +73,7 @@ just by calling the method
 
 	list(AriCallback<List<? extends Channel>> callback);
 
-instead of the plain list.
+instead of the plain list() method.
 
 A working example can be found under the examples tree, as 
 in https://github.com/l3nz/ari4java/blob/master/examples/helloworld/HelloAriWorld.java
