@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_0_0_1.models;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -21,13 +21,13 @@ import java.util.Map;
 public class MissingParams_impl_ari_0_0_1 extends Message_impl_ari_0_0_1 implements MissingParams, java.io.Serializable {
 private static final long serialVersionUID = 1L;
   /**  A list of the missing parameters  */
-  private List<? extends String> params;
- public List<? extends String> getParams() {
+  private List<String> params;
+ public List<String> getParams() {
    return params;
  }
 
  @JsonDeserialize( contentAs=String.class )
- public void setParams(List<? extends String> val ) {
+ public void setParams(List<String> val ) {
    params = val;
  }
 

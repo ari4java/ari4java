@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_5_0.models;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:30 CET 2014
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -54,13 +54,13 @@ private static final long serialVersionUID = 1L;
  }
 
   /**  Technology specific key/value pairs associated with the message.  */
-  private List<? extends TextMessageVariable> variables;
- public List<? extends TextMessageVariable> getVariables() {
+  private List<TextMessageVariable> variables;
+ public List<TextMessageVariable> getVariables() {
    return variables;
  }
 
  @JsonDeserialize( contentAs=TextMessageVariable_impl_ari_1_5_0.class )
- public void setVariables(List<? extends TextMessageVariable> val ) {
+ public void setVariables(List<TextMessageVariable> val ) {
    variables = val;
  }
 

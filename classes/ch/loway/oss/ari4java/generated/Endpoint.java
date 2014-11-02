@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -15,6 +15,16 @@ import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface Endpoint {
 
+// List<String> getChannel_ids
+/**********************************************************
+ * Id's of channels associated with this endpoint
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public List<String> getChannel_ids();
+
+
+
 // void setState String
 /**********************************************************
  * Endpoint's state
@@ -25,13 +35,13 @@ public interface Endpoint {
 
 
 
-// void setChannel_ids List<? extends String>
+// void setChannel_ids List<String>
 /**********************************************************
  * Id's of channels associated with this endpoint
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setChannel_ids(List<? extends String> val );
+ public void setChannel_ids(List<String> val );
 
 
 
@@ -82,16 +92,6 @@ public interface Endpoint {
  * @since ari_0_0_1
  *********************************************************/
  public String getState();
-
-
-
-// List<? extends String> getChannel_ids
-/**********************************************************
- * Id's of channels associated with this endpoint
- * 
- * @since ari_0_0_1
- *********************************************************/
- public List<? extends String> getChannel_ids();
 
 
 }

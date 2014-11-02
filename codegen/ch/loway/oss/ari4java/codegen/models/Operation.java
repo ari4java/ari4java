@@ -95,11 +95,16 @@ public class Operation {
 	            if (responseConcreteClass.startsWith("List<") ) {
 	                //  (List<Interface>) mapper.readValue( string, new TypeReference<List<Concrete>>() {});                
 	                deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
-	            }
-	
-	            sb.append( "return deserializeJson( json, ")
+                        sb.append( "return deserializeJsonAsAbstractList( json,\n   ")
 	                    .append( deserializationType )
 	                    .append(" ); \n");
+	            } else {
+                        sb.append( "return deserializeJson( json, ")
+	                    .append( deserializationType )
+	                    .append(" ); \n");
+                    }
+	
+	            
 	
 	        }
 	        sb.append( "}\n\n");

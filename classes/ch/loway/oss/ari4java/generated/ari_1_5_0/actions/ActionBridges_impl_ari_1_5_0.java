@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_5_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:30 CET 2014
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -30,14 +30,15 @@ method = "GET";
 }
 
 @Override
-public List<? extends Bridge> list() throws RestException {
+public List<Bridge> list() throws RestException {
 buildList();
 String json = httpActionSync();
-return deserializeJson( json, new TypeReference<List<Bridge_impl_ari_1_5_0>>() {} ); 
+return deserializeJsonAsAbstractList( json,
+   new TypeReference<List<Bridge_impl_ari_1_5_0>>() {} ); 
 }
 
 @Override
-public void list(AriCallback<List<? extends Bridge>> callback) {
+public void list(AriCallback<List<Bridge>> callback) {
 buildList();
 httpActionAsync(callback, new TypeReference<List<Bridge_impl_ari_1_5_0>>() {});
 }
@@ -173,34 +174,6 @@ String json = httpActionSync();
 @Override
 public void addChannel(String bridgeId, String channel, String role, AriCallback<Void> callback) {
 buildAddChannel(bridgeId, channel, role);
-httpActionAsync(callback);
-}
-
-/**********************************************************
- * Remove a channel from a bridge
- * 
- * Remove a channel from a bridge.
- *********************************************************/
-private void buildRemoveChannel(String bridgeId, String channel) {
-reset();
-url = "/bridges/" + bridgeId + "/removeChannel";
-method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "channel", channel) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Bridge not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Bridge not in Stasis application") );
-lE.add( BaseAriAction.HttpResponse.build( 422, "Channel not in this bridge") );
-}
-
-@Override
-public void removeChannel(String bridgeId, String channel) throws RestException {
-buildRemoveChannel(bridgeId, channel);
-String json = httpActionSync();
-}
-
-@Override
-public void removeChannel(String bridgeId, String channel, AriCallback<Void> callback) {
-buildRemoveChannel(bridgeId, channel);
 httpActionAsync(callback);
 }
 
@@ -353,6 +326,34 @@ return deserializeJson( json, LiveRecording_impl_ari_1_5_0.class );
 public void record(String bridgeId, String name, String format, int maxDurationSeconds, int maxSilenceSeconds, String ifExists, boolean beep, String terminateOn, AriCallback<LiveRecording> callback) {
 buildRecord(bridgeId, name, format, maxDurationSeconds, maxSilenceSeconds, ifExists, beep, terminateOn);
 httpActionAsync(callback, LiveRecording_impl_ari_1_5_0.class);
+}
+
+/**********************************************************
+ * Remove a channel from a bridge
+ * 
+ * Remove a channel from a bridge.
+ *********************************************************/
+private void buildRemoveChannel(String bridgeId, String channel) {
+reset();
+url = "/bridges/" + bridgeId + "/removeChannel";
+method = "POST";
+lParamQuery.add( BaseAriAction.HttpParam.build( "channel", channel) );
+lE.add( BaseAriAction.HttpResponse.build( 400, "Channel not found") );
+lE.add( BaseAriAction.HttpResponse.build( 404, "Bridge not found") );
+lE.add( BaseAriAction.HttpResponse.build( 409, "Bridge not in Stasis application") );
+lE.add( BaseAriAction.HttpResponse.build( 422, "Channel not in this bridge") );
+}
+
+@Override
+public void removeChannel(String bridgeId, String channel) throws RestException {
+buildRemoveChannel(bridgeId, channel);
+String json = httpActionSync();
+}
+
+@Override
+public void removeChannel(String bridgeId, String channel, AriCallback<Void> callback) {
+buildRemoveChannel(bridgeId, channel);
+httpActionAsync(callback);
 }
 
 /**********************************************************

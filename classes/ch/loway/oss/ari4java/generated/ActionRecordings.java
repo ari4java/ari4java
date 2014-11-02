@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -68,6 +68,16 @@ public void pause(String recordingName, AriCallback<Void> callback);
 
 
 
+// void listStored AriCallback<List<StoredRecording>> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public void listStored(AriCallback<List<StoredRecording>> callback);
+
+
+
 // void deleteStored String AriCallback<Void> callback
 /**********************************************************
  * 
@@ -110,6 +120,17 @@ public void unmute(String recordingName) throws RestException;
 
 
 
+// List<StoredRecording> listStored
+/**********************************************************
+ * List recordings that are complete.
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public List<StoredRecording> listStored() throws RestException;
+
+
+
 // void deleteStored String
 /**********************************************************
  * Delete a stored recording.
@@ -118,16 +139,6 @@ public void unmute(String recordingName) throws RestException;
  * @since ari_0_0_1
  *********************************************************/
 public void deleteStored(String recordingName) throws RestException;
-
-
-
-// void listStored AriCallback<List<? extends StoredRecording>> callback
-/**********************************************************
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
-public void listStored(AriCallback<List<? extends StoredRecording>> callback);
 
 
 
@@ -222,17 +233,6 @@ public void stop(String recordingName) throws RestException;
  * @since ari_0_0_1
  *********************************************************/
 public void unmute(String recordingName, AriCallback<Void> callback);
-
-
-
-// List<? extends StoredRecording> listStored
-/**********************************************************
- * List recordings that are complete.
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
-public List<? extends StoredRecording> listStored() throws RestException;
 
 
 

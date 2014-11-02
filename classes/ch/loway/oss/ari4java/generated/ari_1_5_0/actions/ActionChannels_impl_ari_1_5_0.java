@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_5_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:30 CET 2014
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -30,14 +30,15 @@ method = "GET";
 }
 
 @Override
-public List<? extends Channel> list() throws RestException {
+public List<Channel> list() throws RestException {
 buildList();
 String json = httpActionSync();
-return deserializeJson( json, new TypeReference<List<Channel_impl_ari_1_5_0>>() {} ); 
+return deserializeJsonAsAbstractList( json,
+   new TypeReference<List<Channel_impl_ari_1_5_0>>() {} ); 
 }
 
 @Override
-public void list(AriCallback<List<? extends Channel>> callback) {
+public void list(AriCallback<List<Channel>> callback) {
 buildList();
 httpActionAsync(callback, new TypeReference<List<Channel_impl_ari_1_5_0>>() {});
 }
@@ -165,34 +166,6 @@ httpActionAsync(callback);
 }
 
 /**********************************************************
- * Exit application; continue execution in the dialplan
- * 
- * Exit application; continue execution in the dialplan.
- *********************************************************/
-private void buildContinueInDialplan(String channelId, String context, String extension, int priority) {
-reset();
-url = "/channels/" + channelId + "/continue";
-method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "context", context) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "extension", extension) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "priority", priority) );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
-}
-
-@Override
-public void continueInDialplan(String channelId, String context, String extension, int priority) throws RestException {
-buildContinueInDialplan(channelId, context, extension, priority);
-String json = httpActionSync();
-}
-
-@Override
-public void continueInDialplan(String channelId, String context, String extension, int priority, AriCallback<Void> callback) {
-buildContinueInDialplan(channelId, context, extension, priority);
-httpActionAsync(callback);
-}
-
-/**********************************************************
  * Answer a channel
  * 
  * Answer a channel.
@@ -218,52 +191,30 @@ httpActionAsync(callback);
 }
 
 /**********************************************************
- * Send a ringing indication to a channel
+ * Exit application; continue execution in the dialplan
  * 
- * Indicate ringing to a channel.
+ * Exit application; continue execution in the dialplan.
  *********************************************************/
-private void buildRing(String channelId) {
+private void buildContinueInDialplan(String channelId, String context, String extension, int priority) {
 reset();
-url = "/channels/" + channelId + "/ring";
+url = "/channels/" + channelId + "/continue";
 method = "POST";
+lParamQuery.add( BaseAriAction.HttpParam.build( "context", context) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "extension", extension) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "priority", priority) );
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
-public void ring(String channelId) throws RestException {
-buildRing(channelId);
+public void continueInDialplan(String channelId, String context, String extension, int priority) throws RestException {
+buildContinueInDialplan(channelId, context, extension, priority);
 String json = httpActionSync();
 }
 
 @Override
-public void ring(String channelId, AriCallback<Void> callback) {
-buildRing(channelId);
-httpActionAsync(callback);
-}
-
-/**********************************************************
- * Send a ringing indication to a channel
- * 
- * Stop ringing indication on a channel if locally generated.
- *********************************************************/
-private void buildRingStop(String channelId) {
-reset();
-url = "/channels/" + channelId + "/ring";
-method = "DELETE";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
-}
-
-@Override
-public void ringStop(String channelId) throws RestException {
-buildRingStop(channelId);
-String json = httpActionSync();
-}
-
-@Override
-public void ringStop(String channelId, AriCallback<Void> callback) {
-buildRingStop(channelId);
+public void continueInDialplan(String channelId, String context, String extension, int priority, AriCallback<Void> callback) {
+buildContinueInDialplan(channelId, context, extension, priority);
 httpActionAsync(callback);
 }
 
@@ -295,58 +246,6 @@ String json = httpActionSync();
 @Override
 public void sendDTMF(String channelId, String dtmf, int before, int between, int duration, int after, AriCallback<Void> callback) {
 buildSendDTMF(channelId, dtmf, before, between, duration, after);
-httpActionAsync(callback);
-}
-
-/**********************************************************
- * Mute a channel
- * 
- * Mute a channel.
- *********************************************************/
-private void buildMute(String channelId, String direction) {
-reset();
-url = "/channels/" + channelId + "/mute";
-method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "direction", direction) );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
-}
-
-@Override
-public void mute(String channelId, String direction) throws RestException {
-buildMute(channelId, direction);
-String json = httpActionSync();
-}
-
-@Override
-public void mute(String channelId, String direction, AriCallback<Void> callback) {
-buildMute(channelId, direction);
-httpActionAsync(callback);
-}
-
-/**********************************************************
- * Mute a channel
- * 
- * Unmute a channel.
- *********************************************************/
-private void buildUnmute(String channelId, String direction) {
-reset();
-url = "/channels/" + channelId + "/mute";
-method = "DELETE";
-lParamQuery.add( BaseAriAction.HttpParam.build( "direction", direction) );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
-}
-
-@Override
-public void unmute(String channelId, String direction) throws RestException {
-buildUnmute(channelId, direction);
-String json = httpActionSync();
-}
-
-@Override
-public void unmute(String channelId, String direction, AriCallback<Void> callback) {
-buildUnmute(channelId, direction);
 httpActionAsync(callback);
 }
 
@@ -453,53 +352,54 @@ httpActionAsync(callback);
 }
 
 /**********************************************************
- * Play silence to a channel
+ * Mute a channel
  * 
- * Play silence to a channel.
- * Using media operations such as /play on a channel playing silence in this manner will suspend silence without resuming automatically.
+ * Mute a channel.
  *********************************************************/
-private void buildStartSilence(String channelId) {
+private void buildMute(String channelId, String direction) {
 reset();
-url = "/channels/" + channelId + "/silence";
+url = "/channels/" + channelId + "/mute";
 method = "POST";
+lParamQuery.add( BaseAriAction.HttpParam.build( "direction", direction) );
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
-public void startSilence(String channelId) throws RestException {
-buildStartSilence(channelId);
+public void mute(String channelId, String direction) throws RestException {
+buildMute(channelId, direction);
 String json = httpActionSync();
 }
 
 @Override
-public void startSilence(String channelId, AriCallback<Void> callback) {
-buildStartSilence(channelId);
+public void mute(String channelId, String direction, AriCallback<Void> callback) {
+buildMute(channelId, direction);
 httpActionAsync(callback);
 }
 
 /**********************************************************
- * Play silence to a channel
+ * Mute a channel
  * 
- * Stop playing silence to a channel.
+ * Unmute a channel.
  *********************************************************/
-private void buildStopSilence(String channelId) {
+private void buildUnmute(String channelId, String direction) {
 reset();
-url = "/channels/" + channelId + "/silence";
+url = "/channels/" + channelId + "/mute";
 method = "DELETE";
+lParamQuery.add( BaseAriAction.HttpParam.build( "direction", direction) );
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
-public void stopSilence(String channelId) throws RestException {
-buildStopSilence(channelId);
+public void unmute(String channelId, String direction) throws RestException {
+buildUnmute(channelId, direction);
 String json = httpActionSync();
 }
 
 @Override
-public void stopSilence(String channelId, AriCallback<Void> callback) {
-buildStopSilence(channelId);
+public void unmute(String channelId, String direction, AriCallback<Void> callback) {
+buildUnmute(channelId, direction);
 httpActionAsync(callback);
 }
 
@@ -603,58 +503,103 @@ httpActionAsync(callback, LiveRecording_impl_ari_1_5_0.class);
 }
 
 /**********************************************************
- * Variables on a channel
+ * Send a ringing indication to a channel
  * 
- * Get the value of a channel variable or function.
+ * Indicate ringing to a channel.
  *********************************************************/
-private void buildGetChannelVar(String channelId, String variable) {
+private void buildRing(String channelId) {
 reset();
-url = "/channels/" + channelId + "/variable";
-method = "GET";
-lParamQuery.add( BaseAriAction.HttpParam.build( "variable", variable) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Missing variable parameter.") );
+url = "/channels/" + channelId + "/ring";
+method = "POST";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
-public Variable getChannelVar(String channelId, String variable) throws RestException {
-buildGetChannelVar(channelId, variable);
+public void ring(String channelId) throws RestException {
+buildRing(channelId);
 String json = httpActionSync();
-return deserializeJson( json, Variable_impl_ari_1_5_0.class ); 
 }
 
 @Override
-public void getChannelVar(String channelId, String variable, AriCallback<Variable> callback) {
-buildGetChannelVar(channelId, variable);
-httpActionAsync(callback, Variable_impl_ari_1_5_0.class);
+public void ring(String channelId, AriCallback<Void> callback) {
+buildRing(channelId);
+httpActionAsync(callback);
 }
 
 /**********************************************************
- * Variables on a channel
+ * Send a ringing indication to a channel
  * 
- * Set the value of a channel variable or function.
+ * Stop ringing indication on a channel if locally generated.
  *********************************************************/
-private void buildSetChannelVar(String channelId, String variable, String value) {
+private void buildRingStop(String channelId) {
 reset();
-url = "/channels/" + channelId + "/variable";
-method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "variable", variable) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "value", value) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Missing variable parameter.") );
+url = "/channels/" + channelId + "/ring";
+method = "DELETE";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
 lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
-public void setChannelVar(String channelId, String variable, String value) throws RestException {
-buildSetChannelVar(channelId, variable, value);
+public void ringStop(String channelId) throws RestException {
+buildRingStop(channelId);
 String json = httpActionSync();
 }
 
 @Override
-public void setChannelVar(String channelId, String variable, String value, AriCallback<Void> callback) {
-buildSetChannelVar(channelId, variable, value);
+public void ringStop(String channelId, AriCallback<Void> callback) {
+buildRingStop(channelId);
+httpActionAsync(callback);
+}
+
+/**********************************************************
+ * Play silence to a channel
+ * 
+ * Play silence to a channel.
+ * Using media operations such as /play on a channel playing silence in this manner will suspend silence without resuming automatically.
+ *********************************************************/
+private void buildStartSilence(String channelId) {
+reset();
+url = "/channels/" + channelId + "/silence";
+method = "POST";
+lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
+lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+}
+
+@Override
+public void startSilence(String channelId) throws RestException {
+buildStartSilence(channelId);
+String json = httpActionSync();
+}
+
+@Override
+public void startSilence(String channelId, AriCallback<Void> callback) {
+buildStartSilence(channelId);
+httpActionAsync(callback);
+}
+
+/**********************************************************
+ * Play silence to a channel
+ * 
+ * Stop playing silence to a channel.
+ *********************************************************/
+private void buildStopSilence(String channelId) {
+reset();
+url = "/channels/" + channelId + "/silence";
+method = "DELETE";
+lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
+lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+}
+
+@Override
+public void stopSilence(String channelId) throws RestException {
+buildStopSilence(channelId);
+String json = httpActionSync();
+}
+
+@Override
+public void stopSilence(String channelId, AriCallback<Void> callback) {
+buildStopSilence(channelId);
 httpActionAsync(callback);
 }
 
@@ -719,6 +664,62 @@ return deserializeJson( json, Channel_impl_ari_1_5_0.class );
 public void snoopChannelWithId(String channelId, String snoopId, String spy, String whisper, String app, String appArgs, AriCallback<Channel> callback) {
 buildSnoopChannelWithId(channelId, snoopId, spy, whisper, app, appArgs);
 httpActionAsync(callback, Channel_impl_ari_1_5_0.class);
+}
+
+/**********************************************************
+ * Variables on a channel
+ * 
+ * Get the value of a channel variable or function.
+ *********************************************************/
+private void buildGetChannelVar(String channelId, String variable) {
+reset();
+url = "/channels/" + channelId + "/variable";
+method = "GET";
+lParamQuery.add( BaseAriAction.HttpParam.build( "variable", variable) );
+lE.add( BaseAriAction.HttpResponse.build( 400, "Missing variable parameter.") );
+lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
+lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+}
+
+@Override
+public Variable getChannelVar(String channelId, String variable) throws RestException {
+buildGetChannelVar(channelId, variable);
+String json = httpActionSync();
+return deserializeJson( json, Variable_impl_ari_1_5_0.class ); 
+}
+
+@Override
+public void getChannelVar(String channelId, String variable, AriCallback<Variable> callback) {
+buildGetChannelVar(channelId, variable);
+httpActionAsync(callback, Variable_impl_ari_1_5_0.class);
+}
+
+/**********************************************************
+ * Variables on a channel
+ * 
+ * Set the value of a channel variable or function.
+ *********************************************************/
+private void buildSetChannelVar(String channelId, String variable, String value) {
+reset();
+url = "/channels/" + channelId + "/variable";
+method = "POST";
+lParamQuery.add( BaseAriAction.HttpParam.build( "variable", variable) );
+lParamQuery.add( BaseAriAction.HttpParam.build( "value", value) );
+lE.add( BaseAriAction.HttpResponse.build( 400, "Missing variable parameter.") );
+lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
+lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+}
+
+@Override
+public void setChannelVar(String channelId, String variable, String value) throws RestException {
+buildSetChannelVar(channelId, variable, value);
+String json = httpActionSync();
+}
+
+@Override
+public void setChannelVar(String channelId, String variable, String value, AriCallback<Void> callback) {
+buildSetChannelVar(channelId, variable, value);
+httpActionAsync(callback);
 }
 
 /**********************************************************

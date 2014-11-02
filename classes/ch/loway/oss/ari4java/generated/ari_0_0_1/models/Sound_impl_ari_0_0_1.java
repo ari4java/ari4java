@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_0_0_1.models;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -21,13 +21,13 @@ import java.util.Map;
 public class Sound_impl_ari_0_0_1 implements Sound, java.io.Serializable {
 private static final long serialVersionUID = 1L;
   /**  The formats and languages in which this sound is available.  */
-  private List<? extends FormatLangPair> formats;
- public List<? extends FormatLangPair> getFormats() {
+  private List<FormatLangPair> formats;
+ public List<FormatLangPair> getFormats() {
    return formats;
  }
 
  @JsonDeserialize( contentAs=FormatLangPair_impl_ari_0_0_1.class )
- public void setFormats(List<? extends FormatLangPair> val ) {
+ public void setFormats(List<FormatLangPair> val ) {
    formats = val;
  }
 

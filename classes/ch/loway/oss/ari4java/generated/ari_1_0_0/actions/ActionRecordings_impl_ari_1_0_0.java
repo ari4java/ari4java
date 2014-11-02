@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_0_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:30 CET 2014
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -18,79 +18,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_1_0_0.models.*;
 
 public class ActionRecordings_impl_ari_1_0_0 extends BaseAriAction  implements ActionRecordings {
-/**********************************************************
- * Recordings
- * 
- * List recordings that are complete.
- *********************************************************/
-private void buildListStored() {
-reset();
-url = "/recordings/stored";
-method = "GET";
-}
-
-@Override
-public List<? extends StoredRecording> listStored() throws RestException {
-buildListStored();
-String json = httpActionSync();
-return deserializeJson( json, new TypeReference<List<StoredRecording_impl_ari_1_0_0>>() {} ); 
-}
-
-@Override
-public void listStored(AriCallback<List<? extends StoredRecording>> callback) {
-buildListStored();
-httpActionAsync(callback, new TypeReference<List<StoredRecording_impl_ari_1_0_0>>() {});
-}
-
-/**********************************************************
- * Individual recording
- * 
- * Get a stored recording's details.
- *********************************************************/
-private void buildGetStored(String recordingName) {
-reset();
-url = "/recordings/stored/" + recordingName + "";
-method = "GET";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
-}
-
-@Override
-public StoredRecording getStored(String recordingName) throws RestException {
-buildGetStored(recordingName);
-String json = httpActionSync();
-return deserializeJson( json, StoredRecording_impl_ari_1_0_0.class ); 
-}
-
-@Override
-public void getStored(String recordingName, AriCallback<StoredRecording> callback) {
-buildGetStored(recordingName);
-httpActionAsync(callback, StoredRecording_impl_ari_1_0_0.class);
-}
-
-/**********************************************************
- * Individual recording
- * 
- * Delete a stored recording.
- *********************************************************/
-private void buildDeleteStored(String recordingName) {
-reset();
-url = "/recordings/stored/" + recordingName + "";
-method = "DELETE";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
-}
-
-@Override
-public void deleteStored(String recordingName) throws RestException {
-buildDeleteStored(recordingName);
-String json = httpActionSync();
-}
-
-@Override
-public void deleteStored(String recordingName, AriCallback<Void> callback) {
-buildDeleteStored(recordingName);
-httpActionAsync(callback);
-}
-
 /**********************************************************
  * A recording that is in progress
  * 
@@ -143,24 +70,51 @@ httpActionAsync(callback);
 /**********************************************************
  * 
  * 
- * Stop a live recording and store it.
+ * Mute a live recording.
+ * Muting a recording suspends silence detection, which will be restarted when the recording is unmuted.
  *********************************************************/
-private void buildStop(String recordingName) {
+private void buildMute(String recordingName) {
 reset();
-url = "/recordings/live/" + recordingName + "/stop";
+url = "/recordings/live/" + recordingName + "/mute";
 method = "POST";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
+lE.add( BaseAriAction.HttpResponse.build( 409, "Recording not in session") );
 }
 
 @Override
-public void stop(String recordingName) throws RestException {
-buildStop(recordingName);
+public void mute(String recordingName) throws RestException {
+buildMute(recordingName);
 String json = httpActionSync();
 }
 
 @Override
-public void stop(String recordingName, AriCallback<Void> callback) {
-buildStop(recordingName);
+public void mute(String recordingName, AriCallback<Void> callback) {
+buildMute(recordingName);
+httpActionAsync(callback);
+}
+
+/**********************************************************
+ * 
+ * 
+ * Unmute a live recording.
+ *********************************************************/
+private void buildUnmute(String recordingName) {
+reset();
+url = "/recordings/live/" + recordingName + "/mute";
+method = "DELETE";
+lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
+lE.add( BaseAriAction.HttpResponse.build( 409, "Recording not in session") );
+}
+
+@Override
+public void unmute(String recordingName) throws RestException {
+buildUnmute(recordingName);
+String json = httpActionSync();
+}
+
+@Override
+public void unmute(String recordingName, AriCallback<Void> callback) {
+buildUnmute(recordingName);
 httpActionAsync(callback);
 }
 
@@ -218,51 +172,98 @@ httpActionAsync(callback);
 /**********************************************************
  * 
  * 
- * Mute a live recording.
- * Muting a recording suspends silence detection, which will be restarted when the recording is unmuted.
+ * Stop a live recording and store it.
  *********************************************************/
-private void buildMute(String recordingName) {
+private void buildStop(String recordingName) {
 reset();
-url = "/recordings/live/" + recordingName + "/mute";
+url = "/recordings/live/" + recordingName + "/stop";
 method = "POST";
 lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Recording not in session") );
 }
 
 @Override
-public void mute(String recordingName) throws RestException {
-buildMute(recordingName);
+public void stop(String recordingName) throws RestException {
+buildStop(recordingName);
 String json = httpActionSync();
 }
 
 @Override
-public void mute(String recordingName, AriCallback<Void> callback) {
-buildMute(recordingName);
+public void stop(String recordingName, AriCallback<Void> callback) {
+buildStop(recordingName);
 httpActionAsync(callback);
 }
 
 /**********************************************************
+ * Recordings
  * 
- * 
- * Unmute a live recording.
+ * List recordings that are complete.
  *********************************************************/
-private void buildUnmute(String recordingName) {
+private void buildListStored() {
 reset();
-url = "/recordings/live/" + recordingName + "/mute";
-method = "DELETE";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Recording not in session") );
+url = "/recordings/stored";
+method = "GET";
 }
 
 @Override
-public void unmute(String recordingName) throws RestException {
-buildUnmute(recordingName);
+public List<StoredRecording> listStored() throws RestException {
+buildListStored();
+String json = httpActionSync();
+return deserializeJsonAsAbstractList( json,
+   new TypeReference<List<StoredRecording_impl_ari_1_0_0>>() {} ); 
+}
+
+@Override
+public void listStored(AriCallback<List<StoredRecording>> callback) {
+buildListStored();
+httpActionAsync(callback, new TypeReference<List<StoredRecording_impl_ari_1_0_0>>() {});
+}
+
+/**********************************************************
+ * Individual recording
+ * 
+ * Get a stored recording's details.
+ *********************************************************/
+private void buildGetStored(String recordingName) {
+reset();
+url = "/recordings/stored/" + recordingName + "";
+method = "GET";
+lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
+}
+
+@Override
+public StoredRecording getStored(String recordingName) throws RestException {
+buildGetStored(recordingName);
+String json = httpActionSync();
+return deserializeJson( json, StoredRecording_impl_ari_1_0_0.class ); 
+}
+
+@Override
+public void getStored(String recordingName, AriCallback<StoredRecording> callback) {
+buildGetStored(recordingName);
+httpActionAsync(callback, StoredRecording_impl_ari_1_0_0.class);
+}
+
+/**********************************************************
+ * Individual recording
+ * 
+ * Delete a stored recording.
+ *********************************************************/
+private void buildDeleteStored(String recordingName) {
+reset();
+url = "/recordings/stored/" + recordingName + "";
+method = "DELETE";
+lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
+}
+
+@Override
+public void deleteStored(String recordingName) throws RestException {
+buildDeleteStored(recordingName);
 String json = httpActionSync();
 }
 
 @Override
-public void unmute(String recordingName, AriCallback<Void> callback) {
-buildUnmute(recordingName);
+public void deleteStored(String recordingName, AriCallback<Void> callback) {
+buildDeleteStored(recordingName);
 httpActionAsync(callback);
 }
 

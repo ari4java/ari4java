@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author lenz
  */
-public class Action {
+public class Action implements Comparable<Action> {
 
     public String path = "";
     public String description = "";
@@ -40,7 +40,21 @@ public class Action {
         }
     }
 
+    /**
+     * Per ordine alfabetico.
+     * 
+     * @param o
+     * @return 
+     */
+    
+    @Override
+    public int compareTo(Action o) {
+        return path.compareToIgnoreCase( o.path ); 
+    }
 
+
+    
+    
 
 
 }

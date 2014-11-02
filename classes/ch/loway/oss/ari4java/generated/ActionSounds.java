@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -14,6 +14,17 @@ import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface ActionSounds {
+
+// List<Sound> list String String
+/**********************************************************
+ * List all sounds.
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public List<Sound> list(String lang, String format) throws RestException;
+
+
 
 // void get String AriCallback<Sound> callback
 /**********************************************************
@@ -36,24 +47,13 @@ public Sound get(String soundId) throws RestException;
 
 
 
-// List<? extends Sound> list String String
-/**********************************************************
- * List all sounds.
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
-public List<? extends Sound> list(String lang, String format) throws RestException;
-
-
-
-// void list String String AriCallback<List<? extends Sound>> callback
+// void list String String AriCallback<List<Sound>> callback
 /**********************************************************
  * 
  * 
  * @since ari_0_0_1
  *********************************************************/
-public void list(String lang, String format, AriCallback<List<? extends Sound>> callback);
+public void list(String lang, String format, AriCallback<List<Sound>> callback);
 
 
 }

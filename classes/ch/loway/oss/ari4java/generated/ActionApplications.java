@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -15,6 +15,17 @@ import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface ActionApplications {
 
+// List<Application> list
+/**********************************************************
+ * List all applications.
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public List<Application> list() throws RestException;
+
+
+
 // void unsubscribe String String AriCallback<Application> callback
 /**********************************************************
  * 
@@ -22,17 +33,6 @@ public interface ActionApplications {
  * @since ari_0_0_1
  *********************************************************/
 public void unsubscribe(String applicationName, String eventSource, AriCallback<Application> callback);
-
-
-
-// List<? extends Application> list
-/**********************************************************
- * List all applications.
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
-public List<? extends Application> list() throws RestException;
 
 
 
@@ -78,13 +78,13 @@ public Application unsubscribe(String applicationName, String eventSource) throw
 
 
 
-// void list AriCallback<List<? extends Application>> callback
+// void list AriCallback<List<Application>> callback
 /**********************************************************
  * 
  * 
  * @since ari_0_0_1
  *********************************************************/
-public void list(AriCallback<List<? extends Application>> callback);
+public void list(AriCallback<List<Application>> callback);
 
 
 

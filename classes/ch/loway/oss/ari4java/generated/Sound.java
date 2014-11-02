@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -15,13 +15,13 @@ import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface Sound {
 
-// void setFormats List<? extends FormatLangPair>
+// List<FormatLangPair> getFormats
 /**********************************************************
  * The formats and languages in which this sound is available.
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setFormats(List<? extends FormatLangPair> val );
+ public List<FormatLangPair> getFormats();
 
 
 
@@ -55,13 +55,13 @@ public interface Sound {
 
 
 
-// List<? extends FormatLangPair> getFormats
+// void setFormats List<FormatLangPair>
 /**********************************************************
  * The formats and languages in which this sound is available.
  * 
  * @since ari_0_0_1
  *********************************************************/
- public List<? extends FormatLangPair> getFormats();
+ public void setFormats(List<FormatLangPair> val );
 
 
 

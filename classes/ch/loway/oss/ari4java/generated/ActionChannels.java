@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -298,17 +298,6 @@ public void snoopChannel(String channelId, String spy, String whisper, String ap
 
 
 
-// List<? extends Channel> list
-/**********************************************************
- * List all active channels in Asterisk.
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
-public List<? extends Channel> list() throws RestException;
-
-
-
 // void stopMoh String
 /**********************************************************
  * Stop playing music on hold to a channel.
@@ -447,6 +436,16 @@ public void answer(String channelId) throws RestException;
 
 
 
+// void list AriCallback<List<Channel>> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public void list(AriCallback<List<Channel>> callback);
+
+
+
 // void hold String
 /**********************************************************
  * Hold a channel.
@@ -468,13 +467,14 @@ public void setChannelVar(String channelId, String variable, String value, AriCa
 
 
 
-// void list AriCallback<List<? extends Channel>> callback
+// List<Channel> list
 /**********************************************************
+ * List all active channels in Asterisk.
  * 
  * 
  * @since ari_0_0_1
  *********************************************************/
-public void list(AriCallback<List<? extends Channel>> callback);
+public List<Channel> list() throws RestException;
 
 
 

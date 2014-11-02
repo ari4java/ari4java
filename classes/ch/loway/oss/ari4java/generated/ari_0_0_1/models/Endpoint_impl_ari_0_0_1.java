@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_0_0_1.models;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -23,13 +23,13 @@ import java.util.Map;
 public class Endpoint_impl_ari_0_0_1 implements Endpoint, java.io.Serializable {
 private static final long serialVersionUID = 1L;
   /**  Id's of channels associated with this endpoint  */
-  private List<? extends String> channel_ids;
- public List<? extends String> getChannel_ids() {
+  private List<String> channel_ids;
+ public List<String> getChannel_ids() {
    return channel_ids;
  }
 
  @JsonDeserialize( contentAs=String.class )
- public void setChannel_ids(List<? extends String> val ) {
+ public void setChannel_ids(List<String> val ) {
    channel_ids = val;
  }
 

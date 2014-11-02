@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -26,24 +26,24 @@ public Endpoint get(String tech, String resource) throws RestException;
 
 
 
-// void list AriCallback<List<? extends Endpoint>> callback
-/**********************************************************
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
-public void list(AriCallback<List<? extends Endpoint>> callback);
-
-
-
-// List<? extends Endpoint> listByTech String
+// List<Endpoint> listByTech String
 /**********************************************************
  * List available endoints for a given endpoint technology.
  * 
  * 
  * @since ari_0_0_1
  *********************************************************/
-public List<? extends Endpoint> listByTech(String tech) throws RestException;
+public List<Endpoint> listByTech(String tech) throws RestException;
+
+
+
+// void list AriCallback<List<Endpoint>> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public void list(AriCallback<List<Endpoint>> callback);
 
 
 
@@ -67,6 +67,16 @@ public void sendMessage(String to, String from, String body, Map<String,String> 
 
 
 
+// void listByTech String AriCallback<List<Endpoint>> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public void listByTech(String tech, AriCallback<List<Endpoint>> callback);
+
+
+
 // void get String String AriCallback<Endpoint> callback
 /**********************************************************
  * 
@@ -74,6 +84,17 @@ public void sendMessage(String to, String from, String body, Map<String,String> 
  * @since ari_0_0_1
  *********************************************************/
 public void get(String tech, String resource, AriCallback<Endpoint> callback);
+
+
+
+// List<Endpoint> list
+/**********************************************************
+ * List all endpoints.
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public List<Endpoint> list() throws RestException;
 
 
 
@@ -85,27 +106,6 @@ public void get(String tech, String resource, AriCallback<Endpoint> callback);
  * @since ari_1_5_0
  *********************************************************/
 public void sendMessageToEndpoint(String tech, String resource, String from, String body, Map<String,String> variables) throws RestException;
-
-
-
-// void listByTech String AriCallback<List<? extends Endpoint>> callback
-/**********************************************************
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
-public void listByTech(String tech, AriCallback<List<? extends Endpoint>> callback);
-
-
-
-// List<? extends Endpoint> list
-/**********************************************************
- * List all endpoints.
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
-public List<? extends Endpoint> list() throws RestException;
 
 
 

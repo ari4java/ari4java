@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -32,6 +32,17 @@ public void create(String type, String bridgeId, String name, AriCallback<Bridge
  * @since ari_0_0_1
  *********************************************************/
 public void create(String type, AriCallback<Bridge> callback);
+
+
+
+// List<Bridge> list
+/**********************************************************
+ * List all active bridges in Asterisk.
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public List<Bridge> list() throws RestException;
 
 
 
@@ -131,16 +142,6 @@ public Bridge create(String type) throws RestException;
 
 
 
-// void list AriCallback<List<? extends Bridge>> callback
-/**********************************************************
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
-public void list(AriCallback<List<? extends Bridge>> callback);
-
-
-
 // void record String String String int int String boolean String AriCallback<LiveRecording> callback
 /**********************************************************
  * 
@@ -189,17 +190,6 @@ public void create(String type, String name, AriCallback<Bridge> callback);
  * @since ari_0_0_1
  *********************************************************/
 public void addChannel(String bridgeId, String channel, String role, AriCallback<Void> callback);
-
-
-
-// List<? extends Bridge> list
-/**********************************************************
- * List all active bridges in Asterisk.
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
-public List<? extends Bridge> list() throws RestException;
 
 
 
@@ -295,6 +285,16 @@ public void startMoh(String bridgeId, String mohClass) throws RestException;
  * @since ari_1_5_0
  *********************************************************/
 public Bridge create_or_update_with_id(String type, String bridgeId, String name) throws RestException;
+
+
+
+// void list AriCallback<List<Bridge>> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public void list(AriCallback<List<Bridge>> callback);
 
 
 

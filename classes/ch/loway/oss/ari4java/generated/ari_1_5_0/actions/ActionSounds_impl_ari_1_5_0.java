@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_5_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:30 CET 2014
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -32,14 +32,15 @@ lParamQuery.add( BaseAriAction.HttpParam.build( "format", format) );
 }
 
 @Override
-public List<? extends Sound> list(String lang, String format) throws RestException {
+public List<Sound> list(String lang, String format) throws RestException {
 buildList(lang, format);
 String json = httpActionSync();
-return deserializeJson( json, new TypeReference<List<Sound_impl_ari_1_5_0>>() {} ); 
+return deserializeJsonAsAbstractList( json,
+   new TypeReference<List<Sound_impl_ari_1_5_0>>() {} ); 
 }
 
 @Override
-public void list(String lang, String format, AriCallback<List<? extends Sound>> callback) {
+public void list(String lang, String format, AriCallback<List<Sound>> callback) {
 buildList(lang, format);
 httpActionAsync(callback, new TypeReference<List<Sound_impl_ari_1_5_0>>() {});
 }

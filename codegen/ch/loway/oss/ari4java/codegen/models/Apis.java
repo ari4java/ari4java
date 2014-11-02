@@ -6,6 +6,7 @@ import ch.loway.oss.ari4java.codegen.genJava.JavaInterface;
 import ch.loway.oss.ari4java.codegen.genJava.JavaPkgInfo;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,7 +44,9 @@ public class Apis extends JavaPkgInfo {
                 .append(" implements ")
                 .append( getInterfaceName() )
                 .append( " {\n" );
-
+        
+        Collections.sort(actions);
+        
         for ( Action a: actions ) {
 
             for ( Operation o: a.operations ) {

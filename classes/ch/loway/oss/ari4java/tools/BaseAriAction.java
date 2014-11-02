@@ -212,9 +212,15 @@ public class BaseAriAction {
         httpActionAsync(new AriAsyncHandler<T>(callback, klazz));
     }
 
-    protected <S, T extends S> void httpActionAsync(AriCallback<S> callback, TypeReference<T> klazzType) {
-        httpActionAsync(new AriAsyncHandler<T>(callback, klazzType));
+    protected <A, C extends A> void httpActionAsync(
+            AriCallback<List<A>> callback, TypeReference<List<C>> klazzType) {
+        httpActionAsync(new AriAsyncHandler(callback, klazzType));
     }
+
+    // httpActionAsync(AriCallback<List<Application>>, TypeReference<List<Application_impl_ari_1_5_0>>() {});
+
+    
+    
 
 //    private String httpActionImpl(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpResponse> errors) throws RestException {
 //        return daddy.performHttp(uri, method, parametersQuery, parametersForm, errors);
@@ -262,6 +268,7 @@ public class BaseAriAction {
      * 
      * In theory we should be safe given the condition that A extends C.
      * I hope at least.
+     * This is bug #17 - Avoid Lists of ? extends something 
      * 
      * @param <A> The abstract type for members of the list.
      * @param <C> The concrete type for members of the list.
@@ -284,40 +291,7 @@ public class BaseAriAction {
         }
 
     }
-    
-    
-    
-    /**
-     * Deserialize a list to an abstract type.
-     * Please note that concreteType must implement <A>
-     * 
-     * This is bug #17 - Avoid Lists of ? extends something 
-     * 
-     * @param <A> the abstract type for elements of the list
-     * @param json input blob
-     * @param returnedTypeReference 
-     * @param abstractType 
-     * @param concreteType the class that will be used for building actual elements.
-     * @return A list of the interface.
-     * @throws RestException 
-     */
-    
-    public static <A> List<A> deserializeJsonList(String json, 
-            TypeReference<List<A>> returnedTypeReference,
-            Class abstractType,
-            Class concreteType) throws RestException {
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.getTypeFactory().constructParametricType(abstractType, concreteType);
-        try {
-            return mapper.readValue(json, returnedTypeReference);
-        } catch (IOException e) {
-            throw new RestException("Decoding JSON list: " + e.toString());
-        }
-
-    }
-    
-    
+   
 
     /**
      * Deserialize the event.

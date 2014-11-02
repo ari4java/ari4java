@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_0_0.models;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:30 CET 2014
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -45,13 +45,13 @@ private static final long serialVersionUID = 1L;
  }
 
   /**  Ids of channels participating in this bridge  */
-  private List<? extends String> channels;
- public List<? extends String> getChannels() {
+  private List<String> channels;
+ public List<String> getChannels() {
    return channels;
  }
 
  @JsonDeserialize( contentAs=String.class )
- public void setChannels(List<? extends String> val ) {
+ public void setChannels(List<String> val ) {
    channels = val;
  }
 

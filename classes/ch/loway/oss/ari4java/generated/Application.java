@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -15,13 +15,43 @@ import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface Application {
 
-// void setDevice_names List<? extends String>
+// void setEndpoint_ids List<String>
 /**********************************************************
- * Names of the devices subscribed to.
+ * {tech}/{resource} for endpoints subscribed to.
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setDevice_names(List<? extends String> val );
+ public void setEndpoint_ids(List<String> val );
+
+
+
+// void setBridge_ids List<String>
+/**********************************************************
+ * Id's for bridges subscribed to.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setBridge_ids(List<String> val );
+
+
+
+// List<String> getChannel_ids
+/**********************************************************
+ * Id's for channels subscribed to.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public List<String> getChannel_ids();
+
+
+
+// List<String> getBridge_ids
+/**********************************************************
+ * Id's for bridges subscribed to.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public List<String> getBridge_ids();
 
 
 
@@ -35,53 +65,23 @@ public interface Application {
 
 
 
-// void setBridge_ids List<? extends String>
-/**********************************************************
- * Id's for bridges subscribed to.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setBridge_ids(List<? extends String> val );
-
-
-
-// List<? extends String> getDevice_names
-/**********************************************************
- * Names of the devices subscribed to.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public List<? extends String> getDevice_names();
-
-
-
-// List<? extends String> getEndpoint_ids
+// List<String> getEndpoint_ids
 /**********************************************************
  * {tech}/{resource} for endpoints subscribed to.
  * 
  * @since ari_0_0_1
  *********************************************************/
- public List<? extends String> getEndpoint_ids();
+ public List<String> getEndpoint_ids();
 
 
 
-// void setChannel_ids List<? extends String>
+// void setChannel_ids List<String>
 /**********************************************************
  * Id's for channels subscribed to.
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setChannel_ids(List<? extends String> val );
-
-
-
-// List<? extends String> getBridge_ids
-/**********************************************************
- * Id's for bridges subscribed to.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public List<? extends String> getBridge_ids();
+ public void setChannel_ids(List<String> val );
 
 
 
@@ -95,23 +95,23 @@ public interface Application {
 
 
 
-// void setEndpoint_ids List<? extends String>
+// void setDevice_names List<String>
 /**********************************************************
- * {tech}/{resource} for endpoints subscribed to.
+ * Names of the devices subscribed to.
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setEndpoint_ids(List<? extends String> val );
+ public void setDevice_names(List<String> val );
 
 
 
-// List<? extends String> getChannel_ids
+// List<String> getDevice_names
 /**********************************************************
- * Id's for channels subscribed to.
+ * Names of the devices subscribed to.
  * 
  * @since ari_0_0_1
  *********************************************************/
- public List<? extends String> getChannel_ids();
+ public List<String> getDevice_names();
 
 
 }

@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_0_0_1.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:30 CET 2014
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -30,14 +30,15 @@ method = "GET";
 }
 
 @Override
-public List<? extends DeviceState> list() throws RestException {
+public List<DeviceState> list() throws RestException {
 buildList();
 String json = httpActionSync();
-return deserializeJson( json, new TypeReference<List<DeviceState_impl_ari_0_0_1>>() {} ); 
+return deserializeJsonAsAbstractList( json,
+   new TypeReference<List<DeviceState_impl_ari_0_0_1>>() {} ); 
 }
 
 @Override
-public void list(AriCallback<List<? extends DeviceState>> callback) {
+public void list(AriCallback<List<DeviceState>> callback) {
 buildList();
 httpActionAsync(callback, new TypeReference<List<DeviceState_impl_ari_0_0_1>>() {});
 }

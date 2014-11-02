@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -45,16 +45,6 @@ public interface Bridge {
 
 
 
-// List<? extends String> getChannels
-/**********************************************************
- * Ids of channels participating in this bridge
- * 
- * @since ari_0_0_1
- *********************************************************/
- public List<? extends String> getChannels();
-
-
-
 // String getId
 /**********************************************************
  * Unique identifier for this bridge
@@ -62,16 +52,6 @@ public interface Bridge {
  * @since ari_0_0_1
  *********************************************************/
  public String getId();
-
-
-
-// void setChannels List<? extends String>
-/**********************************************************
- * Ids of channels participating in this bridge
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setChannels(List<? extends String> val );
 
 
 
@@ -142,6 +122,26 @@ public interface Bridge {
  * @since ari_0_0_1
  *********************************************************/
  public String getTechnology();
+
+
+
+// List<String> getChannels
+/**********************************************************
+ * Ids of channels participating in this bridge
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public List<String> getChannels();
+
+
+
+// void setChannels List<String>
+/**********************************************************
+ * Ids of channels participating in this bridge
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setChannels(List<String> val );
 
 
 

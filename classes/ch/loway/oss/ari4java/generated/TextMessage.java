@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,16 +22,6 @@ public interface TextMessage {
  * @since ari_1_5_0
  *********************************************************/
  public void setFrom(String val );
-
-
-
-// void setVariables List<? extends TextMessageVariable>
-/**********************************************************
- * Technology specific key/value pairs associated with the message.
- * 
- * @since ari_1_5_0
- *********************************************************/
- public void setVariables(List<? extends TextMessageVariable> val );
 
 
 
@@ -85,13 +75,23 @@ public interface TextMessage {
 
 
 
-// List<? extends TextMessageVariable> getVariables
+// List<TextMessageVariable> getVariables
 /**********************************************************
  * Technology specific key/value pairs associated with the message.
  * 
  * @since ari_1_5_0
  *********************************************************/
- public List<? extends TextMessageVariable> getVariables();
+ public List<TextMessageVariable> getVariables();
+
+
+
+// void setVariables List<TextMessageVariable>
+/**********************************************************
+ * Technology specific key/value pairs associated with the message.
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+ public void setVariables(List<TextMessageVariable> val );
 
 
 }

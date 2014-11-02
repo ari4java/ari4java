@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -15,13 +15,14 @@ import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface ActionDeviceStates {
 
-// void list AriCallback<List<? extends DeviceState>> callback
+// List<DeviceState> list
 /**********************************************************
+ * List all ARI controlled device states.
  * 
  * 
  * @since ari_0_0_1
  *********************************************************/
-public void list(AriCallback<List<? extends DeviceState>> callback);
+public List<DeviceState> list() throws RestException;
 
 
 
@@ -56,17 +57,6 @@ public void delete(String deviceName) throws RestException;
 
 
 
-// List<? extends DeviceState> list
-/**********************************************************
- * List all ARI controlled device states.
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
-public List<? extends DeviceState> list() throws RestException;
-
-
-
 // void update String String AriCallback<Void> callback
 /**********************************************************
  * 
@@ -96,6 +86,16 @@ public void update(String deviceName, String deviceState) throws RestException;
  * @since ari_0_0_1
  *********************************************************/
 public DeviceState get(String deviceName) throws RestException;
+
+
+
+// void list AriCallback<List<DeviceState>> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public void list(AriCallback<List<DeviceState>> callback);
 
 
 }

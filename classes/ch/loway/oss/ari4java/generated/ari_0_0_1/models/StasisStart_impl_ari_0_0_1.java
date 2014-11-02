@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_0_0_1.models;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:30 CET 2014
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -21,13 +21,13 @@ import java.util.Map;
 public class StasisStart_impl_ari_0_0_1 extends Event_impl_ari_0_0_1 implements StasisStart, java.io.Serializable {
 private static final long serialVersionUID = 1L;
   /**  Arguments to the application  */
-  private List<? extends String> args;
- public List<? extends String> getArgs() {
+  private List<String> args;
+ public List<String> getArgs() {
    return args;
  }
 
  @JsonDeserialize( contentAs=String.class )
- public void setArgs(List<? extends String> val ) {
+ public void setArgs(List<String> val ) {
    args = val;
  }
 

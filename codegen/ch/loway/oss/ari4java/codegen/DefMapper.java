@@ -454,7 +454,7 @@ public class DefMapper {
         String listAry = "List[";
 
         if ( jsonType.startsWith( listAry ) ) {
-            return (concrete ? "List<" : "List<? extends ") + innerRemapType( jsonType.substring(listAry.length(), jsonType.length()-1 ), concrete, apiVersion ) + ">";
+            return (concrete ? "List<" : "List<") + innerRemapType( jsonType.substring(listAry.length(), jsonType.length()-1 ), concrete, apiVersion ) + ">";
         }
         else
         if ( JavaPkgInfo.TypeMap.containsKey( jsonType.toLowerCase() ) ) {

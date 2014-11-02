@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -15,23 +15,23 @@ import ch.loway.oss.ari4java.tools.AriCallback;
 
 public interface MissingParams {
 
-// List<? extends String> getParams
+// void setParams List<String>
 /**********************************************************
  * A list of the missing parameters
  * 
  * @since ari_0_0_1
  *********************************************************/
- public List<? extends String> getParams();
+ public void setParams(List<String> val );
 
 
 
-// void setParams List<? extends String>
+// List<String> getParams
 /**********************************************************
  * A list of the missing parameters
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setParams(List<? extends String> val );
+ public List<String> getParams();
 
 
 }

@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:29 CET 2014
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -35,26 +35,6 @@ public interface StasisStart {
 
 
 
-// void setArgs List<? extends String>
-/**********************************************************
- * Arguments to the application
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setArgs(List<? extends String> val );
-
-
-
-// List<? extends String> getArgs
-/**********************************************************
- * Arguments to the application
- * 
- * @since ari_0_0_1
- *********************************************************/
- public List<? extends String> getArgs();
-
-
-
 // Channel getChannel
 /**********************************************************
  * 
@@ -62,6 +42,26 @@ public interface StasisStart {
  * @since ari_0_0_1
  *********************************************************/
  public Channel getChannel();
+
+
+
+// void setArgs List<String>
+/**********************************************************
+ * Arguments to the application
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setArgs(List<String> val );
+
+
+
+// List<String> getArgs
+/**********************************************************
+ * Arguments to the application
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public List<String> getArgs();
 
 
 

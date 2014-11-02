@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_0_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Nov 01 19:27:12 CET 2014
+//    Generated on: Sun Nov 02 19:48:30 CET 2014
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -30,14 +30,15 @@ method = "GET";
 }
 
 @Override
-public List<? extends Endpoint> list() throws RestException {
+public List<Endpoint> list() throws RestException {
 buildList();
 String json = httpActionSync();
-return deserializeJson( json, new TypeReference<List<Endpoint_impl_ari_1_0_0>>() {} ); 
+return deserializeJsonAsAbstractList( json,
+   new TypeReference<List<Endpoint_impl_ari_1_0_0>>() {} ); 
 }
 
 @Override
-public void list(AriCallback<List<? extends Endpoint>> callback) {
+public void list(AriCallback<List<Endpoint>> callback) {
 buildList();
 httpActionAsync(callback, new TypeReference<List<Endpoint_impl_ari_1_0_0>>() {});
 }
@@ -55,14 +56,15 @@ lE.add( BaseAriAction.HttpResponse.build( 404, "Endpoints not found") );
 }
 
 @Override
-public List<? extends Endpoint> listByTech(String tech) throws RestException {
+public List<Endpoint> listByTech(String tech) throws RestException {
 buildListByTech(tech);
 String json = httpActionSync();
-return deserializeJson( json, new TypeReference<List<Endpoint_impl_ari_1_0_0>>() {} ); 
+return deserializeJsonAsAbstractList( json,
+   new TypeReference<List<Endpoint_impl_ari_1_0_0>>() {} ); 
 }
 
 @Override
-public void listByTech(String tech, AriCallback<List<? extends Endpoint>> callback) {
+public void listByTech(String tech, AriCallback<List<Endpoint>> callback) {
 buildListByTech(tech);
 httpActionAsync(callback, new TypeReference<List<Endpoint_impl_ari_1_0_0>>() {});
 }
