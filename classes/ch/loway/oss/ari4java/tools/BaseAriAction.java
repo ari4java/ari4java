@@ -255,6 +255,69 @@ public class BaseAriAction {
         }
 
     }
+    
+    /**
+     * Deserialize an object as a list of interface.
+     * Class erasure in Java plain sucks, I tell ya.
+     * 
+     * In theory we should be safe given the condition that A extends C.
+     * I hope at least.
+     * 
+     * @param <A> The abstract type for members of the list.
+     * @param <C> The concrete type for members of the list.
+     * @param json Data in
+     * @param refConcreteType The reference concrete type, should be a List<C>
+     * @return a list of A's
+     * @throws RestException 
+     */
+    
+    
+    public static <A, C extends A> List<A> deserializeJsonAsAbstractList(String json, TypeReference<List<C>> refConcreteType) throws RestException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            List<C> lC = mapper.readValue(json, refConcreteType);
+            List<A> lA = (List<A>) lC;
+            return lA;
+        } catch (IOException e) {
+            throw new RestException("Decoding JSON list: " + e.toString());
+        }
+
+    }
+    
+    
+    
+    /**
+     * Deserialize a list to an abstract type.
+     * Please note that concreteType must implement <A>
+     * 
+     * This is bug #17 - Avoid Lists of ? extends something 
+     * 
+     * @param <A> the abstract type for elements of the list
+     * @param json input blob
+     * @param returnedTypeReference 
+     * @param abstractType 
+     * @param concreteType the class that will be used for building actual elements.
+     * @return A list of the interface.
+     * @throws RestException 
+     */
+    
+    public static <A> List<A> deserializeJsonList(String json, 
+            TypeReference<List<A>> returnedTypeReference,
+            Class abstractType,
+            Class concreteType) throws RestException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.getTypeFactory().constructParametricType(abstractType, concreteType);
+        try {
+            return mapper.readValue(json, returnedTypeReference);
+        } catch (IOException e) {
+            throw new RestException("Decoding JSON list: " + e.toString());
+        }
+
+    }
+    
+    
 
     /**
      * Deserialize the event.
