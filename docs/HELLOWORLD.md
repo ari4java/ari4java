@@ -63,7 +63,7 @@ The easiest thing we can do now is to query the list of active channels.
 In order to do this we call the list() method on the Channels action.
 All commands we can send are organized into a set of Actions.
             
-    List<? extends Channel> channels = ari.channels().list();
+    List<Channel> channels = ari.channels().list();
 
 Please note that what we get back is Java objects, not just JSON blobs.
 Everything is strongly typed.
@@ -71,7 +71,7 @@ Everything is strongly typed.
 A second thing to note is that this could be done in a non-blocking way as well,
 just by calling the method 
 
-	list(AriCallback<List<? extends Channel>> callback);
+	list(AriCallback<List<Channel>> callback);
 
 instead of the plain list() method.
 
