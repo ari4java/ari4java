@@ -42,7 +42,7 @@ public class MessageQueue {
      * Remove a message from the queue. This return immediately -
      * if no message found, return null.
      * 
-     * @return
+     * @return the message just removed.
      */
 
     public synchronized Message dequeue() {
@@ -62,7 +62,7 @@ public class MessageQueue {
      *
      * @param max
      * @param interval
-     * @return
+     * @return the message.
      */
 
     public Message dequeueMax( int max, int interval ) {

@@ -8,7 +8,8 @@ import ch.loway.oss.ari4java.tools.http.NettyHttpClient;
 import java.net.URISyntaxException;
 
 /**
- *
+ * This class is a placeholder for convenience factory methods.
+ * 
  * @author lenz
  */
 public class AriFactory {
@@ -20,7 +21,7 @@ public class AriFactory {
      * @param login
      * @param pass
      * @param version
-     * @return
+     * @return a ready-to-use connector.
      * @throws ARIException
      * @throws URISyntaxException 
      */

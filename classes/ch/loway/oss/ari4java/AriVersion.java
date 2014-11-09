@@ -48,7 +48,7 @@ public enum AriVersion {
      * Return the correct version object from the signature string.
      * 
      * @param version
-     * @return
+     * @return the inferred version.
      * @throws ARIException
      */
 

@@ -95,7 +95,7 @@ public class ARI {
      * Builds a concrete instance given an interface.
      * Note that we make no assumptions on the type of objects being built.
      * @param klazz
-     * @return
+     * @return the concrete implementation for that interface under the ARI in use.
      * @throws ARIException 
      */
         
@@ -213,10 +213,12 @@ public class ARI {
     /**
      * Runs an HTTP GET and returns the text downloaded.
      *
+     * \TODO does it really belong here?
+     * 
      * @param urlWithParms
      * @param user
      * @param pwd
-     * @return
+     * @return The body of the HTTP request.
      * @throws ARIException
      */
 
@@ -286,7 +288,7 @@ public class ARI {
      * Matches the version string out of the resources.json file.
      * 
      * @param response
-     * @return
+     * @return a String describing the version reported from Asterisk.
      * @throws ARIException
      */
 
@@ -344,11 +346,10 @@ public class ARI {
     /**
      * In order to avoid multi-threading for users, you can get a
      * MessageQueue object and poll on it for new messages.
-     * This makes sure you don't really need to synchonize or be worrided by
-     * threading issues.
-     * Another plus is that
+     * This makes sure you don't really need to synchonize or be worried by
+     * threading issues
      *
-     * @return 
+     * @return The MQ connected to your websocket.
      * @throws ARIException
      */
 
@@ -386,7 +387,7 @@ public class ARI {
     /**
      * Gets us a ready to use object.
      * 
-     * @return
+     * @return an Applications object.
      */
     public ActionApplications applications() {
         return (ActionApplications) setupAction(version.builder().actionApplications());
@@ -395,7 +396,7 @@ public class ARI {
     /**
      * Gets us a ready to use object.
      *
-     * @return
+     * @return an Asterisk object.
      */
     public ActionAsterisk asterisk() {
         return (ActionAsterisk) setupAction(version.builder().actionAsterisk());
@@ -404,7 +405,7 @@ public class ARI {
     /**
      * Gets us a ready to use object.
      *
-     * @return
+     * @return a Bridges object.
      */
     public ActionBridges bridges() {
         return (ActionBridges) setupAction(version.builder().actionBridges());
@@ -413,7 +414,7 @@ public class ARI {
     /**
      * Gets us a ready to use object.
      *
-     * @return
+     * @return a Channels object.
      */
     public ActionChannels channels() {
         return (ActionChannels) setupAction(version.builder().actionChannels());
@@ -422,7 +423,7 @@ public class ARI {
     /**
      * Gets us a ready to use object.
      *
-     * @return
+     * @return a deviceSTates object.
      */
     public ActionDeviceStates deviceStates() {
         return (ActionDeviceStates) setupAction(version.builder().actionDeviceStates());
@@ -431,7 +432,7 @@ public class ARI {
     /**
      * Gets us a ready to use object.
      *
-     * @return
+     * @return an Endpoints object.
      */
     public ActionEndpoints endpoints() {
         return (ActionEndpoints) setupAction(version.builder().actionEndpoints());
@@ -440,7 +441,7 @@ public class ARI {
     /**
      * Gets us a ready to use object.
      *
-     * @return
+     * @return an Events object.
      */
     public ActionEvents events() {
         return (ActionEvents) setupAction(version.builder().actionEvents());
@@ -449,7 +450,7 @@ public class ARI {
     /**
      * Gets us a ready to use object.
      *
-     * @return
+     * @return a Playbacks object.
      */
     public ActionPlaybacks playbacks() {
         return (ActionPlaybacks) setupAction(version.builder().actionPlaybacks());
@@ -458,7 +459,7 @@ public class ARI {
     /**
      * Gets us a ready to use object.
      *
-     * @return
+     * @return a Recordings object.
      */
     public ActionRecordings recordings() {
         return (ActionRecordings) setupAction(version.builder().actionRecordings());
@@ -467,7 +468,7 @@ public class ARI {
     /**
      * Gets us a ready to use object.
      *
-     * @return
+     * @return a Sounds object.
      */
     public ActionSounds sounds() {
         return (ActionSounds) setupAction(version.builder().actionSounds());
@@ -480,8 +481,12 @@ public class ARI {
      * Most likely we should either implement an interface, or push the clients
      * to the default builder.
      * 
+     * See the getActionImpl() method here.
+     * 
+     * \TODO
+     * 
      * @param a
-     * @return
+     * @return  an Action object on which we'll set the default clients.
      * @throws IllegalArgumentException
      */
 
@@ -510,7 +515,10 @@ public class ARI {
         }
     }
 
-    
+    /**
+     * This interface is used to go from an interface to its concrete 
+     * implementation.
+     */
     public static interface ClassFactory {
         public Class getImplementationFor( Class interfaceClass );
     }
