@@ -12,7 +12,6 @@ import java.util.List;
 /**
  *
  *
- * $Id$
  * @author lenz
  */
 public class Apis extends JavaPkgInfo {

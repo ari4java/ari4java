@@ -115,5 +115,3 @@ public class JavaInterface {
     
 }
 
-// $Log$
-//

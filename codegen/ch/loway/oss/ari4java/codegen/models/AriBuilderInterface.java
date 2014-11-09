@@ -3,6 +3,7 @@ package ch.loway.oss.ari4java.codegen.models;
 
 import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,7 +21,11 @@ public class AriBuilderInterface {
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
-        JavaGen.importClasses(sb, "ch.loway.oss.ari4java.generated", Collections.EMPTY_LIST);
+        JavaGen.importClasses(sb, "ch.loway.oss.ari4java.generated", 
+                Arrays.asList( new String[] {
+                "ch.loway.oss.ari4java.ARI"
+                } )
+        );
 
 
         sb.append( "public interface AriBuilder {\n" );
@@ -32,6 +37,11 @@ public class AriBuilderInterface {
                     .append( " " ).append( lcFirst(iface) ).append("();\n");
         }
 
+        
+        sb.append( "\n\n"
+                + "\tpublic abstract ARI.ClassFactory getClassFactory();\n\n");
+        
+        
         sb.append( "\n}\n");
 
         return sb.toString();

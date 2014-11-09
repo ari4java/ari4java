@@ -44,12 +44,16 @@ public class JavaPkgInfo {
         return base + "." + className;
     }
 
+    public String getBaseApiPackage() {
+        return base + "." + apiVersion;
+    } 
+    
     public String getModelPackage() {
-        return base + "." + apiVersion + "." + "models";
+        return getBaseApiPackage() + "." + "models";
     }
 
     public String getActionsPackage() {
-        return base + "." + apiVersion + "." + "actions";
+        return getBaseApiPackage() + "." + "actions";
     }
 
     public String getInterfaceName() {        
@@ -87,6 +91,3 @@ public class JavaPkgInfo {
     }
 
 }
-
-// $Log$
-//

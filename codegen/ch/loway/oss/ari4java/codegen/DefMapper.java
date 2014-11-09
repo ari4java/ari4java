@@ -7,6 +7,7 @@ import ch.loway.oss.ari4java.codegen.genJava.JavaPkgInfo;
 import ch.loway.oss.ari4java.codegen.models.Action;
 import ch.loway.oss.ari4java.codegen.models.Apis;
 import ch.loway.oss.ari4java.codegen.models.AriBuilderInterface;
+import ch.loway.oss.ari4java.codegen.models.ClassTranslator;
 import ch.loway.oss.ari4java.codegen.models.Operation;
 import ch.loway.oss.ari4java.codegen.models.Model;
 import ch.loway.oss.ari4java.codegen.models.ModelField;
@@ -148,6 +149,7 @@ public class DefMapper {
         generateModels();
         generateApis();
         generateProperties( abi );
+        generateImplementationClasses( abi );
     }
 
     /**
@@ -233,12 +235,51 @@ public class DefMapper {
         }
 
         for ( String ver: mM.keySet() ) {
-            writeProperties(ver, mA.get(ver), mM.get(ver));
+            //writeProperties(ver, mA.get(ver), mM.get(ver));
             writeAriBuilder(ver, abi, mA.get(ver), mM.get(ver));
         }
 
     }
 
+    /**
+     * Generates the translators from the abstract class to the concrete one.
+     * 
+     * @param abi
+     * @throws IOException 
+     */
+    
+    public void generateImplementationClasses( AriBuilderInterface abi ) throws IOException {
+
+        Map<String,ClassTranslator> mTranslators = new HashMap<String,ClassTranslator>();
+        
+       for ( Apis api: myAPIs ) {
+            String ver = api.apiVersion;
+            ClassTranslator ct = getClassTranslator(mTranslators, ver);
+            ct.setClass( api.className, api.className + "_impl_" + ver );
+        }
+
+        for ( Model mod: mymodels ) {
+            String ver = mod.apiVersion;
+            ClassTranslator ct = getClassTranslator(mTranslators, ver);
+            ct.setClass( mod.className, mod.className + "_impl_" + ver );
+        }
+        
+        for ( ClassTranslator ct: mTranslators.values() ) {
+                saveToDisk(ct);
+        }
+    }
+    
+    
+    
+    private ClassTranslator getClassTranslator( Map<String,ClassTranslator> mTranslators, String apiVer ) {
+        if ( !mTranslators.containsKey( apiVer ) ) {
+            ClassTranslator ct = new ClassTranslator();
+            ct.apiVersion = apiVer;
+            mTranslators.put( apiVer, ct );
+        }
+        return mTranslators.get( apiVer);
+    }
+    
 
     /**
      *
@@ -392,6 +433,11 @@ public class DefMapper {
     public void saveToDisk( JavaInterface ji ) throws IOException {
         saveToDisk( "classes/", "ch.loway.oss.ari4java.generated", ji.className, ji.toString() );
     }
+
+    public void saveToDisk( ClassTranslator ct ) throws IOException {
+        saveToDisk( "classes/", ct.getBaseApiPackage(), ct.getImplName(), ct.toString() );
+    }
+
     
     public void clean(String apiVersion) throws IOException {
     	String base = "classes/ch/loway/oss/ari4java/generated";
@@ -466,36 +512,36 @@ public class DefMapper {
         }
     }
 
-    /**
-     * Writes implemenattion mappings.
-     *
-     *
-     * @param apiVersion
-     * @throws IOException
-     */
-
-    private void writeProperties( String apiVersion, Collection<Apis> apis, Collection<Model> models ) throws IOException {
-    	String base = myAbsoluteProjectFolder 
-                + "/classes"
-                + "/ch/loway/oss/ari4java/generated";
-        String fName = base + "/" + apiVersion + ".properties";
-        FileWriter outFile = new FileWriter(fName);
-        PrintWriter out = new PrintWriter(outFile);
-        out.println("# Implementation mapping for "+apiVersion);
-        for (Apis api : apis) {
-        	String prop = "ch.loway.oss.ari4java.generated."
-        		+ api.getInterfaceName() 
-        		+ " = " + api.getActionsPackage()+"."+api.getImplName();
-        	out.println(prop);
-        }
-        for (Model m : models) {
-        	String prop = "ch.loway.oss.ari4java.generated."
-            	+ m.getInterfaceName() 
-            	+ " = " + m.getModelPackage()+"."+m.getImplName();
-            	out.println(prop);
-        }
-        out.close();
-    }
+//    /**
+//     * Writes implemenattion mappings.
+//     *
+//     *
+//     * @param apiVersion
+//     * @throws IOException
+//     */
+//
+//    private void writeProperties( String apiVersion, Collection<Apis> apis, Collection<Model> models ) throws IOException {
+//    	String base = myAbsoluteProjectFolder 
+//                + "/classes"
+//                + "/ch/loway/oss/ari4java/generated";
+//        String fName = base + "/" + apiVersion + ".properties";
+//        FileWriter outFile = new FileWriter(fName);
+//        PrintWriter out = new PrintWriter(outFile);
+//        out.println("# Implementation mapping for "+apiVersion);
+//        for (Apis api : apis) {
+//        	String prop = "ch.loway.oss.ari4java.generated."
+//        		+ api.getInterfaceName() 
+//        		+ " = " + api.getActionsPackage()+"."+api.getImplName();
+//        	out.println(prop);
+//        }
+//        for (Model m : models) {
+//        	String prop = "ch.loway.oss.ari4java.generated."
+//            	+ m.getInterfaceName() 
+//            	+ " = " + m.getModelPackage()+"."+m.getImplName();
+//            	out.println(prop);
+//        }
+//        out.close();
+//    }
 
 
     private void writeAriBuilder( String apiVersion, AriBuilderInterface abi, Collection<Apis> apis, Collection<Model> models ) throws IOException {
@@ -508,7 +554,8 @@ public class DefMapper {
                 Arrays.asList( new String[] {
                     "ch.loway.oss.ari4java.generated." + apiVersion + ".models.*" ,
                     "ch.loway.oss.ari4java.generated." + apiVersion + ".actions.*",
-                    "ch.loway.oss.ari4java.generated.*"
+                    "ch.loway.oss.ari4java.generated.*",
+                    "ch.loway.oss.ari4java.ARI"
         }));
 
         sb.append("public class ").append( thisClass ).append( " implements AriBuilder {\n\n");
@@ -530,6 +577,11 @@ public class DefMapper {
             sb.append( AriBuilderInterface.getUnimplemented(ifc) );
         }
 
+        sb.append( "public ARI.ClassFactory getClassFactory() {\n"
+                 + " return new ClassTranslator_impl_" + apiVersion + "();\n"
+                 + "};\n\n"
+        );
+        
         sb.append( "};");
 
         saveToDisk( "classes/", "ch.loway.oss.ari4java.generated." + apiVersion, thisClass, sb.toString() );
@@ -545,11 +597,4 @@ public class DefMapper {
         myAbsoluteProjectFolder =baseProjectFolder;
     }
 
-
-
-
-
 }
-
-// $Log$
-//
