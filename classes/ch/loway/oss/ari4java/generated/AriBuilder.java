@@ -3,9 +3,10 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sun Nov 02 19:48:29 CET 2014
+//    Generated on: Sat Nov 08 18:09:34 CET 2014
 // ----------------------------------------------------
 
+import ch.loway.oss.ari4java.ARI;
 
 public interface AriBuilder {
     public abstract ActionApplications actionApplications();
@@ -73,6 +74,10 @@ public interface AriBuilder {
     public abstract TextMessageReceived textMessageReceived();
     public abstract TextMessageVariable textMessageVariable();
     public abstract Variable variable();
+
+
+	public abstract ARI.ClassFactory getClassFactory();
+
 
 }
 
