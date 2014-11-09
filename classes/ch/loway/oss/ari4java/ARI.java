@@ -46,13 +46,7 @@ public class ARI {
     private AriVersion version;
     private HttpClient httpClient;
     private WsClient wsClient;
-
     private ActionEvents liveActionEvent = null;
-
-    // Map of interfaces (key) and implementations (value) for actions
-    private Map<Class<?>, Class<?>> actionMap = new HashMap<Class<?>, Class<?>>();
-    // Map of interfaces (key) and implementations (value) for models
-    private Map<Class<?>, Class<?>> modelMap = new HashMap<Class<?>, Class<?>>();
 
     public void setHttpClient(HttpClient httpClient) {
         this.httpClient = httpClient;
@@ -67,40 +61,6 @@ public class ARI {
         this.version = version;
     }
     
-//    public void setVersion(AriVersion version) throws ARIException {
-//        String propFile = "ch/loway/oss/ari4java/generated/" + version.name().toLowerCase() + ".properties";
-//        Properties prop = new Properties();
-//        try {
-//            URL propUrl = ClassLoader.getSystemResource(propFile);
-//            if (propUrl == null) {
-//                throw new ARIException("Properties file " + propFile + " not found");
-//            }
-//            prop.load(propUrl.openStream());
-//            this.version = version;
-//            actionMap.clear();
-//            modelMap.clear();
-//            for (Object key : prop.keySet()) {
-//                if (key instanceof String && prop.get(key) instanceof String) {
-//                    try {
-//                        Class<?> apiClazz = ClassLoader.getSystemClassLoader().loadClass((String) key);
-//                        Class<?> implClazz = ClassLoader.getSystemClassLoader().loadClass((String) prop.get(key));
-//                        if (!apiClazz.isAssignableFrom(implClazz)) {
-//                            throw new ARIException(implClazz.getName() + " is not an implementation of " + apiClazz.getName());
-//                        }
-//                        if (BaseAriAction.class.isAssignableFrom(implClazz)) {
-//                            actionMap.put(apiClazz, implClazz);
-//                        } else {
-//                            modelMap.put(apiClazz, implClazz);
-//                        }
-//                    } catch (ClassNotFoundException e) {
-//                        throw new ARIException("Cannot find API class " + key + " or implementation " + prop.get(key));
-//                    }
-//                }
-//            }
-//        } catch (IOException e) {
-//            throw new ARIException("Cannot load properties file " + propFile);
-//        }
-//    }
 
     /**
      * Get the implementation for a given action interface
