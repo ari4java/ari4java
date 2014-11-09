@@ -89,15 +89,6 @@ public class ARITest {
         ActionAsterisk asterisk = ari.asterisk();
         assertTrue( "Correct type", asterisk instanceof ActionAsterisk_impl_ari_0_0_1 );    
     }
-    
-    @Test
-    public void testBuildAction() throws ARIException {
-        ARI ari = new ARI();
-        ari.setVersion(AriVersion.ARI_0_0_1);
         
-        ActionAsterisk asterisk = ari.asterisk();
-        assertTrue( "Correct type", asterisk instanceof ActionAsterisk_impl_ari_0_0_1 );    
-    }
-    
     
 }
