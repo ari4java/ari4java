@@ -90,5 +90,13 @@ public class ARITest {
         assertTrue( "Correct type", asterisk instanceof ActionAsterisk_impl_ari_0_0_1 );    
     }
         
+    @Test
+    public void testCreateUid() throws ARIException {
+        ARI ari = new ARI();
+        String v = ari.getUID();
+        System.out.println("UID: "+v);
+        assertTrue( "UID created", v.length() > 0);
+    }
+    
     
 }

@@ -42,6 +42,8 @@ import java.util.regex.Pattern;
  */
 public class ARI {
 
+    private final static String ALLOWED_IN_UID = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        
     private String appName = "";
     private AriVersion version;
     private HttpClient httpClient;
@@ -525,6 +527,29 @@ public class ARI {
         }
     }
 
+    /**
+     * Generates a pseudo-random ID like "a4j.ZH6IA.IXEX0.TUIE8".
+     * 
+     * @return the UID
+     */
+    public static String getUID() {
+        StringBuilder sb = new StringBuilder(20);
+
+        sb.append("a4j");
+
+        for (int n = 0; n < 15; n++) {
+            if ((n % 5) == 0) {
+                sb.append(".");
+            }
+            int pos = (int) (Math.random() * ALLOWED_IN_UID.length());
+            sb.append(ALLOWED_IN_UID.charAt(pos));
+        }
+        return sb.toString();
+
+    }
+    
+    
+    
     /**
      * This interface is used to go from an interface to its concrete 
      * implementation.
