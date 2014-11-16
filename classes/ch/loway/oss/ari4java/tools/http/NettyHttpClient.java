@@ -57,6 +57,9 @@ import ch.loway.oss.ari4java.tools.WsClient;
  */
 public class NettyHttpClient implements HttpClient, WsClient {
 
+    
+    public static final int MAX_HTTP_REQUEST_KB = 256;
+    
     /**
      * HttpClientHandler handles the asynchronous response from the remote
      * HTTP server
@@ -209,7 +212,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
                 pipeline.addLast("http-codec", new HttpClientCodec());
-                pipeline.addLast("aggregator", new HttpObjectAggregator(8192));
+                pipeline.addLast("aggregator", new HttpObjectAggregator( MAX_HTTP_REQUEST_KB *1024));
                 pipeline.addLast("http-handler", new HttpClientHandler());
             }
         });
