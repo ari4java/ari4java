@@ -191,6 +191,16 @@ public class ARI {
     }
 
     /**
+     * Sets the application name.
+     * 
+     * @param s 
+     */
+    
+    public void setAppName( String s ) {
+        this.appName = s;
+    }
+    
+    /**
      * Connect and detect the current ARI version.
      * If the ARI version is not supported,
      * will raise an excepttion as we have no bindings for it.
