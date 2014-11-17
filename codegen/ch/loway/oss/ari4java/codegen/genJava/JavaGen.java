@@ -59,6 +59,16 @@ public class JavaGen {
     	return "AriCallback<"+response.replaceAll("^void$",  "Void")+"> callback";
     }
 
+    public static void emptyLines( StringBuilder sb, int nLines ) {
+        for ( int i =0; i< nLines; i++ ) {
+            sb.append( "\n" );
+        }
+    }
+
+    public static void emptyLine( StringBuilder sb ) {
+        emptyLines(sb, 1);
+    }
+    
 
 }
 
