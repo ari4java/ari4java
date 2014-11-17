@@ -11,12 +11,11 @@ import ch.loway.oss.ari4java.generated.ActionEvents;
 import ch.loway.oss.ari4java.generated.ActionPlaybacks;
 import ch.loway.oss.ari4java.generated.ActionRecordings;
 import ch.loway.oss.ari4java.generated.ActionSounds;
+import ch.loway.oss.ari4java.generated.Application;
 import ch.loway.oss.ari4java.generated.Message;
 import ch.loway.oss.ari4java.tools.AriCallback;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.MessageQueue;
@@ -24,6 +23,7 @@ import ch.loway.oss.ari4java.tools.HttpClient;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.WsClient;
 import ch.loway.oss.ari4java.tools.http.NettyHttpClient;
+import ch.loway.oss.ari4java.tools.tags.EventSource;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -49,6 +49,7 @@ public class ARI {
     private HttpClient httpClient;
     private WsClient wsClient;
     private ActionEvents liveActionEvent = null;
+    private AriSubscriber subscriptions = new AriSubscriber();
 
     public void setHttpClient(HttpClient httpClient) {
         this.httpClient = httpClient;
@@ -200,6 +201,16 @@ public class ARI {
     
     public void setAppName( String s ) {
         this.appName = s;
+    }
+    
+    /**
+     * Return the current application name.
+     * 
+     * @return 
+     */
+    
+    public String getAppName() {
+        return this.appName;
     }
     
     /**
@@ -547,6 +558,40 @@ public class ARI {
         return sb.toString();
 
     }
+    
+    /**
+     * Subscribes to an event source.
+     * 
+     * @param m
+     * @return
+     * @throws RestException 
+     */
+    
+    public Application subscribe( EventSource m ) throws RestException {
+        return subscriptions.subscribe(this, m);
+    }
+    
+    /**
+     * Unsubscribes from an event source.
+     * @param m
+     * @throws RestException 
+     */
+    
+    public void unsubscribe( EventSource m ) throws RestException {
+        subscriptions.unsubscribe(this, m);
+        
+    }
+    
+    /**
+     * Unsubscribes from all known subscriptions.
+     * 
+     * @throws RestException 
+     */
+    
+    public void unsubscribeAll() throws RestException {
+        subscriptions.unsubscribeAll(this);
+    }
+    
     
     
     
