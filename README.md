@@ -43,14 +43,11 @@ Building
 
 The code here is partially hand-written and partially generated out of Swagger definitions.
 
-"classes/" contains Java code to be released (manually and automatically generated). All automatically
+* "classes/" contains Java code to be released (manually and automatically generated). All automatically
 generated classes are under "ch.loway.oss.ari4vaja.generated". They should not be hand-edited. 
-
-"tests/" contains test cases for "classes/"
-
-"codegen/" contains the Java code that creates auto-generated classes.
-
-"codegen-data/" contains Swagger models from different versions of the interface (copied from Asterisk).
+* "tests/" contains test cases for "classes/"
+* "codegen/" contains the Java code that creates auto-generated classes.
+* "codegen-data/" contains Swagger models from different versions of the interface (copied from Asterisk).
 
 Creating Java code out of Swagger definitions
 ---------------------------------------------
@@ -90,7 +87,7 @@ Status
 * 13.12.30 - Added AriBuilder interfaces
 * 13.12.29 - Imported the definitions for Asterisk 12.0.0 - ARI 1.0.0 - a bit of code changes in the code generator - Added the Gradle build script.
 * 13.11.26 - Netty.io based HTTP and WebSocket implementation, factory, sync and async methods
-* 13.10.21 - All objects are deserializable right out of JSON. Mesages can be deserialzed automatically.
+* 13.10.21 - All objects are deserializable right out of JSON. Mesages can be deserialized automatically.
 * 13.10.18 - Auto-generates all classes and compiles them.
 
 
