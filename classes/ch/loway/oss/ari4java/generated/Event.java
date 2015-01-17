@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Mon Nov 17 10:19:16 CET 2014
+//    Generated on: Sat Jan 17 10:23:16 CET 2015
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -60,9 +60,6 @@ public interface Event {
  *********************************************************/
  public void setApplication(String val );
 
- 
- 
- 
 
 }
 ;

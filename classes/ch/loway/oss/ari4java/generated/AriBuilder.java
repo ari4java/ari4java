@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Mon Nov 17 10:19:16 CET 2014
+//    Generated on: Sat Jan 17 10:23:16 CET 2015
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.ARI;
@@ -32,6 +32,7 @@ public interface AriBuilder {
     public abstract CallerID callerID();
     public abstract Channel channel();
     public abstract ChannelCallerId channelCallerId();
+    public abstract ChannelConnectedLine channelConnectedLine();
     public abstract ChannelCreated channelCreated();
     public abstract ChannelDestroyed channelDestroyed();
     public abstract ChannelDialplan channelDialplan();
