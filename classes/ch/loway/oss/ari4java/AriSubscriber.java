@@ -1,6 +1,5 @@
 package ch.loway.oss.ari4java;
 
-import ch.loway.oss.ari4java.codegen.models.Model;
 import ch.loway.oss.ari4java.generated.Application;
 import ch.loway.oss.ari4java.generated.Bridge;
 import ch.loway.oss.ari4java.generated.Channel;
