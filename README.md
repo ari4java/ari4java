@@ -33,7 +33,7 @@ If you use Gradle (or any tool using Maven dependencies) you can simply declare 
 
 
 	dependencies {
-	    compile 'ch.loway.oss.ari4java:ari4java:0.2.2'
+	    compile 'ch.loway.oss.ari4java:ari4java:0.2.3'
 	}
 
 This will download the package and all required dependencies.
@@ -76,11 +76,12 @@ The project requires:
 - jackson-core-2.2.2
 - jackson-databind-2.2.2
 - jackson-annotations-2.2.2
-- netty-all-4.0.11-Final
+- netty-all-4.0.25-Final
 
 Status
 ------
 
+* 15.01.17 - Added support for ARI 1.6.0 (bug #24) - release 0.2.3 - compiles with Netty 4.0.25
 * 14.11.01 - Added support for ARI 1.5 (bug #9)
 * 14.10.30 - Added ARI bindings for 1.5.0 as coming from the official Asterisk 13.0.0 release
 * 14.01.01 - Added a minimal application under tests/ class ch.loway.oss.ari4java.sandbox.sample to be used as a style laboratory. Look for UGLY tags. Rel 0.1.2.
