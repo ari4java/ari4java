@@ -20,6 +20,8 @@ across different versions.
 
 **Getting started?** start from the "Hello ARI World" tutorial at https://github.com/l3nz/ari4java/blob/master/docs/HELLOWORLD.md
 
+**Getting started?** please read our FAQs at https://github.com/l3nz/ari4java/blob/master/docs/FAQ.md
+
 Using the library
 =================
 
