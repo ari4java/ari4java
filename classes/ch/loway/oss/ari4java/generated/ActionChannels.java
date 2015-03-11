@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 17 10:23:16 CET 2015
+//    Generated on: Wed Mar 11 09:57:08 CET 2015
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -167,6 +167,16 @@ public void setChannelVar(String channelId, String variable, String value) throw
 
 
 
+// void continueInDialplan String String String int String AriCallback<Void> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_7_0
+ *********************************************************/
+public void continueInDialplan(String channelId, String context, String extension, int priority, String label, AriCallback<Void> callback);
+
+
+
 // void unhold String AriCallback<Void> callback
 /**********************************************************
  * 
@@ -262,6 +272,16 @@ public void stopSilence(String channelId) throws RestException;
 
 
 
+// void originate String String String long String String String String int Map<String,String> String String String AriCallback<Channel> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_7_0
+ *********************************************************/
+public void originate(String endpoint, String extension, String context, long priority, String label, String app, String appArgs, String callerId, int timeout, Map<String,String> variables, String channelId, String otherChannelId, String originator, AriCallback<Channel> callback);
+
+
+
 // Channel snoopChannelWithId String String String String String String
 /**********************************************************
  * Start snooping.
@@ -281,6 +301,17 @@ public Channel snoopChannelWithId(String channelId, String snoopId, String spy, 
  * @since ari_0_0_1
  *********************************************************/
 public void startSilence(String channelId) throws RestException;
+
+
+
+// Channel originate String String String long String String String String int Map<String,String> String String String
+/**********************************************************
+ * Create a new channel (originate).
+ * The new channel is created immediately and a snapshot of it returned. If a Stasis application is provided it will be automatically subscribed to the originated channel for further events and updates.
+ * 
+ * @since ari_1_7_0
+ *********************************************************/
+public Channel originate(String endpoint, String extension, String context, long priority, String label, String app, String appArgs, String callerId, int timeout, Map<String,String> variables, String channelId, String otherChannelId, String originator) throws RestException;
 
 
 
@@ -432,6 +463,16 @@ public void getChannelVar(String channelId, String variable, AriCallback<Variabl
 
 
 
+// void originateWithId String String String String long String String String String int Map<String,String> String String AriCallback<Channel> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_7_0
+ *********************************************************/
+public void originateWithId(String channelId, String endpoint, String extension, String context, long priority, String label, String app, String appArgs, String callerId, int timeout, Map<String,String> variables, String otherChannelId, String originator, AriCallback<Channel> callback);
+
+
+
 // void answer String
 /**********************************************************
  * Answer a channel.
@@ -516,6 +557,17 @@ public void record(String channelId, String name, String format, int maxDuration
 
 
 
+// Channel originateWithId String String String String long String String String String int Map<String,String> String String
+/**********************************************************
+ * Create a new channel (originate with id).
+ * The new channel is created immediately and a snapshot of it returned. If a Stasis application is provided it will be automatically subscribed to the originated channel for further events and updates.
+ * 
+ * @since ari_1_7_0
+ *********************************************************/
+public Channel originateWithId(String channelId, String endpoint, String extension, String context, long priority, String label, String app, String appArgs, String callerId, int timeout, Map<String,String> variables, String otherChannelId, String originator) throws RestException;
+
+
+
 // void play String String String int int AriCallback<Playback> callback
 /**********************************************************
  * 
@@ -554,6 +606,17 @@ public void mute(String channelId, String direction, AriCallback<Void> callback)
  * @since ari_0_0_1
  *********************************************************/
 public void answer(String channelId, AriCallback<Void> callback);
+
+
+
+// void continueInDialplan String String String int String
+/**********************************************************
+ * Exit application; continue execution in the dialplan.
+ * 
+ * 
+ * @since ari_1_7_0
+ *********************************************************/
+public void continueInDialplan(String channelId, String context, String extension, int priority, String label) throws RestException;
 
 
 

@@ -6,6 +6,7 @@ import ch.loway.oss.ari4java.generated.ari_0_0_1.AriBuilder_impl_ari_0_0_1;
 import ch.loway.oss.ari4java.generated.ari_1_0_0.AriBuilder_impl_ari_1_0_0;
 import ch.loway.oss.ari4java.generated.ari_1_5_0.AriBuilder_impl_ari_1_5_0;
 import ch.loway.oss.ari4java.generated.ari_1_6_0.AriBuilder_impl_ari_1_6_0;
+import ch.loway.oss.ari4java.generated.ari_1_7_0.AriBuilder_impl_ari_1_7_0;
 import ch.loway.oss.ari4java.tools.ARIException;
 
 /**
@@ -20,6 +21,7 @@ public enum AriVersion {
     ARI_1_0_0 ( "1.0.0", new AriBuilder_impl_ari_1_0_0() ),   /** Asterisk 12 */
     ARI_1_5_0 ( "1.5.0", new AriBuilder_impl_ari_1_5_0() ),   /** Asterisk 13.0.0 */
     ARI_1_6_0 ( "1.6.0", new AriBuilder_impl_ari_1_6_0() ),   /** Asterisk 13.1.0 */
+    ARI_1_7_0 ( "1.7.0", new AriBuilder_impl_ari_1_7_0() ),   /** Asterisk 13.2.0 */
     IM_FEELING_LUCKY ( "", null );
 
     final AriBuilder builder;

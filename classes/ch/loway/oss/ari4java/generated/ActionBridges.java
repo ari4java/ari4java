@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 17 10:23:16 CET 2015
+//    Generated on: Wed Mar 11 09:57:08 CET 2015
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -29,6 +29,16 @@ public interface ActionBridges {
  * @since ari_1_5_0
  *********************************************************/
 public void create(String type, String bridgeId, String name, AriCallback<Bridge> callback);
+
+
+
+// void createWithId String String String AriCallback<Bridge> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_7_0
+ *********************************************************/
+public void createWithId(String type, String bridgeId, String name, AriCallback<Bridge> callback);
 
 
 
@@ -71,6 +81,17 @@ public void playWithId(String bridgeId, String playbackId, String media, String 
  * @since ari_0_0_1
  *********************************************************/
 public Bridge get(String bridgeId) throws RestException;
+
+
+
+// Bridge createWithId String String String
+/**********************************************************
+ * Create a new bridge or updates an existing one.
+ * This bridge persists until it has been shut down, or Asterisk has been shut down.
+ * 
+ * @since ari_1_7_0
+ *********************************************************/
+public Bridge createWithId(String type, String bridgeId, String name) throws RestException;
 
 
 

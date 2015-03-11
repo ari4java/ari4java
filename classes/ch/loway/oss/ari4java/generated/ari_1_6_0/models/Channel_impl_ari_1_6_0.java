@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_6_0.models;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 17 10:23:16 CET 2015
+//    Generated on: Wed Mar 11 09:57:09 CET 2015
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -111,6 +111,23 @@ This is the same as the Uniqueid field in AMI.  */
    state = val;
  }
 
-/** No missing signatures from interface */
+/**********************************************************
+ * The default spoken language
+ * 
+ * @since ari_1_7_0
+ *********************************************************/
+ public String getLanguage(){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * The default spoken language
+ * 
+ * @since ari_1_7_0
+ *********************************************************/
+ public void setLanguage(String val ){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
 }
 

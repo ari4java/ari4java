@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 17 10:23:16 CET 2015
+//    Generated on: Wed Mar 11 09:57:08 CET 2015
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -21,6 +21,16 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 
 public interface Channel extends EventSource  {
+
+// String getLanguage
+/**********************************************************
+ * The default spoken language
+ * 
+ * @since ari_1_7_0
+ *********************************************************/
+ public String getLanguage();
+
+
 
 // void setState String
 /**********************************************************
@@ -123,6 +133,16 @@ public interface Channel extends EventSource  {
  * @since ari_0_0_1
  *********************************************************/
  public String getState();
+
+
+
+// void setLanguage String
+/**********************************************************
+ * The default spoken language
+ * 
+ * @since ari_1_7_0
+ *********************************************************/
+ public void setLanguage(String val );
 
 
 

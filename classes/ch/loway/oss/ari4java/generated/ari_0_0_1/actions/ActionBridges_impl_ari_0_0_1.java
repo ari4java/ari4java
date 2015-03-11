@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_0_0_1.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 17 10:23:16 CET 2015
+//    Generated on: Wed Mar 11 09:57:09 CET 2015
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -313,9 +313,28 @@ public void create(String type, String bridgeId, String name, AriCallback<Bridge
 /**********************************************************
  * 
  * 
+ * @since ari_1_7_0
+ *********************************************************/
+public void createWithId(String type, String bridgeId, String name, AriCallback<Bridge> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * 
+ * 
  * @since ari_1_5_0
  *********************************************************/
 public void playWithId(String bridgeId, String playbackId, String media, String lang, int offsetms, int skipms, AriCallback<Playback> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Create a new bridge or updates an existing one.
+ * This bridge persists until it has been shut down, or Asterisk has been shut down.
+ * 
+ * @since ari_1_7_0
+ *********************************************************/
+public Bridge createWithId(String type, String bridgeId, String name) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
