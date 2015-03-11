@@ -33,6 +33,7 @@ public class run {
         loadAsteriskDefs( dm, "ari_1_0_0" );
         loadAsteriskDefs( dm, "ari_1_5_0" );
         loadAsteriskDefs( dm, "ari_1_6_0" );
+        loadAsteriskDefs( dm, "ari_1_7_0" );
         
         
         dm.generateAllClasses();
