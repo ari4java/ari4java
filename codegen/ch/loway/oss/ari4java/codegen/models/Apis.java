@@ -33,6 +33,8 @@ public class Apis extends JavaPkgInfo {
             "ch.loway.oss.ari4java.tools.BaseAriAction",
             "ch.loway.oss.ari4java.tools.RestException",
             "ch.loway.oss.ari4java.tools.AriCallback",
+            "ch.loway.oss.ari4java.tools.HttpParam",
+            "ch.loway.oss.ari4java.tools.HttpResponse",
             "com.fasterxml.jackson.core.type.TypeReference",
             getModelPackage() + ".*"
         } ));

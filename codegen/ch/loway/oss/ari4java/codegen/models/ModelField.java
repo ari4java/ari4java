@@ -79,6 +79,7 @@ public class ModelField implements Comparable<ModelField> {
         return sb.toString();
     }
 
+    @Override
     public int compareTo(ModelField o) {
         ModelField mf2 = o;
         return field.compareTo( mf2.field );

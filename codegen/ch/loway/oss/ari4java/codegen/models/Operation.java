@@ -63,16 +63,16 @@ public class Operation {
         sb.append( "method = \"").append( method ).append( "\";\n");
         for ( Param p: parms ) {
             if ( p.type == ParamType.QUERY ) {
-                sb.append( "lParamQuery.add( BaseAriAction.HttpParam.build( \"").append( p.name)
+                sb.append( "lParamQuery.add( HttpParam.build( \"").append( p.name)
                         .append( "\", ").append( p.name ).append( ") );\n");
             } else
             if ( p.type == ParamType.FORM ) {
-                sb.append( "lParamForm.add( BaseAriAction.HttpParam.build( \"").append( p.name)
+                sb.append( "lParamForm.add( HttpParam.build( \"").append( p.name)
                         .append( "\", ").append( p.name ).append( ") );\n");
             };
         }
         for ( ErrorResp er: errorCodes ) {
-            sb.append( "lE.add( BaseAriAction.HttpResponse.build( ").append( er.code)
+            sb.append( "lE.add( HttpResponse.build( ").append( er.code)
                     .append( ", \"").append( er.reason ).append( "\") );\n");
         }
         if (wsUpgrade) {
