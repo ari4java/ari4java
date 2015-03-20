@@ -35,7 +35,7 @@ If you use Gradle (or any tool using Maven dependencies) you can simply declare 
 
 
 	dependencies {
-	    compile 'ch.loway.oss.ari4java:ari4java:0.3.0'
+	    compile 'ch.loway.oss.ari4java:ari4java:0.3.1'
 	}
 
 This will download the package and all required dependencies.
@@ -83,6 +83,7 @@ The project requires:
 Status
 ------
 
+* 15.03.20 - Disconnected ARI WS now throws an exception - se bug #28 - release 0.3.1
 * 15.03.11 - Added support for ARI 1.7.0 (bug #28) - release 0.3.0
 * 15.01.17 - Added support for ARI 1.6.0 (bug #24) - release 0.2.3 - compiles with Netty 4.0.25
 * 14.11.01 - Added support for ARI 1.5 (bug #9)
