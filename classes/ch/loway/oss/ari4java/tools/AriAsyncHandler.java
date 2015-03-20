@@ -49,7 +49,7 @@ public class AriAsyncHandler<T> implements HttpResponseHandler {
 
     @Override
     public void onDisconnect() {
-        //this.callback.onFailure(new RestException("Asterisk WS is disconnected. Please retry."));
+        this.callback.onFailure(new RestException("Asterisk WS is disconnected. Please retry."));
     }
 
     @Override
