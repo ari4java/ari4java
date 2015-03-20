@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_0_0_1.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Mar 11 09:57:09 CET 2015
+//    Generated on: Fri Mar 20 17:43:44 CET 2015
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
+import ch.loway.oss.ari4java.tools.HttpParam;
+import ch.loway.oss.ari4java.tools.HttpResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.models.*;
 
@@ -33,8 +35,8 @@ private void buildList(String lang, String format) {
 reset();
 url = "/sounds";
 method = "GET";
-lParamQuery.add( BaseAriAction.HttpParam.build( "lang", lang) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "format", format) );
+lParamQuery.add( HttpParam.build( "lang", lang) );
+lParamQuery.add( HttpParam.build( "format", format) );
 }
 
 @Override

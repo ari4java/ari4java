@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_0_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Mar 11 09:57:09 CET 2015
+//    Generated on: Fri Mar 20 17:43:44 CET 2015
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
+import ch.loway.oss.ari4java.tools.HttpParam;
+import ch.loway.oss.ari4java.tools.HttpResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_1_0_0.models.*;
 
@@ -59,8 +61,8 @@ private void buildCreate(String type, String name) {
 reset();
 url = "/bridges";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "type", type) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "name", name) );
+lParamQuery.add( HttpParam.build( "type", type) );
+lParamQuery.add( HttpParam.build( "name", name) );
 }
 
 @Override
@@ -85,7 +87,7 @@ private void buildGet(String bridgeId) {
 reset();
 url = "/bridges/" + bridgeId + "";
 method = "GET";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Bridge not found") );
+lE.add( HttpResponse.build( 404, "Bridge not found") );
 }
 
 @Override
@@ -111,7 +113,7 @@ private void buildDestroy(String bridgeId) {
 reset();
 url = "/bridges/" + bridgeId + "";
 method = "DELETE";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Bridge not found") );
+lE.add( HttpResponse.build( 404, "Bridge not found") );
 }
 
 @Override
@@ -135,12 +137,12 @@ private void buildAddChannel(String bridgeId, String channel, String role) {
 reset();
 url = "/bridges/" + bridgeId + "/addChannel";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "channel", channel) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "role", role) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Bridge not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Bridge not in Stasis application; Channel currently recording") );
-lE.add( BaseAriAction.HttpResponse.build( 422, "Channel not in Stasis application") );
+lParamQuery.add( HttpParam.build( "channel", channel) );
+lParamQuery.add( HttpParam.build( "role", role) );
+lE.add( HttpResponse.build( 400, "Channel not found") );
+lE.add( HttpResponse.build( 404, "Bridge not found") );
+lE.add( HttpResponse.build( 409, "Bridge not in Stasis application; Channel currently recording") );
+lE.add( HttpResponse.build( 422, "Channel not in Stasis application") );
 }
 
 @Override
@@ -164,9 +166,9 @@ private void buildStartMoh(String bridgeId, String mohClass) {
 reset();
 url = "/bridges/" + bridgeId + "/moh";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "mohClass", mohClass) );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Bridge not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Bridge not in Stasis application") );
+lParamQuery.add( HttpParam.build( "mohClass", mohClass) );
+lE.add( HttpResponse.build( 404, "Bridge not found") );
+lE.add( HttpResponse.build( 409, "Bridge not in Stasis application") );
 }
 
 @Override
@@ -191,8 +193,8 @@ private void buildStopMoh(String bridgeId) {
 reset();
 url = "/bridges/" + bridgeId + "/moh";
 method = "DELETE";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Bridge not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Bridge not in Stasis application") );
+lE.add( HttpResponse.build( 404, "Bridge not found") );
+lE.add( HttpResponse.build( 409, "Bridge not in Stasis application") );
 }
 
 @Override
@@ -217,12 +219,12 @@ private void buildPlay(String bridgeId, String media, String lang, int offsetms,
 reset();
 url = "/bridges/" + bridgeId + "/play";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "media", media) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "lang", lang) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "offsetms", offsetms) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "skipms", skipms) );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Bridge not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Bridge not in a Stasis application") );
+lParamQuery.add( HttpParam.build( "media", media) );
+lParamQuery.add( HttpParam.build( "lang", lang) );
+lParamQuery.add( HttpParam.build( "offsetms", offsetms) );
+lParamQuery.add( HttpParam.build( "skipms", skipms) );
+lE.add( HttpResponse.build( 404, "Bridge not found") );
+lE.add( HttpResponse.build( 409, "Bridge not in a Stasis application") );
 }
 
 @Override
@@ -248,17 +250,17 @@ private void buildRecord(String bridgeId, String name, String format, int maxDur
 reset();
 url = "/bridges/" + bridgeId + "/record";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "name", name) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "format", format) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "maxDurationSeconds", maxDurationSeconds) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "maxSilenceSeconds", maxSilenceSeconds) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "ifExists", ifExists) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "beep", beep) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "terminateOn", terminateOn) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Invalid parameters") );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Bridge not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Bridge is not in a Stasis application; A recording with the same name already exists on the system and can not be overwritten because it is in progress or ifExists=fail") );
-lE.add( BaseAriAction.HttpResponse.build( 422, "The format specified is unknown on this system") );
+lParamQuery.add( HttpParam.build( "name", name) );
+lParamQuery.add( HttpParam.build( "format", format) );
+lParamQuery.add( HttpParam.build( "maxDurationSeconds", maxDurationSeconds) );
+lParamQuery.add( HttpParam.build( "maxSilenceSeconds", maxSilenceSeconds) );
+lParamQuery.add( HttpParam.build( "ifExists", ifExists) );
+lParamQuery.add( HttpParam.build( "beep", beep) );
+lParamQuery.add( HttpParam.build( "terminateOn", terminateOn) );
+lE.add( HttpResponse.build( 400, "Invalid parameters") );
+lE.add( HttpResponse.build( 404, "Bridge not found") );
+lE.add( HttpResponse.build( 409, "Bridge is not in a Stasis application; A recording with the same name already exists on the system and can not be overwritten because it is in progress or ifExists=fail") );
+lE.add( HttpResponse.build( 422, "The format specified is unknown on this system") );
 }
 
 @Override
@@ -283,11 +285,11 @@ private void buildRemoveChannel(String bridgeId, String channel) {
 reset();
 url = "/bridges/" + bridgeId + "/removeChannel";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "channel", channel) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Bridge not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Bridge not in Stasis application") );
-lE.add( BaseAriAction.HttpResponse.build( 422, "Channel not in this bridge") );
+lParamQuery.add( HttpParam.build( "channel", channel) );
+lE.add( HttpResponse.build( 400, "Channel not found") );
+lE.add( HttpResponse.build( 404, "Bridge not found") );
+lE.add( HttpResponse.build( 409, "Bridge not in Stasis application") );
+lE.add( HttpResponse.build( 422, "Channel not in this bridge") );
 }
 
 @Override

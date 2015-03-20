@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_0_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Mar 11 09:57:09 CET 2015
+//    Generated on: Fri Mar 20 17:43:44 CET 2015
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
+import ch.loway.oss.ari4java.tools.HttpParam;
+import ch.loway.oss.ari4java.tools.HttpResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_1_0_0.models.*;
 
@@ -33,7 +35,7 @@ private void buildGetLive(String recordingName) {
 reset();
 url = "/recordings/live/" + recordingName + "";
 method = "GET";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
+lE.add( HttpResponse.build( 404, "Recording not found") );
 }
 
 @Override
@@ -58,7 +60,7 @@ private void buildCancel(String recordingName) {
 reset();
 url = "/recordings/live/" + recordingName + "";
 method = "DELETE";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
+lE.add( HttpResponse.build( 404, "Recording not found") );
 }
 
 @Override
@@ -83,8 +85,8 @@ private void buildMute(String recordingName) {
 reset();
 url = "/recordings/live/" + recordingName + "/mute";
 method = "POST";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Recording not in session") );
+lE.add( HttpResponse.build( 404, "Recording not found") );
+lE.add( HttpResponse.build( 409, "Recording not in session") );
 }
 
 @Override
@@ -108,8 +110,8 @@ private void buildUnmute(String recordingName) {
 reset();
 url = "/recordings/live/" + recordingName + "/mute";
 method = "DELETE";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Recording not in session") );
+lE.add( HttpResponse.build( 404, "Recording not found") );
+lE.add( HttpResponse.build( 409, "Recording not in session") );
 }
 
 @Override
@@ -134,8 +136,8 @@ private void buildPause(String recordingName) {
 reset();
 url = "/recordings/live/" + recordingName + "/pause";
 method = "POST";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Recording not in session") );
+lE.add( HttpResponse.build( 404, "Recording not found") );
+lE.add( HttpResponse.build( 409, "Recording not in session") );
 }
 
 @Override
@@ -159,8 +161,8 @@ private void buildUnpause(String recordingName) {
 reset();
 url = "/recordings/live/" + recordingName + "/pause";
 method = "DELETE";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Recording not in session") );
+lE.add( HttpResponse.build( 404, "Recording not found") );
+lE.add( HttpResponse.build( 409, "Recording not in session") );
 }
 
 @Override
@@ -184,7 +186,7 @@ private void buildStop(String recordingName) {
 reset();
 url = "/recordings/live/" + recordingName + "/stop";
 method = "POST";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
+lE.add( HttpResponse.build( 404, "Recording not found") );
 }
 
 @Override
@@ -233,7 +235,7 @@ private void buildGetStored(String recordingName) {
 reset();
 url = "/recordings/stored/" + recordingName + "";
 method = "GET";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
+lE.add( HttpResponse.build( 404, "Recording not found") );
 }
 
 @Override
@@ -258,7 +260,7 @@ private void buildDeleteStored(String recordingName) {
 reset();
 url = "/recordings/stored/" + recordingName + "";
 method = "DELETE";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Recording not found") );
+lE.add( HttpResponse.build( 404, "Recording not found") );
 }
 
 @Override

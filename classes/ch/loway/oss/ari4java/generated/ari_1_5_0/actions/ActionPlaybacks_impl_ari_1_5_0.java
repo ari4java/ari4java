@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_5_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Mar 11 09:57:09 CET 2015
+//    Generated on: Fri Mar 20 17:43:44 CET 2015
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
+import ch.loway.oss.ari4java.tools.HttpParam;
+import ch.loway.oss.ari4java.tools.HttpResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_1_5_0.models.*;
 
@@ -33,7 +35,7 @@ private void buildGet(String playbackId) {
 reset();
 url = "/playbacks/" + playbackId + "";
 method = "GET";
-lE.add( BaseAriAction.HttpResponse.build( 404, "The playback cannot be found") );
+lE.add( HttpResponse.build( 404, "The playback cannot be found") );
 }
 
 @Override
@@ -58,7 +60,7 @@ private void buildStop(String playbackId) {
 reset();
 url = "/playbacks/" + playbackId + "";
 method = "DELETE";
-lE.add( BaseAriAction.HttpResponse.build( 404, "The playback cannot be found") );
+lE.add( HttpResponse.build( 404, "The playback cannot be found") );
 }
 
 @Override
@@ -82,10 +84,10 @@ private void buildControl(String playbackId, String operation) {
 reset();
 url = "/playbacks/" + playbackId + "/control";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "operation", operation) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "The provided operation parameter was invalid") );
-lE.add( BaseAriAction.HttpResponse.build( 404, "The playback cannot be found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "The operation cannot be performed in the playback's current state") );
+lParamQuery.add( HttpParam.build( "operation", operation) );
+lE.add( HttpResponse.build( 400, "The provided operation parameter was invalid") );
+lE.add( HttpResponse.build( 404, "The playback cannot be found") );
+lE.add( HttpResponse.build( 409, "The operation cannot be performed in the playback's current state") );
 }
 
 @Override

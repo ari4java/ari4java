@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_6_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Mar 11 09:57:09 CET 2015
+//    Generated on: Fri Mar 20 17:43:44 CET 2015
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
+import ch.loway.oss.ari4java.tools.HttpParam;
+import ch.loway.oss.ari4java.tools.HttpResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_1_6_0.models.*;
 
@@ -58,7 +60,7 @@ private void buildGet(String applicationName) {
 reset();
 url = "/applications/" + applicationName + "";
 method = "GET";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Application does not exist.") );
+lE.add( HttpResponse.build( 404, "Application does not exist.") );
 }
 
 @Override
@@ -84,10 +86,10 @@ private void buildSubscribe(String applicationName, String eventSource) {
 reset();
 url = "/applications/" + applicationName + "/subscription";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "eventSource", eventSource) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Missing parameter.") );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Application does not exist.") );
-lE.add( BaseAriAction.HttpResponse.build( 422, "Event source does not exist.") );
+lParamQuery.add( HttpParam.build( "eventSource", eventSource) );
+lE.add( HttpResponse.build( 400, "Missing parameter.") );
+lE.add( HttpResponse.build( 404, "Application does not exist.") );
+lE.add( HttpResponse.build( 422, "Event source does not exist.") );
 }
 
 @Override
@@ -113,11 +115,11 @@ private void buildUnsubscribe(String applicationName, String eventSource) {
 reset();
 url = "/applications/" + applicationName + "/subscription";
 method = "DELETE";
-lParamQuery.add( BaseAriAction.HttpParam.build( "eventSource", eventSource) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Missing parameter; event source scheme not recognized.") );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Application does not exist.") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Application not subscribed to event source.") );
-lE.add( BaseAriAction.HttpResponse.build( 422, "Event source does not exist.") );
+lParamQuery.add( HttpParam.build( "eventSource", eventSource) );
+lE.add( HttpResponse.build( 400, "Missing parameter; event source scheme not recognized.") );
+lE.add( HttpResponse.build( 404, "Application does not exist.") );
+lE.add( HttpResponse.build( 409, "Application not subscribed to event source.") );
+lE.add( HttpResponse.build( 422, "Event source does not exist.") );
 }
 
 @Override

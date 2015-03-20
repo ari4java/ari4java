@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_0_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Mar 11 09:57:09 CET 2015
+//    Generated on: Fri Mar 20 17:43:44 CET 2015
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
+import ch.loway.oss.ari4java.tools.HttpParam;
+import ch.loway.oss.ari4java.tools.HttpResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_1_0_0.models.*;
 
@@ -82,9 +84,9 @@ private void buildUpdate(String deviceName, String deviceState) {
 reset();
 url = "/deviceStates/" + deviceName + "";
 method = "PUT";
-lParamQuery.add( BaseAriAction.HttpParam.build( "deviceState", deviceState) );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Device name is missing") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Uncontrolled device specified") );
+lParamQuery.add( HttpParam.build( "deviceState", deviceState) );
+lE.add( HttpResponse.build( 404, "Device name is missing") );
+lE.add( HttpResponse.build( 409, "Uncontrolled device specified") );
 }
 
 @Override
@@ -108,8 +110,8 @@ private void buildDelete(String deviceName) {
 reset();
 url = "/deviceStates/" + deviceName + "";
 method = "DELETE";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Device name is missing") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Uncontrolled device specified") );
+lE.add( HttpResponse.build( 404, "Device name is missing") );
+lE.add( HttpResponse.build( 409, "Uncontrolled device specified") );
 }
 
 @Override

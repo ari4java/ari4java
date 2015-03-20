@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_6_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Mar 11 09:57:09 CET 2015
+//    Generated on: Fri Mar 20 17:43:44 CET 2015
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
+import ch.loway.oss.ari4java.tools.HttpParam;
+import ch.loway.oss.ari4java.tools.HttpResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_1_6_0.models.*;
 
@@ -33,7 +35,7 @@ private void buildGetInfo(String only) {
 reset();
 url = "/asterisk/info";
 method = "GET";
-lParamQuery.add( BaseAriAction.HttpParam.build( "only", only) );
+lParamQuery.add( HttpParam.build( "only", only) );
 }
 
 @Override
@@ -58,8 +60,8 @@ private void buildGetGlobalVar(String variable) {
 reset();
 url = "/asterisk/variable";
 method = "GET";
-lParamQuery.add( BaseAriAction.HttpParam.build( "variable", variable) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Missing variable parameter.") );
+lParamQuery.add( HttpParam.build( "variable", variable) );
+lE.add( HttpResponse.build( 400, "Missing variable parameter.") );
 }
 
 @Override
@@ -84,9 +86,9 @@ private void buildSetGlobalVar(String variable, String value) {
 reset();
 url = "/asterisk/variable";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "variable", variable) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "value", value) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Missing variable parameter.") );
+lParamQuery.add( HttpParam.build( "variable", variable) );
+lParamQuery.add( HttpParam.build( "value", value) );
+lE.add( HttpResponse.build( 400, "Missing variable parameter.") );
 }
 
 @Override

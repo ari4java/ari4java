@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_7_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Mar 11 09:57:09 CET 2015
+//    Generated on: Fri Mar 20 17:43:44 CET 2015
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
+import ch.loway.oss.ari4java.tools.HttpParam;
+import ch.loway.oss.ari4java.tools.HttpResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_1_7_0.models.*;
 
@@ -59,19 +61,19 @@ private void buildOriginate(String endpoint, String extension, String context, l
 reset();
 url = "/channels";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "endpoint", endpoint) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "extension", extension) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "context", context) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "priority", priority) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "label", label) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "app", app) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "appArgs", appArgs) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "callerId", callerId) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "timeout", timeout) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "channelId", channelId) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "otherChannelId", otherChannelId) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "originator", originator) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Invalid parameters for originating a channel.") );
+lParamQuery.add( HttpParam.build( "endpoint", endpoint) );
+lParamQuery.add( HttpParam.build( "extension", extension) );
+lParamQuery.add( HttpParam.build( "context", context) );
+lParamQuery.add( HttpParam.build( "priority", priority) );
+lParamQuery.add( HttpParam.build( "label", label) );
+lParamQuery.add( HttpParam.build( "app", app) );
+lParamQuery.add( HttpParam.build( "appArgs", appArgs) );
+lParamQuery.add( HttpParam.build( "callerId", callerId) );
+lParamQuery.add( HttpParam.build( "timeout", timeout) );
+lParamQuery.add( HttpParam.build( "channelId", channelId) );
+lParamQuery.add( HttpParam.build( "otherChannelId", otherChannelId) );
+lParamQuery.add( HttpParam.build( "originator", originator) );
+lE.add( HttpResponse.build( 400, "Invalid parameters for originating a channel.") );
 }
 
 @Override
@@ -96,7 +98,7 @@ private void buildGet(String channelId) {
 reset();
 url = "/channels/" + channelId + "";
 method = "GET";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 404, "Channel not found") );
 }
 
 @Override
@@ -122,18 +124,18 @@ private void buildOriginateWithId(String channelId, String endpoint, String exte
 reset();
 url = "/channels/" + channelId + "";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "endpoint", endpoint) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "extension", extension) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "context", context) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "priority", priority) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "label", label) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "app", app) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "appArgs", appArgs) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "callerId", callerId) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "timeout", timeout) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "otherChannelId", otherChannelId) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "originator", originator) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Invalid parameters for originating a channel.") );
+lParamQuery.add( HttpParam.build( "endpoint", endpoint) );
+lParamQuery.add( HttpParam.build( "extension", extension) );
+lParamQuery.add( HttpParam.build( "context", context) );
+lParamQuery.add( HttpParam.build( "priority", priority) );
+lParamQuery.add( HttpParam.build( "label", label) );
+lParamQuery.add( HttpParam.build( "app", app) );
+lParamQuery.add( HttpParam.build( "appArgs", appArgs) );
+lParamQuery.add( HttpParam.build( "callerId", callerId) );
+lParamQuery.add( HttpParam.build( "timeout", timeout) );
+lParamQuery.add( HttpParam.build( "otherChannelId", otherChannelId) );
+lParamQuery.add( HttpParam.build( "originator", originator) );
+lE.add( HttpResponse.build( 400, "Invalid parameters for originating a channel.") );
 }
 
 @Override
@@ -158,9 +160,9 @@ private void buildHangup(String channelId, String reason) {
 reset();
 url = "/channels/" + channelId + "";
 method = "DELETE";
-lParamQuery.add( BaseAriAction.HttpParam.build( "reason", reason) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Invalid reason for hangup provided") );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
+lParamQuery.add( HttpParam.build( "reason", reason) );
+lE.add( HttpResponse.build( 400, "Invalid reason for hangup provided") );
+lE.add( HttpResponse.build( 404, "Channel not found") );
 }
 
 @Override
@@ -184,8 +186,8 @@ private void buildAnswer(String channelId) {
 reset();
 url = "/channels/" + channelId + "/answer";
 method = "POST";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
@@ -209,12 +211,12 @@ private void buildContinueInDialplan(String channelId, String context, String ex
 reset();
 url = "/channels/" + channelId + "/continue";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "context", context) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "extension", extension) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "priority", priority) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "label", label) );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lParamQuery.add( HttpParam.build( "context", context) );
+lParamQuery.add( HttpParam.build( "extension", extension) );
+lParamQuery.add( HttpParam.build( "priority", priority) );
+lParamQuery.add( HttpParam.build( "label", label) );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
@@ -238,14 +240,14 @@ private void buildSendDTMF(String channelId, String dtmf, int before, int betwee
 reset();
 url = "/channels/" + channelId + "/dtmf";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "dtmf", dtmf) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "before", before) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "between", between) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "duration", duration) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "after", after) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "DTMF is required") );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lParamQuery.add( HttpParam.build( "dtmf", dtmf) );
+lParamQuery.add( HttpParam.build( "before", before) );
+lParamQuery.add( HttpParam.build( "between", between) );
+lParamQuery.add( HttpParam.build( "duration", duration) );
+lParamQuery.add( HttpParam.build( "after", after) );
+lE.add( HttpResponse.build( 400, "DTMF is required") );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
@@ -269,8 +271,8 @@ private void buildHold(String channelId) {
 reset();
 url = "/channels/" + channelId + "/hold";
 method = "POST";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
@@ -294,8 +296,8 @@ private void buildUnhold(String channelId) {
 reset();
 url = "/channels/" + channelId + "/hold";
 method = "DELETE";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
@@ -320,9 +322,9 @@ private void buildStartMoh(String channelId, String mohClass) {
 reset();
 url = "/channels/" + channelId + "/moh";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "mohClass", mohClass) );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lParamQuery.add( HttpParam.build( "mohClass", mohClass) );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
@@ -346,8 +348,8 @@ private void buildStopMoh(String channelId) {
 reset();
 url = "/channels/" + channelId + "/moh";
 method = "DELETE";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
@@ -371,9 +373,9 @@ private void buildMute(String channelId, String direction) {
 reset();
 url = "/channels/" + channelId + "/mute";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "direction", direction) );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lParamQuery.add( HttpParam.build( "direction", direction) );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
@@ -397,9 +399,9 @@ private void buildUnmute(String channelId, String direction) {
 reset();
 url = "/channels/" + channelId + "/mute";
 method = "DELETE";
-lParamQuery.add( BaseAriAction.HttpParam.build( "direction", direction) );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lParamQuery.add( HttpParam.build( "direction", direction) );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
@@ -424,13 +426,13 @@ private void buildPlay(String channelId, String media, String lang, int offsetms
 reset();
 url = "/channels/" + channelId + "/play";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "media", media) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "lang", lang) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "offsetms", offsetms) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "skipms", skipms) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "playbackId", playbackId) );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lParamQuery.add( HttpParam.build( "media", media) );
+lParamQuery.add( HttpParam.build( "lang", lang) );
+lParamQuery.add( HttpParam.build( "offsetms", offsetms) );
+lParamQuery.add( HttpParam.build( "skipms", skipms) );
+lParamQuery.add( HttpParam.build( "playbackId", playbackId) );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
@@ -456,12 +458,12 @@ private void buildPlayWithId(String channelId, String playbackId, String media, 
 reset();
 url = "/channels/" + channelId + "/play/" + playbackId + "";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "media", media) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "lang", lang) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "offsetms", offsetms) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "skipms", skipms) );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lParamQuery.add( HttpParam.build( "media", media) );
+lParamQuery.add( HttpParam.build( "lang", lang) );
+lParamQuery.add( HttpParam.build( "offsetms", offsetms) );
+lParamQuery.add( HttpParam.build( "skipms", skipms) );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
@@ -487,17 +489,17 @@ private void buildRecord(String channelId, String name, String format, int maxDu
 reset();
 url = "/channels/" + channelId + "/record";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "name", name) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "format", format) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "maxDurationSeconds", maxDurationSeconds) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "maxSilenceSeconds", maxSilenceSeconds) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "ifExists", ifExists) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "beep", beep) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "terminateOn", terminateOn) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Invalid parameters") );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel is not in a Stasis application; the channel is currently bridged with other hcannels; A recording with the same name already exists on the system and can not be overwritten because it is in progress or ifExists=fail") );
-lE.add( BaseAriAction.HttpResponse.build( 422, "The format specified is unknown on this system") );
+lParamQuery.add( HttpParam.build( "name", name) );
+lParamQuery.add( HttpParam.build( "format", format) );
+lParamQuery.add( HttpParam.build( "maxDurationSeconds", maxDurationSeconds) );
+lParamQuery.add( HttpParam.build( "maxSilenceSeconds", maxSilenceSeconds) );
+lParamQuery.add( HttpParam.build( "ifExists", ifExists) );
+lParamQuery.add( HttpParam.build( "beep", beep) );
+lParamQuery.add( HttpParam.build( "terminateOn", terminateOn) );
+lE.add( HttpResponse.build( 400, "Invalid parameters") );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel is not in a Stasis application; the channel is currently bridged with other hcannels; A recording with the same name already exists on the system and can not be overwritten because it is in progress or ifExists=fail") );
+lE.add( HttpResponse.build( 422, "The format specified is unknown on this system") );
 }
 
 @Override
@@ -522,8 +524,8 @@ private void buildRing(String channelId) {
 reset();
 url = "/channels/" + channelId + "/ring";
 method = "POST";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
@@ -547,8 +549,8 @@ private void buildRingStop(String channelId) {
 reset();
 url = "/channels/" + channelId + "/ring";
 method = "DELETE";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
@@ -573,8 +575,8 @@ private void buildStartSilence(String channelId) {
 reset();
 url = "/channels/" + channelId + "/silence";
 method = "POST";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
@@ -598,8 +600,8 @@ private void buildStopSilence(String channelId) {
 reset();
 url = "/channels/" + channelId + "/silence";
 method = "DELETE";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
@@ -624,13 +626,13 @@ private void buildSnoopChannel(String channelId, String spy, String whisper, Str
 reset();
 url = "/channels/" + channelId + "/snoop";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "spy", spy) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "whisper", whisper) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "app", app) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "appArgs", appArgs) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "snoopId", snoopId) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Invalid parameters") );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
+lParamQuery.add( HttpParam.build( "spy", spy) );
+lParamQuery.add( HttpParam.build( "whisper", whisper) );
+lParamQuery.add( HttpParam.build( "app", app) );
+lParamQuery.add( HttpParam.build( "appArgs", appArgs) );
+lParamQuery.add( HttpParam.build( "snoopId", snoopId) );
+lE.add( HttpResponse.build( 400, "Invalid parameters") );
+lE.add( HttpResponse.build( 404, "Channel not found") );
 }
 
 @Override
@@ -656,12 +658,12 @@ private void buildSnoopChannelWithId(String channelId, String snoopId, String sp
 reset();
 url = "/channels/" + channelId + "/snoop/" + snoopId + "";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "spy", spy) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "whisper", whisper) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "app", app) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "appArgs", appArgs) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Invalid parameters") );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
+lParamQuery.add( HttpParam.build( "spy", spy) );
+lParamQuery.add( HttpParam.build( "whisper", whisper) );
+lParamQuery.add( HttpParam.build( "app", app) );
+lParamQuery.add( HttpParam.build( "appArgs", appArgs) );
+lE.add( HttpResponse.build( 400, "Invalid parameters") );
+lE.add( HttpResponse.build( 404, "Channel not found") );
 }
 
 @Override
@@ -686,10 +688,10 @@ private void buildGetChannelVar(String channelId, String variable) {
 reset();
 url = "/channels/" + channelId + "/variable";
 method = "GET";
-lParamQuery.add( BaseAriAction.HttpParam.build( "variable", variable) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Missing variable parameter.") );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lParamQuery.add( HttpParam.build( "variable", variable) );
+lE.add( HttpResponse.build( 400, "Missing variable parameter.") );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override
@@ -714,11 +716,11 @@ private void buildSetChannelVar(String channelId, String variable, String value)
 reset();
 url = "/channels/" + channelId + "/variable";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "variable", variable) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "value", value) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Missing variable parameter.") );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Channel not found") );
-lE.add( BaseAriAction.HttpResponse.build( 409, "Channel not in a Stasis application") );
+lParamQuery.add( HttpParam.build( "variable", variable) );
+lParamQuery.add( HttpParam.build( "value", value) );
+lE.add( HttpResponse.build( 400, "Missing variable parameter.") );
+lE.add( HttpResponse.build( 404, "Channel not found") );
+lE.add( HttpResponse.build( 409, "Channel not in a Stasis application") );
 }
 
 @Override

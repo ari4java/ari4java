@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_7_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Mar 11 09:57:09 CET 2015
+//    Generated on: Fri Mar 20 17:43:44 CET 2015
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
+import ch.loway.oss.ari4java.tools.HttpParam;
+import ch.loway.oss.ari4java.tools.HttpResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_1_7_0.models.*;
 
@@ -58,10 +60,10 @@ private void buildSendMessage(String to, String from, String body, Map<String,St
 reset();
 url = "/endpoints/sendMessage";
 method = "PUT";
-lParamQuery.add( BaseAriAction.HttpParam.build( "to", to) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "from", from) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "body", body) );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Endpoint not found") );
+lParamQuery.add( HttpParam.build( "to", to) );
+lParamQuery.add( HttpParam.build( "from", from) );
+lParamQuery.add( HttpParam.build( "body", body) );
+lE.add( HttpResponse.build( 404, "Endpoint not found") );
 }
 
 @Override
@@ -85,7 +87,7 @@ private void buildListByTech(String tech) {
 reset();
 url = "/endpoints/" + tech + "";
 method = "GET";
-lE.add( BaseAriAction.HttpResponse.build( 404, "Endpoints not found") );
+lE.add( HttpResponse.build( 404, "Endpoints not found") );
 }
 
 @Override
@@ -111,8 +113,8 @@ private void buildGet(String tech, String resource) {
 reset();
 url = "/endpoints/" + tech + "/" + resource + "";
 method = "GET";
-lE.add( BaseAriAction.HttpResponse.build( 400, "Invalid parameters for sending a message.") );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Endpoints not found") );
+lE.add( HttpResponse.build( 400, "Invalid parameters for sending a message.") );
+lE.add( HttpResponse.build( 404, "Endpoints not found") );
 }
 
 @Override
@@ -137,10 +139,10 @@ private void buildSendMessageToEndpoint(String tech, String resource, String fro
 reset();
 url = "/endpoints/" + tech + "/" + resource + "/sendMessage";
 method = "PUT";
-lParamQuery.add( BaseAriAction.HttpParam.build( "from", from) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "body", body) );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Invalid parameters for sending a message.") );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Endpoint not found") );
+lParamQuery.add( HttpParam.build( "from", from) );
+lParamQuery.add( HttpParam.build( "body", body) );
+lE.add( HttpResponse.build( 400, "Invalid parameters for sending a message.") );
+lE.add( HttpResponse.build( 404, "Endpoint not found") );
 }
 
 @Override

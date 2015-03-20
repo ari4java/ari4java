@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_7_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Mar 11 09:57:09 CET 2015
+//    Generated on: Fri Mar 20 17:43:44 CET 2015
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.AriCallback;
+import ch.loway.oss.ari4java.tools.HttpParam;
+import ch.loway.oss.ari4java.tools.HttpResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import ch.loway.oss.ari4java.generated.ari_1_7_0.models.*;
 
@@ -33,7 +35,7 @@ private void buildEventWebsocket(String app) {
 reset();
 url = "/events";
 method = "GET";
-lParamQuery.add( BaseAriAction.HttpParam.build( "app", app) );
+lParamQuery.add( HttpParam.build( "app", app) );
 wsUpgrade = true;
 }
 
@@ -57,11 +59,11 @@ private void buildUserEvent(String eventName, String application, String source,
 reset();
 url = "/events/user/" + eventName + "";
 method = "POST";
-lParamQuery.add( BaseAriAction.HttpParam.build( "application", application) );
-lParamQuery.add( BaseAriAction.HttpParam.build( "source", source) );
-lE.add( BaseAriAction.HttpResponse.build( 404, "Application does not exist.") );
-lE.add( BaseAriAction.HttpResponse.build( 422, "Event source not found.") );
-lE.add( BaseAriAction.HttpResponse.build( 400, "Invalid even tsource URI or userevent data.") );
+lParamQuery.add( HttpParam.build( "application", application) );
+lParamQuery.add( HttpParam.build( "source", source) );
+lE.add( HttpResponse.build( 404, "Application does not exist.") );
+lE.add( HttpResponse.build( 422, "Event source not found.") );
+lE.add( HttpResponse.build( 400, "Invalid even tsource URI or userevent data.") );
 }
 
 @Override
