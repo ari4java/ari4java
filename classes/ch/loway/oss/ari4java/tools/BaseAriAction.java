@@ -1,6 +1,5 @@
 package ch.loway.oss.ari4java.tools;
 
-
 import ch.loway.oss.ari4java.generated.Message;
 import ch.loway.oss.ari4java.tools.WsClient.WsClientConnection;
 
@@ -12,119 +11,17 @@ import java.util.List;
 
 /**
  * Base functionality for ARI actions
- * 
- * Provides asynchronous and synchronous methods for forwarding requests
- * to the HTTP or WebSocket server. 
- * 
- * Provides serialize/deserialize interface for JSON encoded objects 
+ *
+ * Provides asynchronous and synchronous methods for forwarding requests to the
+ * HTTP or WebSocket server.
+ *
+ * Provides serialize/deserialize interface for JSON encoded objects
  *
  * @author lenz
  * @author mwalton
  */
 public class BaseAriAction {
 
-    /**
-     * Delegate for handling asynchronous ARI responses
-     */
-    public static class AriAsyncHandler<T> implements HttpResponseHandler {
-
-        private final AriCallback<? super T> callback;
-        private Class<T> klazz;
-        private TypeReference<T> klazzType;
-
-        public AriAsyncHandler(AriCallback<? super T> callback, Class<T> klazz) {
-            this.callback = callback;
-            this.klazz = klazz;
-        }
-
-        public AriAsyncHandler(AriCallback<? super T> callback,
-                TypeReference<T> klazzType) {
-            this.callback = callback;
-        }
-
-        public AriCallback<? super T> getCallback() {
-            return callback;
-        }
-
-        private void handleResponse(String json) {
-            try {
-                T result;
-                if (Void.class.equals(klazz)) {
-                    result = null;
-                } else if (klazz != null) {
-                    result = deserializeJson(json, klazz);
-                } else {
-                    result = deserializeJson(json, klazzType);
-                }
-                this.callback.onSuccess(result);
-            } catch (RestException e) {
-                this.callback.onFailure(e);
-            }
-        }
-
-        @Override
-        public void onConnect() {
-        }
-
-        @Override
-        public void onDisconnect() {
-        }
-
-        @Override
-        public void onSuccess(String response) {
-            handleResponse(response);
-        }
-
-        @Override
-        public void onFailure(Throwable e) {
-            this.callback.onFailure(new RestException(e));
-        }
-    }
-
-    public static class HttpParam {
-
-        public String name = "";
-        public String value = "";
-
-        public static HttpParam build(String n, String v) {
-            HttpParam p = new HttpParam();
-            p.name = n;
-            p.value = v;
-            return p;
-        }
-
-        public static HttpParam build(String n, int v) {
-            return build(n, Integer.toString(v));
-        }
-
-        public static HttpParam build(String n, long v) {
-            return build(n, Long.toString(v));
-        }
-
-        public static HttpParam build(String n, boolean v) {
-            return build(n, v ? "true" : "false");
-        }
-    }
-
-//            public AriConnector daddy = null;
-//
-//        public void configure(AriConnector connector) {
-//            daddy = connector;
-//        }
-
-
-    public static class HttpResponse {
-
-        public int code = 0;
-        public String description = "";
-
-        public static HttpResponse build(int code, String descr) {
-            HttpResponse r = new HttpResponse();
-            r.code = code;
-            r.description = descr;
-            return r;
-        }
-    }
     private String forcedResponse = null;
     private HttpClient httpClient;
     private WsClient wsClient;
@@ -152,15 +49,15 @@ public class BaseAriAction {
     }
 
     /**
-     * Initiate synchronous HTTP interaction with server 
-     * 
+     * Initiate synchronous HTTP interaction with server
+     *
      * @return Response from server
      * @throws RestException
      */
     protected synchronized String httpActionSync() throws RestException {
         if (forcedResponse != null) {
             return forcedResponse;
-        } else {            
+        } else {
             if (httpClient == null) {
                 throw new RestException("HTTP client implementation not set");
             } else {
@@ -171,7 +68,7 @@ public class BaseAriAction {
 
     /**
      * Initiate asynchronous HTTP or WebSocket interaction with server
-     * 
+     *
      * @param asyncHandler
      */
     private synchronized void httpActionAsync(AriAsyncHandler<?> asyncHandler) {
@@ -217,21 +114,12 @@ public class BaseAriAction {
         httpActionAsync(new AriAsyncHandler(callback, klazzType));
     }
 
-    // httpActionAsync(AriCallback<List<Application>>, TypeReference<List<Application_impl_ari_1_5_0>>() {});
-
-    
-    
-
-//    private String httpActionImpl(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpResponse> errors) throws RestException {
-//        return daddy.performHttp(uri, method, parametersQuery, parametersForm, errors);
-//    }
-
     /**
      * Deserialize a type
      *
      * @param json
      * @param klazz
-     * @return Deserialized  type
+     * @return Deserialized type
      */
     public static <T> T deserializeJson(String json, Class<T> klazz) throws RestException {
 
@@ -246,7 +134,7 @@ public class BaseAriAction {
 
     /**
      * Deserialize a list
-     * 
+     *
      * @param json
      * @param klazzType
      * @return Deserialized list
@@ -261,24 +149,21 @@ public class BaseAriAction {
         }
 
     }
-    
+
     /**
-     * Deserialize an object as a list of interface.
-     * Class erasure in Java plain sucks, I tell ya.
-     * 
-     * In theory we should be safe given the condition that A extends C.
-     * I hope at least.
-     * This is bug #17 - Avoid Lists of ? extends something 
-     * 
+     * Deserialize an object as a list of interface. Class erasure in Java plain
+     * sucks, I tell ya.
+     *
+     * In theory we should be safe given the condition that A extends C. I hope
+     * at least. This is bug #17 - Avoid Lists of ? extends something
+     *
      * @param <A> The abstract type for members of the list.
      * @param <C> The concrete type for members of the list.
      * @param json Data in
      * @param refConcreteType The reference concrete type, should be a List<C>
      * @return a list of A's
-     * @throws RestException 
+     * @throws RestException
      */
-    
-    
     public static <A, C extends A> List<A> deserializeJsonAsAbstractList(String json, TypeReference<List<C>> refConcreteType) throws RestException {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -291,7 +176,6 @@ public class BaseAriAction {
         }
 
     }
-   
 
     /**
      * Deserialize the event.
@@ -312,12 +196,12 @@ public class BaseAriAction {
     }
 
     /**
-     * Close the WebSocket connection 
-     * 
+     * Close the WebSocket connection
+     *
      * @throws RestException
      */
     public synchronized void close() throws RestException {
-        System.out.println( "Closing connection" );
+        System.out.println("Closing connection");
         if (wsUpgrade && wsConnection == null) {
             throw new RestException("No WebSocket connection is open");
         }

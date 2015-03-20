@@ -37,18 +37,18 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import ch.loway.oss.ari4java.tools.BaseAriAction.HttpParam;
-import ch.loway.oss.ari4java.tools.BaseAriAction.HttpResponse;
+import ch.loway.oss.ari4java.tools.HttpParam;
+import ch.loway.oss.ari4java.tools.HttpResponse;
 import ch.loway.oss.ari4java.tools.HttpClient;
 import ch.loway.oss.ari4java.tools.HttpResponseHandler;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.WsClient;
 
 /**
- * HTTP and WebSocket client implementation based on netty.io
+ * HTTP and WebSocket client implementation based on netty.io.
  * 
  * Threading is handled by NioEventLoopGroup, which selects on multiple
- * sockets and provides threads to handle the events on the sockets
+ * sockets and provides threads to handle the events on the sockets.
  * 
  * Requires netty-all-4.0.12.Final.jar
  * 
@@ -57,136 +57,8 @@ import ch.loway.oss.ari4java.tools.WsClient;
  */
 public class NettyHttpClient implements HttpClient, WsClient {
 
-    
     public static final int MAX_HTTP_REQUEST_KB = 256;
     
-    /**
-     * HttpClientHandler handles the asynchronous response from the remote
-     * HTTP server
-     *
-     * @author mwalton
-     *
-     */
-    @Sharable
-    public static class HttpClientHandler extends SimpleChannelInboundHandler<Object> {
-
-        protected String responseText;
-        protected HttpResponseStatus responseStatus;
-
-        public void reset() {
-            responseText = null;
-            responseStatus = null;
-        }
-
-        @Override
-        protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-            //Channel ch = ctx.channel();
-            if (msg instanceof FullHttpResponse) {
-                FullHttpResponse response = (FullHttpResponse) msg;
-                responseText = response.content().toString(Charset.defaultCharset());
-                responseStatus = response.getStatus();
-            } else {
-                // TODO: what?
-            }
-        }
-
-        public String getResponseText() {
-            return responseText;
-        }
-
-        public HttpResponseStatus getResponseStatus() {
-            return responseStatus;
-        }
-
-        ;
-
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-            cause.printStackTrace();
-
-            ctx.close();
-        }
-    }
-
-    /**
-     * WebSocketClientHandler handles the transactions with the remote
-     * WebSocket, forwarding to the client HttpResponseHandler interface
-     *
-     * @author mwalton
-     *
-     */
-    @Sharable
-    public static class WebSocketClientHandler extends HttpClientHandler {
-
-        private final WebSocketClientHandshaker handshaker;
-        private ChannelPromise handshakeFuture;
-        private final HttpResponseHandler wsCallback;
-
-        public WebSocketClientHandler(WebSocketClientHandshaker handshaker, HttpResponseHandler wsCallback) {
-            this.handshaker = handshaker;
-            this.wsCallback = wsCallback;
-        }
-
-        public ChannelFuture handshakeFuture() {
-            return handshakeFuture;
-        }
-
-        @Override
-        public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-            handshakeFuture = ctx.newPromise();
-        }
-
-        @Override
-        public void channelActive(ChannelHandlerContext ctx) throws Exception {
-            handshaker.handshake(ctx.channel());
-        }
-
-        @Override
-        public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-            wsCallback.onDisconnect();
-        }
-
-        @Override
-        protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-            Channel ch = ctx.channel();
-            if (!handshaker.isHandshakeComplete()) {
-                handshaker.finishHandshake(ch, (FullHttpResponse) msg);
-                handshakeFuture.setSuccess();
-                wsCallback.onConnect();
-                return;
-            }
-
-            if (msg instanceof FullHttpResponse) {
-                FullHttpResponse response = (FullHttpResponse) msg;
-                throw new Exception("Unexpected FullHttpResponse (getStatus=" + response.getStatus() + ", content="
-                        + response.content().toString(CharsetUtil.UTF_8) + ')');
-            }
-
-            WebSocketFrame frame = (WebSocketFrame) msg;
-            if (frame instanceof TextWebSocketFrame) {
-                TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-                responseText = textFrame.text();
-                wsCallback.onSuccess(textFrame.text());
-            } else if (frame instanceof PongWebSocketFrame) {
-                System.out.println("WebSocket Client received pong");
-            } else if (frame instanceof CloseWebSocketFrame) {
-                System.out.println("WebSocket Client received closing");
-                ch.close();
-            }
-        }
-
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-            cause.printStackTrace();
-
-            if (!handshakeFuture.isDone()) {
-                handshakeFuture.setFailure(cause);
-            }
-
-            ctx.close();
-            wsCallback.onFailure(cause);
-        }
-    }
     private Bootstrap bootStrap;
     private URI baseUri;
     private EventLoopGroup group;
@@ -213,7 +85,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
                 ChannelPipeline pipeline = ch.pipeline();
                 pipeline.addLast("http-codec", new HttpClientCodec());
                 pipeline.addLast("aggregator", new HttpObjectAggregator( MAX_HTTP_REQUEST_KB *1024));
-                pipeline.addLast("http-handler", new HttpClientHandler());
+                pipeline.addLast("http-handler", new NettyHttpClientHandler());
             }
         });
     }
@@ -281,7 +153,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
             HttpRequest request = buildRequest(uri, method, parametersQuery, parametersForm);
             //handler.reset();
             ch = bootStrap.connect(baseUri.getHost(), baseUri.getPort()).sync().channel();
-            HttpClientHandler handler = (HttpClientHandler) ch.pipeline().get("http-handler");
+            NettyHttpClientHandler handler = (NettyHttpClientHandler) ch.pipeline().get("http-handler");
             ch.writeAndFlush(request);
             ch.closeFuture().sync();
             if (HttpResponseStatus.OK.equals(handler.getResponseStatus()) || HttpResponseStatus.NO_CONTENT.equals(handler.getResponseStatus())) {
@@ -316,7 +188,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
                         public void operationComplete(ChannelFuture future) throws Exception {
                             responseHandler.onDisconnect();
                             if (future.isSuccess()) {
-                                HttpClientHandler handler = (HttpClientHandler) future.channel().pipeline().get("http-handler");
+                                NettyHttpClientHandler handler = (NettyHttpClientHandler) future.channel().pipeline().get("http-handler");
                                 if (HttpResponseStatus.OK.equals(handler.getResponseStatus()) || HttpResponseStatus.NO_CONTENT.equals(handler.getResponseStatus())) {
                                     responseHandler.onSuccess(handler.getResponseText());
                                 } else {
@@ -346,8 +218,8 @@ public class NettyHttpClient implements HttpClient, WsClient {
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
                 pipeline.addLast("http-codec", new HttpClientCodec());
-                pipeline.addLast("aggregator", new HttpObjectAggregator(8192));
-                pipeline.addLast("ws-handler", new WebSocketClientHandler(getWsHandshake(url, lParamQuery), callback));
+                pipeline.addLast("aggregator", new HttpObjectAggregator(MAX_HTTP_REQUEST_KB * 1024));
+                pipeline.addLast("ws-handler", new NettyWSClientHandler(getWsHandshake(url, lParamQuery), callback));
             }
         });
         final ChannelFuture cf = wsBootStrap.connect(baseUri.getHost(), baseUri.getPort());
@@ -359,7 +231,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
                     callback.onConnect();
                     // Nothing - handshake future will activate later
 					/*Channel ch = future.channel();
-                    WebSocketClientHandler handler = (WebSocketClientHandler) ch.pipeline().get("ws-handler");
+                    NettyWSClientHandler handler = (NettyWSClientHandler) ch.pipeline().get("ws-handler");
                     handler.handshakeFuture.sync();*/
                 } else {
                     callback.onFailure(future.cause());
@@ -374,7 +246,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
                 Channel ch = cf.channel();
                 if (ch != null) {
                     ch.writeAndFlush(new CloseWebSocketFrame());
-                    // WebSocketClientHandler will close the connection when the server
+                    // NettyWSClientHandler will close the connection when the server
                     // responds to the CloseWebSocketFrame.
                     try {
                         ch.closeFuture().sync();
