@@ -16,11 +16,15 @@ In order to support different versions of the API, what we do is we maintain con
 for each version of the API, but we also have general interfaces that are used to work with objects
 across different versions.
 
-**Tip:** using ari4java? join [our ari4java Google+ group](https://plus.google.com/u/0/communities/116130645492865479649) for news, help and plain bouncing of ideas around. 
+**Getting started?**
 
-**Getting started?** start from the "Hello ARI World" tutorial at https://github.com/l3nz/ari4java/blob/master/docs/HELLOWORLD.md
+* Start from the "Hello ARI World" tutorial at https://github.com/l3nz/ari4java/blob/master/docs/HELLOWORLD.md
+* Read our FAQs at https://github.com/l3nz/ari4java/blob/master/docs/FAQ.md
+* Want to run a ready-made Asterisk image? This will make your life easier when developing! get
+  yours from https://github.com/l3nz/whaleware/tree/master/examples/asterisk-load-test
 
-**Getting started?** please read our FAQs at https://github.com/l3nz/ari4java/blob/master/docs/FAQ.md
+
+**Tip:** join [our ari4java Google+ group](https://plus.google.com/u/0/communities/116130645492865479649) for news, help and plain bouncing of ideas around. 
 
 Using the library
 =================
