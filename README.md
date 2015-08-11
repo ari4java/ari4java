@@ -178,7 +178,7 @@ Similar & Interesting projects
 ------------------------------
 
 * AstAryPy - a Python library - https://github.com/asterisk/ast-ari-py
-* AsterNET.ARI	- C# / .NET - https://asternetari.codeplex.com/
+* AsterNET.ARI	- C# / .NET - https://github.com/skrusty/AsterNET.ARI
 * node-ari-client - JavaScript (node) - https://github.com/asterisk/node-ari-client
 * phpari - PHP - http://www.phpari.org/
 * asterisk-ari-client - Ruby - https://github.com/svoboda-jan/asterisk-ari
