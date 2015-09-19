@@ -1,3 +1,9 @@
+
+THIS IS THE NEW CODEGEN2 BRANCH
+==============================
+
+A code generator rewrite is under way....
+
 ari4java
 ========
 
