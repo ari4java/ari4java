@@ -40,7 +40,8 @@ public class AriSubscriber {
     }
     
     /**
-     * Return thecorrect string "modeltype:id".
+     * Return the correct string "modeltype:id".
+     * 
      * See 
      * channel:{channelId}, 
      * bridge:{bridgeId}, 
@@ -48,7 +49,7 @@ public class AriSubscriber {
      * deviceState:{deviceName}
      * 
      * @param m
-     * @return 
+     * @return a string representation, e.g. "channel:1234"
      */
     
     

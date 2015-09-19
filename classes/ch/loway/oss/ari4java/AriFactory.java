@@ -39,7 +39,7 @@ public class AriFactory {
      * @param pass
      * @param version
      * @param app
-     * @return
+     * @return your ready-to-use connector.
      * @throws ARIException
      * @throws URISyntaxException 
      */

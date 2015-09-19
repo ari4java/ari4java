@@ -206,7 +206,7 @@ public class ARI {
     /**
      * Return the current application name.
      * 
-     * @return 
+     * @return the appName
      */
     
     public String getAppName() {
@@ -563,7 +563,7 @@ public class ARI {
      * Subscribes to an event source.
      * 
      * @param m
-     * @return
+     * @return the Application object 
      * @throws RestException 
      */
     
