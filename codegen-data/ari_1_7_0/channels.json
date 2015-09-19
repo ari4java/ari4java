@@ -307,7 +307,7 @@
 							"required": false,
 							"allowMultiple": false,
 							"dataType": "string",
-							"defalutValue": "normal",
+							"defaultValue": "normal",
 							"allowableValues": {
 								"valueType": "LIST",
 								"values": [

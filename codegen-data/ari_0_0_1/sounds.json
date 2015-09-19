@@ -30,7 +30,7 @@
 							"paramType": "query",
 							"dataType": "string",
 							"required": false,
-							"__note": "core show translation can show translation paths between formats, along with relative costs. so this could be just installed format, or we could follow that for transcoded formats."
+							"note": "core show translation can show translation paths between formats, along with relative costs. so this could be just installed format, or we could follow that for transcoded formats."
 						}
 					]
 				}
