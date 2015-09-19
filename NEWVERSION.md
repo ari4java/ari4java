@@ -9,6 +9,11 @@ When adding a new version of the ARI:
 In the main source tree:
 
 - create the version to be used in AriVersion.java
+
+
+
+(Obsolete)
+
 - in ARI.java, edit the build() function to get you the correct objects
 
 

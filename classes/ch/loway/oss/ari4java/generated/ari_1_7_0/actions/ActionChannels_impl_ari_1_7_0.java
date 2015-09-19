@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_7_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Fri Mar 20 17:43:44 CET 2015
+//    Generated on: Sat Sep 19 08:50:54 CEST 2015
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -790,6 +790,25 @@ public void continueInDialplan(String channelId, String context, String extensio
  * @since ari_0_0_1
  *********************************************************/
 public void originate(String endpoint, String extension, String context, long priority, String app, String appArgs, String callerId, int timeout, AriCallback<Channel> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Redirect the channel to a different location.
+ * 
+ * 
+ * @since ari_1_8_0
+ *********************************************************/
+public void redirect(String channelId, String endpoint) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_8_0
+ *********************************************************/
+public void redirect(String channelId, String endpoint, AriCallback<Void> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
