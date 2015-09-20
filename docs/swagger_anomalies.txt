@@ -1,0 +1,41 @@
+This file is used to keep track of a number of anomalies in Swagger files.
+
+
+Unrecognized field "defalutValue" (class ch.loway.oss.ari4java.codegen2.models.ApiParameter)
+ at [Source: ./codegen-data/ari_1_8_0/channels.json; line: 310, column: 25]
+
+Unrecognized field "descriptioni" (class ch.loway.oss.ari4java.codegen2.models.ApiParameter)
+ at [Source: ./codegen-data/ari_1_8_0/endpoints.json; line: 58, column: 25] 
+
+ Unrecognized field "descriptioni" (class ch.loway.oss.ari4java.codegen2.models.ApiParameter)
+ at [Source: ./codegen-data/ari_1_8_0/endpoints.json; line: 180, column: 25] 
+
+ Unrecognized field "__note" 
+ at [Source: ./codegen-data/ari_1_8_0/sounds.json
+
+
+
+Enums are a mix of different cases (lowercase, uppercase, CamelCase)
+
+EBridge_type=[holding, mixing], 
+ELiveRecordingState=[canceled, done, failed, paused, queued, recording], 
+EIfExists=[append, fail, overwrite], 
+EEndpointState=[offline, online, unknown], 
+EDirection=[both, in, out], 
+ESpy=[both, in, none, out], 
+EReason=[busy, congestion, no_answer, normal], 
+EWhisper=[both, in, none, out], 
+EPlaybackState=[complete, playing, queued], 
+EOnly=[build, config, status, system], 
+
+EDeviceState=[BUSY, INUSE, INVALID, NOT_INUSE, ONHOLD, RINGING, RINGINUSE, UNAVAILABLE], 
+EDeviceStateState=[BUSY, INUSE, INVALID, NOT_INUSE, ONHOLD, RINGING, RINGINUSE, UNAVAILABLE, UNKNOWN], 
+
+- DeviceStates appear twice, with a different set of entries!
+
+EOperation=[forward, pause, restart, reverse, unpause], 
+ETerminateOn=[#, *, any, none], 
+
+EChannelState=[Busy, Dialing, Dialing Offhook, Down, OffHook, Pre-ring, Ring, Ringing, Rsrved, Unknown, Up]}
+
+- Rserverd?
