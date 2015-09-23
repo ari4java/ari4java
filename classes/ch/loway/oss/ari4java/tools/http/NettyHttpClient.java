@@ -156,7 +156,10 @@ public class NettyHttpClient implements HttpClient, WsClient {
             NettyHttpClientHandler handler = (NettyHttpClientHandler) ch.pipeline().get("http-handler");
             ch.writeAndFlush(request);
             ch.closeFuture().sync();
-            if (HttpResponseStatus.OK.equals(handler.getResponseStatus()) || HttpResponseStatus.NO_CONTENT.equals(handler.getResponseStatus())) {
+            if (HttpResponseStatus.OK.equals(handler.getResponseStatus())
+                || HttpResponseStatus.NO_CONTENT.equals(handler.getResponseStatus())
+                || HttpResponseStatus.ACCEPTED.equals(handler.getResponseStatus())
+                || HttpResponseStatus.CREATED.equals(handler.getResponseStatus())) {
                 return handler.getResponseText();
             } else {
                 throw makeException(handler.getResponseStatus(), handler.getResponseText(), errors);
@@ -189,7 +192,10 @@ public class NettyHttpClient implements HttpClient, WsClient {
                             responseHandler.onDisconnect();
                             if (future.isSuccess()) {
                                 NettyHttpClientHandler handler = (NettyHttpClientHandler) future.channel().pipeline().get("http-handler");
-                                if (HttpResponseStatus.OK.equals(handler.getResponseStatus()) || HttpResponseStatus.NO_CONTENT.equals(handler.getResponseStatus())) {
+                                if (HttpResponseStatus.OK.equals(handler.getResponseStatus())
+                                    || HttpResponseStatus.NO_CONTENT.equals(handler.getResponseStatus())
+                                    || HttpResponseStatus.ACCEPTED.equals(handler.getResponseStatus())
+                                    || HttpResponseStatus.CREATED.equals(handler.getResponseStatus())) {
                                     responseHandler.onSuccess(handler.getResponseText());
                                 } else {
                                     responseHandler.onFailure(makeException(handler.getResponseStatus(), handler.getResponseText(), errors));
