@@ -20,6 +20,7 @@ public class AriAsyncHandler<T> implements HttpResponseHandler {
 
     public AriAsyncHandler(AriCallback<? super T> callback, TypeReference<T> klazzType) {
         this.callback = callback;
+        this.klazzType = klazzType;
     }
 
     public AriCallback<? super T> getCallback() {
