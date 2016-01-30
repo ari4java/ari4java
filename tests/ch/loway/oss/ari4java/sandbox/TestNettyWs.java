@@ -175,7 +175,7 @@ public class TestNettyWs {
             System.out.println("WebSocket Client sending close");
             ch.writeAndFlush(new CloseWebSocketFrame());
 
-            // WebSocketClientHandler will close the connection when the server
+            // WebSocketClientHandler will disconnectWs the connection when the server
             // responds to the CloseWebSocketFrame.
             ch.closeFuture().sync();
     	} catch (Exception e) {

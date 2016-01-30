@@ -200,8 +200,8 @@ public class BaseAriAction {
      *
      * @throws RestException
      */
-    public synchronized void close() throws RestException {
-        System.out.println("Closing connection");
+    public synchronized void disconnectWs() throws RestException {
+        System.out.println("Closing WS connection");
         if (wsUpgrade && wsConnection == null) {
             throw new RestException("No WebSocket connection is open");
         }

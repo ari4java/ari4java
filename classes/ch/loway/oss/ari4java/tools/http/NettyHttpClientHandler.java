@@ -32,8 +32,14 @@ public class NettyHttpClientHandler extends SimpleChannelInboundHandler<Object> 
             FullHttpResponse response = (FullHttpResponse) msg;
             responseText = response.content().toString(Charset.defaultCharset());
             responseStatus = response.getStatus();
+            
+            //System.out.println( "S:" + responseStatus + " T:" + responseText);
+            
         } else {
             // TODO: what?
+            if ( msg != null ) {
+                System.out.println( "Unknown object:" + msg);
+            }
         }
     }
 

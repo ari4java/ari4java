@@ -155,7 +155,7 @@ public class ARI {
         }
         BaseAriAction ba = (BaseAriAction) action;
         try {
-            ba.close();
+            ba.disconnectWs();
         } catch (RestException e) {
             throw new ARIException(e.getMessage());
         }
@@ -411,7 +411,7 @@ public class ARI {
             }
         });
 
-        // register the AE so we can close it when the erorr goes down
+        // register the AE so we can disconnectWs it when the erorr goes down
         liveActionEvent = ae;
         return q;
 

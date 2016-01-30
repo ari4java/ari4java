@@ -156,7 +156,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
             NettyHttpClientHandler handler = (NettyHttpClientHandler) ch.pipeline().get("http-handler");
             ch.writeAndFlush(request);
             ch.closeFuture().sync();
-            if (HttpResponseStatus.OK.equals(handler.getResponseStatus()) || HttpResponseStatus.NO_CONTENT.equals(handler.getResponseStatus())) {
+            if ( httpResponseOkay(handler.getResponseStatus())) {
                 return handler.getResponseText();
             } else {
                 throw makeException(handler.getResponseStatus(), handler.getResponseText(), errors);
@@ -180,16 +180,18 @@ public class NettyHttpClient implements HttpClient, WsClient {
             public void operationComplete(ChannelFuture future) throws Exception {
                 if (future.isSuccess()) {
                     Channel ch = future.channel();
-                    responseHandler.onConnect();
+                    responseHandler.onChReadyToWrite();
                     ch.writeAndFlush(request);
                     ch.closeFuture().addListener(new ChannelFutureListener() {
 
                         @Override
                         public void operationComplete(ChannelFuture future) throws Exception {
-                            responseHandler.onDisconnect();
+                            responseHandler.onResponseReceived();
                             if (future.isSuccess()) {
                                 NettyHttpClientHandler handler = (NettyHttpClientHandler) future.channel().pipeline().get("http-handler");
-                                if (HttpResponseStatus.OK.equals(handler.getResponseStatus()) || HttpResponseStatus.NO_CONTENT.equals(handler.getResponseStatus())) {
+                                HttpResponseStatus rStatus = handler.getResponseStatus();
+                                
+                                if ( httpResponseOkay(rStatus)) {
                                     responseHandler.onSuccess(handler.getResponseText());
                                 } else {
                                     responseHandler.onFailure(makeException(handler.getResponseStatus(), handler.getResponseText(), errors));
@@ -228,7 +230,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
                 if (future.isSuccess()) {
-                    callback.onConnect();
+                    callback.onChReadyToWrite();
                     // Nothing - handshake future will activate later
 					/*Channel ch = future.channel();
                     NettyWSClientHandler handler = (NettyWSClientHandler) ch.pipeline().get("ws-handler");
@@ -257,4 +259,25 @@ public class NettyHttpClient implements HttpClient, WsClient {
             }
         };
     }
+    
+    /**
+     * Checks if a response is okay.
+     * All 2XX responses are supposed to be okay.
+     * 
+     * @param status
+     * @return 
+     */
+    
+    private boolean httpResponseOkay( HttpResponseStatus status ) {
+        
+        if ( HttpResponseStatus.OK.equals(status) 
+          || HttpResponseStatus.NO_CONTENT.equals(status) ) {
+            return true;
+        } else {
+            return false;
+        }
+        
+    }
+    
+    
 }

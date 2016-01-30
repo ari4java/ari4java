@@ -3,15 +3,17 @@ package ch.loway.oss.ari4java.sandbox.sample;
 import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.tools.ARIException;
 import ch.loway.oss.ari4java.AriVersion;
-import ch.loway.oss.ari4java.generated.ActionEvents;
 import ch.loway.oss.ari4java.generated.AsteriskInfo;
 import ch.loway.oss.ari4java.generated.Bridge;
+import ch.loway.oss.ari4java.generated.Channel;
 import ch.loway.oss.ari4java.generated.Message;
 import ch.loway.oss.ari4java.generated.StasisStart;
 import ch.loway.oss.ari4java.tools.AriCallback;
 import ch.loway.oss.ari4java.tools.MessageQueue;
 import ch.loway.oss.ari4java.tools.RestException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class opens up an ARI application that creates a bridge with MOH.
@@ -22,6 +24,10 @@ import java.util.List;
  */
 public class ConnectAndDial {
 
+    public static final String ASTERISK_ADDRESS = "http://192.168.99.100:18088/";
+    public static final String ASTERISK_USER    = "ari4java";
+    public static final String ASTERISK_PASS    = "yothere";
+    
     ARI ari = null;
     Bridge b = null;
 
@@ -64,9 +70,16 @@ public class ConnectAndDial {
 
     public void connect() throws ARIException {
 
-        ari = ARI.build("http://10.10.5.26:8088/", "hello", "aritest", "testme", AriVersion.IM_FEELING_LUCKY);
+        System.out.println("Connecting to: " + ASTERISK_ADDRESS 
+                + " as " + ASTERISK_USER + ":" + ASTERISK_PASS);
+        
+        ari = ARI.build( ASTERISK_ADDRESS, "myapp", 
+                ASTERISK_USER, ASTERISK_PASS, 
+                AriVersion.IM_FEELING_LUCKY);
 
-        // lets raise an exeption if the connection is not valid
+        System.out.println("Connected through ARI: " + ari.getVersion());
+        
+        // let's raise an exeption if the connection is not valid
         AsteriskInfo ai = ari.asterisk().getInfo("");
         System.out.println("Hey! We're connected! Asterisk Version: " + ai.getSystem().getVersion());
 
@@ -76,16 +89,17 @@ public class ConnectAndDial {
 
         // create a bridge and start playing MOH on it
         // UGLY: we should have a constant for the allowed bridge types
-        b = ari.bridges().create("", "myBridge");
+        System.out.println( "Creating a bridge");
+        b = ari.bridges().create("", "a4j-bridge1", "myBridge");
         System.out.println("Bridge ID:" + b.getId() + " Name:" + b.getName() + " Tech:" + b.getTechnology() + " Creator:" + b.getCreator());
-
-
+        
         // start MOH on the bridge
+        System.out.println( "Starting MOH on bridge");
         ari.bridges().startMoh(b.getId(), "");
 
         // check which bridges are available
-        // UGLY: why not a List<Bridges>? the cliens should not care....
-        List<? extends Bridge> bridges = ari.bridges().list();
+        System.out.println( "Listing bridges");
+        List<Bridge> bridges = ari.bridges().list();
 
         for (Bridge bb : bridges) {
             printBridge(bb);
@@ -93,62 +107,12 @@ public class ConnectAndDial {
 
     }
 
-    /**
-     * This code is ugly.
-     * we should have only one websocket, per app, not linked to an action....
-     * 
-     * @throws ARIException
-     */
-    public void processEvents_old() throws ARIException {
-
-        ActionEvents ae = ari.events();
-        ae.eventWebsocket("hello", new AriCallback<Message>() {
-
-            @Override
-            public void onSuccess(Message result) {
-                // Let's do something with the event
-
-                System.out.println(result);
-
-                if (result instanceof StasisStart) {
-                    StasisStart event = (StasisStart) result;
-                    System.out.println("Channel found: " + event.getChannel().getId() + " State:" + event.getChannel().getState());
-
-                    try {
-                        ari.bridges().addChannel(b.getId(), event.getChannel().getId(), "");
-                    } catch (ARIException e) {
-                        // UGLY!!
-                        System.out.println("Error: " + e.getMessage());
-                    }
-                }
-
-
-
-            }
-
-            @Override
-            public void onFailure(RestException e) {
-                e.printStackTrace();
-            }
-        });
-
-        try {
-            Thread.sleep(5000); // Wait 5 seconds for events
-        } catch (InterruptedException e) {
-        }
-
-        // UGLIEST - if you do a closeaction, everything dies and no more actions
-        // are sent
-        ari.closeAction(ae); // Now close the websocket
-
-    }
 
     /**
      * The new style of event processing...
      *
      * @throws ARIException
      */
-
 
     public void processEvents() throws ARIException {
 
@@ -157,8 +121,13 @@ public class ConnectAndDial {
 
         long start = System.currentTimeMillis();
 
-        while ((System.currentTimeMillis() - start) < 2 * 1000L) {
-
+        String dummy = "";
+  
+        Channel chan = ari.channels().originate("Local/100@wdep", "100", "wdep", 1, dummy, dummy, dummy, dummy, 10000, Collections.EMPTY_MAP, dummy, dummy, dummy);
+        System.out.println( "Channel:" + chan.getId() + " in state " + chan.getState() );
+        
+        while ((System.currentTimeMillis() - start) < 10 * 1000L) {
+            
             Message m = mq.dequeueMax( 100, 20 );
             if (m != null) {
 
@@ -180,19 +149,19 @@ public class ConnectAndDial {
 
     public void removeBridge() throws ARIException {
 
-        System.out.println("Removing....");
+        System.out.println( threadName() + "Removing bridge...."  );
 
         ari.bridges().destroy(b.getId(), new AriCallback<Void>() {
 
             @Override
             public void onSuccess(Void result) {
                 // Let's do something with the returned value
-                System.out.println("Bridge destroyed");
+                System.out.println( threadName() + "Bridge destroyed " );
             }
 
             @Override
             public void onFailure(RestException e) {
-                System.out.println( "Failure removeBridge() ");
+                System.out.println( threadName() + "Failure in removeBridge() " );
                 e.printStackTrace();
             }
         });
@@ -205,7 +174,7 @@ public class ConnectAndDial {
      * @param b
      */
     private void printBridge(Bridge b) {
-        System.out.println("Bridge ID:" + b.getId()
+        System.out.println(". BridgeID:" + b.getId()
                 + " Name:" + b.getName()
                 + " Tech:" + b.getTechnology()
                 + " Creator:" + b.getCreator()
@@ -213,8 +182,16 @@ public class ConnectAndDial {
                 + " Type: " + b.getBridge_type()
                 + " Chans: " + b.getChannels().size());
         for (String s : b.getChannels()) {
-            System.out.println(" - ID: " + s);
+            System.out.println(" - ChannelID: " + s);
         }
-
+    }
+    
+    /**
+     * The name of the current thread.
+     * @return 
+     */
+    
+    private String threadName() {
+        return "[Thread:" + Thread.currentThread().getName() + "] ";
     }
 }

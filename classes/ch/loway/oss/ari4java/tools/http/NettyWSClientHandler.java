@@ -49,7 +49,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        wsCallback.onDisconnect();
+        wsCallback.onResponseReceived();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
         if (!handshaker.isHandshakeComplete()) {
             handshaker.finishHandshake(ch, (FullHttpResponse) msg);
             handshakeFuture.setSuccess();
-            wsCallback.onConnect();
+            wsCallback.onChReadyToWrite();
             return;
         }
         
@@ -73,6 +73,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
             responseText = textFrame.text();
             wsCallback.onSuccess(textFrame.text());
+            
         } else if (frame instanceof PongWebSocketFrame) {
             System.out.println("WebSocket Client received pong");
         } else if (frame instanceof CloseWebSocketFrame) {
@@ -94,5 +95,3 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
 
 }
 
-// $Log$
-//
