@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_7_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Sep 19 08:50:54 CEST 2015
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -78,6 +78,24 @@ buildUserEvent(eventName, application, source, variables);
 httpActionAsync(callback);
 }
 
-/** No missing signatures from interface */
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+public void eventWebsocket(String app, boolean subscribeAll, AriCallback<Message> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * WebSocket connection for events.
+ * 
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+public Message eventWebsocket(String app, boolean subscribeAll) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
 };
 

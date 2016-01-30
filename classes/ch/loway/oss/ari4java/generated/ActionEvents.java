@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Sep 19 08:50:54 CEST 2015
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -30,6 +30,16 @@ public interface ActionEvents {
  * @since ari_1_5_0
  *********************************************************/
 public void userEvent(String eventName, String application, String source, Map<String,String> variables) throws RestException;
+
+
+
+// void eventWebsocket String boolean AriCallback<Message> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+public void eventWebsocket(String app, boolean subscribeAll, AriCallback<Message> callback);
 
 
 
@@ -61,6 +71,17 @@ public Message eventWebsocket(String app) throws RestException;
  * @since ari_1_5_0
  *********************************************************/
 public void userEvent(String eventName, String application, String source, Map<String,String> variables, AriCallback<Void> callback);
+
+
+
+// Message eventWebsocket String boolean
+/**********************************************************
+ * WebSocket connection for events.
+ * 
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+public Message eventWebsocket(String app, boolean subscribeAll) throws RestException;
 
 
 }

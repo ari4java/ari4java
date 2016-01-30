@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Sep 19 08:50:54 CEST 2015
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.ARI;
@@ -49,6 +49,8 @@ public interface AriBuilder {
     public abstract ChannelVarset channelVarset();
     public abstract ConfigInfo configInfo();
     public abstract ConfigTuple configTuple();
+    public abstract ContactInfo contactInfo();
+    public abstract ContactStatusChange contactStatusChange();
     public abstract DeviceState deviceState();
     public abstract DeviceStateChanged deviceStateChanged();
     public abstract Dial dial();
@@ -59,9 +61,12 @@ public interface AriBuilder {
     public abstract Event event();
     public abstract FormatLangPair formatLangPair();
     public abstract LiveRecording liveRecording();
+    public abstract LogChannel logChannel();
     public abstract Message message();
     public abstract MissingParams missingParams();
     public abstract Module module();
+    public abstract Peer peer();
+    public abstract PeerStatusChange peerStatusChange();
     public abstract Playback playback();
     public abstract PlaybackFinished playbackFinished();
     public abstract PlaybackStarted playbackStarted();
