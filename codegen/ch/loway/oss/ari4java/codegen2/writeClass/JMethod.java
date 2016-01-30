@@ -21,6 +21,7 @@ public class JMethod {
     public List<JParm>  parameters  = new ArrayList<JParm>();
     public List<String> availableIn = new ArrayList<String>();
     public List<String> throwsEx    = new ArrayList<String>();
+    public String body = "";
 
     public void addParameter(DataType d, String name, String comment) {
         parameters.add( JParm.build(d.asJavaType(), name, comment));

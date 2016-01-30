@@ -1,6 +1,11 @@
 
 package ch.loway.oss.ari4java.codegen2;
 
+import ch.loway.oss.ari4java.codegen2.writeClass.JClass;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -78,6 +83,45 @@ public class StringTools {
         return capitalize(name);
     }
     
+    
+    /**
+     * Writes a file, creating the path if missing, and relative to the file base.
+     * I'm not sure about the encoding .
+     * 
+     * @param jPkgName a.b.c -> /base/path/a/b/c/
+     * @param name The file name
+     * @param contents The contents of the file.
+     * @throws IOException If shit happens.
+     */
+    
+    public static void writeFile( String jPkgName, String name, String contents ) throws IOException {
+        
+        char pathSeparator = '/';
+        File base = Settings.basePkgs.getCanonicalFile();
+        
+        String pkgInPath = base.getAbsolutePath() + pathSeparator + jPkgName.replace('.', pathSeparator );
+        
+        // creates the destination path (if it does not exist)
+        File withFolder = new File( pkgInPath );
+        withFolder.mkdirs();
+        
+        File myFile = new File( withFolder.getCanonicalFile().toString() + pathSeparator + name );
+        FileWriter outFile = new FileWriter( myFile );
+        PrintWriter out = new PrintWriter(outFile);
+        out.println( contents );
+        out.close();
+    }
+    
+    /**
+     * Scrive una classe.
+     * 
+     * @param jc
+     * @throws IOException 
+     */
+    
+    public static void writeClass( JClass jc )  throws IOException {
+        writeFile(jc.xPackage, jc.xName + ".java", jc.toString() );
+    }
     
 }
 

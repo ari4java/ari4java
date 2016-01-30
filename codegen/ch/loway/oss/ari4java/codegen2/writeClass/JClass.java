@@ -16,6 +16,9 @@ public class JClass {
     public JClass xtends   = null;
     public List<JClass> xImpls = new ArrayList<JClass>();
     
+    public List<JMethod> xMethods = new ArrayList<JMethod>();
+    public List<String>  xVars    = new ArrayList<String>();
+    
     public static enum Type {
         CLASS,
         INTERFACE,
@@ -27,6 +30,8 @@ public class JClass {
         return xPackage + "." + xName;
     }
     
+    
+    // public String //
     
     
 }

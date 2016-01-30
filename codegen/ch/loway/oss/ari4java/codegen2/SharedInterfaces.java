@@ -89,7 +89,17 @@ public class SharedInterfaces {
         return ints;
     }
     
+    /**
+     * Loads the current shared interface.
+     * 
+     * @param file
+     * @return 
+     */
     
+    public SharedInterface getInterface( String file ) {
+        return ints.get(file);
+    }
+     
 }
 
 // $Log$

@@ -6,6 +6,8 @@ import ch.loway.oss.ari4java.codegen2.models.Model;
 import ch.loway.oss.ari4java.codegen2.models.ModelProperty;
 import ch.loway.oss.ari4java.codegen2.models.SwaggerFile;
 import ch.loway.oss.ari4java.codegen2.writeClass.InterfaceWriter;
+import ch.loway.oss.ari4java.codegen2.writeClass.JClass;
+import ch.loway.oss.ari4java.codegen2.writeClass.JavaImplBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  *
@@ -21,7 +24,6 @@ import java.util.Map;
 public class Rebuild {
 
     public static String DIR = "/Users/lenz/dev/github/ari4java/codegen-data";
-    
     
     /**
      * @param args the command line arguments
@@ -56,13 +58,6 @@ public class Rebuild {
             }
         }
 
-        for ( String version: versions ) {
-        
-        
-        // Process models
-        // Process events
-        // Process Actions
-        }
         
         
         
@@ -79,7 +74,7 @@ public class Rebuild {
             }
         }
         
-        //System.out.println( sharedInterfaces.toString() );
+        System.out.println( sharedInterfaces.toString() );
         
         for ( String file: files) {
             for ( String ver: versions ) {
@@ -102,11 +97,39 @@ public class Rebuild {
         }
         
         
-        //System.out.println( sharedEnums.toString() );
+        System.out.println( sharedEnums.toString() );
 
         System.out.println( "-------");
         
         // Write interfaces
+        for ( String version: versions ) {
+       
+            for (String file: files ) {
+                SwaggerFile swagFile = sources.get(version).get(file);
+                for ( Entry<String,Model> e: swagFile.models.entrySet() ) {
+                    String modelName = e.getKey();
+                    Model model      = e.getValue();
+                    SharedInterface ifc = sharedInterfaces.getInterface(modelName);
+                
+                    JClass myClass = JavaImplBuilder.makeModelImpl(version, model, ifc);
+                    StringTools.writeClass(myClass);
+                }
+            }
+            
+            
+            // build models
+            // build actions 
+            // build events (?)
+            // merge models
+            // merge actions
+            // merge events
+            
+            
+            
+        // Process models
+        // Process events
+        // Process Actions
+        }
         
         
         // For each version
