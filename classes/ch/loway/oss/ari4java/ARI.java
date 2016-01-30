@@ -64,6 +64,18 @@ public class ARI {
         this.version = version;
     }
     
+    
+    /**
+     * Returns the current ARI version.
+     * 
+     * @return
+     * @throws ARIException 
+     */
+    
+    public AriVersion getVersion() throws ARIException {
+        return version;
+    }
+    
 
     /**
      * Get the implementation for a given action interface
@@ -316,7 +328,7 @@ public class ARI {
      */
 
     private static String findVersionString(String response) throws ARIException {
-        Pattern p = Pattern.compile(".apiVersion.:\\s+\"(.+?)\"", Pattern.MULTILINE + Pattern.CASE_INSENSITIVE );
+        Pattern p = Pattern.compile(".apiVersion.:\\s*\"(.+?)\"", Pattern.MULTILINE + Pattern.CASE_INSENSITIVE );
 
         Matcher m = p.matcher(response);
         if ( m.find()  ) {
