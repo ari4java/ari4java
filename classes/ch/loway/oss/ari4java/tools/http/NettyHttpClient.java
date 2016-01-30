@@ -259,24 +259,26 @@ public class NettyHttpClient implements HttpClient, WsClient {
             }
         };
     }
+
     
     /**
      * Checks if a response is okay.
      * All 2XX responses are supposed to be okay.
      * 
      * @param status
-     * @return 
+     * @return whether it is a 2XX code or not (error!)
      */
-    
-    private boolean httpResponseOkay( HttpResponseStatus status ) {
-        
-        if ( HttpResponseStatus.OK.equals(status) 
-          || HttpResponseStatus.NO_CONTENT.equals(status) ) {
+    private boolean httpResponseOkay(HttpResponseStatus status) {
+
+        if (HttpResponseStatus.OK.equals(status)
+                || HttpResponseStatus.NO_CONTENT.equals(status)
+                || HttpResponseStatus.ACCEPTED.equals(status)
+                || HttpResponseStatus.CREATED.equals(status)) {
             return true;
         } else {
             return false;
         }
-        
+
     }
     
     

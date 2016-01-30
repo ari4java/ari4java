@@ -68,7 +68,7 @@ public class ARI {
     /**
      * Returns the current ARI version.
      * 
-     * @return
+     * @return the ARI version currently used.
      * @throws ARIException 
      */
     
