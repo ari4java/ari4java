@@ -1,6 +1,7 @@
 package ch.loway.oss.ari4java.tools.http;
 
 import ch.loway.oss.ari4java.tools.HttpResponseHandler;
+import ch.loway.oss.ari4java.tools.RestException;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
@@ -77,8 +78,8 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
         } else if (frame instanceof PongWebSocketFrame) {
             System.out.println("WebSocket Client received pong");
         } else if (frame instanceof CloseWebSocketFrame) {
-            System.out.println("WebSocket Client received closing");
             ch.close();
+            wsCallback.onFailure(new RestException("WebSocket Client received close"));
         }
         
     }
