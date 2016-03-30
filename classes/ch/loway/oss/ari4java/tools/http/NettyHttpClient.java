@@ -4,18 +4,12 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandler.Sharable;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
-import io.netty.channel.ChannelPromise;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.http.DefaultHttpRequest;
-import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
@@ -24,17 +18,12 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
-import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
-import io.netty.util.CharsetUtil;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import ch.loway.oss.ari4java.tools.HttpParam;
@@ -43,22 +32,33 @@ import ch.loway.oss.ari4java.tools.HttpClient;
 import ch.loway.oss.ari4java.tools.HttpResponseHandler;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.WsClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.handler.codec.http.DefaultFullHttpRequest;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.multipart.HttpPostRequestEncoder;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 /**
  * HTTP and WebSocket client implementation based on netty.io.
- * 
- * Threading is handled by NioEventLoopGroup, which selects on multiple
- * sockets and provides threads to handle the events on the sockets.
- * 
+ *
+ * Threading is handled by NioEventLoopGroup, which selects on multiple sockets
+ * and provides threads to handle the events on the sockets.
+ *
  * Requires netty-all-4.0.12.Final.jar
- * 
+ *
  * @author mwalton
  *
  */
 public class NettyHttpClient implements HttpClient, WsClient {
 
     public static final int MAX_HTTP_REQUEST_KB = 256;
-    
+
     private Bootstrap bootStrap;
     private URI baseUri;
     private EventLoopGroup group;
@@ -83,9 +83,11 @@ public class NettyHttpClient implements HttpClient, WsClient {
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
+                pipeline.addLast("log", new LoggingHandler(LogLevel.TRACE));
                 pipeline.addLast("http-codec", new HttpClientCodec());
                 pipeline.addLast("aggregator", new HttpObjectAggregator( MAX_HTTP_REQUEST_KB *1024));
                 pipeline.addLast("http-handler", new NettyHttpClientHandler());
+                
             }
         });
     }
@@ -115,24 +117,50 @@ public class NettyHttpClient implements HttpClient, WsClient {
     }
 
     // Build the HTTP request based on the given parameters
-    private HttpRequest buildRequest(String path, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm) {
+    private FullHttpRequest buildRequest(String path, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, Map<String, Map<String, String>> parametersBody) {
         String queryString = String.format("?api_key=%s:%s", username, password);
         for (HttpParam hp : parametersQuery) {
             if (hp.value != null && !hp.value.isEmpty()) {
                 queryString += "&" + hp.name + "=" + hp.value;
             }
         }
-        DefaultHttpRequest request = new DefaultHttpRequest(
+        DefaultFullHttpRequest request = new DefaultFullHttpRequest(
                 HttpVersion.HTTP_1_1, HttpMethod.valueOf(method), "/ari" + path + queryString);
-        //System.out.println(request.getUri());
+
+        System.out.println(request.getUri());
         request.headers().set(HttpHeaders.Names.HOST, "localhost");
-        request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
+        request.headers().set(HttpHeaders.Names.CONTENT_TYPE, "application/json");
+        request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
+        
+        if (parametersBody != null && !parametersBody.isEmpty()) {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode bodyNode = mapper.createObjectNode();
+                for (Map.Entry<String, Map<String, String>> entry : parametersBody.entrySet()) {
+                    String key = entry.getKey();
+                    Map<String, String> value = entry.getValue();
+                    if(value != null && !value.isEmpty()){
+                        bodyNode.put(key, mapper.readTree(mapper.writeValueAsString(value)));
+                    }
+                    
+                }
+                
+                String bodyString = bodyNode.toString();
+                request.headers().set(HttpHeaders.Names.CONTENT_LENGTH, bodyString.getBytes("UTF-8").length);
+                ByteBuf bbuf = Unpooled.copiedBuffer(bodyString, StandardCharsets.UTF_8);
+                request.content().writeBytes(bbuf);
+            } catch (Exception e) {
+             e.printStackTrace();
+            }
+
+        }
+
         return request;
     }
 
     private RestException makeException(HttpResponseStatus status, String response, List<HttpResponse> errors) {
-        
-        if (status == null ) {            
+
+        if (status == null) {
             return new RestException("Shutdown: " + response);
         }
 
@@ -147,16 +175,17 @@ public class NettyHttpClient implements HttpClient, WsClient {
     // Synchronous HTTP action
     @Override
     public String httpActionSync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm,
-            List<HttpResponse> errors) throws RestException {
+            Map<String, Map<String, String>> parametersBody, List<HttpResponse> errors) throws RestException {
         Channel ch;
         try {
-            HttpRequest request = buildRequest(uri, method, parametersQuery, parametersForm);
+            HttpRequest request = buildRequest(uri, method, parametersQuery, parametersForm, parametersBody);
+
             //handler.reset();
             ch = bootStrap.connect(baseUri.getHost(), baseUri.getPort()).sync().channel();
             NettyHttpClientHandler handler = (NettyHttpClientHandler) ch.pipeline().get("http-handler");
             ch.writeAndFlush(request);
             ch.closeFuture().sync();
-            if ( httpResponseOkay(handler.getResponseStatus())) {
+            if (httpResponseOkay(handler.getResponseStatus())) {
                 return handler.getResponseText();
             } else {
                 throw makeException(handler.getResponseStatus(), handler.getResponseText(), errors);
@@ -169,9 +198,9 @@ public class NettyHttpClient implements HttpClient, WsClient {
     // Asynchronous HTTP action, response is passed to HttpResponseHandler
     @Override
     public void httpActionAsync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm,
-            final List<HttpResponse> errors, final HttpResponseHandler responseHandler)
+            Map<String, Map<String, String>> parametersBody, final List<HttpResponse> errors, final HttpResponseHandler responseHandler)
             throws RestException {
-        final HttpRequest request = buildRequest(uri, method, parametersQuery, parametersForm);
+        final FullHttpRequest request = buildRequest(uri, method, parametersQuery, parametersForm, parametersBody);
         // Get future channel
         ChannelFuture cf = bootStrap.connect(baseUri.getHost(), baseUri.getPort());
         cf.addListener(new ChannelFutureListener() {
@@ -181,6 +210,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
                 if (future.isSuccess()) {
                     Channel ch = future.channel();
                     responseHandler.onChReadyToWrite();
+                    HttpPostRequestEncoder rq = new HttpPostRequestEncoder(request, false);
                     ch.writeAndFlush(request);
                     ch.closeFuture().addListener(new ChannelFutureListener() {
 
@@ -190,8 +220,8 @@ public class NettyHttpClient implements HttpClient, WsClient {
                             if (future.isSuccess()) {
                                 NettyHttpClientHandler handler = (NettyHttpClientHandler) future.channel().pipeline().get("http-handler");
                                 HttpResponseStatus rStatus = handler.getResponseStatus();
-                                
-                                if ( httpResponseOkay(rStatus)) {
+
+                                if (httpResponseOkay(rStatus)) {
                                     responseHandler.onSuccess(handler.getResponseText());
                                 } else {
                                     responseHandler.onFailure(makeException(handler.getResponseStatus(), handler.getResponseText(), errors));
@@ -232,7 +262,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
                 if (future.isSuccess()) {
                     callback.onChReadyToWrite();
                     // Nothing - handshake future will activate later
-					/*Channel ch = future.channel();
+                    /*Channel ch = future.channel();
                     NettyWSClientHandler handler = (NettyWSClientHandler) ch.pipeline().get("ws-handler");
                     handler.handshakeFuture.sync();*/
                 } else {
@@ -260,11 +290,9 @@ public class NettyHttpClient implements HttpClient, WsClient {
         };
     }
 
-    
     /**
-     * Checks if a response is okay.
-     * All 2XX responses are supposed to be okay.
-     * 
+     * Checks if a response is okay. All 2XX responses are supposed to be okay.
+     *
      * @param status
      * @return whether it is a 2XX code or not (error!)
      */
@@ -280,6 +308,5 @@ public class NettyHttpClient implements HttpClient, WsClient {
         }
 
     }
-    
-    
+
 }
