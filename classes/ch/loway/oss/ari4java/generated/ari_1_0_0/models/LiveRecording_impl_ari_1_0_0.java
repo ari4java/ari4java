@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_0_0.models;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Mar 30 16:50:37 COT 2016
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -66,38 +66,11 @@ private static final long serialVersionUID = 1L;
  }
 
 /**********************************************************
- * Duration of silence, in seconds, detected in the recording. This is only available if the recording was initiated with a non-zero maxSilenceSeconds.
- * 
- * @since ari_1_5_0
- *********************************************************/
- public int getSilence_duration(){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * URI for the channel or bridge being recorded
- * 
- * @since ari_1_5_0
- *********************************************************/
- public void setTarget_uri(String val ){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
  * URI for the channel or bridge being recorded
  * 
  * @since ari_1_5_0
  *********************************************************/
  public String getTarget_uri(){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * Duration in seconds of the recording
- * 
- * @since ari_1_5_0
- *********************************************************/
- public void setDuration(int val ){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -116,6 +89,33 @@ private static final long serialVersionUID = 1L;
  * @since ari_1_5_0
  *********************************************************/
  public int getDuration(){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * URI for the channel or bridge being recorded
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+ public void setTarget_uri(String val ){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Duration in seconds of the recording
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+ public void setDuration(int val ){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Duration of silence, in seconds, detected in the recording. This is only available if the recording was initiated with a non-zero maxSilenceSeconds.
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+ public int getSilence_duration(){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
