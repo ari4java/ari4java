@@ -22,3 +22,7 @@ build.xml
 # macbook
 .DS_Store
 
+/.nb-gradle/
+/ari4javad/.nb-gradle/
+/codegen/nbproject/private/
+/codegen/build/

@@ -127,7 +127,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
         DefaultFullHttpRequest request = new DefaultFullHttpRequest(
                 HttpVersion.HTTP_1_1, HttpMethod.valueOf(method), "/ari" + path + queryString);
 
-        System.out.println(request.getUri());
+//        System.out.println(request.getUri());
         request.headers().set(HttpHeaders.Names.HOST, "localhost");
         request.headers().set(HttpHeaders.Names.CONTENT_TYPE, "application/json");
         request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
