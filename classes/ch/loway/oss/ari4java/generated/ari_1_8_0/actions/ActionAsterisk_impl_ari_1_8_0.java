@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_8_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Mar 30 16:50:37 COT 2016
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -61,6 +61,7 @@ private void buildUpdateObject(String configClass, String objectType, String id,
 reset();
 url = "/asterisk/config/dynamic/" + configClass + "/" + objectType + "/" + id + "";
 method = "PUT";
+mParamBody.put( "fields", fields );
 lE.add( HttpResponse.build( 400, "Bad request body") );
 lE.add( HttpResponse.build( 403, "Could not create or update object") );
 lE.add( HttpResponse.build( 404, "{configClass|objectType} not found") );
@@ -308,6 +309,35 @@ httpActionAsync(callback);
 }
 
 /**********************************************************
+ * Rotates a log channel.
+ * 
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+public void rotateLog(String logChannelName) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Deletes a log channel.
+ * 
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+public void deleteLog(String logChannelName) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+public void rotateLog(String logChannelName, AriCallback<Void> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
  * 
  * 
  * @since ari_1_9_0
@@ -327,34 +357,6 @@ public List<LogChannel> listLogChannels() throws RestException{
 };
 
 /**********************************************************
- * 
- * 
- * @since ari_1_9_0
- *********************************************************/
-public void rotateLog(String logChannelName, AriCallback<Void> callback){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * Rotates a log channel.
- * 
- * 
- * @since ari_1_9_0
- *********************************************************/
-public void rotateLog(String logChannelName) throws RestException{
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * 
- * 
- * @since ari_1_9_0
- *********************************************************/
-public void listLogChannels(AriCallback<List<LogChannel>> callback){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
  * Adds a log channel.
  * 
  * 
@@ -365,12 +367,11 @@ public void addLog(String logChannelName, String configuration) throws RestExcep
 };
 
 /**********************************************************
- * Deletes a log channel.
  * 
  * 
  * @since ari_1_9_0
  *********************************************************/
-public void deleteLog(String logChannelName) throws RestException{
+public void listLogChannels(AriCallback<List<LogChannel>> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 

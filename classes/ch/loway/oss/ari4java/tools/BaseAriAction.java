@@ -7,7 +7,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Base functionality for ARI actions
@@ -27,6 +29,7 @@ public class BaseAriAction {
     private WsClient wsClient;
     protected List<HttpParam> lParamQuery;
     protected List<HttpParam> lParamForm;
+    protected Map<String, Map<String, String>> mParamBody;
     protected List<HttpResponse> lE;
     protected String url;
     protected String method;
@@ -39,6 +42,7 @@ public class BaseAriAction {
     protected synchronized void reset() {
         lParamQuery = new ArrayList<HttpParam>();
         lParamForm = new ArrayList<HttpParam>();
+        mParamBody = new HashMap();
         lE = new ArrayList<HttpResponse>();
         url = null;
         wsUpgrade = false;
@@ -61,7 +65,7 @@ public class BaseAriAction {
             if (httpClient == null) {
                 throw new RestException("HTTP client implementation not set");
             } else {
-                return httpClient.httpActionSync(this.url, this.method, this.lParamQuery, this.lParamForm, this.lE);
+                return httpClient.httpActionSync(this.url, this.method, this.lParamQuery, this.lParamForm, this.mParamBody, this.lE);
             }
         }
     }
@@ -93,7 +97,7 @@ public class BaseAriAction {
             asyncHandler.getCallback().onFailure(new RestException("HTTP client implementation not set"));
         } else {
             try {
-                httpClient.httpActionAsync(this.url, this.method, this.lParamQuery, this.lParamForm, this.lE, asyncHandler);
+                httpClient.httpActionAsync(this.url, this.method, this.lParamQuery, this.lParamForm,this.mParamBody, this.lE, asyncHandler);
             } catch (RestException e) {
                 asyncHandler.getCallback().onFailure(e);
             }
@@ -160,7 +164,7 @@ public class BaseAriAction {
      * @param <A> The abstract type for members of the list.
      * @param <C> The concrete type for members of the list.
      * @param json Data in
-     * @param refConcreteType The reference concrete type, should be a List<C>
+     * @param refConcreteType The reference concrete type, should be a 
      * @return a list of A's
      * @throws RestException
      */

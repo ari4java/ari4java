@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Mar 30 16:50:37 COT 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -21,16 +21,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 
 public interface ChannelHold {
-
-// String getMusicclass
-/**********************************************************
- * The music on hold class that the initiator requested.
- * 
- * @since ari_1_8_0
- *********************************************************/
- public String getMusicclass();
-
-
 
 // void setMusicclass String
 /**********************************************************
@@ -59,6 +49,16 @@ public interface ChannelHold {
  * @since ari_1_8_0
  *********************************************************/
  public void setChannel(Channel val );
+
+
+
+// String getMusicclass
+/**********************************************************
+ * The music on hold class that the initiator requested.
+ * 
+ * @since ari_1_8_0
+ *********************************************************/
+ public String getMusicclass();
 
 
 }

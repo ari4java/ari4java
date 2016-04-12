@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Mar 30 16:50:37 COT 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -42,16 +42,6 @@ public interface ConfigTuple {
 
 
 
-// String getAttribute
-/**********************************************************
- * A configuration object attribute.
- * 
- * @since ari_1_8_0
- *********************************************************/
- public String getAttribute();
-
-
-
 // void setAttribute String
 /**********************************************************
  * A configuration object attribute.
@@ -59,6 +49,16 @@ public interface ConfigTuple {
  * @since ari_1_8_0
  *********************************************************/
  public void setAttribute(String val );
+
+
+
+// String getAttribute
+/**********************************************************
+ * A configuration object attribute.
+ * 
+ * @since ari_1_8_0
+ *********************************************************/
+ public String getAttribute();
 
 
 }

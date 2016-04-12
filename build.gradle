@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'findbugs'
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 def env = System.getenv()
 
 //
@@ -9,10 +10,12 @@ def env = System.getenv()
 
 project.ext {
   webapp_name    = 'ari4java'
-  app_version    = '0.3.4'
+  app_version    = '0.3.5'
   build_number   = env["BUILD_NUMBER"]  
   version_class  = 'ch/loway/oss/ari4java/BUILD.java'
   build_time     = "" + new Date()
+  groupId        = 'ch.loway.oss.ari4java'
+  artifactId     = 'ari4java'
 }
 
 
@@ -40,11 +43,11 @@ sourceSets {
 task writeNewPom << {
     pom {
         project {
-            groupId 'ch.loway.oss.ari4java'
+            groupId project.ext.groupId
             version project.ext.app_version
             inceptionYear '2013'
             packaging 'jar'
-            name 'ari4java'
+            name project.ext.artifactId
             description 'Asterisk ARI interface bindings for Java'
             licenses {
                 license {
@@ -156,4 +159,15 @@ task downloadJars << {
         into './libs'
         include '**/*.jar'
     }
+}
+publishing {
+    publications {
+        myPublication(MavenPublication) {
+            groupId project.ext.groupId
+            artifactId project.ext.artifactId
+            version project.ext.app_version
+            from components.java
+        }
+    }
+
 }

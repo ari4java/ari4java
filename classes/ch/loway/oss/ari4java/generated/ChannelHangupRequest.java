@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Mar 30 16:50:37 COT 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,16 +22,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface ChannelHangupRequest {
 
-// void setCause int
-/**********************************************************
- * Integer representation of the cause of the hangup.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setCause(int val );
-
-
-
 // int getCause
 /**********************************************************
  * Integer representation of the cause of the hangup.
@@ -42,13 +32,13 @@ public interface ChannelHangupRequest {
 
 
 
-// void setSoft boolean
+// boolean getSoft
 /**********************************************************
  * Whether the hangup request was a soft hangup request.
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setSoft(boolean val );
+ public boolean getSoft();
 
 
 
@@ -62,6 +52,16 @@ public interface ChannelHangupRequest {
 
 
 
+// void setSoft boolean
+/**********************************************************
+ * Whether the hangup request was a soft hangup request.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setSoft(boolean val );
+
+
+
 // void setChannel Channel
 /**********************************************************
  * The channel on which the hangup was requested.
@@ -72,13 +72,13 @@ public interface ChannelHangupRequest {
 
 
 
-// boolean getSoft
+// void setCause int
 /**********************************************************
- * Whether the hangup request was a soft hangup request.
+ * Integer representation of the cause of the hangup.
  * 
  * @since ari_0_0_1
  *********************************************************/
- public boolean getSoft();
+ public void setCause(int val );
 
 
 }

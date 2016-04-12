@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Mar 30 16:50:37 COT 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,23 +22,13 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface StatusInfo {
 
-// void setLast_reload_time Date
+// void setStartup_time Date
 /**********************************************************
- * Time when Asterisk was last reloaded.
+ * Time when Asterisk was started.
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setLast_reload_time(Date val );
-
-
-
-// Date getLast_reload_time
-/**********************************************************
- * Time when Asterisk was last reloaded.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public Date getLast_reload_time();
+ public void setStartup_time(Date val );
 
 
 
@@ -52,13 +42,23 @@ public interface StatusInfo {
 
 
 
-// void setStartup_time Date
+// Date getLast_reload_time
 /**********************************************************
- * Time when Asterisk was started.
+ * Time when Asterisk was last reloaded.
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setStartup_time(Date val );
+ public Date getLast_reload_time();
+
+
+
+// void setLast_reload_time Date
+/**********************************************************
+ * Time when Asterisk was last reloaded.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setLast_reload_time(Date val );
 
 
 }

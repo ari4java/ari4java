@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Mar 30 16:50:37 COT 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,36 +22,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface Endpoint extends EventSource  {
 
-// List<String> getChannel_ids
-/**********************************************************
- * Id's of channels associated with this endpoint
- * 
- * @since ari_0_0_1
- *********************************************************/
- public List<String> getChannel_ids();
-
-
-
-// void setState String
-/**********************************************************
- * Endpoint's state
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setState(String val );
-
-
-
-// void setChannel_ids List<String>
-/**********************************************************
- * Id's of channels associated with this endpoint
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setChannel_ids(List<String> val );
-
-
-
 // String getResource
 /**********************************************************
  * Identifier of the endpoint, specific to the given technology.
@@ -62,13 +32,13 @@ public interface Endpoint extends EventSource  {
 
 
 
-// void setTechnology String
+// List<String> getChannel_ids
 /**********************************************************
- * Technology of the endpoint
+ * Id's of channels associated with this endpoint
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setTechnology(String val );
+ public List<String> getChannel_ids();
 
 
 
@@ -82,13 +52,13 @@ public interface Endpoint extends EventSource  {
 
 
 
-// void setResource String
+// void setTechnology String
 /**********************************************************
- * Identifier of the endpoint, specific to the given technology.
+ * Technology of the endpoint
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setResource(String val );
+ public void setTechnology(String val );
 
 
 
@@ -99,6 +69,36 @@ public interface Endpoint extends EventSource  {
  * @since ari_0_0_1
  *********************************************************/
  public String getState();
+
+
+
+// void setState String
+/**********************************************************
+ * Endpoint's state
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setState(String val );
+
+
+
+// void setResource String
+/**********************************************************
+ * Identifier of the endpoint, specific to the given technology.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setResource(String val );
+
+
+
+// void setChannel_ids List<String>
+/**********************************************************
+ * Id's of channels associated with this endpoint
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setChannel_ids(List<String> val );
 
 
 }

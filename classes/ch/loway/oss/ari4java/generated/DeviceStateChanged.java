@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Mar 30 16:50:37 COT 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,16 +22,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface DeviceStateChanged {
 
-// void setDevice_state DeviceState
-/**********************************************************
- * Device state object
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setDevice_state(DeviceState val );
-
-
-
 // DeviceState getDevice_state
 /**********************************************************
  * Device state object
@@ -39,6 +29,16 @@ public interface DeviceStateChanged {
  * @since ari_0_0_1
  *********************************************************/
  public DeviceState getDevice_state();
+
+
+
+// void setDevice_state DeviceState
+/**********************************************************
+ * Device state object
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setDevice_state(DeviceState val );
 
 
 }

@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_6_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Mar 30 16:50:37 COT 2016
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -61,6 +61,7 @@ url = "/events/user/" + eventName + "";
 method = "POST";
 lParamQuery.add( HttpParam.build( "application", application) );
 lParamQuery.add( HttpParam.build( "source", source) );
+mParamBody.put( "variables", variables );
 lE.add( HttpResponse.build( 404, "Application does not exist.") );
 lE.add( HttpResponse.build( 422, "Event source not found.") );
 lE.add( HttpResponse.build( 400, "Invalid even tsource URI or userevent data.") );
@@ -79,21 +80,21 @@ httpActionAsync(callback);
 }
 
 /**********************************************************
- * 
- * 
- * @since ari_1_9_0
- *********************************************************/
-public void eventWebsocket(String app, boolean subscribeAll, AriCallback<Message> callback){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
  * WebSocket connection for events.
  * 
  * 
  * @since ari_1_9_0
  *********************************************************/
 public Message eventWebsocket(String app, boolean subscribeAll) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+public void eventWebsocket(String app, boolean subscribeAll, AriCallback<Message> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
