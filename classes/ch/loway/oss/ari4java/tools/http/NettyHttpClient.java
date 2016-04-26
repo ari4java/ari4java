@@ -123,7 +123,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
             }
         }
         DefaultHttpRequest request = new DefaultHttpRequest(
-                HttpVersion.HTTP_1_1, HttpMethod.valueOf(method), "/ari" + path + queryString);
+		HttpVersion.HTTP_1_1, HttpMethod.valueOf(method), baseUri.getPath() + "ari" + path + queryString);
         //System.out.println(request.getUri());
         request.headers().set(HttpHeaders.Names.HOST, "localhost");
         request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
