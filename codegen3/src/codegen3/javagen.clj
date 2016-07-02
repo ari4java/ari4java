@@ -169,7 +169,66 @@
                 (str sw-type "_impl_" api-version)
                 sw-type))))
 
+;; DATA CLASSES
+;; Only containers for data.
 
 
+
+(defn mkGetterVal [field]
+  (let [{t :type v :val} field]
+  {
+      :method     (camelName "get" v)
+      :returns    t
+      :args       []
+      :notes      (str "get " v)
+      :body       (str "return this." v ";")
+  }))
+
+(defn mkSetterVal [field]
+  (let [{t :type v :val} field]
+
+  {
+      :method     (camelName "set" v)
+      :returns    "void"
+      :args       [field]
+      :notes      (str "sets " v)
+      :body       (str "this." v " = " v ";")
+  }))
+
+(defn mkPrivateField [acc field]
+  (let [{t :type v :val} field]
+
+  (conj acc
+        (str "private " t " " v ";"))
+  ))
+
+
+(defn mkGettersSetters
+  "da usare con reduce"
+  [funcs field]
+  (conj funcs
+      (mkGetterVal field)
+      (mkSetterVal field))
+  )
+
+(defn mkDataClass
+  " TO BE TESTED
+
+
+  (mkDataClass p c n
+             [{:type int :val pluto}
+              {:type String :val pippo}]
+             )"
+
+
+
+  [package klass notes lfields]
+  {
+        :classname    klass
+        :package      package
+        :notes        notes
+        :functions    (reduce mkGettersSetters [] lfields)
+        :stanzas      (reduce mkPrivateField   [] lfields)
+  })
 
 
