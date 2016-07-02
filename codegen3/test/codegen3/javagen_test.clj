@@ -26,3 +26,20 @@
 
 
 
+(deftest typeTranslator-basics
+  (testing "esempio base: string"
+    (is (= "String" (typeTranslator "string" "" ))))
+  (testing "esempio base: List of string"
+    (is (= "List<String>" (typeTranslator "List[string]" "" ))))
+  (testing "object: abstract"
+    (is (= "Pluto" (typeTranslator "Pluto" "" ))))
+  (testing "object:concrete"
+    (is (= "Pluto_impl_V1" (typeTranslator "Pluto" "V1" ))))
+
+)
+
+
+
+
+
+

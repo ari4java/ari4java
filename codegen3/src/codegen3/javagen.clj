@@ -103,7 +103,7 @@
         :implements   a list of implementations
         :extends      the class to extend
         :notes        the class comments (version etc)
-        :functions      a list of methods to implement (may be empty)
+        :functions    a list of methods to implement (may be empty)
         :stanzas      a list of text to implement (added after the methods)
 
     Output
@@ -133,5 +133,43 @@
           "}\n\n")
     }
   ))
+
+(def knownTypes
+  "These Swagger types match a Java type directly."
+
+
+  {
+                 "string" "String",
+                 "long" "long",
+                 "int" "int" ,
+                 "double" "double",
+                 "date" "Date",
+                 "object" "String",
+                 "boolean" "boolean",
+                 "containers" "Map<String,String>"
+})
+
+
+
+(defn typeTranslator
+  "Turns a Swagger type into a matching Java type.
+  We need to know if we are asking for a concrete implementation
+  or an interface (as for native objects this is different)
+  so we set the API version when we require a concrete
+  implementation.
+  "
+  [sw-type api-version]
+  (let [inList (get (re-matches #"^List\[(.+)\]$" sw-type) 1)
+        known  (knownTypes sw-type)
+        concrete? (pos? (count api-version))]
+    (cond
+       inList (str "List<" (typeTranslator inList api-version) ">")
+       known  known
+       :else  (if concrete?
+                (str sw-type "_impl_" api-version)
+                sw-type))))
+
+
+
 
 

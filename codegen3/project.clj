@@ -7,6 +7,7 @@
   		[org.clojure/data.json "0.2.6"] 
   	]
   :main ^:skip-aot codegen3.core
-  :plugins [[lein-marginalia "0.8.0"]]
+  :plugins [[lein-codox "0.9.5"] 
+            [lein-kibit "0.1.2"]]
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
