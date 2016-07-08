@@ -39,7 +39,7 @@ If you use Gradle (or any tool using Maven dependencies) you can simply declare 
 
 
 	dependencies {
-	    compile 'ch.loway.oss.ari4java:ari4java:0.3.4'
+	    compile 'ch.loway.oss.ari4java:ari4java:0.3.5'
 	}
 
 This will download the package and all required dependencies.

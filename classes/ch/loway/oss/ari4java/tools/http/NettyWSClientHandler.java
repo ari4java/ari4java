@@ -50,7 +50,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        wsCallback.onResponseReceived();
+        wsCallback.onDisconnect();
     }
 
     @Override

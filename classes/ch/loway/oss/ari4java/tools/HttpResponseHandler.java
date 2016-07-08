@@ -18,6 +18,11 @@ public interface HttpResponseHandler {
     void onResponseReceived();
 
     /**
+     * WebSocket disconnected
+     */
+    void onDisconnect();
+
+    /**
      * All went well.
      *
      * @param response
