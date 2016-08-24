@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_8_0.models;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;

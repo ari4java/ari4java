@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,26 +22,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface ContactInfo {
 
-// void setRoundtrip_usec String
-/**********************************************************
- * Current round trip time, in microseconds, for the contact.
- * 
- * @since ari_1_9_0
- *********************************************************/
- public void setRoundtrip_usec(String val );
-
-
-
-// String getContact_status
-/**********************************************************
- * The current status of the contact.
- * 
- * @since ari_1_9_0
- *********************************************************/
- public String getContact_status();
-
-
-
 // String getUri
 /**********************************************************
  * The location of the contact.
@@ -52,33 +32,13 @@ public interface ContactInfo {
 
 
 
-// void setContact_status String
+// void setRoundtrip_usec String
 /**********************************************************
- * The current status of the contact.
+ * Current round trip time, in microseconds, for the contact.
  * 
  * @since ari_1_9_0
  *********************************************************/
- public void setContact_status(String val );
-
-
-
-// void setAor String
-/**********************************************************
- * The Address of Record this contact belongs to.
- * 
- * @since ari_1_9_0
- *********************************************************/
- public void setAor(String val );
-
-
-
-// String getAor
-/**********************************************************
- * The Address of Record this contact belongs to.
- * 
- * @since ari_1_9_0
- *********************************************************/
- public String getAor();
+ public void setRoundtrip_usec(String val );
 
 
 
@@ -92,6 +52,26 @@ public interface ContactInfo {
 
 
 
+// String getAor
+/**********************************************************
+ * The Address of Record this contact belongs to.
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+ public String getAor();
+
+
+
+// void setContact_status String
+/**********************************************************
+ * The current status of the contact.
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+ public void setContact_status(String val );
+
+
+
 // void setUri String
 /**********************************************************
  * The location of the contact.
@@ -99,6 +79,26 @@ public interface ContactInfo {
  * @since ari_1_9_0
  *********************************************************/
  public void setUri(String val );
+
+
+
+// void setAor String
+/**********************************************************
+ * The Address of Record this contact belongs to.
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+ public void setAor(String val );
+
+
+
+// String getContact_status
+/**********************************************************
+ * The current status of the contact.
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+ public String getContact_status();
 
 
 }

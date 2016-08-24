@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,6 +22,16 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface ChannelCallerId {
 
+// void setCaller_presentation int
+/**********************************************************
+ * The integer representation of the Caller Presentation value.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setCaller_presentation(int val );
+
+
+
 // int getCaller_presentation
 /**********************************************************
  * The integer representation of the Caller Presentation value.
@@ -29,36 +39,6 @@ public interface ChannelCallerId {
  * @since ari_0_0_1
  *********************************************************/
  public int getCaller_presentation();
-
-
-
-// String getCaller_presentation_txt
-/**********************************************************
- * The text representation of the Caller Presentation value.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public String getCaller_presentation_txt();
-
-
-
-// Channel getChannel
-/**********************************************************
- * The channel that changed Caller ID.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public Channel getChannel();
-
-
-
-// void setChannel Channel
-/**********************************************************
- * The channel that changed Caller ID.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setChannel(Channel val );
 
 
 
@@ -72,13 +52,33 @@ public interface ChannelCallerId {
 
 
 
-// void setCaller_presentation int
+// Channel getChannel
 /**********************************************************
- * The integer representation of the Caller Presentation value.
+ * The channel that changed Caller ID.
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setCaller_presentation(int val );
+ public Channel getChannel();
+
+
+
+// String getCaller_presentation_txt
+/**********************************************************
+ * The text representation of the Caller Presentation value.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public String getCaller_presentation_txt();
+
+
+
+// void setChannel Channel
+/**********************************************************
+ * The channel that changed Caller ID.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setChannel(Channel val );
 
 
 }

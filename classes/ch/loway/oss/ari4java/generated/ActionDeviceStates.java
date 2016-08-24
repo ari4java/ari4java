@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,24 +22,14 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface ActionDeviceStates {
 
-// void list AriCallback<List<DeviceState>> callback
+// List<DeviceState> list
 /**********************************************************
+ * List all ARI controlled device states.
  * 
  * 
  * @since ari_0_0_1
  *********************************************************/
-public void list(AriCallback<List<DeviceState>> callback);
-
-
-
-// void update String String
-/**********************************************************
- * Change the state of a device controlled by ARI. (Note - implicitly creates the device state).
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
-public void update(String deviceName, String deviceState) throws RestException;
+public List<DeviceState> list() throws RestException;
 
 
 
@@ -53,14 +43,13 @@ public void get(String deviceName, AriCallback<DeviceState> callback);
 
 
 
-// List<DeviceState> list
+// void delete String AriCallback<Void> callback
 /**********************************************************
- * List all ARI controlled device states.
  * 
  * 
  * @since ari_0_0_1
  *********************************************************/
-public List<DeviceState> list() throws RestException;
+public void delete(String deviceName, AriCallback<Void> callback);
 
 
 
@@ -75,13 +64,24 @@ public void delete(String deviceName) throws RestException;
 
 
 
-// void delete String AriCallback<Void> callback
+// void update String String AriCallback<Void> callback
 /**********************************************************
  * 
  * 
  * @since ari_0_0_1
  *********************************************************/
-public void delete(String deviceName, AriCallback<Void> callback);
+public void update(String deviceName, String deviceState, AriCallback<Void> callback);
+
+
+
+// void update String String
+/**********************************************************
+ * Change the state of a device controlled by ARI. (Note - implicitly creates the device state).
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public void update(String deviceName, String deviceState) throws RestException;
 
 
 
@@ -96,13 +96,13 @@ public DeviceState get(String deviceName) throws RestException;
 
 
 
-// void update String String AriCallback<Void> callback
+// void list AriCallback<List<DeviceState>> callback
 /**********************************************************
  * 
  * 
  * @since ari_0_0_1
  *********************************************************/
-public void update(String deviceName, String deviceState, AriCallback<Void> callback);
+public void list(AriCallback<List<DeviceState>> callback);
 
 
 }

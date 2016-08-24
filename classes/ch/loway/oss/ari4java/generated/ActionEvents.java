@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -21,48 +21,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 
 public interface ActionEvents {
-
-// void userEvent String String String Map<String,String> AriCallback<Void> callback
-/**********************************************************
- * 
- * 
- * @since ari_1_5_0
- *********************************************************/
-public void userEvent(String eventName, String application, String source, Map<String,String> variables, AriCallback<Void> callback);
-
-
-
-// Message eventWebsocket String
-/**********************************************************
- * WebSocket connection for events.
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
-public Message eventWebsocket(String app) throws RestException;
-
-
-
-// Message eventWebsocket String boolean
-/**********************************************************
- * WebSocket connection for events.
- * 
- * 
- * @since ari_1_9_0
- *********************************************************/
-public Message eventWebsocket(String app, boolean subscribeAll) throws RestException;
-
-
-
-// void eventWebsocket String AriCallback<Message> callback
-/**********************************************************
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
-public void eventWebsocket(String app, AriCallback<Message> callback);
-
-
 
 // void userEvent String String String Map<String,String>
 /**********************************************************
@@ -82,6 +40,48 @@ public void userEvent(String eventName, String application, String source, Map<S
  * @since ari_1_9_0
  *********************************************************/
 public void eventWebsocket(String app, boolean subscribeAll, AriCallback<Message> callback);
+
+
+
+// void eventWebsocket String AriCallback<Message> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public void eventWebsocket(String app, AriCallback<Message> callback);
+
+
+
+// Message eventWebsocket String
+/**********************************************************
+ * WebSocket connection for events.
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public Message eventWebsocket(String app) throws RestException;
+
+
+
+// void userEvent String String String Map<String,String> AriCallback<Void> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+public void userEvent(String eventName, String application, String source, Map<String,String> variables, AriCallback<Void> callback);
+
+
+
+// Message eventWebsocket String boolean
+/**********************************************************
+ * WebSocket connection for events.
+ * 
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+public Message eventWebsocket(String app, boolean subscribeAll) throws RestException;
 
 
 }

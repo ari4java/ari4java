@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,16 +22,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface SetId {
 
-// String getUser
-/**********************************************************
- * Effective user id.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public String getUser();
-
-
-
 // void setUser String
 /**********************************************************
  * Effective user id.
@@ -42,16 +32,6 @@ public interface SetId {
 
 
 
-// String getGroup
-/**********************************************************
- * Effective group id.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public String getGroup();
-
-
-
 // void setGroup String
 /**********************************************************
  * Effective group id.
@@ -59,6 +39,26 @@ public interface SetId {
  * @since ari_0_0_1
  *********************************************************/
  public void setGroup(String val );
+
+
+
+// String getUser
+/**********************************************************
+ * Effective user id.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public String getUser();
+
+
+
+// String getGroup
+/**********************************************************
+ * Effective group id.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public String getGroup();
 
 
 }

@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_5_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -63,7 +63,6 @@ method = "PUT";
 lParamQuery.add( HttpParam.build( "to", to) );
 lParamQuery.add( HttpParam.build( "from", from) );
 lParamQuery.add( HttpParam.build( "body", body) );
-lParamBody.addAll( HttpParam.build( "variables", variables) );
 lE.add( HttpResponse.build( 404, "Endpoint not found") );
 }
 
@@ -142,7 +141,6 @@ url = "/endpoints/" + tech + "/" + resource + "/sendMessage";
 method = "PUT";
 lParamQuery.add( HttpParam.build( "from", from) );
 lParamQuery.add( HttpParam.build( "body", body) );
-lParamBody.addAll( HttpParam.build( "variables", variables) );
 lE.add( HttpResponse.build( 400, "Invalid parameters for sending a message.") );
 lE.add( HttpResponse.build( 404, "Endpoint not found") );
 }

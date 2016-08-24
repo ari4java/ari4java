@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,6 +22,46 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface DialplanCEP {
 
+// void setContext String
+/**********************************************************
+ * Context in the dialplan
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setContext(String val );
+
+
+
+// long getPriority
+/**********************************************************
+ * Priority in the dialplan
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public long getPriority();
+
+
+
+// void setPriority long
+/**********************************************************
+ * Priority in the dialplan
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setPriority(long val );
+
+
+
+// String getExten
+/**********************************************************
+ * Extension in the dialplan
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public String getExten();
+
+
+
 // String getContext
 /**********************************************************
  * Context in the dialplan
@@ -39,46 +79,6 @@ public interface DialplanCEP {
  * @since ari_0_0_1
  *********************************************************/
  public void setExten(String val );
-
-
-
-// void setContext String
-/**********************************************************
- * Context in the dialplan
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setContext(String val );
-
-
-
-// void setPriority long
-/**********************************************************
- * Priority in the dialplan
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setPriority(long val );
-
-
-
-// long getPriority
-/**********************************************************
- * Priority in the dialplan
- * 
- * @since ari_0_0_1
- *********************************************************/
- public long getPriority();
-
-
-
-// String getExten
-/**********************************************************
- * Extension in the dialplan
- * 
- * @since ari_0_0_1
- *********************************************************/
- public String getExten();
 
 
 }

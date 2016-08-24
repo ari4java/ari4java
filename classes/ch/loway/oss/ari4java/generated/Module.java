@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,6 +22,26 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface Module {
 
+// void setStatus String
+/**********************************************************
+ * The running status of this module
+ * 
+ * @since ari_1_8_0
+ *********************************************************/
+ public void setStatus(String val );
+
+
+
+// void setName String
+/**********************************************************
+ * The name of this module
+ * 
+ * @since ari_1_8_0
+ *********************************************************/
+ public void setName(String val );
+
+
+
 // void setDescription String
 /**********************************************************
  * The description of this module
@@ -32,23 +52,23 @@ public interface Module {
 
 
 
-// String getName
+// String getStatus
 /**********************************************************
- * The name of this module
+ * The running status of this module
  * 
  * @since ari_1_8_0
  *********************************************************/
- public String getName();
+ public String getStatus();
 
 
 
-// int getUse_count
+// String getDescription
 /**********************************************************
- * The number of times this module is being used
+ * The description of this module
  * 
  * @since ari_1_8_0
  *********************************************************/
- public int getUse_count();
+ public String getDescription();
 
 
 
@@ -72,6 +92,16 @@ public interface Module {
 
 
 
+// String getName
+/**********************************************************
+ * The name of this module
+ * 
+ * @since ari_1_8_0
+ *********************************************************/
+ public String getName();
+
+
+
 // String getSupport_level
 /**********************************************************
  * The support state of this module
@@ -82,43 +112,13 @@ public interface Module {
 
 
 
-// String getDescription
+// int getUse_count
 /**********************************************************
- * The description of this module
+ * The number of times this module is being used
  * 
  * @since ari_1_8_0
  *********************************************************/
- public String getDescription();
-
-
-
-// String getStatus
-/**********************************************************
- * The running status of this module
- * 
- * @since ari_1_8_0
- *********************************************************/
- public String getStatus();
-
-
-
-// void setName String
-/**********************************************************
- * The name of this module
- * 
- * @since ari_1_8_0
- *********************************************************/
- public void setName(String val );
-
-
-
-// void setStatus String
-/**********************************************************
- * The running status of this module
- * 
- * @since ari_1_8_0
- *********************************************************/
- public void setStatus(String val );
+ public int getUse_count();
 
 
 }

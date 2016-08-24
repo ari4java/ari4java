@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,23 +22,13 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface ContactStatusChange {
 
-// Endpoint getEndpoint
+// void setContact_info ContactInfo
 /**********************************************************
  * 
  * 
  * @since ari_1_9_0
  *********************************************************/
- public Endpoint getEndpoint();
-
-
-
-// ContactInfo getContact_info
-/**********************************************************
- * 
- * 
- * @since ari_1_9_0
- *********************************************************/
- public ContactInfo getContact_info();
+ public void setContact_info(ContactInfo val );
 
 
 
@@ -52,13 +42,23 @@ public interface ContactStatusChange {
 
 
 
-// void setContact_info ContactInfo
+// ContactInfo getContact_info
 /**********************************************************
  * 
  * 
  * @since ari_1_9_0
  *********************************************************/
- public void setContact_info(ContactInfo val );
+ public ContactInfo getContact_info();
+
+
+
+// Endpoint getEndpoint
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+ public Endpoint getEndpoint();
 
 
 }

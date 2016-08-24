@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -21,6 +21,26 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 
 public interface ChannelDestroyed {
+
+// void setCause_txt String
+/**********************************************************
+ * Text representation of the cause of the hangup
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setCause_txt(String val );
+
+
+
+// void setCause int
+/**********************************************************
+ * Integer representation of the cause of the hangup
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setCause(int val );
+
+
 
 // int getCause
 /**********************************************************
@@ -42,26 +62,6 @@ public interface ChannelDestroyed {
 
 
 
-// void setChannel Channel
-/**********************************************************
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setChannel(Channel val );
-
-
-
-// void setCause_txt String
-/**********************************************************
- * Text representation of the cause of the hangup
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setCause_txt(String val );
-
-
-
 // String getCause_txt
 /**********************************************************
  * Text representation of the cause of the hangup
@@ -72,13 +72,13 @@ public interface ChannelDestroyed {
 
 
 
-// void setCause int
+// void setChannel Channel
 /**********************************************************
- * Integer representation of the cause of the hangup
+ * 
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setCause(int val );
+ public void setChannel(Channel val );
 
 
 }

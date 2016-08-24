@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,26 +22,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface DeviceState extends EventSource  {
 
-// String getName
-/**********************************************************
- * Name of the device.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public String getName();
-
-
-
-// String getState
-/**********************************************************
- * Device's state
- * 
- * @since ari_0_0_1
- *********************************************************/
- public String getState();
-
-
-
 // void setState String
 /**********************************************************
  * Device's state
@@ -59,6 +39,26 @@ public interface DeviceState extends EventSource  {
  * @since ari_0_0_1
  *********************************************************/
  public void setName(String val );
+
+
+
+// String getName
+/**********************************************************
+ * Name of the device.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public String getName();
+
+
+
+// String getState
+/**********************************************************
+ * Device's state
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public String getState();
 
 
 }

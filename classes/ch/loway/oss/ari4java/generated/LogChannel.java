@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,23 +22,23 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface LogChannel {
 
-// String getChannel
+// void setStatus String
 /**********************************************************
- * The log channel path
+ * Whether or not a log type is enabled
  * 
  * @since ari_1_9_0
  *********************************************************/
- public String getChannel();
+ public void setStatus(String val );
 
 
 
-// String getType
+// void setType String
 /**********************************************************
  * Types of logs for the log channel
  * 
  * @since ari_1_9_0
  *********************************************************/
- public String getType();
+ public void setType(String val );
 
 
 
@@ -52,23 +52,13 @@ public interface LogChannel {
 
 
 
-// void setConfiguration String
+// String getChannel
 /**********************************************************
- * The various log levels
+ * The log channel path
  * 
  * @since ari_1_9_0
  *********************************************************/
- public void setConfiguration(String val );
-
-
-
-// void setType String
-/**********************************************************
- * Types of logs for the log channel
- * 
- * @since ari_1_9_0
- *********************************************************/
- public void setType(String val );
+ public String getChannel();
 
 
 
@@ -92,13 +82,23 @@ public interface LogChannel {
 
 
 
-// void setStatus String
+// String getType
 /**********************************************************
- * Whether or not a log type is enabled
+ * Types of logs for the log channel
  * 
  * @since ari_1_9_0
  *********************************************************/
- public void setStatus(String val );
+ public String getType();
+
+
+
+// void setConfiguration String
+/**********************************************************
+ * The various log levels
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+ public void setConfiguration(String val );
 
 
 }

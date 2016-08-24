@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,23 +22,13 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface Bridge extends EventSource  {
 
-// String getName
+// void setBridge_type String
 /**********************************************************
- * Name the creator gave the bridge
- * 
- * @since ari_1_0_0
- *********************************************************/
- public String getName();
-
-
-
-// void setTechnology String
-/**********************************************************
- * Name of the current bridging technology
+ * Type of bridge technology
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setTechnology(String val );
+ public void setBridge_type(String val );
 
 
 
@@ -52,13 +42,33 @@ public interface Bridge extends EventSource  {
 
 
 
-// void setChannels List<String>
+// void setName String
 /**********************************************************
- * Ids of channels participating in this bridge
+ * Name the creator gave the bridge
+ * 
+ * @since ari_1_0_0
+ *********************************************************/
+ public void setName(String val );
+
+
+
+// String getId
+/**********************************************************
+ * Unique identifier for this bridge
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setChannels(List<String> val );
+ public String getId();
+
+
+
+// void setId String
+/**********************************************************
+ * Unique identifier for this bridge
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setId(String val );
 
 
 
@@ -69,6 +79,36 @@ public interface Bridge extends EventSource  {
  * @since ari_0_0_1
  *********************************************************/
  public String getBridge_type();
+
+
+
+// String getName
+/**********************************************************
+ * Name the creator gave the bridge
+ * 
+ * @since ari_1_0_0
+ *********************************************************/
+ public String getName();
+
+
+
+// String getCreator
+/**********************************************************
+ * Entity that created the bridge
+ * 
+ * @since ari_1_0_0
+ *********************************************************/
+ public String getCreator();
+
+
+
+// void setTechnology String
+/**********************************************************
+ * Name of the current bridging technology
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setTechnology(String val );
 
 
 
@@ -92,26 +132,6 @@ public interface Bridge extends EventSource  {
 
 
 
-// String getCreator
-/**********************************************************
- * Entity that created the bridge
- * 
- * @since ari_1_0_0
- *********************************************************/
- public String getCreator();
-
-
-
-// void setBridge_type String
-/**********************************************************
- * Type of bridge technology
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setBridge_type(String val );
-
-
-
 // List<String> getChannels
 /**********************************************************
  * Ids of channels participating in this bridge
@@ -122,23 +142,13 @@ public interface Bridge extends EventSource  {
 
 
 
-// void setId String
+// void setChannels List<String>
 /**********************************************************
- * Unique identifier for this bridge
+ * Ids of channels participating in this bridge
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setId(String val );
-
-
-
-// String getId
-/**********************************************************
- * Unique identifier for this bridge
- * 
- * @since ari_0_0_1
- *********************************************************/
- public String getId();
+ public void setChannels(List<String> val );
 
 
 
@@ -149,16 +159,6 @@ public interface Bridge extends EventSource  {
  * @since ari_1_0_0
  *********************************************************/
  public void setCreator(String val );
-
-
-
-// void setName String
-/**********************************************************
- * Name the creator gave the bridge
- * 
- * @since ari_1_0_0
- *********************************************************/
- public void setName(String val );
 
 
 }

@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_8_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:06 CET 2016
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -70,7 +70,6 @@ lParamQuery.add( HttpParam.build( "app", app) );
 lParamQuery.add( HttpParam.build( "appArgs", appArgs) );
 lParamQuery.add( HttpParam.build( "callerId", callerId) );
 lParamQuery.add( HttpParam.build( "timeout", timeout) );
-lParamBody.addAll( HttpParam.build( "variables", variables) );
 lParamQuery.add( HttpParam.build( "channelId", channelId) );
 lParamQuery.add( HttpParam.build( "otherChannelId", otherChannelId) );
 lParamQuery.add( HttpParam.build( "originator", originator) );
@@ -134,7 +133,6 @@ lParamQuery.add( HttpParam.build( "app", app) );
 lParamQuery.add( HttpParam.build( "appArgs", appArgs) );
 lParamQuery.add( HttpParam.build( "callerId", callerId) );
 lParamQuery.add( HttpParam.build( "timeout", timeout) );
-lParamBody.addAll( HttpParam.build( "variables", variables) );
 lParamQuery.add( HttpParam.build( "otherChannelId", otherChannelId) );
 lParamQuery.add( HttpParam.build( "originator", originator) );
 lE.add( HttpResponse.build( 400, "Invalid parameters for originating a channel.") );
@@ -766,31 +764,20 @@ httpActionAsync(callback);
 }
 
 /**********************************************************
- * Create a new channel (originate with id).
- * The new channel is created immediately and a snapshot of it returned. If a Stasis application is provided it will be automatically subscribed to the originated channel for further events and updates.
+ * 
  * 
  * @since ari_1_5_0
  *********************************************************/
-public Channel originateWithId(String channelId, String endpoint, String extension, String context, long priority, String app, String appArgs, String callerId, int timeout, Map<String,String> variables, String otherChannelId) throws RestException{
+public void originateWithId(String channelId, String endpoint, String extension, String context, long priority, String app, String appArgs, String callerId, int timeout, Map<String,String> variables, String otherChannelId, AriCallback<Channel> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
 /**********************************************************
- * Start snooping.
- * Snoop (spy/whisper) on a specific channel.
+ * 
  * 
  * @since ari_0_0_1
  *********************************************************/
-public Channel snoopChannel(String channelId, String spy, String whisper, String app, String appArgs) throws RestException{
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * 
- * 
- * @since ari_1_5_0
- *********************************************************/
-public void originate(String endpoint, String extension, String context, long priority, String app, String appArgs, String callerId, int timeout, Map<String,String> variables, String channelId, String otherChannelId, AriCallback<Channel> callback){
+public void snoopChannel(String channelId, String spy, String whisper, String app, String appArgs, AriCallback<Channel> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -814,11 +801,14 @@ public Playback play(String channelId, String media, String lang, int offsetms, 
 };
 
 /**********************************************************
+ * Exit application{
+  throw new UnsupportedOperationException("Method availble from ...");
+}; continue execution in the dialplan.
  * 
  * 
  * @since ari_0_0_1
  *********************************************************/
-public void play(String channelId, String media, String lang, int offsetms, int skipms, AriCallback<Playback> callback){
+public void continueInDialplan(String channelId, String context, String extension, int priority) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -827,7 +817,7 @@ public void play(String channelId, String media, String lang, int offsetms, int 
  * 
  * @since ari_0_0_1
  *********************************************************/
-public void snoopChannel(String channelId, String spy, String whisper, String app, String appArgs, AriCallback<Channel> callback){
+public void originate(String endpoint, String extension, String context, long priority, String app, String appArgs, String callerId, int timeout, AriCallback<Channel> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -836,7 +826,7 @@ public void snoopChannel(String channelId, String spy, String whisper, String ap
  * 
  * @since ari_1_5_0
  *********************************************************/
-public void originateWithId(String channelId, String endpoint, String extension, String context, long priority, String app, String appArgs, String callerId, int timeout, Map<String,String> variables, String otherChannelId, AriCallback<Channel> callback){
+public void originate(String endpoint, String extension, String context, long priority, String app, String appArgs, String callerId, int timeout, Map<String,String> variables, String channelId, String otherChannelId, AriCallback<Channel> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -851,14 +841,12 @@ public Channel originate(String endpoint, String extension, String context, long
 };
 
 /**********************************************************
- * Exit application{
-  throw new UnsupportedOperationException("Method availble from ...");
-}; continue execution in the dialplan.
+ * Create a new channel (originate with id).
+ * The new channel is created immediately and a snapshot of it returned. If a Stasis application is provided it will be automatically subscribed to the originated channel for further events and updates.
  * 
- * 
- * @since ari_0_0_1
+ * @since ari_1_5_0
  *********************************************************/
-public void continueInDialplan(String channelId, String context, String extension, int priority) throws RestException{
+public Channel originateWithId(String channelId, String endpoint, String extension, String context, long priority, String app, String appArgs, String callerId, int timeout, Map<String,String> variables, String otherChannelId) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -877,7 +865,17 @@ public Channel originate(String endpoint, String extension, String context, long
  * 
  * @since ari_0_0_1
  *********************************************************/
-public void originate(String endpoint, String extension, String context, long priority, String app, String appArgs, String callerId, int timeout, AriCallback<Channel> callback){
+public void play(String channelId, String media, String lang, int offsetms, int skipms, AriCallback<Playback> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Start snooping.
+ * Snoop (spy/whisper) on a specific channel.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public Channel snoopChannel(String channelId, String spy, String whisper, String app, String appArgs) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
 };
 

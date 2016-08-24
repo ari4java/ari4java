@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -33,6 +33,16 @@ public List<Sound> list(String lang, String format) throws RestException;
 
 
 
+// void get String AriCallback<Sound> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public void get(String soundId, AriCallback<Sound> callback);
+
+
+
 // Sound get String
 /**********************************************************
  * Get a sound's details.
@@ -51,16 +61,6 @@ public Sound get(String soundId) throws RestException;
  * @since ari_0_0_1
  *********************************************************/
 public void list(String lang, String format, AriCallback<List<Sound>> callback);
-
-
-
-// void get String AriCallback<Sound> callback
-/**********************************************************
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
-public void get(String soundId, AriCallback<Sound> callback);
 
 
 }

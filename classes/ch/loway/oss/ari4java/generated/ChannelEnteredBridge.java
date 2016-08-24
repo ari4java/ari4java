@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,16 +22,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface ChannelEnteredBridge {
 
-// Channel getChannel
-/**********************************************************
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
- public Channel getChannel();
-
-
-
 // void setBridge Bridge
 /**********************************************************
  * 
@@ -42,13 +32,13 @@ public interface ChannelEnteredBridge {
 
 
 
-// void setChannel Channel
+// Channel getChannel
 /**********************************************************
  * 
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setChannel(Channel val );
+ public Channel getChannel();
 
 
 
@@ -59,6 +49,16 @@ public interface ChannelEnteredBridge {
  * @since ari_0_0_1
  *********************************************************/
  public Bridge getBridge();
+
+
+
+// void setChannel Channel
+/**********************************************************
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setChannel(Channel val );
 
 
 }

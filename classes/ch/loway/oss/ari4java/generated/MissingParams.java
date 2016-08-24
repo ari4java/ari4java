@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,16 +22,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface MissingParams {
 
-// List<String> getParams
-/**********************************************************
- * A list of the missing parameters
- * 
- * @since ari_0_0_1
- *********************************************************/
- public List<String> getParams();
-
-
-
 // void setParams List<String>
 /**********************************************************
  * A list of the missing parameters
@@ -39,6 +29,16 @@ public interface MissingParams {
  * @since ari_0_0_1
  *********************************************************/
  public void setParams(List<String> val );
+
+
+
+// List<String> getParams
+/**********************************************************
+ * A list of the missing parameters
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public List<String> getParams();
 
 
 }

@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_0_0_1.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -103,6 +103,24 @@ httpActionAsync(callback, Endpoint_impl_ari_0_0_1.class);
 }
 
 /**********************************************************
+ * 
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+public void sendMessage(String to, String from, String body, Map<String,String> variables, AriCallback<Void> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+public void sendMessageToEndpoint(String tech, String resource, String from, String body, Map<String,String> variables, AriCallback<Void> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
  * Send a message to some endpoint in a technology.
  * 
  * 
@@ -119,24 +137,6 @@ public void sendMessageToEndpoint(String tech, String resource, String from, Str
  * @since ari_1_5_0
  *********************************************************/
 public void sendMessage(String to, String from, String body, Map<String,String> variables) throws RestException{
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * 
- * 
- * @since ari_1_5_0
- *********************************************************/
-public void sendMessage(String to, String from, String body, Map<String,String> variables, AriCallback<Void> callback){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * 
- * 
- * @since ari_1_5_0
- *********************************************************/
-public void sendMessageToEndpoint(String tech, String resource, String from, String body, Map<String,String> variables, AriCallback<Void> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 

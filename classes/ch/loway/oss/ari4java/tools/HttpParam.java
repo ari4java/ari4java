@@ -1,10 +1,6 @@
 
 package ch.loway.oss.ari4java.tools;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 /**
  *
  * @author lenz
@@ -18,16 +14,6 @@ public class HttpParam {
         p.name = n;
         p.value = v;
         return p;
-    }
-
-    public static List<ch.loway.oss.ari4java.tools.HttpParam> build(String key, Map<String,String> variables) {
-        ArrayList<ch.loway.oss.ari4java.tools.HttpParam> vars = new ArrayList<>();
-
-        for (Map.Entry<String,String> entry : variables.entrySet()) {
-            vars.add(build(entry.getKey(), entry.getValue()));
-        }
-
-        return vars;
     }
 
     public static HttpParam build(String n, int v) {

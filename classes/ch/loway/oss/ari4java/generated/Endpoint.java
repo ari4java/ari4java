@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 24 13:07:49 SAST 2016
+//    Generated on: Sat Jan 30 13:39:05 CET 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,16 +22,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface Endpoint extends EventSource  {
 
-// String getResource
-/**********************************************************
- * Identifier of the endpoint, specific to the given technology.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public String getResource();
-
-
-
 // List<String> getChannel_ids
 /**********************************************************
  * Id's of channels associated with this endpoint
@@ -39,36 +29,6 @@ public interface Endpoint extends EventSource  {
  * @since ari_0_0_1
  *********************************************************/
  public List<String> getChannel_ids();
-
-
-
-// String getTechnology
-/**********************************************************
- * Technology of the endpoint
- * 
- * @since ari_0_0_1
- *********************************************************/
- public String getTechnology();
-
-
-
-// void setTechnology String
-/**********************************************************
- * Technology of the endpoint
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setTechnology(String val );
-
-
-
-// String getState
-/**********************************************************
- * Endpoint's state
- * 
- * @since ari_0_0_1
- *********************************************************/
- public String getState();
 
 
 
@@ -82,6 +42,46 @@ public interface Endpoint extends EventSource  {
 
 
 
+// void setChannel_ids List<String>
+/**********************************************************
+ * Id's of channels associated with this endpoint
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setChannel_ids(List<String> val );
+
+
+
+// String getResource
+/**********************************************************
+ * Identifier of the endpoint, specific to the given technology.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public String getResource();
+
+
+
+// void setTechnology String
+/**********************************************************
+ * Technology of the endpoint
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setTechnology(String val );
+
+
+
+// String getTechnology
+/**********************************************************
+ * Technology of the endpoint
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public String getTechnology();
+
+
+
 // void setResource String
 /**********************************************************
  * Identifier of the endpoint, specific to the given technology.
@@ -92,13 +92,13 @@ public interface Endpoint extends EventSource  {
 
 
 
-// void setChannel_ids List<String>
+// String getState
 /**********************************************************
- * Id's of channels associated with this endpoint
+ * Endpoint's state
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setChannel_ids(List<String> val );
+ public String getState();
 
 
 }
