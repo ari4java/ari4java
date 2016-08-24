@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Aug 24 13:07:49 SAST 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -21,6 +21,16 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 
 public interface ChannelTalkingFinished {
+
+// int getDuration
+/**********************************************************
+ * The length of time, in milliseconds, that talking was detected on the channel
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+ public int getDuration();
+
+
 
 // void setDuration int
 /**********************************************************
@@ -49,16 +59,6 @@ public interface ChannelTalkingFinished {
  * @since ari_1_5_0
  *********************************************************/
  public void setChannel(Channel val );
-
-
-
-// int getDuration
-/**********************************************************
- * The length of time, in milliseconds, that talking was detected on the channel
- * 
- * @since ari_1_5_0
- *********************************************************/
- public int getDuration();
 
 
 }

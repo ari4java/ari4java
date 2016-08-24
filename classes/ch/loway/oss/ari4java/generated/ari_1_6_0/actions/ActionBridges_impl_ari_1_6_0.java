@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_6_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Aug 24 13:07:49 SAST 2016
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -365,11 +365,12 @@ httpActionAsync(callback);
 }
 
 /**********************************************************
+ * Start playback of media on a bridge.
+ * The media URI may be any of a number of URI's. Currently sound: and recording: URI's are supported. This operation creates a playback resource that can be used to control the playback of media (pause, rewind, fast forward, etc.)
  * 
- * 
- * @since ari_1_7_0
+ * @since ari_0_0_1
  *********************************************************/
-public void createWithId(String type, String bridgeId, String name, AriCallback<Bridge> callback){
+public Playback play(String bridgeId, String media, String lang, int offsetms, int skipms) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -378,17 +379,16 @@ public void createWithId(String type, String bridgeId, String name, AriCallback<
  * 
  * @since ari_0_0_1
  *********************************************************/
-public void create(String type, AriCallback<Bridge> callback){
+public void play(String bridgeId, String media, String lang, int offsetms, int skipms, AriCallback<Playback> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
 /**********************************************************
- * Create a new bridge or updates an existing one.
- * This bridge persists until it has been shut down, or Asterisk has been shut down.
+ * 
  * 
  * @since ari_1_7_0
  *********************************************************/
-public Bridge createWithId(String type, String bridgeId, String name) throws RestException{
+public void createWithId(String type, String bridgeId, String name, AriCallback<Bridge> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -417,17 +417,7 @@ public Bridge create(String type) throws RestException{
  * 
  * @since ari_0_0_1
  *********************************************************/
-public void play(String bridgeId, String media, String lang, int offsetms, int skipms, AriCallback<Playback> callback){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * Start playback of media on a bridge.
- * The media URI may be any of a number of URI's. Currently sound: and recording: URI's are supported. This operation creates a playback resource that can be used to control the playback of media (pause, rewind, fast forward, etc.)
- * 
- * @since ari_0_0_1
- *********************************************************/
-public Playback play(String bridgeId, String media, String lang, int offsetms, int skipms) throws RestException{
+public void create(String type, AriCallback<Bridge> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -437,6 +427,16 @@ public Playback play(String bridgeId, String media, String lang, int offsetms, i
  * @since ari_1_0_0
  *********************************************************/
 public void create(String type, String name, AriCallback<Bridge> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Create a new bridge or updates an existing one.
+ * This bridge persists until it has been shut down, or Asterisk has been shut down.
+ * 
+ * @since ari_1_7_0
+ *********************************************************/
+public Bridge createWithId(String type, String bridgeId, String name) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
 };
 

@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Aug 24 13:07:49 SAST 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,16 +22,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface FormatLangPair {
 
-// String getFormat
-/**********************************************************
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
- public String getFormat();
-
-
-
 // String getLanguage
 /**********************************************************
  * 
@@ -42,13 +32,13 @@ public interface FormatLangPair {
 
 
 
-// void setLanguage String
+// String getFormat
 /**********************************************************
  * 
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setLanguage(String val );
+ public String getFormat();
 
 
 
@@ -59,6 +49,16 @@ public interface FormatLangPair {
  * @since ari_0_0_1
  *********************************************************/
  public void setFormat(String val );
+
+
+
+// void setLanguage String
+/**********************************************************
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setLanguage(String val );
 
 
 }

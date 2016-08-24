@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Aug 24 13:07:49 SAST 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,16 +22,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface Message {
 
-// void setType String
-/**********************************************************
- * Indicates the type of this message.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setType(String val );
-
-
-
 // String getType
 /**********************************************************
  * Indicates the type of this message.
@@ -39,6 +29,16 @@ public interface Message {
  * @since ari_0_0_1
  *********************************************************/
  public String getType();
+
+
+
+// void setType String
+/**********************************************************
+ * Indicates the type of this message.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setType(String val );
 
 
 }

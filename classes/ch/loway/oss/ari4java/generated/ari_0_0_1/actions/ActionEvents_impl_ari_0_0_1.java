@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_0_0_1.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Aug 24 13:07:49 SAST 2016
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -51,25 +51,6 @@ httpActionAsync(callback, Message_impl_ari_0_0_1.class);
 }
 
 /**********************************************************
- * Generate a user event.
- * 
- * 
- * @since ari_1_5_0
- *********************************************************/
-public void userEvent(String eventName, String application, String source, Map<String,String> variables) throws RestException{
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * 
- * 
- * @since ari_1_9_0
- *********************************************************/
-public void eventWebsocket(String app, boolean subscribeAll, AriCallback<Message> callback){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
  * 
  * 
  * @since ari_1_5_0
@@ -85,6 +66,25 @@ public void userEvent(String eventName, String application, String source, Map<S
  * @since ari_1_9_0
  *********************************************************/
 public Message eventWebsocket(String app, boolean subscribeAll) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Generate a user event.
+ * 
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+public void userEvent(String eventName, String application, String source, Map<String,String> variables) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+public void eventWebsocket(String app, boolean subscribeAll, AriCallback<Message> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 

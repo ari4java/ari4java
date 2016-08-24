@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Aug 24 13:07:49 SAST 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,6 +22,16 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface ChannelDtmfReceived {
 
+// void setDigit String
+/**********************************************************
+ * DTMF digit received (0-9, A-E, # or *)
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setDigit(String val );
+
+
+
 // String getDigit
 /**********************************************************
  * DTMF digit received (0-9, A-E, # or *)
@@ -39,16 +49,6 @@ public interface ChannelDtmfReceived {
  * @since ari_0_0_1
  *********************************************************/
  public void setDuration_ms(int val );
-
-
-
-// int getDuration_ms
-/**********************************************************
- * Number of milliseconds DTMF was received
- * 
- * @since ari_0_0_1
- *********************************************************/
- public int getDuration_ms();
 
 
 
@@ -72,13 +72,13 @@ public interface ChannelDtmfReceived {
 
 
 
-// void setDigit String
+// int getDuration_ms
 /**********************************************************
- * DTMF digit received (0-9, A-E, # or *)
+ * Number of milliseconds DTMF was received
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setDigit(String val );
+ public int getDuration_ms();
 
 
 }

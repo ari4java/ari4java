@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Aug 24 13:07:49 SAST 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,16 +22,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface Event {
 
-// Date getTimestamp
-/**********************************************************
- * Time at which this event was created.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public Date getTimestamp();
-
-
-
 // void setTimestamp Date
 /**********************************************************
  * Time at which this event was created.
@@ -42,13 +32,13 @@ public interface Event {
 
 
 
-// String getApplication
+// Date getTimestamp
 /**********************************************************
- * Name of the application receiving the event.
+ * Time at which this event was created.
  * 
  * @since ari_0_0_1
  *********************************************************/
- public String getApplication();
+ public Date getTimestamp();
 
 
 
@@ -59,6 +49,16 @@ public interface Event {
  * @since ari_0_0_1
  *********************************************************/
  public void setApplication(String val );
+
+
+
+// String getApplication
+/**********************************************************
+ * Name of the application receiving the event.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public String getApplication();
 
 
 }

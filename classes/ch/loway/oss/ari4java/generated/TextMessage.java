@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Aug 24 13:07:49 SAST 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,13 +22,23 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface TextMessage {
 
-// void setFrom String
+// List<TextMessageVariable> getVariables
 /**********************************************************
- * A technology specific URI specifying the source of the message. For sip and pjsip technologies, any SIP URI can be specified. For xmpp, the URI must correspond to the client connection being used to send the message.
+ * Technology specific key/value pairs associated with the message.
  * 
  * @since ari_1_5_0
  *********************************************************/
- public void setFrom(String val );
+ public List<TextMessageVariable> getVariables();
+
+
+
+// void setBody String
+/**********************************************************
+ * The text of the message.
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+ public void setBody(String val );
 
 
 
@@ -52,23 +62,13 @@ public interface TextMessage {
 
 
 
-// void setBody String
+// void setVariables List<TextMessageVariable>
 /**********************************************************
- * The text of the message.
+ * Technology specific key/value pairs associated with the message.
  * 
  * @since ari_1_5_0
  *********************************************************/
- public void setBody(String val );
-
-
-
-// String getFrom
-/**********************************************************
- * A technology specific URI specifying the source of the message. For sip and pjsip technologies, any SIP URI can be specified. For xmpp, the URI must correspond to the client connection being used to send the message.
- * 
- * @since ari_1_5_0
- *********************************************************/
- public String getFrom();
+ public void setVariables(List<TextMessageVariable> val );
 
 
 
@@ -82,23 +82,23 @@ public interface TextMessage {
 
 
 
-// List<TextMessageVariable> getVariables
+// void setFrom String
 /**********************************************************
- * Technology specific key/value pairs associated with the message.
+ * A technology specific URI specifying the source of the message. For sip and pjsip technologies, any SIP URI can be specified. For xmpp, the URI must correspond to the client connection being used to send the message.
  * 
  * @since ari_1_5_0
  *********************************************************/
- public List<TextMessageVariable> getVariables();
+ public void setFrom(String val );
 
 
 
-// void setVariables List<TextMessageVariable>
+// String getFrom
 /**********************************************************
- * Technology specific key/value pairs associated with the message.
+ * A technology specific URI specifying the source of the message. For sip and pjsip technologies, any SIP URI can be specified. For xmpp, the URI must correspond to the client connection being used to send the message.
  * 
  * @since ari_1_5_0
  *********************************************************/
- public void setVariables(List<TextMessageVariable> val );
+ public String getFrom();
 
 
 }

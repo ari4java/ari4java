@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Aug 24 13:07:49 SAST 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,16 +22,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface EndpointStateChange {
 
-// void setEndpoint Endpoint
-/**********************************************************
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setEndpoint(Endpoint val );
-
-
-
 // Endpoint getEndpoint
 /**********************************************************
  * 
@@ -39,6 +29,16 @@ public interface EndpointStateChange {
  * @since ari_0_0_1
  *********************************************************/
  public Endpoint getEndpoint();
+
+
+
+// void setEndpoint Endpoint
+/**********************************************************
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setEndpoint(Endpoint val );
 
 
 }
