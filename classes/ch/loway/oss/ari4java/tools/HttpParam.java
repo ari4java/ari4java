@@ -22,11 +22,11 @@ public class HttpParam {
 
     public static List<ch.loway.oss.ari4java.tools.HttpParam> build(String key, Map<String,String> variables) {
         ArrayList<ch.loway.oss.ari4java.tools.HttpParam> vars = new ArrayList<>();
-
-        for (Map.Entry<String,String> entry : variables.entrySet()) {
-            vars.add(build(entry.getKey(), entry.getValue()));
+        if (variables != null) {
+            for (Map.Entry<String, String> entry : variables.entrySet()) {
+                vars.add(build(entry.getKey(), entry.getValue()));
+            }
         }
-
         return vars;
     }
 

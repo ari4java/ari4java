@@ -121,7 +121,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
         FullHttpRequest request = new DefaultFullHttpRequest(
                 HttpVersion.HTTP_1_1, HttpMethod.valueOf(method), "/ari" + path + queryString);
         //System.out.println(request.getUri());
-        if (!parametersBody.isEmpty()) {
+        if (parametersBody != null && !parametersBody.isEmpty()) {
             String vars = makeBodyVariables(parametersBody);
             ByteBuf bbuf = Unpooled.copiedBuffer(vars, StandardCharsets.UTF_8);
 
