@@ -45,6 +45,7 @@ public class ARI {
     private final static String ALLOWED_IN_UID = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         
     private String appName = "";
+    private String url = "";
     private AriVersion version;
     private HttpClient httpClient;
     private WsClient wsClient;
@@ -64,6 +65,9 @@ public class ARI {
         this.version = version;
     }
     
+    public void setUrl(String url) {
+    	this.url = url;
+    }
     
     /**
      * Returns the current ARI version.
@@ -76,6 +80,14 @@ public class ARI {
         return version;
     }
     
+    /**
+     * Returns the server and port the websocket is connected to.
+     * 
+   	 * @return the server currently being used.
+   	 */
+   	public String getUrl() {
+   		return url;
+   	}
 
     /**
      * Get the implementation for a given action interface
@@ -196,6 +208,7 @@ public class ARI {
                 ari.setHttpClient(hc);
                 ari.setWsClient(hc);
                 ari.setVersion( version );
+                ari.setUrl(url);
 
                 return ari;
 
