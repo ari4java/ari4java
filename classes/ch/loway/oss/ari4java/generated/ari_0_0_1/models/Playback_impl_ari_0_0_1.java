@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_0_0_1.models;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Aug 31 18:05:10 CEST 2016
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -76,6 +76,23 @@ private static final long serialVersionUID = 1L;
    target_uri = val;
  }
 
-/** No missing signatures from interface */
+/**********************************************************
+ * If a list of URIs is being played, the next media URI to be played back.
+ * 
+ * @since ari_1_10_0
+ *********************************************************/
+ public void setNext_media_uri(String val ){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * If a list of URIs is being played, the next media URI to be played back.
+ * 
+ * @since ari_1_10_0
+ *********************************************************/
+ public String getNext_media_uri(){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
 }
 

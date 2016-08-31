@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Aug 31 18:05:10 CEST 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -99,6 +99,26 @@ public interface Playback {
  * @since ari_0_0_1
  *********************************************************/
  public void setId(String val );
+
+
+
+// void setNext_media_uri String
+/**********************************************************
+ * If a list of URIs is being played, the next media URI to be played back.
+ * 
+ * @since ari_1_10_0
+ *********************************************************/
+ public void setNext_media_uri(String val );
+
+
+
+// String getNext_media_uri
+/**********************************************************
+ * If a list of URIs is being played, the next media URI to be played back.
+ * 
+ * @since ari_1_10_0
+ *********************************************************/
+ public String getNext_media_uri();
 
 
 

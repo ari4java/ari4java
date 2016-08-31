@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Aug 31 18:05:10 CEST 2016
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -170,6 +170,17 @@ public void pause(String recordingName) throws RestException;
 
 
 
+// byte[] getStoredFile String
+/**********************************************************
+ * Get the file associated with the stored recording.
+ * 
+ * 
+ * @since ari_1_10_0
+ *********************************************************/
+public byte[] getStoredFile(String recordingName) throws RestException;
+
+
+
 // StoredRecording copyStored String String
 /**********************************************************
  * Copy a stored recording.
@@ -178,6 +189,16 @@ public void pause(String recordingName) throws RestException;
  * @since ari_1_5_0
  *********************************************************/
 public StoredRecording copyStored(String recordingName, String destinationRecordingName) throws RestException;
+
+
+
+// void getStoredFile String AriCallback<byte[]> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_10_0
+ *********************************************************/
+public void getStoredFile(String recordingName, AriCallback<byte[]> callback);
 
 
 

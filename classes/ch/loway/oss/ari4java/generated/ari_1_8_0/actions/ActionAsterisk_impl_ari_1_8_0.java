@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_8_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Sat Jan 30 13:39:05 CET 2016
+//    Generated on: Wed Aug 31 18:05:11 CEST 2016
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -61,6 +61,7 @@ private void buildUpdateObject(String configClass, String objectType, String id,
 reset();
 url = "/asterisk/config/dynamic/" + configClass + "/" + objectType + "/" + id + "";
 method = "PUT";
+lParamBody.addAll( HttpParam.build( "fields", fields) );
 lE.add( HttpResponse.build( 400, "Bad request body") );
 lE.add( HttpResponse.build( 403, "Could not create or update object") );
 lE.add( HttpResponse.build( 404, "{configClass|objectType} not found") );
