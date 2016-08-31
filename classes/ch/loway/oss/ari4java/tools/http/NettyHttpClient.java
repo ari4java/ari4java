@@ -1,6 +1,8 @@
 package ch.loway.oss.ari4java.tools.http;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -14,15 +16,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.http.DefaultHttpRequest;
-import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpClientCodec;
-import io.netty.handler.codec.http.HttpHeaders;
-import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.HttpVersion;
+import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -35,6 +29,8 @@ import io.netty.util.CharsetUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 import java.util.List;
 
 import ch.loway.oss.ari4java.tools.HttpParam;
@@ -115,19 +111,43 @@ public class NettyHttpClient implements HttpClient, WsClient {
     }
 
     // Build the HTTP request based on the given parameters
-    private HttpRequest buildRequest(String path, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm) {
+    private HttpRequest buildRequest(String path, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody) {
         String queryString = String.format("?api_key=%s:%s", username, password);
         for (HttpParam hp : parametersQuery) {
             if (hp.value != null && !hp.value.isEmpty()) {
                 queryString += "&" + hp.name + "=" + hp.value;
             }
         }
-        DefaultHttpRequest request = new DefaultHttpRequest(
-		HttpVersion.HTTP_1_1, HttpMethod.valueOf(method), baseUri.getPath() + "ari" + path + queryString);
+        FullHttpRequest request = new DefaultFullHttpRequest(
+                HttpVersion.HTTP_1_1, HttpMethod.valueOf(method), "/ari" + path + queryString);
         //System.out.println(request.getUri());
+        if (parametersBody != null && !parametersBody.isEmpty()) {
+            String vars = makeBodyVariables(parametersBody);
+            ByteBuf bbuf = Unpooled.copiedBuffer(vars, StandardCharsets.UTF_8);
+
+            request.headers().add(HttpHeaders.Names.CONTENT_TYPE, "application/json");
+            request.headers().set(HttpHeaders.Names.CONTENT_LENGTH, bbuf.readableBytes());
+            request.content().clear().writeBytes(bbuf);
+        }
         request.headers().set(HttpHeaders.Names.HOST, "localhost");
         request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
         return request;
+    }
+
+    private String makeBodyVariables(List<HttpParam> variables) {
+        StringBuilder varBuilder = new StringBuilder();
+        varBuilder.append("{").append("\"variables\": {");
+        Iterator<HttpParam> entryIterator = variables.iterator();
+        while(entryIterator.hasNext()) {
+            HttpParam param = entryIterator.next();
+            varBuilder.append("\"").append(param.name).append("\"").append(": ").append("\"").append(param.value).append("\"");
+            if (entryIterator.hasNext()) {
+                varBuilder.append(",");
+            }
+        }
+        varBuilder.append("}}");
+
+        return varBuilder.toString();
     }
 
     private RestException makeException(HttpResponseStatus status, String response, List<HttpResponse> errors) {
@@ -146,11 +166,11 @@ public class NettyHttpClient implements HttpClient, WsClient {
 
     // Synchronous HTTP action
     @Override
-    public String httpActionSync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm,
+    public String httpActionSync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
             List<HttpResponse> errors) throws RestException {
         Channel ch;
         try {
-            HttpRequest request = buildRequest(uri, method, parametersQuery, parametersForm);
+            HttpRequest request = buildRequest(uri, method, parametersQuery, parametersForm, parametersBody);
             //handler.reset();
             ch = bootStrap.connect(baseUri.getHost(), baseUri.getPort()).sync().channel();
             NettyHttpClientHandler handler = (NettyHttpClientHandler) ch.pipeline().get("http-handler");
@@ -168,10 +188,10 @@ public class NettyHttpClient implements HttpClient, WsClient {
 
     // Asynchronous HTTP action, response is passed to HttpResponseHandler
     @Override
-    public void httpActionAsync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm,
+    public void httpActionAsync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
             final List<HttpResponse> errors, final HttpResponseHandler responseHandler)
             throws RestException {
-        final HttpRequest request = buildRequest(uri, method, parametersQuery, parametersForm);
+        final HttpRequest request = buildRequest(uri, method, parametersQuery, parametersForm, parametersBody);
         // Get future channel
         ChannelFuture cf = bootStrap.connect(baseUri.getHost(), baseUri.getPort());
         cf.addListener(new ChannelFutureListener() {

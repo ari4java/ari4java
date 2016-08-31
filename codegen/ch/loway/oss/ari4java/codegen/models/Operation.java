@@ -65,9 +65,11 @@ public class Operation {
             if ( p.type == ParamType.QUERY ) {
                 sb.append( "lParamQuery.add( HttpParam.build( \"").append( p.name)
                         .append( "\", ").append( p.name ).append( ") );\n");
-            } else
-            if ( p.type == ParamType.FORM ) {
+            } else if ( p.type == ParamType.FORM ) {
                 sb.append( "lParamForm.add( HttpParam.build( \"").append( p.name)
+                        .append( "\", ").append( p.name ).append( ") );\n");
+            } else if ( p.type == ParamType.BODY ) {
+                sb.append("lParamBody.addAll( HttpParam.build( \"").append( p.name)
                         .append( "\", ").append( p.name ).append( ") );\n");
             };
         }

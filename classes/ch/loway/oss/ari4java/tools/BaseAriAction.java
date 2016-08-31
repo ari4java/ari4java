@@ -27,6 +27,7 @@ public class BaseAriAction {
     private WsClient wsClient;
     protected List<HttpParam> lParamQuery;
     protected List<HttpParam> lParamForm;
+    protected List<HttpParam> lParamBody;
     protected List<HttpResponse> lE;
     protected String url;
     protected String method;
@@ -39,6 +40,7 @@ public class BaseAriAction {
     protected synchronized void reset() {
         lParamQuery = new ArrayList<HttpParam>();
         lParamForm = new ArrayList<HttpParam>();
+        lParamBody = new ArrayList<HttpParam>();
         lE = new ArrayList<HttpResponse>();
         url = null;
         wsUpgrade = false;
@@ -61,7 +63,7 @@ public class BaseAriAction {
             if (httpClient == null) {
                 throw new RestException("HTTP client implementation not set");
             } else {
-                return httpClient.httpActionSync(this.url, this.method, this.lParamQuery, this.lParamForm, this.lE);
+                return httpClient.httpActionSync(this.url, this.method, this.lParamQuery, this.lParamForm, this.lParamBody, this.lE);
             }
         }
     }
@@ -93,7 +95,7 @@ public class BaseAriAction {
             asyncHandler.getCallback().onFailure(new RestException("HTTP client implementation not set"));
         } else {
             try {
-                httpClient.httpActionAsync(this.url, this.method, this.lParamQuery, this.lParamForm, this.lE, asyncHandler);
+                httpClient.httpActionAsync(this.url, this.method, this.lParamQuery, this.lParamForm, this.lParamBody, this.lE, asyncHandler);
             } catch (RestException e) {
                 asyncHandler.getCallback().onFailure(e);
             }
