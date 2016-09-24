@@ -22,3 +22,6 @@ build.xml
 # macbook
 .DS_Store
 
+# netbeans
+.nb-gradle/
+
