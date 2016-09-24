@@ -232,3 +232,7 @@
   })
 
 
+;; CREATE FILE
+;; (let [file-name "path/to/whatever.txt"]
+;;  (make-parents file-name)
+;;  (spit file-name "whatever"))
