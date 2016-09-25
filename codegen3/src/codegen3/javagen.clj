@@ -3,6 +3,7 @@
   (:require [clojure.string :as s])
   (:gen-class))
 
+(def BASE-CLASS-PATH "./jclazz")
 
 ;(genclassfile {:package "a.b.c"
 ;               :classname "Pippon"
@@ -92,6 +93,12 @@
    )))
 
 
+(defn genFilename
+  "Returns the relative filename of a package + class"
+  [pkgName kName]
+  (let [pkg (s/replace pkgName "." "/")]
+    (str pkg "/" kName ".java")))
+
 
 
 (defn genclassfile
@@ -112,7 +119,7 @@
    "
    [data]
    (let [{:keys [classname isInterface package imports implements extends notes functions stanzas]} data]
-   { :filename "x"
+   { :filename (genFilename package classname)
      :body
        (str
           "package " package ";\n\n"
@@ -230,6 +237,42 @@
         :functions    (reduce mkGettersSetters [] lfields)
         :stanzas      (reduce mkPrivateField   [] lfields)
   })
+
+
+(defn writeOutKlass
+  "Generates and writes a classfile on disk.
+   Returns the filename."
+  [klass]
+  (let [{:keys [filename body]} (genclassfile klass)
+        realPath (str BASE-CLASS-PATH "/" filename)]
+    (clojure.java.io/make-parents realPath)
+    (spit realPath body)
+    realPath))
+
+;(writeOutKlass
+;(mkDataClass "p.k.g" "c" "n"
+;             [{:type "int" :val "pluto"}
+;              {:type "String" :val "pippo"}]
+;             ))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ;; CREATE FILE

@@ -39,7 +39,9 @@
 )
 
 
-
+(deftest classFileName
+  (testing "Plain sample"
+    (is (= "a/b/c.java" (genFilename "a.b" "c")))))
 
 
 
