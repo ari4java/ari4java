@@ -5,7 +5,16 @@
 ;; Load func: cmd+enter
 ;; Load all:  shift+cmd+enter
 
+;; TBD
+;; - check signatures using :pre and  :post
+
 ;; WHAT WE HAVE TO BUILD
+;; I would
+;; - Read all AMI versions     [*]
+;; - Generate Java signatures
+;; - Merge all signatures -> Interfaces
+;; - Write interfaces
+;; - Write each specific object
 
 ;; ## INTERFACES
 
