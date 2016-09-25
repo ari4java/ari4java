@@ -44,4 +44,12 @@
     (is (= "a/b/c.java" (genFilename "a.b" "c")))))
 
 
+(deftest genAttributesTest
+  (testing "One attribute"
+    (is (= "int P" (genAttrs [{:name "P" :type "int"}]) )))
+  (testing "Multiple attribute"
+    (is (= "int P, String Q"
+           (genAttrs [{:name "P" :type "int"} {:name "Q" :type "String"}]) )))
 
+
+  )

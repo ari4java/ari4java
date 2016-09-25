@@ -3,7 +3,13 @@
   (:require [clojure.string :as s])
   (:gen-class))
 
-(def BASE-CLASS-PATH "./jclazz")
+(def BASE-CLASS-PATH "./gen-java")
+
+(def PREAMBLE
+  (str " - THIS CLASS IS AUTOMATICALLY GENERATED - \n"
+       " - -    PLEASE DO NOT EDIT MANUALLY    - - \n\n"
+       " Generated on: " (.toString (java.util.Date.))
+       "\n\n"))
 
 ;(genclassfile {:package "a.b.c"
 ;               :classname "Pippon"
@@ -49,12 +55,28 @@
   [lImports]
   (mkSection "import " ";\n" lImports) )
 
+(defn indent-prefix
+  "Adds a given prefix to a block of text (string).
+  Returns the string with prefix applied. "
+  [prefix text]
+  (s/join "\n"
+      (map #(str prefix % ) (s/split-lines text))))
+
+(defn indent
+  "Indents a text by three spaces"
+  [text]
+  (indent-prefix "   " text))
+
 (defn mkComment
-  "Creates a Java comment"
-  [lines]
-  (str "/******\n"
-      (mkSection " * " "\n" lines)
-       "****/\n\n"))
+  "Creates a Java comment.
+  Receives one string of (multi-line) text."
+  [text]
+  (let [STARS "************************************************"]
+    (str "/" STARS "\n"
+       (indent-prefix " * " text) "\n"
+       " " STARS "/" "\n\n"
+        )))
+
 
 
 
@@ -77,18 +99,16 @@
   [data]
   (let [{:keys [method returns isPrivate args notes body]} data]
   (str
+    "\n\n"
     (mkComment notes)
     (if isPrivate "private " "public ")
     returns " "
     method "("
     (genAttrs args)
     "){\n"
-     body
-
-    "}"
-
-
-
+    (indent body)
+    "\n"
+    "}\n"
 
    )))
 
@@ -124,7 +144,7 @@
        (str
           "package " package ";\n\n"
           (mkImports imports)
-          (mkComment notes)
+          (mkComment (str PREAMBLE notes))
           "public "
                (if isInterface "interface " "class ")
                classname
@@ -134,12 +154,13 @@
                "java.io.Serializable "
                " {\n"
 
-          (mkSection "" "\n\n" (map genbody functions))
           (mkSection "" "\n\n" stanzas)
+          (mkSection "" "\n\n" (map #(indent (genbody %)) functions))
 
           "}\n\n")
     }
-  ))
+  ) )
+
 
 (def knownTypes
   "These Swagger types match a Java type directly."
@@ -182,7 +203,7 @@
 
 
 (defn mkGetterVal [field]
-  (let [{t :type v :val} field]
+  (let [{t :type v :name} field]
   {
       :method     (camelName "get" v)
       :returns    t
@@ -192,7 +213,7 @@
   }))
 
 (defn mkSetterVal [field]
-  (let [{t :type v :val} field]
+  (let [{t :type v :name} field]
 
   {
       :method     (camelName "set" v)
@@ -203,7 +224,7 @@
   }))
 
 (defn mkPrivateField [acc field]
-  (let [{t :type v :val} field]
+  (let [{t :type v :name} field]
 
   (conj acc
         (str "private " t " " v ";"))
