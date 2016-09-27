@@ -363,11 +363,18 @@ public class ARI {
     public void cleanup() throws ARIException {
 
         if ( liveActionEvent != null ) {
-            closeAction( liveActionEvent );
+            try {
+                closeAction(liveActionEvent);
+            } catch (ARIException e) {
+                // ignore on cleanup...
+            }
+            liveActionEvent = null;
         }
 
         destroy( wsClient );
-        destroy( httpClient );
+        if (wsClient != httpClient) {
+            destroy(httpClient);
+        }
 
         wsClient = null;
         httpClient = null;
