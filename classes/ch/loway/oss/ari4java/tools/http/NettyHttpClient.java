@@ -18,8 +18,10 @@ import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.concurrent.ScheduledFuture;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
@@ -124,11 +126,11 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     }
 
     // Build the HTTP request based on the given parameters
-    private HttpRequest buildRequest(String path, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody) {
-        String queryString = String.format("?api_key=%s:%s", username, password);
+    private HttpRequest buildRequest(String path, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody) throws UnsupportedEncodingException {
+        String queryString = String.format("?api_key=%s:%s", URLEncoder.encode(username, "UTF-8"), URLEncoder.encode(password, "UTF-8"));
         for (HttpParam hp : parametersQuery) {
             if (hp.value != null && !hp.value.isEmpty()) {
-                queryString += "&" + hp.name + "=" + hp.value;
+                queryString += "&" + hp.name + "=" + URLEncoder.encode(hp.value, "UTF-8");
             }
         }
         FullHttpRequest request = new DefaultFullHttpRequest(
@@ -194,6 +196,8 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             } else {
                 throw makeException(handler.getResponseStatus(), handler.getResponseText(), errors);
             }
+        } catch (UnsupportedEncodingException e) {
+            throw new RestException(e);
         } catch (InterruptedException e) {
             throw new RestException(e);
         }
@@ -204,41 +208,45 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     public void httpActionAsync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
             final List<HttpResponse> errors, final HttpResponseHandler responseHandler)
             throws RestException {
-        final HttpRequest request = buildRequest(uri, method, parametersQuery, parametersForm, parametersBody);
-        // Get future channel
-        ChannelFuture cf = bootStrap.connect(baseUri.getHost(), baseUri.getPort());
-        cf.addListener(new ChannelFutureListener() {
+        try {
+            final HttpRequest request = buildRequest(uri, method, parametersQuery, parametersForm, parametersBody);
+            // Get future channel
+            ChannelFuture cf = bootStrap.connect(baseUri.getHost(), baseUri.getPort());
+            cf.addListener(new ChannelFutureListener() {
 
-            @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
-                if (future.isSuccess()) {
-                    Channel ch = future.channel();
-                    responseHandler.onChReadyToWrite();
-                    ch.writeAndFlush(request);
-                    ch.closeFuture().addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    if (future.isSuccess()) {
+                        Channel ch = future.channel();
+                        responseHandler.onChReadyToWrite();
+                        ch.writeAndFlush(request);
+                        ch.closeFuture().addListener(new ChannelFutureListener() {
 
-                        @Override
-                        public void operationComplete(ChannelFuture future) throws Exception {
-                            responseHandler.onResponseReceived();
-                            if (future.isSuccess()) {
-                                NettyHttpClientHandler handler = (NettyHttpClientHandler) future.channel().pipeline().get("http-handler");
-                                HttpResponseStatus rStatus = handler.getResponseStatus();
-                                
-                                if ( httpResponseOkay(rStatus)) {
-                                    responseHandler.onSuccess(handler.getResponseText());
+                            @Override
+                            public void operationComplete(ChannelFuture future) throws Exception {
+                                responseHandler.onResponseReceived();
+                                if (future.isSuccess()) {
+                                    NettyHttpClientHandler handler = (NettyHttpClientHandler) future.channel().pipeline().get("http-handler");
+                                    HttpResponseStatus rStatus = handler.getResponseStatus();
+
+                                    if ( httpResponseOkay(rStatus)) {
+                                        responseHandler.onSuccess(handler.getResponseText());
+                                    } else {
+                                        responseHandler.onFailure(makeException(handler.getResponseStatus(), handler.getResponseText(), errors));
+                                    }
                                 } else {
-                                    responseHandler.onFailure(makeException(handler.getResponseStatus(), handler.getResponseText(), errors));
+                                    responseHandler.onFailure(future.cause());
                                 }
-                            } else {
-                                responseHandler.onFailure(future.cause());
                             }
-                        }
-                    });
-                } else {
-                    responseHandler.onFailure(future.cause());
+                        });
+                    } else {
+                        responseHandler.onFailure(future.cause());
+                    }
                 }
-            }
-        });
+            });
+        } catch (UnsupportedEncodingException e) {
+            throw new RestException(e);
+        }
     }
     // WsClient implementation - connect to WebSocket server
 
