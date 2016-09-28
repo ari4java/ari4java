@@ -99,6 +99,11 @@ public class ARI {
     @SuppressWarnings("unchecked")
     public <T> T getActionImpl(Class<T> klazz) throws ARIException {
 
+        // use the events method as we ref it for cleanup
+        if (klazz == ActionEvents.class) {
+            return (T) events();
+        }
+
         BaseAriAction action = (BaseAriAction) buildConcreteImplementation(klazz);
         action.setHttpClient(this.httpClient);
         action.setWsClient(this.wsClient);
@@ -417,8 +422,7 @@ public class ARI {
 
         final MessageQueue q = new MessageQueue();
 
-        ActionEvents ae = events();
-        ae.eventWebsocket( appName, new AriCallback<Message>() {
+        events().eventWebsocket( appName, new AriCallback<Message>() {
 
             @Override
             public void onSuccess(Message result) {                
@@ -431,8 +435,6 @@ public class ARI {
             }
         });
 
-        // register the AE so we can disconnectWs it when the erorr goes down
-        liveActionEvent = ae;
         return q;
 
     }
@@ -499,7 +501,9 @@ public class ARI {
      * @return an Events object.
      */
     public ActionEvents events() {
-        return (ActionEvents) setupAction(version.builder().actionEvents());
+        if (liveActionEvent == null)
+            liveActionEvent = (ActionEvents) setupAction(version.builder().actionEvents());
+        return liveActionEvent;
     }
 
     /**
