@@ -1,18 +1,14 @@
 package ch.loway.oss.ari4java.tools.http;
 
 import ch.loway.oss.ari4java.tools.HttpResponseHandler;
-import ch.loway.oss.ari4java.tools.RestException;
+import ch.loway.oss.ari4java.tools.WsClientAutoReconnect;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
-import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
 
 /**
@@ -28,6 +24,13 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
     final WebSocketClientHandshaker handshaker;
     private ChannelPromise handshakeFuture;
     final HttpResponseHandler wsCallback;
+    private WsClientAutoReconnect wsClient = null;
+    private boolean shuttingDown = false;
+
+    public NettyWSClientHandler(WebSocketClientHandshaker handshaker, HttpResponseHandler wsCallback, WsClientAutoReconnect wsClient) {
+        this(handshaker, wsCallback);
+        this.wsClient = wsClient;
+    }
 
     public NettyWSClientHandler(WebSocketClientHandshaker handshaker, HttpResponseHandler wsCallback) {
         this.handshaker = handshaker;
@@ -50,7 +53,13 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        wsCallback.onDisconnect();
+        if (!shuttingDown) {
+            if (this.wsClient != null) {
+                wsClient.reconnectWs();
+            } else {
+                wsCallback.onDisconnect();
+            }
+        }
     }
 
     @Override
@@ -66,20 +75,28 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
         
         if (msg instanceof FullHttpResponse) {
             FullHttpResponse response = (FullHttpResponse) msg;
-            throw new Exception("Unexpected FullHttpResponse (getStatus=" + response.getStatus() + ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
+            String error = "Unexpected FullHttpResponse (getStatus=" + response.getStatus() + ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')';
+            System.err.println(error);
+            throw new Exception(error);
         }
+
+        // call this so we can set the last received time
+        wsCallback.onResponseReceived();
         
         WebSocketFrame frame = (WebSocketFrame) msg;
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
             responseText = textFrame.text();
             wsCallback.onSuccess(textFrame.text());
-            
-        } else if (frame instanceof PongWebSocketFrame) {
-            System.out.println("WebSocket Client received pong");
         } else if (frame instanceof CloseWebSocketFrame) {
             ch.close();
-            wsCallback.onFailure(new RestException("WebSocket Client received close"));
+            if (!shuttingDown) {
+                if (this.wsClient != null) {
+                    wsClient.reconnectWs();
+                } else {
+                    wsCallback.onDisconnect();
+                }
+            }
         }
         
     }
@@ -94,5 +111,12 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
         wsCallback.onFailure(cause);
     }
 
+    public boolean isShuttingDown() {
+        return shuttingDown;
+    }
+
+    public void setShuttingDown(boolean shuttingDown) {
+        this.shuttingDown = shuttingDown;
+    }
 }
 

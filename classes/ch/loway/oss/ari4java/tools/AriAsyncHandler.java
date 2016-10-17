@@ -12,6 +12,7 @@ public class AriAsyncHandler<T> implements HttpResponseHandler {
     private final AriCallback<? super T> callback;
     private Class<T> klazz;
     private TypeReference<T> klazzType;
+    private long lastResponseTime = 0;
 
     public AriAsyncHandler(AriCallback<? super T> callback, Class<T> klazz) {
         this.callback = callback;
@@ -45,12 +46,12 @@ public class AriAsyncHandler<T> implements HttpResponseHandler {
 
     @Override
     public void onChReadyToWrite() {
-        // Client connected. That's good.
+        lastResponseTime = System.currentTimeMillis();
     }
 
     @Override
     public void onResponseReceived() {
-        // not sure what should go here...
+        lastResponseTime = System.currentTimeMillis();
     }
 
     @Override
@@ -67,6 +68,11 @@ public class AriAsyncHandler<T> implements HttpResponseHandler {
     @Override
     public void onFailure(Throwable e) {
         this.callback.onFailure(new RestException(e));
+    }
+
+    @Override
+    public long getLastResponseTime() {
+        return lastResponseTime;
     }
 
 }
