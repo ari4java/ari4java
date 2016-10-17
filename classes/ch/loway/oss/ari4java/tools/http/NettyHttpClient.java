@@ -303,7 +303,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                 public void run() {
                     if (System.currentTimeMillis() - wsCallback.getLastResponseTime() > 15000) {
                         if (!wsChannelFuture.isCancelled() && wsChannelFuture.channel() != null) {
-                            WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer("ari4j".getBytes()));
+                            WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer("ari4j".getBytes( StandardCharsets.UTF_8 )));
                             wsChannelFuture.channel().writeAndFlush(frame);
                         }
                     }
