@@ -109,7 +109,8 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
     private String buildURL(String path, List<HttpParam> parametersQuery) throws UnsupportedEncodingException {
         StringBuilder uriBuilder = new StringBuilder();
-        uriBuilder.append("/ari");
+        uriBuilder.append(baseUri.getPath());
+        uriBuilder.append("ari");
         uriBuilder.append(path);
         uriBuilder.append("?api_key=");
         uriBuilder.append(URLEncoder.encode(username, "UTF-8"));
