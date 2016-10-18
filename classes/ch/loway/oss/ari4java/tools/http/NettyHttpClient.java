@@ -107,16 +107,33 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         }, 250L, TimeUnit.MILLISECONDS);
     }
 
-    // Factory for WS handshakes
-    private WebSocketClientHandshaker getWsHandshake(String path, List<HttpParam> parametersQuery) {
-        String queryString = String.format("?api_key=%s:%s", username, password);
-        for (HttpParam hp : parametersQuery) {
-            if (hp.value != null && !hp.value.isEmpty()) {
-                queryString += "&" + hp.name + "=" + hp.value;
+    private String buildURL(String path, List<HttpParam> parametersQuery) throws UnsupportedEncodingException {
+        StringBuilder uriBuilder = new StringBuilder();
+        uriBuilder.append(baseUri.getPath());
+        uriBuilder.append("ari");
+        uriBuilder.append(path);
+        uriBuilder.append("?api_key=");
+        uriBuilder.append(URLEncoder.encode(username, "UTF-8"));
+        uriBuilder.append(":");
+        uriBuilder.append(URLEncoder.encode(password, "UTF-8"));
+        if (parametersQuery != null) {
+            for (HttpParam hp : parametersQuery) {
+                if (hp.value != null && !hp.value.isEmpty()) {
+                    uriBuilder.append("&");
+                    uriBuilder.append(hp.name);
+                    uriBuilder.append("=");
+                    uriBuilder.append(URLEncoder.encode(hp.value, "UTF-8"));
+                }
             }
         }
+        return uriBuilder.toString();
+    }
+
+    // Factory for WS handshakes
+    private WebSocketClientHandshaker getWsHandshake(String path, List<HttpParam> parametersQuery) throws UnsupportedEncodingException {
+        String url = buildURL(path, parametersQuery);
         try {
-            URI uri = new URI(baseUri.toString().replaceFirst("http", "ws") + "ari" + path + queryString);
+            URI uri = new URI(url.replaceFirst("http", "ws"));
             return WebSocketClientHandshakerFactory.newHandshaker(
                     uri, WebSocketVersion.V13, null, false, null);
         } catch (URISyntaxException e) {
@@ -127,14 +144,9 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
     // Build the HTTP request based on the given parameters
     private HttpRequest buildRequest(String path, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody) throws UnsupportedEncodingException {
-        String queryString = String.format("?api_key=%s:%s", URLEncoder.encode(username, "UTF-8"), URLEncoder.encode(password, "UTF-8"));
-        for (HttpParam hp : parametersQuery) {
-            if (hp.value != null && !hp.value.isEmpty()) {
-                queryString += "&" + hp.name + "=" + URLEncoder.encode(hp.value, "UTF-8");
-            }
-        }
+        String url = buildURL(path, parametersQuery);
         FullHttpRequest request = new DefaultFullHttpRequest(
-                HttpVersion.HTTP_1_1, HttpMethod.valueOf(method), "/ari" + path + queryString);
+                HttpVersion.HTTP_1_1, HttpMethod.valueOf(method), url);
         //System.out.println(request.getUri());
         if (parametersBody != null && !parametersBody.isEmpty()) {
             String vars = makeBodyVariables(parametersBody);
@@ -256,7 +268,11 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         this.wsCallback = callback;
         this.wsEventsUrl = url;
         this.wsEventsParamQuery = lParamQuery;
-        this.wsHandler = new NettyWSClientHandler(getWsHandshake(url, lParamQuery), callback, this);
+        try {
+            this.wsHandler = new NettyWSClientHandler(getWsHandshake(url, lParamQuery), callback, this);
+        } catch (UnsupportedEncodingException e) {
+            throw new RestException(e);
+        }
 
         Bootstrap wsBootStrap = new Bootstrap();
         wsBootStrap.group(group);
