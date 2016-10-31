@@ -1,5 +1,9 @@
 (ns codegen3.core
   (:require [clojure.data.json :as json])
+  (:require [codegen3.methods  :as meth])
+  (:require [codegen3.javagen  :as javagen])
+
+
   (:gen-class))
 
 ;; Load func: cmd+enter
@@ -52,6 +56,10 @@
 (def ARI_VERSIONS
   ["ari_0_0_1" "ari_1_0_0"])
 
+
+(def ARI-VERSIONS-KW
+  (vec (map keyword ARI_VERSIONS)))
+
 ;; ALL KNOWN ARI FILES
 (def ALL_FILES
   {"applications" {},
@@ -62,7 +70,8 @@
    "events" {}
 })
 
-
+(def ALL-FILES-KW
+  (vec (map keyword (keys ALL_FILES))))
 
 ;; READ ARI FOLDER as JSON
 (defn loadResourceFile
@@ -113,6 +122,41 @@
   (reduce readKnownFilesForVersion {} ARI_VERSIONS))
 
 
+(defn allFilesAllAris
+  "Ritorna tuple di tutte le permutazioni di file e di tutte le ARI,
+   anche quelle che non esistono"
+  []
+  (for [ari  ARI_VERSIONS
+        file (keys ALL_FILES)]
+  [ (keyword ari) (keyword file)] ))
+
+
+(defn mkFnSignature
+  "Creates a list of signatures for each file"
+  [apiOp]
+
+  )
+
+
+
+(defn write$interfaces [DB]
+  (for [file ALL-FILES-KW]
+    (javagen/writeInterface
+       file
+       "--comment--"
+       (vals (meth/allSigsForInterface DB file ARI-VERSIONS-KW)))))
+
+(defn run$
+  []
+  (let [DB (readAll)]
+      (do
+        (write$interfaces DB)
+      )
+    ))
+
+
+
+
 
 ;; How is this supposed to be working?
 ;; 1. we read the contents of known files in all
@@ -122,3 +166,19 @@
 ;; 3. we build events
 ;; 4. we build ???
 ;; 5. for each version of the interface, we build ...
+
+
+;; READ ALL METHODS
+;; (def DT (readAll))
+;; apis is an array
+;;  (get-in DT [:ari_1_0_0 :asterisk :apis 0 :operations])
+
+;; READS ALL MODELS
+;;  (keys (get-in DT [:ari_1_0_0 :asterisk :models]))
+;; a specific model
+;;  (get-in DT [:ari_1_0_0 :asterisk :models :BuildInfo])
+
+
+
+
+;; SVILUPPO

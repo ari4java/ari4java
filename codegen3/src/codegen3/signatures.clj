@@ -27,3 +27,9 @@
   (map getMethodSignature lFuncs)
   ; AGGIUNGERE ASSERTIONS: metodi unici
   )
+
+
+(defn constrained-sqr [x]
+    {:pre  [(pos? x)]
+     :post [(> % 16), (< % 225)]}
+    (* x x))

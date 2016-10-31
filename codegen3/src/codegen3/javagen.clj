@@ -11,6 +11,23 @@
        " Generated on: " (.toString (java.util.Date.))
        "\n\n"))
 
+
+
+;ch.loway.oss.ari4java.generated
+(def BASE-GEN-PKG "gg")
+
+
+(def IMPORTS-INTERFACE [
+     "java.util.Date"
+     "java.util.List"
+     "java.util.Map"
+     "java.util.ArrayList"
+    "ch.loway.oss.ari4java.tools.RestException"
+    "ch.loway.oss.ari4java.tools.AriCallback"
+    "ch.loway.oss.ari4java.tools.tags.*" ])
+
+
+
 ;(genclassfile {:package "a.b.c"
 ;               :classname "Pippon"
 ;               :imports ["java.w"]
@@ -30,6 +47,7 @@
   "Creates a camelName - es getDate by joining 'get' (prefix)
   and 'date' (value)"
   [p v]
+  {:pre [(pos? (count v))]}
   (str p
        (s/upper-case (subs v 0 1))
        (subs v 1)))
@@ -78,12 +96,18 @@
         )))
 
 
+(defn genAttr
+  "Generate an attribute. Checks that :type and :name are defined."
+  [{t :type n :name}]
+  {:pre [(string? t) (string? n)]}
+  (str t " " n))
 
 
 (defn genAttrs
-  "The attributes for a method."
+  "The attributes for a method.
+   data is a list of attributes."
   [data]
-  (let [signatures (map #(str (:type %) " " (:name %)) data)]
+  (let [signatures (map genAttr data)]
     (s/join ", " signatures)))
 
 
@@ -95,9 +119,10 @@
       :args        [{:type :name}]
       :notes
       :body
+      :isAbstract
   "
   [data]
-  (let [{:keys [method returns isPrivate args notes body]} data]
+  (let [{:keys [method returns isPrivate args notes body isAbstract]} data]
   (str
     "\n\n"
     (mkComment notes)
@@ -105,10 +130,15 @@
     returns " "
     method "("
     (genAttrs args)
-    "){\n"
-    (indent body)
+    ")"
+    (if isAbstract
+       ";"
+       (str
+        "{\n"
+        (indent body)
+        "\n"
+        "}"))
     "\n"
-    "}\n"
 
    )))
 
@@ -270,12 +300,30 @@
     (spit realPath body)
     realPath))
 
-;(writeOutKlass
-;(mkDataClass "p.k.g" "c" "n"
-;             [{:type "int" :val "pluto"}
-;              {:type "String" :val "pippo"}]
-;             ))
 
+
+(defn writeInterface
+  "Una interfaccia è scritta su disco sulla base del nome del file e dei metodi"
+  [file comments meths]
+  (let [klass {
+        :classname    (camelName "Action" (name file))
+        :isInterface  true
+        :package      BASE-GEN-PKG
+        :imports      IMPORTS-INTERFACE
+        ;:implements   ""
+        ;:extends      the class to extend
+        :notes        comments
+        :functions    meths
+        ;:stanzas      a list of text to implement (added after the methods)
+        }]
+    (writeOutKlass klass)  ) )
+
+
+
+
+;(writeOutKlass
+;   (mkDataClass "p.k.g" "c" "no"
+;      [{:type "int" :name "pluto"} {:type "String" :name "pippno"}]  ))
 
 
 

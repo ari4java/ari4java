@@ -25,3 +25,7 @@ build.xml
 # netbeans
 .nb-gradle/
 
+#codegen3
+codegen3/gen-java/
+
+
