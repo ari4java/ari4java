@@ -39,7 +39,7 @@ If you use Gradle (or any tool using Maven dependencies) you can simply declare 
 
 
 	dependencies {
-	    compile 'ch.loway.oss.ari4java:ari4java:0.4.1'
+	    compile 'ch.loway.oss.ari4java:ari4java:0.4.2'
 	}
 
 This will download the package and all required dependencies.
@@ -87,6 +87,7 @@ The project requires:
 Status
 ------
  
+* 16.10.21 - Fixing #55 and #57 - rel 0.4.2
 * 16.10.17 - Graham's AutoReconnect patch #52 - rel 0.4.1
 * 16.08.31 - Added support for ARI 1.10.0 (Asterisk 14) and some bug fixes - release 0.4.0
 * 16.01.30 - Added support for ARI 1.9.0 - release 0.3.4

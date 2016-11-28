@@ -9,7 +9,7 @@ def env = System.getenv()
 
 project.ext {
   webapp_name    = 'ari4java'
-  app_version    = '0.4.1'
+  app_version    = '0.4.2'
   build_number   = env["BUILD_NUMBER"]  
   version_class  = 'ch/loway/oss/ari4java/BUILD.java'
   build_time     = "" + new Date()
