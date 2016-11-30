@@ -18,6 +18,7 @@ build.xml
 /.classpath
 /.project
 /.gradle
+/.nb-gradle
 
 # macbook
 .DS_Store
