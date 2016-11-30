@@ -86,7 +86,8 @@ The project requires:
 
 Status
 ------
- 
+
+* 16.11.30 - Fixes on Graham's AutoReconnect patch - #60 - rel 0.4.3 
 * 16.10.21 - Fixing #55 and #57 - rel 0.4.2
 * 16.10.17 - Graham's AutoReconnect patch #52 - rel 0.4.1
 * 16.08.31 - Added support for ARI 1.10.0 (Asterisk 14) and some bug fixes - release 0.4.0
