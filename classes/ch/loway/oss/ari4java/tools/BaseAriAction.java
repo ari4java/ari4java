@@ -203,7 +203,8 @@ public class BaseAriAction {
      * @throws RestException
      */
     public synchronized void disconnectWs() throws RestException {
-        wsConnection.disconnect();
+        if (wsConnection != null)
+            wsConnection.disconnect();
         wsConnection = null;
     }
 

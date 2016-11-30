@@ -103,6 +103,8 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        if (!shuttingDown)
+            return;
         cause.printStackTrace();
         if (!handshakeFuture.isDone()) {
             handshakeFuture.setFailure(cause);

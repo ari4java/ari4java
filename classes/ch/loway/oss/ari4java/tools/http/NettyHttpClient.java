@@ -57,6 +57,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     private ChannelFuture wsChannelFuture;
     private ScheduledFuture<?> wsPingTimer = null;
     private NettyWSClientHandler wsHandler;
+    private ChannelFutureListener wsFuture;
 
     public NettyHttpClient() {
         group = new NioEventLoopGroup();
@@ -287,23 +288,25 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                 pipeline.addLast("ws-handler", wsHandler);
             }
         });
-        wsChannelFuture = wsBootStrap.connect(baseUri.getHost(), baseUri.getPort());
-        wsChannelFuture.addListener(new ChannelFutureListener() {
 
+        wsChannelFuture = wsBootStrap.connect(baseUri.getHost(), baseUri.getPort());
+        wsFuture = new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
                 if (future.isSuccess()) {
                     callback.onChReadyToWrite();
-					// reset the reconnect counter on successful connect
+                    // reset the reconnect counter on successful connect
                     reconnectCount = 0;
                 } else {
-                    if (reconnectCount >= 10)
+                    if (reconnectCount >= 10) {
                         callback.onFailure(future.cause());
-                    else
+                    } else {
                         reconnectWs();
+                    }
                 }
             }
-        });
+        };
+        wsChannelFuture.addListener(wsFuture);
 
         // start a ws ping schedule
         startPing();
@@ -337,10 +340,13 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                     wsHandler.setShuttingDown(true);
                     Channel ch = wsChannelFuture.channel();
                     if (ch != null) {
-                        ch.writeAndFlush(new CloseWebSocketFrame());
                         // NettyWSClientHandler will close the connection when the server
                         // responds to the CloseWebSocketFrame.
+                        ch.writeAndFlush(new CloseWebSocketFrame());
+                        // if the server is no longer there then close any way
+                        ch.close();
                     }
+                    wsChannelFuture.removeListener(wsFuture);
                 }
             };
         }
@@ -377,14 +383,17 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         }
         // if not shutdown reconnect, note the check not on the shutDownGroup
         if (!group.isShuttingDown()) {
-            // schedule reconnect after a 1,5,10 seconds
-            long[] timeouts = {1L, 5L, 10L};
+            // schedule reconnect after a 2,5,10 seconds
+            long[] timeouts = {2L, 5L, 10L};
+            reconnectCount++;
             shutDownGroup.schedule(new Runnable() {
                 @Override
                 public void run() {
-                    reconnectCount++;
                     try {
+                        // 1st close up
+                        wsClientConnection.disconnect();
                         System.err.println(System.currentTimeMillis() + " ** connecting...  try:" + reconnectCount + " ++");
+                        // then connect again
                         connect(wsCallback, wsEventsUrl, wsEventsParamQuery);
                     } catch (RestException e) {
                         wsCallback.onFailure(e);
