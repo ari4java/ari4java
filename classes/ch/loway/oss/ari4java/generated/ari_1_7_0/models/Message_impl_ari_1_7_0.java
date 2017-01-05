@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_7_0.models;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:10 CEST 2016
+//    Generated on: Thu Jan 05 17:19:54 CET 2017
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -71,6 +71,23 @@ private static final long serialVersionUID = 1L;
    type = val;
  }
 
-/** No missing signatures from interface */
+/**********************************************************
+ * The unique ID for the Asterisk instance that raised this event.
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+ public String getAsterisk_id(){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * The unique ID for the Asterisk instance that raised this event.
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+ public void setAsterisk_id(String val ){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
 }
 

@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_0_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:11 CEST 2016
+//    Generated on: Thu Jan 05 17:19:54 CET 2017
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -641,7 +641,7 @@ public void originateWithId(String channelId, String endpoint, String extension,
 /**********************************************************
  * 
  * 
- * @since ari_1_10_0
+ * @since ari_2_0_0
  *********************************************************/
 public void dial(String channelId, String caller, int timeout, AriCallback<Void> callback){
   throw new UnsupportedOperationException("Method availble from ...");
@@ -660,7 +660,7 @@ public void playWithId(String channelId, String playbackId, String media, String
  * Dial a created channel.
  * 
  * 
- * @since ari_1_10_0
+ * @since ari_2_0_0
  *********************************************************/
 public void dial(String channelId, String caller, int timeout) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
@@ -687,7 +687,7 @@ public void continueInDialplan(String channelId, String context, String extensio
 /**********************************************************
  * 
  * 
- * @since ari_1_10_0
+ * @since ari_2_0_0
  *********************************************************/
 public void originateWithId(String channelId, String endpoint, String extension, String context, long priority, String label, String app, String appArgs, String callerId, int timeout, Map<String,String> variables, String otherChannelId, String originator, String formats, AriCallback<Channel> callback){
   throw new UnsupportedOperationException("Method availble from ...");
@@ -697,7 +697,7 @@ public void originateWithId(String channelId, String endpoint, String extension,
  * Create a new channel (originate).
  * The new channel is created immediately and a snapshot of it returned. If a Stasis application is provided it will be automatically subscribed to the originated channel for further events and updates.
  * 
- * @since ari_1_10_0
+ * @since ari_2_0_0
  *********************************************************/
 public Channel originate(String endpoint, String extension, String context, long priority, String label, String app, String appArgs, String callerId, int timeout, Map<String,String> variables, String channelId, String otherChannelId, String originator, String formats) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
@@ -765,7 +765,7 @@ public Channel originate(String endpoint, String extension, String context, long
  * Create channel.
  * 
  * 
- * @since ari_1_10_0
+ * @since ari_2_0_0
  *********************************************************/
 public Channel create(String endpoint, String app, String appArgs, String channelId, String otherChannelId, String originator, String formats) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
@@ -812,7 +812,7 @@ public Channel originateWithId(String channelId, String endpoint, String extensi
  * Create a new channel (originate with id).
  * The new channel is created immediately and a snapshot of it returned. If a Stasis application is provided it will be automatically subscribed to the originated channel for further events and updates.
  * 
- * @since ari_1_10_0
+ * @since ari_2_0_0
  *********************************************************/
 public Channel originateWithId(String channelId, String endpoint, String extension, String context, long priority, String label, String app, String appArgs, String callerId, int timeout, Map<String,String> variables, String otherChannelId, String originator, String formats) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
@@ -830,7 +830,7 @@ public void originateWithId(String channelId, String endpoint, String extension,
 /**********************************************************
  * 
  * 
- * @since ari_1_10_0
+ * @since ari_2_0_0
  *********************************************************/
 public void create(String endpoint, String app, String appArgs, String channelId, String otherChannelId, String originator, String formats, AriCallback<Channel> callback){
   throw new UnsupportedOperationException("Method availble from ...");
@@ -891,7 +891,7 @@ public Playback playWithId(String channelId, String playbackId, String media, St
 /**********************************************************
  * 
  * 
- * @since ari_1_10_0
+ * @since ari_2_0_0
  *********************************************************/
 public void originate(String endpoint, String extension, String context, long priority, String label, String app, String appArgs, String callerId, int timeout, Map<String,String> variables, String channelId, String otherChannelId, String originator, String formats, AriCallback<Channel> callback){
   throw new UnsupportedOperationException("Method availble from ...");

@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:10 CEST 2016
+//    Generated on: Thu Jan 05 17:19:53 CET 2017
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -126,6 +126,16 @@ public interface Channel extends EventSource  {
 
 
 
+// String getChannelvars
+/**********************************************************
+ * Channel variables
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+ public String getChannelvars();
+
+
+
 // String getState
 /**********************************************************
  * 
@@ -173,6 +183,16 @@ public interface Channel extends EventSource  {
  * @since ari_0_0_1
  *********************************************************/
  public Date getCreationtime();
+
+
+
+// void setChannelvars String
+/**********************************************************
+ * Channel variables
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+ public void setChannelvars(String val );
 
 
 

@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_0_0_1.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:11 CEST 2016
+//    Generated on: Thu Jan 05 17:19:54 CET 2017
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -288,7 +288,7 @@ public StoredRecording copyStored(String recordingName, String destinationRecord
 /**********************************************************
  * 
  * 
- * @since ari_1_10_0
+ * @since ari_2_0_0
  *********************************************************/
 public void getStoredFile(String recordingName, AriCallback<byte[]> callback){
   throw new UnsupportedOperationException("Method availble from ...");
@@ -298,7 +298,7 @@ public void getStoredFile(String recordingName, AriCallback<byte[]> callback){
  * Get the file associated with the stored recording.
  * 
  * 
- * @since ari_1_10_0
+ * @since ari_2_0_0
  *********************************************************/
 public byte[] getStoredFile(String recordingName) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
