@@ -92,19 +92,31 @@ public class MessageQueue {
      * 
      */
 
-
     public static class ErrorMessage implements Message {
 
         String type = "";
 
+        @Override
         public void setType(String val) {
             type=val;
         }
 
+        @Override
         public String getType() {
             return type;
         }
-        
+
+        String asterisk_id = "";
+
+        @Override
+		public void setAsterisk_id(String val) {
+			asterisk_id = val;
+		}
+
+		@Override
+		public String getAsterisk_id() {
+			return asterisk_id;
+		}
     }
 }
 

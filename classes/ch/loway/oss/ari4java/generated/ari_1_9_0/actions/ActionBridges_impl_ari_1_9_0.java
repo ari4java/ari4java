@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_9_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:11 CEST 2016
+//    Generated on: Thu Jan 05 17:19:54 CET 2017
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -367,6 +367,15 @@ httpActionAsync(callback);
 /**********************************************************
  * 
  * 
+ * @since ari_2_0_0
+ *********************************************************/
+public void setVideoSource(String bridgeId, String channelId, AriCallback<Void> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * 
+ * 
  * @since ari_0_0_1
  *********************************************************/
 public void create(String type, AriCallback<Bridge> callback){
@@ -422,6 +431,25 @@ public void create(String type, String name, AriCallback<Bridge> callback){
 };
 
 /**********************************************************
+ * Set a channel as the video source in a multi-party mixing bridge. This operation has no effect on bridges with two or fewer participants.
+ * 
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+public void setVideoSource(String bridgeId, String channelId) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * 
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+public void clearVideoSource(String bridgeId, AriCallback<Void> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
  * 
  * 
  * @since ari_1_5_0
@@ -437,6 +465,16 @@ public void create_or_update_with_id(String type, String bridgeId, String name, 
  * @since ari_1_5_0
  *********************************************************/
 public Bridge create_or_update_with_id(String type, String bridgeId, String name) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Removes any explicit video source in a multi-party mixing bridge. This operation has no effect on bridges with two or fewer participants. When no explicit video source is set, talk detection will be used to determine the active video stream.
+ * 
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+public void clearVideoSource(String bridgeId) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
 };
 

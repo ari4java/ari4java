@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:10 CEST 2016
+//    Generated on: Thu Jan 05 17:19:53 CET 2017
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,16 +22,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface Bridge extends EventSource  {
 
-// void setBridge_type String
-/**********************************************************
- * Type of bridge technology
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setBridge_type(String val );
-
-
-
 // void setBridge_class String
 /**********************************************************
  * Bridging class
@@ -39,16 +29,6 @@ public interface Bridge extends EventSource  {
  * @since ari_0_0_1
  *********************************************************/
  public void setBridge_class(String val );
-
-
-
-// void setName String
-/**********************************************************
- * Name the creator gave the bridge
- * 
- * @since ari_1_0_0
- *********************************************************/
- public void setName(String val );
 
 
 
@@ -62,13 +42,13 @@ public interface Bridge extends EventSource  {
 
 
 
-// void setId String
+// String getVideo_source_id
 /**********************************************************
- * Unique identifier for this bridge
+ * The ID of the channel that is the source of video in this bridge, if one exists.
  * 
- * @since ari_0_0_1
+ * @since ari_2_0_0
  *********************************************************/
- public void setId(String val );
+ public String getVideo_source_id();
 
 
 
@@ -82,33 +62,23 @@ public interface Bridge extends EventSource  {
 
 
 
-// String getName
+// void setId String
 /**********************************************************
- * Name the creator gave the bridge
- * 
- * @since ari_1_0_0
- *********************************************************/
- public String getName();
-
-
-
-// String getCreator
-/**********************************************************
- * Entity that created the bridge
- * 
- * @since ari_1_0_0
- *********************************************************/
- public String getCreator();
-
-
-
-// void setTechnology String
-/**********************************************************
- * Name of the current bridging technology
+ * Unique identifier for this bridge
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setTechnology(String val );
+ public void setId(String val );
+
+
+
+// String getVideo_mode
+/**********************************************************
+ * The video mode the bridge is using. One of 'none', 'talker', or 'single'.
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+ public String getVideo_mode();
 
 
 
@@ -122,6 +92,26 @@ public interface Bridge extends EventSource  {
 
 
 
+// void setTechnology String
+/**********************************************************
+ * Name of the current bridging technology
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setTechnology(String val );
+
+
+
+// String getCreator
+/**********************************************************
+ * Entity that created the bridge
+ * 
+ * @since ari_1_0_0
+ *********************************************************/
+ public String getCreator();
+
+
+
 // String getTechnology
 /**********************************************************
  * Name of the current bridging technology
@@ -132,6 +122,16 @@ public interface Bridge extends EventSource  {
 
 
 
+// void setVideo_source_id String
+/**********************************************************
+ * The ID of the channel that is the source of video in this bridge, if one exists.
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+ public void setVideo_source_id(String val );
+
+
+
 // List<String> getChannels
 /**********************************************************
  * Ids of channels participating in this bridge
@@ -139,6 +139,46 @@ public interface Bridge extends EventSource  {
  * @since ari_0_0_1
  *********************************************************/
  public List<String> getChannels();
+
+
+
+// void setBridge_type String
+/**********************************************************
+ * Type of bridge technology
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setBridge_type(String val );
+
+
+
+// void setName String
+/**********************************************************
+ * Name the creator gave the bridge
+ * 
+ * @since ari_1_0_0
+ *********************************************************/
+ public void setName(String val );
+
+
+
+// void setVideo_mode String
+/**********************************************************
+ * The video mode the bridge is using. One of 'none', 'talker', or 'single'.
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+ public void setVideo_mode(String val );
+
+
+
+// String getName
+/**********************************************************
+ * Name the creator gave the bridge
+ * 
+ * @since ari_1_0_0
+ *********************************************************/
+ public String getName();
 
 
 

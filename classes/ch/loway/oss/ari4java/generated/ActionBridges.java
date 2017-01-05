@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:10 CEST 2016
+//    Generated on: Thu Jan 05 17:19:53 CET 2017
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -29,6 +29,16 @@ public interface ActionBridges {
  * @since ari_1_5_0
  *********************************************************/
 public void create(String type, String bridgeId, String name, AriCallback<Bridge> callback);
+
+
+
+// void setVideoSource String String AriCallback<Void> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+public void setVideoSource(String bridgeId, String channelId, AriCallback<Void> callback);
 
 
 
@@ -221,6 +231,17 @@ public void addChannel(String bridgeId, String channel, String role, AriCallback
 
 
 
+// void setVideoSource String String
+/**********************************************************
+ * Set a channel as the video source in a multi-party mixing bridge. This operation has no effect on bridges with two or fewer participants.
+ * 
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+public void setVideoSource(String bridgeId, String channelId) throws RestException;
+
+
+
 // Playback play String String String int int String
 /**********************************************************
  * Start playback of media on a bridge.
@@ -250,6 +271,16 @@ public void get(String bridgeId, AriCallback<Bridge> callback);
  * @since ari_1_5_0
  *********************************************************/
 public Playback playWithId(String bridgeId, String playbackId, String media, String lang, int offsetms, int skipms) throws RestException;
+
+
+
+// void clearVideoSource String AriCallback<Void> callback
+/**********************************************************
+ * 
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+public void clearVideoSource(String bridgeId, AriCallback<Void> callback);
 
 
 
@@ -333,6 +364,17 @@ public void list(AriCallback<List<Bridge>> callback);
  * @since ari_0_0_1
  *********************************************************/
 public void startMoh(String bridgeId, String mohClass, AriCallback<Void> callback);
+
+
+
+// void clearVideoSource String
+/**********************************************************
+ * Removes any explicit video source in a multi-party mixing bridge. This operation has no effect on bridges with two or fewer participants. When no explicit video source is set, talk detection will be used to determine the active video stream.
+ * 
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+public void clearVideoSource(String bridgeId) throws RestException;
 
 
 
