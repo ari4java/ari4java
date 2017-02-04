@@ -92,21 +92,31 @@ public class MessageQueue {
      * 
      */
 
-
     public static class ErrorMessage implements Message {
 
         String type = "";
+        String asterisk_id = "";
 
+        @Override
         public void setType(String val) {
-            type=val;
+            this.type=val;
         }
 
+        @Override
         public String getType() {
-            return type;
+            return this.type;
+        }
+
+        @Override
+        public void setAsterisk_id(String val) {
+            this.asterisk_id = val;
+        }
+
+        @Override
+        public String getAsterisk_id() {
+            return this.asterisk_id;
         }
         
     }
 }
 
-// $Log$
-//
