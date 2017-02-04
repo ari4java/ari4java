@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:10 CEST 2016
+//    Generated on: Sat Feb 04 15:23:08 CET 2017
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,26 +22,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface SystemInfo {
 
-// String getEntity_id
-/**********************************************************
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
- public String getEntity_id();
-
-
-
-// void setVersion String
-/**********************************************************
- * Asterisk version.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setVersion(String val );
-
-
-
 // void setEntity_id String
 /**********************************************************
  * 
@@ -59,6 +39,26 @@ public interface SystemInfo {
  * @since ari_0_0_1
  *********************************************************/
  public String getVersion();
+
+
+
+// void setVersion String
+/**********************************************************
+ * Asterisk version.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setVersion(String val );
+
+
+
+// String getEntity_id
+/**********************************************************
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public String getEntity_id();
 
 
 }

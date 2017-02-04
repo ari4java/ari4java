@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_0_0_1.models;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:10 CEST 2016
+//    Generated on: Sat Feb 04 15:23:09 CET 2017
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -79,24 +79,6 @@ private static final long serialVersionUID = 1L;
  }
 
 /**********************************************************
- * Entity that created the bridge
- * 
- * @since ari_1_0_0
- *********************************************************/
- public String getCreator(){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * Name the creator gave the bridge
- * 
- * @since ari_1_0_0
- *********************************************************/
- public void setName(String val ){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
  * Name the creator gave the bridge
  * 
  * @since ari_1_0_0
@@ -106,11 +88,65 @@ private static final long serialVersionUID = 1L;
 };
 
 /**********************************************************
+ * The video mode the bridge is using. One of 'none', 'talker', or 'single'.
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+ public String getVideo_mode(){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * The ID of the channel that is the source of video in this bridge, if one exists.
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+ public String getVideo_source_id(){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Entity that created the bridge
+ * 
+ * @since ari_1_0_0
+ *********************************************************/
+ public String getCreator(){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * The video mode the bridge is using. One of 'none', 'talker', or 'single'.
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+ public void setVideo_mode(String val ){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * The ID of the channel that is the source of video in this bridge, if one exists.
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+ public void setVideo_source_id(String val ){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
  * Entity that created the bridge
  * 
  * @since ari_1_0_0
  *********************************************************/
  public void setCreator(String val ){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Name the creator gave the bridge
+ * 
+ * @since ari_1_0_0
+ *********************************************************/
+ public void setName(String val ){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 

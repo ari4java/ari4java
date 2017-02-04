@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:10 CEST 2016
+//    Generated on: Sat Feb 04 15:23:08 CET 2017
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,13 +22,13 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface BridgeMerged {
 
-// void setBridge_from Bridge
+// Bridge getBridge_from
 /**********************************************************
  * 
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setBridge_from(Bridge val );
+ public Bridge getBridge_from();
 
 
 
@@ -42,16 +42,6 @@ public interface BridgeMerged {
 
 
 
-// Bridge getBridge_from
-/**********************************************************
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
- public Bridge getBridge_from();
-
-
-
 // Bridge getBridge
 /**********************************************************
  * 
@@ -59,6 +49,16 @@ public interface BridgeMerged {
  * @since ari_0_0_1
  *********************************************************/
  public Bridge getBridge();
+
+
+
+// void setBridge_from Bridge
+/**********************************************************
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setBridge_from(Bridge val );
 
 
 }

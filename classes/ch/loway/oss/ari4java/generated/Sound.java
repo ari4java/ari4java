@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:10 CEST 2016
+//    Generated on: Sat Feb 04 15:23:08 CET 2017
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -32,26 +32,6 @@ public interface Sound {
 
 
 
-// String getId
-/**********************************************************
- * Sound's identifier.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public String getId();
-
-
-
-// void setId String
-/**********************************************************
- * Sound's identifier.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setId(String val );
-
-
-
 // String getText
 /**********************************************************
  * Text description of the sound, usually the words spoken.
@@ -69,6 +49,26 @@ public interface Sound {
  * @since ari_0_0_1
  *********************************************************/
  public void setFormats(List<FormatLangPair> val );
+
+
+
+// void setId String
+/**********************************************************
+ * Sound's identifier.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setId(String val );
+
+
+
+// String getId
+/**********************************************************
+ * Sound's identifier.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public String getId();
 
 
 

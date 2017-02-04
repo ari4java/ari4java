@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:10 CEST 2016
+//    Generated on: Sat Feb 04 15:23:09 CET 2017
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.ARI;
@@ -28,6 +28,7 @@ public interface AriBuilder {
     public abstract BridgeCreated bridgeCreated();
     public abstract BridgeDestroyed bridgeDestroyed();
     public abstract BridgeMerged bridgeMerged();
+    public abstract BridgeVideoSourceChanged bridgeVideoSourceChanged();
     public abstract BuildInfo buildInfo();
     public abstract CallerID callerID();
     public abstract Channel channel();

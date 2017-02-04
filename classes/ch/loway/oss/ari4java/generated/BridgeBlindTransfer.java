@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:10 CEST 2016
+//    Generated on: Sat Feb 04 15:23:09 CET 2017
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,13 +22,13 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface BridgeBlindTransfer {
 
-// void setIs_external boolean
+// Channel getTransferee
 /**********************************************************
- * Whether the transfer was externally initiated or not
+ * The channel that is being transferred
  * 
  * @since ari_1_5_0
  *********************************************************/
- public void setIs_external(boolean val );
+ public Channel getTransferee();
 
 
 
@@ -42,23 +42,13 @@ public interface BridgeBlindTransfer {
 
 
 
-// String getContext
+// void setExten String
 /**********************************************************
- * The context transferred to
+ * The extension transferred to
  * 
  * @since ari_1_5_0
  *********************************************************/
- public String getContext();
-
-
-
-// Channel getTransferee
-/**********************************************************
- * The channel that is being transferred
- * 
- * @since ari_1_5_0
- *********************************************************/
- public Channel getTransferee();
+ public void setExten(String val );
 
 
 
@@ -69,16 +59,6 @@ public interface BridgeBlindTransfer {
  * @since ari_1_5_0
  *********************************************************/
  public Bridge getBridge();
-
-
-
-// void setTransferee Channel
-/**********************************************************
- * The channel that is being transferred
- * 
- * @since ari_1_5_0
- *********************************************************/
- public void setTransferee(Channel val );
 
 
 
@@ -102,16 +82,6 @@ public interface BridgeBlindTransfer {
 
 
 
-// void setBridge Bridge
-/**********************************************************
- * The bridge being transferred
- * 
- * @since ari_1_5_0
- *********************************************************/
- public void setBridge(Bridge val );
-
-
-
 // Channel getReplace_channel
 /**********************************************************
  * The channel that is replacing transferer when the transferee(s) can not be transferred directly
@@ -122,13 +92,13 @@ public interface BridgeBlindTransfer {
 
 
 
-// String getExten
+// String getContext
 /**********************************************************
- * The extension transferred to
+ * The context transferred to
  * 
  * @since ari_1_5_0
  *********************************************************/
- public String getExten();
+ public String getContext();
 
 
 
@@ -152,16 +122,6 @@ public interface BridgeBlindTransfer {
 
 
 
-// void setResult String
-/**********************************************************
- * The result of the transfer attempt
- * 
- * @since ari_1_5_0
- *********************************************************/
- public void setResult(String val );
-
-
-
 // void setChannel Channel
 /**********************************************************
  * The channel performing the blind transfer
@@ -172,13 +132,53 @@ public interface BridgeBlindTransfer {
 
 
 
-// void setExten String
+// void setTransferee Channel
+/**********************************************************
+ * The channel that is being transferred
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+ public void setTransferee(Channel val );
+
+
+
+// void setBridge Bridge
+/**********************************************************
+ * The bridge being transferred
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+ public void setBridge(Bridge val );
+
+
+
+// void setIs_external boolean
+/**********************************************************
+ * Whether the transfer was externally initiated or not
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+ public void setIs_external(boolean val );
+
+
+
+// void setResult String
+/**********************************************************
+ * The result of the transfer attempt
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+ public void setResult(String val );
+
+
+
+// String getExten
 /**********************************************************
  * The extension transferred to
  * 
  * @since ari_1_5_0
  *********************************************************/
- public void setExten(String val );
+ public String getExten();
 
 
 }

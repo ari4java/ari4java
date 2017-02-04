@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:10 CEST 2016
+//    Generated on: Sat Feb 04 15:23:09 CET 2017
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -21,6 +21,16 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 
 public interface TextMessageReceived {
+
+// Endpoint getEndpoint
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+ public Endpoint getEndpoint();
+
+
 
 // TextMessage getMessage
 /**********************************************************
@@ -49,16 +59,6 @@ public interface TextMessageReceived {
  * @since ari_1_5_0
  *********************************************************/
  public void setMessage(TextMessage val );
-
-
-
-// Endpoint getEndpoint
-/**********************************************************
- * 
- * 
- * @since ari_1_5_0
- *********************************************************/
- public Endpoint getEndpoint();
 
 
 }

@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_0_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:11 CEST 2016
+//    Generated on: Sat Feb 04 15:23:09 CET 2017
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -104,22 +104,11 @@ httpActionAsync(callback);
 }
 
 /**********************************************************
- * Reload an Asterisk module.
  * 
  * 
  * @since ari_1_8_0
  *********************************************************/
-public void reloadModule(String moduleName) throws RestException{
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * Create or update a dynamic configuration object.
- * 
- * 
- * @since ari_1_8_0
- *********************************************************/
-public List<ConfigTuple> updateObject(String configClass, String objectType, String id, Map<String,String> fields) throws RestException{
+public void updateObject(String configClass, String objectType, String id, Map<String,String> fields, AriCallback<List<ConfigTuple>> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -128,7 +117,7 @@ public List<ConfigTuple> updateObject(String configClass, String objectType, Str
  * 
  * @since ari_1_8_0
  *********************************************************/
-public void deleteObject(String configClass, String objectType, String id, AriCallback<Void> callback){
+public void listModules(AriCallback<List<Module>> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -137,16 +126,7 @@ public void deleteObject(String configClass, String objectType, String id, AriCa
  * 
  * @since ari_1_8_0
  *********************************************************/
-public void reloadModule(String moduleName, AriCallback<Void> callback){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * 
- * 
- * @since ari_1_9_0
- *********************************************************/
-public void addLog(String logChannelName, String configuration, AriCallback<Void> callback){
+public void getModule(String moduleName, AriCallback<Module> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -160,51 +140,31 @@ public void unloadModule(String moduleName, AriCallback<Void> callback){
 };
 
 /**********************************************************
- * List Asterisk modules.
- * 
- * 
- * @since ari_1_8_0
- *********************************************************/
-public List<Module> listModules() throws RestException{
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * Gets Asterisk log channel information.
+ * Rotates a log channel.
  * 
  * 
  * @since ari_1_9_0
  *********************************************************/
-public List<LogChannel> listLogChannels() throws RestException{
+public void rotateLog(String logChannelName) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
 /**********************************************************
- * Get Asterisk module information.
  * 
  * 
  * @since ari_1_8_0
  *********************************************************/
-public Module getModule(String moduleName) throws RestException{
+public void deleteObject(String configClass, String objectType, String id, AriCallback<Void> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
 /**********************************************************
+ * Deletes a log channel.
  * 
  * 
  * @since ari_1_9_0
  *********************************************************/
-public void rotateLog(String logChannelName, AriCallback<Void> callback){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * Retrieve a dynamic configuration object.
- * 
- * 
- * @since ari_1_8_0
- *********************************************************/
-public List<ConfigTuple> getObject(String configClass, String objectType, String id) throws RestException{
+public void deleteLog(String logChannelName) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -229,40 +189,32 @@ public void unloadModule(String moduleName) throws RestException{
 };
 
 /**********************************************************
+ * Create or update a dynamic configuration object.
  * 
  * 
  * @since ari_1_8_0
  *********************************************************/
-public void getModule(String moduleName, AriCallback<Module> callback){
+public List<ConfigTuple> updateObject(String configClass, String objectType, String id, Map<String,String> fields) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
 /**********************************************************
+ * Retrieve a dynamic configuration object.
  * 
  * 
  * @since ari_1_8_0
  *********************************************************/
-public void updateObject(String configClass, String objectType, String id, Map<String,String> fields, AriCallback<List<ConfigTuple>> callback){
+public List<ConfigTuple> getObject(String configClass, String objectType, String id) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
 /**********************************************************
- * Delete a dynamic configuration object.
+ * Get Asterisk module information.
  * 
  * 
  * @since ari_1_8_0
  *********************************************************/
-public void deleteObject(String configClass, String objectType, String id) throws RestException{
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * Rotates a log channel.
- * 
- * 
- * @since ari_1_9_0
- *********************************************************/
-public void rotateLog(String logChannelName) throws RestException{
+public Module getModule(String moduleName) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -271,7 +223,53 @@ public void rotateLog(String logChannelName) throws RestException{
  * 
  * @since ari_1_9_0
  *********************************************************/
-public void listLogChannels(AriCallback<List<LogChannel>> callback){
+public void rotateLog(String logChannelName, AriCallback<Void> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_8_0
+ *********************************************************/
+public void loadModule(String moduleName, AriCallback<Void> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+public void addLog(String logChannelName, String configuration, AriCallback<Void> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_8_0
+ *********************************************************/
+public void reloadModule(String moduleName, AriCallback<Void> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Gets Asterisk log channel information.
+ * 
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+public List<LogChannel> listLogChannels() throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_8_0
+ *********************************************************/
+public void getObject(String configClass, String objectType, String id, AriCallback<List<ConfigTuple>> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -288,19 +286,29 @@ public void addLog(String logChannelName, String configuration) throws RestExcep
 /**********************************************************
  * 
  * 
- * @since ari_1_8_0
+ * @since ari_1_9_0
  *********************************************************/
-public void listModules(AriCallback<List<Module>> callback){
+public void listLogChannels(AriCallback<List<LogChannel>> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
 /**********************************************************
- * Deletes a log channel.
+ * List Asterisk modules.
  * 
  * 
- * @since ari_1_9_0
+ * @since ari_1_8_0
  *********************************************************/
-public void deleteLog(String logChannelName) throws RestException{
+public List<Module> listModules() throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Reload an Asterisk module.
+ * 
+ * 
+ * @since ari_1_8_0
+ *********************************************************/
+public void reloadModule(String moduleName) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -314,20 +322,12 @@ public void deleteLog(String logChannelName, AriCallback<Void> callback){
 };
 
 /**********************************************************
+ * Delete a dynamic configuration object.
  * 
  * 
  * @since ari_1_8_0
  *********************************************************/
-public void loadModule(String moduleName, AriCallback<Void> callback){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * 
- * 
- * @since ari_1_8_0
- *********************************************************/
-public void getObject(String configClass, String objectType, String id, AriCallback<List<ConfigTuple>> callback){
+public void deleteObject(String configClass, String objectType, String id) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
 };
 

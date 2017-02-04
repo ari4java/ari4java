@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_0_0.models;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:10 CEST 2016
+//    Generated on: Sat Feb 04 15:23:09 CET 2017
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -55,24 +55,6 @@ private static final long serialVersionUID = 1L;
  }
 
 /**********************************************************
- * A bridge that is signaled with the user event.
- * 
- * @since ari_1_5_0
- *********************************************************/
- public void setBridge(Bridge val ){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * A endpoint that is signaled with the user event.
- * 
- * @since ari_1_5_0
- *********************************************************/
- public void setEndpoint(Endpoint val ){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
  * A endpoint that is signaled with the user event.
  * 
  * @since ari_1_5_0
@@ -86,7 +68,25 @@ private static final long serialVersionUID = 1L;
  * 
  * @since ari_1_5_0
  *********************************************************/
+ public void setBridge(Bridge val ){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * A bridge that is signaled with the user event.
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
  public Bridge getBridge(){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * A endpoint that is signaled with the user event.
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+ public void setEndpoint(Endpoint val ){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 

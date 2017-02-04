@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:10 CEST 2016
+//    Generated on: Sat Feb 04 15:23:08 CET 2017
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -22,26 +22,6 @@ import ch.loway.oss.ari4java.tools.tags.*;
 
 public interface ChannelUserevent {
 
-// void setEventname String
-/**********************************************************
- * The name of the user event.
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setEventname(String val );
-
-
-
-// void setUserevent String
-/**********************************************************
- * Custom Userevent data
- * 
- * @since ari_0_0_1
- *********************************************************/
- public void setUserevent(String val );
-
-
-
 // String getEventname
 /**********************************************************
  * The name of the user event.
@@ -52,33 +32,13 @@ public interface ChannelUserevent {
 
 
 
-// void setEndpoint Endpoint
+// void setEventname String
 /**********************************************************
- * A endpoint that is signaled with the user event.
- * 
- * @since ari_1_5_0
- *********************************************************/
- public void setEndpoint(Endpoint val );
-
-
-
-// void setBridge Bridge
-/**********************************************************
- * A bridge that is signaled with the user event.
- * 
- * @since ari_1_5_0
- *********************************************************/
- public void setBridge(Bridge val );
-
-
-
-// Channel getChannel
-/**********************************************************
- * The channel that signaled the user event.
+ * The name of the user event.
  * 
  * @since ari_0_0_1
  *********************************************************/
- public Channel getChannel();
+ public void setEventname(String val );
 
 
 
@@ -92,13 +52,33 @@ public interface ChannelUserevent {
 
 
 
-// String getUserevent
+// Channel getChannel
 /**********************************************************
- * Custom Userevent data
+ * The channel that signaled the user event.
  * 
  * @since ari_0_0_1
  *********************************************************/
- public String getUserevent();
+ public Channel getChannel();
+
+
+
+// void setChannel Channel
+/**********************************************************
+ * The channel that signaled the user event.
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public void setChannel(Channel val );
+
+
+
+// void setBridge Bridge
+/**********************************************************
+ * A bridge that is signaled with the user event.
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+ public void setBridge(Bridge val );
 
 
 
@@ -112,13 +92,33 @@ public interface ChannelUserevent {
 
 
 
-// void setChannel Channel
+// void setUserevent String
 /**********************************************************
- * The channel that signaled the user event.
+ * Custom Userevent data
  * 
  * @since ari_0_0_1
  *********************************************************/
- public void setChannel(Channel val );
+ public void setUserevent(String val );
+
+
+
+// void setEndpoint Endpoint
+/**********************************************************
+ * A endpoint that is signaled with the user event.
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+ public void setEndpoint(Endpoint val );
+
+
+
+// String getUserevent
+/**********************************************************
+ * Custom Userevent data
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+ public String getUserevent();
 
 
 }

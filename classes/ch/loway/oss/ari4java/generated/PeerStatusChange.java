@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:10 CEST 2016
+//    Generated on: Sat Feb 04 15:23:08 CET 2017
 // ----------------------------------------------------
 
 import java.util.Date;
@@ -32,6 +32,16 @@ public interface PeerStatusChange {
 
 
 
+// Endpoint getEndpoint
+/**********************************************************
+ * 
+ * 
+ * @since ari_1_9_0
+ *********************************************************/
+ public Endpoint getEndpoint();
+
+
+
 // void setPeer Peer
 /**********************************************************
  * 
@@ -49,16 +59,6 @@ public interface PeerStatusChange {
  * @since ari_1_9_0
  *********************************************************/
  public void setEndpoint(Endpoint val );
-
-
-
-// Endpoint getEndpoint
-/**********************************************************
- * 
- * 
- * @since ari_1_9_0
- *********************************************************/
- public Endpoint getEndpoint();
 
 
 }

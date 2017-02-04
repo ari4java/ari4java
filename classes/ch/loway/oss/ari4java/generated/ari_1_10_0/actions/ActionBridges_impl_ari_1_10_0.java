@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_10_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:11 CEST 2016
+//    Generated on: Sat Feb 04 15:23:09 CET 2017
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -365,11 +365,21 @@ httpActionAsync(callback);
 }
 
 /**********************************************************
+ * Start playback of media on a bridge.
+ * The media URI may be any of a number of URI's. Currently sound: and recording: URI's are supported. This operation creates a playback resource that can be used to control the playback of media (pause, rewind, fast forward, etc.)
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public Playback play(String bridgeId, String media, String lang, int offsetms, int skipms) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
  * 
  * 
  * @since ari_0_0_1
  *********************************************************/
-public void create(String type, AriCallback<Bridge> callback){
+public void play(String bridgeId, String media, String lang, int offsetms, int skipms, AriCallback<Playback> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -384,6 +394,35 @@ public Bridge create(String type, String name) throws RestException{
 };
 
 /**********************************************************
+ * 
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+public void create_or_update_with_id(String type, String bridgeId, String name, AriCallback<Bridge> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Set a channel as the video source in a multi-party mixing bridge. This operation has no effect on bridges with two or fewer participants.
+ * 
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+public void setVideoSource(String bridgeId, String channelId) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * Create a new bridge or updates an existing one.
+ * This bridge persists until it has been shut down, or Asterisk has been shut down.
+ * 
+ * @since ari_1_5_0
+ *********************************************************/
+public Bridge create_or_update_with_id(String type, String bridgeId, String name) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
  * Create a new bridge.
  * This bridge persists until it has been shut down, or Asterisk has been shut down.
  * 
@@ -394,21 +433,30 @@ public Bridge create(String type) throws RestException{
 };
 
 /**********************************************************
+ * Removes any explicit video source in a multi-party mixing bridge. This operation has no effect on bridges with two or fewer participants. When no explicit video source is set, talk detection will be used to determine the active video stream.
  * 
  * 
- * @since ari_0_0_1
+ * @since ari_2_0_0
  *********************************************************/
-public void play(String bridgeId, String media, String lang, int offsetms, int skipms, AriCallback<Playback> callback){
+public void clearVideoSource(String bridgeId) throws RestException{
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
 /**********************************************************
- * Start playback of media on a bridge.
- * The media URI may be any of a number of URI's. Currently sound: and recording: URI's are supported. This operation creates a playback resource that can be used to control the playback of media (pause, rewind, fast forward, etc.)
+ * 
  * 
  * @since ari_0_0_1
  *********************************************************/
-public Playback play(String bridgeId, String media, String lang, int offsetms, int skipms) throws RestException{
+public void create(String type, AriCallback<Bridge> callback){
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * 
+ * 
+ * @since ari_2_0_0
+ *********************************************************/
+public void setVideoSource(String bridgeId, String channelId, AriCallback<Void> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
@@ -424,19 +472,9 @@ public void create(String type, String name, AriCallback<Bridge> callback){
 /**********************************************************
  * 
  * 
- * @since ari_1_5_0
+ * @since ari_2_0_0
  *********************************************************/
-public void create_or_update_with_id(String type, String bridgeId, String name, AriCallback<Bridge> callback){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
- * Create a new bridge or updates an existing one.
- * This bridge persists until it has been shut down, or Asterisk has been shut down.
- * 
- * @since ari_1_5_0
- *********************************************************/
-public Bridge create_or_update_with_id(String type, String bridgeId, String name) throws RestException{
+public void clearVideoSource(String bridgeId, AriCallback<Void> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 

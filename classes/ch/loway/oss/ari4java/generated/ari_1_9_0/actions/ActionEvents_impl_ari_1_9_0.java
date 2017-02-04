@@ -3,7 +3,7 @@ package ch.loway.oss.ari4java.generated.ari_1_9_0.actions;
 // ----------------------------------------------------
 //      THIS CLASS WAS GENERATED AUTOMATICALLY         
 //               PLEASE DO NOT EDIT                    
-//    Generated on: Wed Aug 31 18:05:11 CEST 2016
+//    Generated on: Sat Feb 04 15:23:09 CET 2017
 // ----------------------------------------------------
 
 import ch.loway.oss.ari4java.generated.*;
@@ -81,21 +81,21 @@ httpActionAsync(callback);
 }
 
 /**********************************************************
- * 
- * 
- * @since ari_0_0_1
- *********************************************************/
-public void eventWebsocket(String app, AriCallback<Message> callback){
-  throw new UnsupportedOperationException("Method availble from ...");
-};
-
-/**********************************************************
  * WebSocket connection for events.
  * 
  * 
  * @since ari_0_0_1
  *********************************************************/
 public Message eventWebsocket(String app) throws RestException{
+  throw new UnsupportedOperationException("Method availble from ...");
+};
+
+/**********************************************************
+ * 
+ * 
+ * @since ari_0_0_1
+ *********************************************************/
+public void eventWebsocket(String app, AriCallback<Message> callback){
   throw new UnsupportedOperationException("Method availble from ...");
 };
 
