@@ -22,6 +22,9 @@ import java.util.List;
  */
 public class BaseAriAction {
 
+    // Shared ObjectMapper
+    private static final ObjectMapper mapper = new ObjectMapper();
+
     private String forcedResponse = null;
     private HttpClient httpClient;
     private WsClient wsClient;
@@ -125,7 +128,6 @@ public class BaseAriAction {
      */
     public static <T> T deserializeJson(String json, Class<T> klazz) throws RestException {
 
-        ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.readValue(json, klazz);
         } catch (IOException e) {
@@ -143,7 +145,6 @@ public class BaseAriAction {
      */
     public static <T> T deserializeJson(String json, TypeReference<T> klazzType) throws RestException {
 
-        ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.readValue(json, klazzType);
         } catch (IOException e) {
@@ -168,7 +169,6 @@ public class BaseAriAction {
      */
     public static <A, C extends A> List<A> deserializeJsonAsAbstractList(String json, TypeReference<List<C>> refConcreteType) throws RestException {
 
-        ObjectMapper mapper = new ObjectMapper();
         try {
             List<C> lC = mapper.readValue(json, refConcreteType);
             List<A> lA = (List<A>) lC;
@@ -188,7 +188,6 @@ public class BaseAriAction {
      * @throws RestException
      */
     public static Message deserializeEvent(String json, Class<?> klazz) throws RestException {
-        ObjectMapper mapper = new ObjectMapper();
         try {
             return (Message) mapper.readValue(json, klazz);
         } catch (IOException e) {
@@ -203,8 +202,9 @@ public class BaseAriAction {
      * @throws RestException
      */
     public synchronized void disconnectWs() throws RestException {
-        if (wsConnection != null)
+        if (wsConnection != null) {
             wsConnection.disconnect();
+        }
         wsConnection = null;
     }
 
