@@ -33,8 +33,8 @@ If you use Gradle (or any tool using Maven dependencies) you can simply declare 
 
 
 	repositories {
-		mavenCentral()
-	    mavenRepo(url: 'http://jcenter.bintray.com') 
+        mavenCentral()
+        jcenter()
 	}
 
 
