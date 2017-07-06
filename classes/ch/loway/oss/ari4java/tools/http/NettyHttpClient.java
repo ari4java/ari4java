@@ -16,6 +16,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.*;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 import io.netty.util.concurrent.ScheduledFuture;
 
 import java.io.UnsupportedEncodingException;
@@ -101,7 +103,13 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                     }
                 }
                 if (group != null && !group.isShuttingDown()) {
-                    group.shutdownGracefully(5, 10, TimeUnit.SECONDS).syncUninterruptibly();
+                    group.shutdownGracefully(5, 10, TimeUnit.SECONDS).addListener(new GenericFutureListener() {
+                        @Override
+                        public void operationComplete(Future future) throws Exception {
+                            shutDownGroup.shutdownGracefully(5, 10, TimeUnit.SECONDS);
+                            shutDownGroup = null;
+                        }
+                    }).syncUninterruptibly();
                     group = null;
                 }
             }
