@@ -1,7 +1,7 @@
 
 package ch.loway.oss.ari4java.codegen.genJava;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -14,7 +14,7 @@ public class JavaPkgInfo {
     public final static Map<String,String> TypeMap;
 
     static {
-        TypeMap = new HashMap<String, String>();
+        TypeMap = new LinkedHashMap<>();
 
         TypeMap.put( "string", "String" );
         TypeMap.put( "long", "long" );
