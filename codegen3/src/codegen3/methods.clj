@@ -46,7 +46,7 @@
    parametro in formato {:type :name :comment}"
   [parm exp]
   (let [n (:name parm)
-        t (javagen/typeTranslator (:dataType parm) "")
+        t (javagen/swagger->java (:dataType parm) "")
         c (:description parm)]
     {:type t
      :name n
@@ -58,7 +58,7 @@
   [path descr op]
   (let [nick (:nickname op)
         summary (str descr "\n" (:summary op))
-        response (javagen/typeTranslator (:responseClass op) "")
+        response (javagen/swagger->java (:responseClass op) "")
         parms (:parameters op)]
     {
       :method      nick
@@ -80,9 +80,76 @@
     (map #(baseSignature path des %) ops)))
 
 
+(defn javaField
+  "
+   Trasforma una descrizione d un field ARI in una Java.
+
+  Esempi ARI:
+
+   {:id {:type 'string', :description '..', :required true}}
+
+   {:type `string`, :description `Type of bridge technology`, :required true, :allowableValues {:valueType `LIST`, :values [`mixing` `holding`]}}
+
+   {:type `List[string]`, :description `Ids of channels participating in this bridge`, :required true}
+
+  quelle JAva sono 
+   {:type ... :name ....}
+
+  "  
+
+  [ariNameSymbol ariField]
+  (let [atype (:type ariField)
+        jtype (javagen/swagger->java atype "")
+        jname (name ariNameSymbol)]  
+    {:type jtype
+     :name jname
+     :comment "xxx"}
+    ))
+
+
+(defn modelFromFile
+  "
+  Genera un modello partendo da un descrittore.
+  "
+  [ariModel]
+  (let [cName (:id ariModel)
+        pkg   "-"
+        nota  (:description ariModel)
+        fieldsAri (:properties ariModel)
+        fieldsJava (map #(javaField (first %) (second %) ) fieldsAri)]
+
+    (javagen/mkDataClass pkg cName nota fieldsJava)
+    
+    ))
+
+
+(defn allModelsForAriFile
+  "
+  Genera i modelli per questo file.
+  
+  codegen3.core> (keys  (get-in _db [:ari_1_0_0 :bridges :models :Bridge]))
+  (:id :description :properties)
+  codegen3.core> (keys  (get-in _db [:ari_1_0_0 :bridges :models :Bridge :properties]))
+  (:id :technology :bridge_type :bridge_class :creator :name :channels)
+
+
+   "
+  [db ari-ver file]
+
+  ;; VEDI SOTTO
+  (let [models (get-in db [ari-ver file :models])
+        modelData (map #(modelFromFile (second %)) models)
+        ]
+    modelData
+
+    ))
+
+
+
+
 
 (defn allSigsForAriFile
-  "Tutte le signatures per un file dato di un'ari data"
+  "Tutte Le Signatures Per un file dato di un'ari data"
   [db ari-ver file]
   (let [file-paths (get-in db [ari-ver file :apis])]
     (flatten (mapv allSignsForPath file-paths))))
@@ -108,7 +175,19 @@
             (map #(allSigsForAriFile DB % file) ari-versions))]
     (reduce rdc-addSigToMap {} all-possible-sgns)
 
-    ))
+  ))
+
+
+
+(defn allSigsForModels
+  "
+  Ottiene tutte le signatures per tutti i modelli
+  ricostruendole nelle varie versioni dell'ARI.
+  "
+  [DB ari-versions]
+
+
+  )
 
 
 

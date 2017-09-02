@@ -18,7 +18,7 @@
   "
   [{n :method t :returns a :args}]
   (let [args (map :type a)
-        start [t n]]
+        start [t n]] 
     (into start args)))
 
 (defn getSignaturesForClass
@@ -30,6 +30,6 @@
 
 
 (defn constrained-sqr [x]
-    {:pre  [(pos? x)]
-     :post [(> % 16), (< % 225)]}
-    (* x x))
+  {:pre  [(pos? x)] 
+   :post [(> % 16), (< % 225)]}
+  (* x x))

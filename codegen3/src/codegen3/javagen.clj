@@ -18,29 +18,29 @@
 
 
 (def IMPORTS-INTERFACE [
-     "java.util.Date"
-     "java.util.List"
-     "java.util.Map"
-     "java.util.ArrayList"
-    "ch.loway.oss.ari4java.tools.RestException"
-    "ch.loway.oss.ari4java.tools.AriCallback"
-    "ch.loway.oss.ari4java.tools.tags.*" ])
+                        "java.util.Date"
+                        "java.util.List"
+                        "java.util.Map"
+                        "java.util.ArrayList"
+                        "ch.loway.oss.ari4java.tools.RestException"
+                        "ch.loway.oss.ari4java.tools.AriCallback"
+                        "ch.loway.oss.ari4java.tools.tags.*" ])
 
 
 
-;(genclassfile {:package "a.b.c"
-;               :classname "Pippon"
-;               :imports ["java.w"]
-;               :implements ["tool", "tool2"]
-;               :extends "base"
-;               :functions [
-;                  { :method "pippo"
-;                    :returns "void"
-;                    :args [ {:type "int" :name "pippo"}
-;                            {:type "String" :name "plut"}]
-;                    :notes ["yoo"]}
-;               ]
-;               :stanzas ["m;" ]  } )
+                                        ;(genclassfile {:package "a.b.c"
+                                        ;               :classname "Pippon"
+                                        ;               :imports ["java.w"]
+                                        ;               :implements ["tool", "tool2"]
+                                        ;               :extends "base"
+                                        ;               :functions [
+                                        ;                  { :method "pippo"
+                                        ;                    :returns "void"
+                                        ;                    :args [ {:type "int" :name "pippo
+                                        ;                            {:type "String" :name "plut"}]
+                                        ;                    :notes ["yoo"]}
+                                        ;               ]
+                                        ;               :stanzas ["m;" ]  } )
 
 
 (defn camelName
@@ -192,24 +192,23 @@
   ) )
 
 
-(def knownTypes
+(def knownSwaggerTypes
   "These Swagger types match a Java type directly."
 
-
   {
-                 "string" "String",
-                 "long" "long",
-                 "int" "int" ,
-                 "double" "double",
-                 "date" "Date",
-                 "object" "String",
-                 "boolean" "boolean",
-                 "containers" "Map<String,String>"
-})
+   "string" "String",
+   "long" "long",
+   "int" "int" ,
+   "double" "double",
+   "date" "Date",
+   "object" "String",
+   "boolean" "boolean",
+   "containers" "Map<String,String>"
+   })
 
 
 
-(defn typeTranslator
+(defn swagger->java
   "Turns a Swagger type into a matching Java type.
   We need to know if we are asking for a concrete implementation
   or an interface (as for native objects this is different)
@@ -218,10 +217,10 @@
   "
   [sw-type api-version]
   (let [inList (get (re-matches #"^List\[(.+)\]$" sw-type) 1)
-        known  (knownTypes sw-type)
+        known  (knownSwaggerTypes sw-type)
         concrete? (pos? (count api-version))]
     (cond
-       inList (str "List<" (typeTranslator inList api-version) ">")
+       inList (str "List<" (swagger->java inList api-version) ">")
        known  known
        :else  (if concrete?
                 (str sw-type "_impl_" api-version)
@@ -282,12 +281,12 @@
 
   [package klass notes lfields]
   {
-        :classname    klass
-        :package      package
-        :notes        notes
-        :functions    (reduce mkGettersSetters [] lfields)
-        :stanzas      (reduce mkPrivateField   [] lfields)
-  })
+   :classname    klass
+   :package      package
+   :notes        notes
+   :functions    (reduce mkGettersSetters [] lfields)
+   :stanzas      (reduce mkPrivateField   [] lfields)
+   })
 
 
 (defn writeOutKlass
@@ -303,27 +302,30 @@
 
 
 (defn writeInterface
-  "Una interfaccia è scritta su disco sulla base del nome del file e dei metodi"
+  "Una interfaccia è scritta su disco 
+  sulla base del nome del file e dei metodi"
   [file comments meths]
   (let [klass {
-        :classname    (camelName "Action" (name file))
-        :isInterface  true
-        :package      BASE-GEN-PKG
-        :imports      IMPORTS-INTERFACE
-        ;:implements   ""
-        ;:extends      the class to extend
-        :notes        comments
-        :functions    meths
-        ;:stanzas      a list of text to implement (added after the methods)
-        }]
+               :classname    (camelName "Action" (name file))
+               :isInterface  true
+               :package      BASE-GEN-PKG
+               :imports      IMPORTS-INTERFACE
+                                        ;:implements   ""
+                                        ;:extends      the class to extend
+               :notes        comments
+               :functions    meths
+                                        ;:stanzas      a list of text to implement (added after the methods)
+               }]
     (writeOutKlass klass)  ) )
 
 
 
 
-;(writeOutKlass
-;   (mkDataClass "p.k.g" "c" "no"
-;      [{:type "int" :name "pluto"} {:type "String" :name "pippno"}]  ))
+
+
+                                        ;(writeOutKlass
+                                        ;   (mkDataClass "p.k.g" "c" "no"
+                                        ;      [{:type "int" :name "pluto"} {:type "String" :name "pippno"}]  ))
 
 
 

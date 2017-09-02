@@ -1,9 +1,8 @@
 (ns codegen3.core
   (:require [clojure.data.json :as json])
-  (:require [codegen3.methods  :as meth])
-  (:require [codegen3.javagen  :as javagen])
-
-
+  (:require [codegen3.methods :as meth])
+  (:require [codegen3.javagen :as javagen])
+  (:require [com.rpl.specter :as spk])
   (:gen-class))
 
 ;; Load func: cmd+enter
@@ -54,7 +53,8 @@
 
 ;; ALL KNOWN ARI VERSIONS
 (def ARI_VERSIONS
-  ["ari_0_0_1" "ari_1_0_0"])
+  ["ari_0_0_1"
+   "ari_1_0_0"])
 
 
 (def ARI-VERSIONS-KW
@@ -63,24 +63,28 @@
 ;; ALL KNOWN ARI FILES
 (def ALL_FILES
   {"applications" {},
-   "asterisk" {},
-   "bridges" {},
-   "channels" {},
-   "deviceStates" {},
-   "events" {}
-})
+;   "asterisk"     {},
+;   "bridges"      {},
+;   "channels"     {},
+;   "deviceStates" {},
+   "events"       {}
+   })
+
+
+
 
 (def ALL-FILES-KW
   (vec (map keyword (keys ALL_FILES))))
 
 ;; READ ARI FOLDER as JSON
 (defn loadResourceFile
-  "Loads a resource file as plain text; if missing, returns the default contents"
+  "Loads a resource file as plain text; if missing, 
+   returns the default contents"
   [resource-path default-if-missing]
   (let [resource (clojure.java.io/resource resource-path)
         contents (cond
-                    (nil? resource) default-if-missing
-                    :else (slurp resource))]
+                   (nil? resource) default-if-missing
+                   :else (slurp resource))]
     contents))
 
 
@@ -88,20 +92,21 @@
   "Loads a JSON file as a Clojure structure.
   e.g.
     (readJson \"ari_0_0_1\" \"applications\")
-
   "
   [ariVersion filename]
-  (let [file  (str ariVersion "/" filename ".json")
-        data  (loadResourceFile file "{}")]
-    (json/read-str data :key-fn keyword)
-  ))
+  (let [file (str ariVersion "/" filename ".json")
+        data (loadResourceFile file "{}")]
+    (json/read-str data :key-fn keyword)))
 
 (defn readJsonAsStruct
   "Legge un file json come
     {:ari {:filename {...data...}}}"
   [ariVersion filename]
-  { (keyword ariVersion)
-      {(keyword filename) (readJson ariVersion filename) }})
+  (let [kVer (keyword ariVersion)
+        kFnam (keyword filename)
+        data (readJson ariVersion filename)]
+
+    {kVer {kFnam data}}))
 
 
 
@@ -111,9 +116,9 @@
   (let [files (keys ALL_FILES)
         redLoadFile (fn [acc filename]
                       (assoc-in acc [(keyword ariVersion)
-                                 (keyword filename)]
-                                 (readJson ariVersion filename))) ]
-    (reduce redLoadFile acc files )))
+                                     (keyword filename)]
+                                (readJson ariVersion filename)))]
+    (reduce redLoadFile acc files)))
 
 
 (defn readAll
@@ -126,9 +131,9 @@
   "Ritorna tuple di tutte le permutazioni di file e di tutte le ARI,
    anche quelle che non esistono"
   []
-  (for [ari  ARI_VERSIONS
+  (for [ari ARI_VERSIONS
         file (keys ALL_FILES)]
-  [ (keyword ari) (keyword file)] ))
+    [(keyword ari) (keyword file)]))
 
 
 (defn mkFnSignature
@@ -142,17 +147,25 @@
 (defn write$interfaces [DB]
   (for [file ALL-FILES-KW]
     (javagen/writeInterface
-       file
-       "--comment--"
-       (vals (meth/allSigsForInterface DB file ARI-VERSIONS-KW)))))
+      file
+      "--comment--"
+      (vals (meth/allSigsForInterface DB file ARI-VERSIONS-KW)))))
+
+(defn write$models [DB]
+  (for [file ALL-FILES-KW]
+    1
+
+    )
+
+  )
+
+
 
 (defn run$
   []
   (let [DB (readAll)]
-      (do
-        (write$interfaces DB)
-      )
-    ))
+    (do
+      (write$interfaces DB))))
 
 
 

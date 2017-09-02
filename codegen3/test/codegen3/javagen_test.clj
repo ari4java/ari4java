@@ -28,13 +28,13 @@
 
 (deftest typeTranslator-basics
   (testing "esempio base: string"
-    (is (= "String" (typeTranslator "string" "" ))))
+    (is (= "String" (swagger->java "string" ""))))
   (testing "esempio base: List of string"
-    (is (= "List<String>" (typeTranslator "List[string]" "" ))))
+    (is (= "List<String>" (swagger->java "List[string]" ""))))
   (testing "object: abstract"
-    (is (= "Pluto" (typeTranslator "Pluto" "" ))))
+    (is (= "Pluto" (swagger->java "Pluto" ""))))
   (testing "object:concrete"
-    (is (= "Pluto_impl_V1" (typeTranslator "Pluto" "V1" ))))
+    (is (= "Pluto_impl_V1" (swagger->java "Pluto" "V1"))))
 
 )
 
