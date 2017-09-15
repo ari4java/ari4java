@@ -2,7 +2,7 @@
 package ch.loway.oss.ari4java.codegen.genJava;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +26,7 @@ public class JavaInterface {
     public String className = "";
     public String since = "";
 
-    Map<String,String> definitions = new HashMap<String, String>();
+    Map<String,String> definitions = new LinkedHashMap<>();
 
     public void iKnow( String signature, String method, String comment, String sinceVersion ) {
 
@@ -45,7 +45,7 @@ public class JavaInterface {
         ji.pkgName = pkgName;
         ji.className = className;
         ji.since = since;
-        ji.definitions = new HashMap<String, String>(definitions);
+        ji.definitions = new LinkedHashMap<>(definitions);
         return ji;
     }
 

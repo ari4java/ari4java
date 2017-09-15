@@ -4,7 +4,7 @@ import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
 import ch.loway.oss.ari4java.codegen.genJava.JavaPkgInfo;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +20,7 @@ public class ClassTranslator extends JavaPkgInfo {
     
     public ClassTranslator() {
         super();
-        mInterfaces = new HashMap<String,String>();
+        mInterfaces = new LinkedHashMap<>();
         imports = new ArrayList<String>();
         className = "ClassTranslator";
         imports.add("ch.loway.oss.ari4java.ARI" );
