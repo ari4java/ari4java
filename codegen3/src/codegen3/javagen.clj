@@ -120,12 +120,14 @@
       :notes
       :body
       :isAbstract
+      :annotation
   "
   [data]
-  (let [{:keys [method returns isPrivate args notes body isAbstract]} data]
+  (let [{:keys [method returns isPrivate args notes body isAbstract annotation]} data]
   (str
     "\n\n"
     (mkComment notes)
+    (if annotation annotation "")
     (if isPrivate "private " "public ")
     returns " "
     method "("
@@ -151,8 +153,14 @@
 
 
 
-(defn genclassfile
-   "Inputs
+(defn genClassFile
+   "
+   Given a data structure that describes
+   our own class, creates a text file containing
+   the class itself and a proposed text file.
+
+
+   Inputs
         :classname    the class name
         :isInterface
         :package      the package name
@@ -164,8 +172,8 @@
         :stanzas      a list of text to implement (added after the methods)
 
     Output
-        :body
-        :filename
+        :body         the textual class in Java
+        :filename     the file name to store it to
    "
    [data]
    (let [{:keys [classname isInterface package imports implements extends notes functions stanzas]} data]
@@ -230,26 +238,66 @@
 ;; Only containers for data.
 
 
+(defn notImplemented
+  []
+  (str "throw new IllegalArgumentException(\"This version of ARI does not support this field\");"))
+
+(defn mkSetterTypeAnnotation
+  "If type is List<XXX>, Jackson needs a type hint
+  to deserialize elements because it does not see
+  the elided signature.
+
+  @JsonDeserialize( contentAs=String.class )
+  public void setBridge_ids(List<String> val )
+
+
+  "
+
+  [t]
+  (let [inList (get (re-matches #"^List<(.+)>$" t) 1)]
+    (cond
+      inList (str "@JsonDeserialize( contentAs=" inList ".class )")
+      :else  ""
+
+      )))
+
 
 (defn mkGetterVal [field]
-  (let [{t :type v :name} field]
+  (let [_    (prn "mkGetter" field)
+        {t :type v :name c :comment ni :notimplemented io :interfaceonly} field]
   {
       :method     (camelName "get" v)
       :returns    t
       :args       []
-      :notes      (str "get " v)
-      :body       (str "return this." v ";")
+      :notes      (str "get " v "\n" c)
+      :isAbstract  (= true io)
+      :body       (cond
+                    (true? io)
+                      ""
+                    (true? ni)
+                      (notImplemented)
+                    :else
+                      (str "return this." v ";"))
+
   }))
 
 (defn mkSetterVal [field]
-  (let [{t :type v :name} field]
+  (let [{t :type v :name c :comment ni :notimplemented io :interfaceonly} field]
 
   {
       :method     (camelName "set" v)
       :returns    "void"
       :args       [field]
-      :notes      (str "sets " v)
-      :body       (str "this." v " = " v ";")
+      :annotation (mkSetterTypeAnnotation t)
+      :notes      (str "sets " v "\n" c)
+      :isAbstract  (= true io)
+      :body       (cond
+                    (true? io)
+                      ""
+                    (true? ni)
+                      (notImplemented)
+                    :else
+                      (str "this." v " = " v ";"))
   }))
 
 (defn mkPrivateField [acc field]
@@ -268,21 +316,35 @@
       (mkSetterVal field))
   )
 
+
+(defn mkDataInterface
+  [package klass extends implements notes lfields]
+  {
+   :isInterface  true
+   :classname    klass
+   :package      package
+   :extends      extends
+   :implements   implements
+   :notes        notes
+   :functions    (reduce mkGettersSetters [] lfields)
+   })
+
+
 (defn mkDataClass
   " TO BE TESTED
 
 
   (mkDataClass p c n
-             [{:type int :val pluto}
-              {:type String :val pippo}]
+             [{:type int :name pluto}
+              {:type String :name pippo}]
              )"
 
-
-
-  [package klass notes lfields]
+  [package klass extends implements notes lfields]
   {
    :classname    klass
    :package      package
+   :extends      extends
+   :implements   implements
    :notes        notes
    :functions    (reduce mkGettersSetters [] lfields)
    :stanzas      (reduce mkPrivateField   [] lfields)
@@ -293,7 +355,8 @@
   "Generates and writes a classfile on disk.
    Returns the filename."
   [klass]
-  (let [{:keys [filename body]} (genclassfile klass)
+  (let [_                       (prn klass)
+        {:keys [filename body]} (genClassFile klass)
         realPath (str BASE-CLASS-PATH "/" filename)]
     (clojure.java.io/make-parents realPath)
     (spit realPath body)

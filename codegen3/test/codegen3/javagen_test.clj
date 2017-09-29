@@ -51,5 +51,15 @@
     (is (= "int P, String Q"
            (genAttrs [{:name "P" :type "int"} {:name "Q" :type "String"}]) )))
 
-
   )
+
+
+(deftest testTypeAnnotation
+  (testing "Anotazioni"
+    (is (= "@JsonDeserialize( contentAs=String.class )"
+           (mkSetterTypeAnnotation "List<String>")))
+    (is (= ""
+           (mkSetterTypeAnnotation "String")))
+
+    ))
+
