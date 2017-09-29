@@ -11,7 +11,7 @@
     (is (= "<>" (mkSection "<" ">" "")))))
 
 (deftest mkSection-string
-  (testing "mkSection con stringa vuota"
+  (testing "mkSection con stringa non vuota"
     (is (= "<a>" (mkSection "<" ">" "a")))))
 
 (deftest mkSection-list

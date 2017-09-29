@@ -111,7 +111,7 @@
     (s/join ", " signatures)))
 
 
-(defn genbody
+(defn genMethodBody
   "Creates a Java method
       :method
       :returns
@@ -127,7 +127,7 @@
   (str
     "\n\n"
     (mkComment notes)
-    (if annotation annotation "")
+    (if annotation (str annotation "\n") "")
     (if isPrivate "private " "public ")
     returns " "
     method "("
@@ -182,6 +182,7 @@
        (str
           "package " package ";\n\n"
           (mkImports imports)
+          "\n"
           (mkComment (str PREAMBLE notes))
           "public "
                (if isInterface "interface " "class ")
@@ -193,7 +194,7 @@
                " {\n"
 
           (mkSection "" "\n\n" stanzas)
-          (mkSection "" "\n\n" (map #(indent (genbody %)) functions))
+          (mkSection "" "\n\n" (map #(indent (genMethodBody %)) functions))
 
           "}\n\n")
     }
@@ -318,33 +319,33 @@
 
 
 (defn mkDataInterface
-  [package klass extends implements notes lfields]
+  [package klass extends implements imports notes lfields]
   {
    :isInterface  true
    :classname    klass
    :package      package
    :extends      extends
    :implements   implements
+   :imports      imports
    :notes        notes
    :functions    (reduce mkGettersSetters [] lfields)
    })
 
 
 (defn mkDataClass
-  " TO BE TESTED
-
-
+  "
   (mkDataClass p c n
              [{:type int :name pluto}
               {:type String :name pippo}]
              )"
 
-  [package klass extends implements notes lfields]
+  [package klass extends implements imports notes lfields]
   {
    :classname    klass
    :package      package
    :extends      extends
    :implements   implements
+   :imports      imports
    :notes        notes
    :functions    (reduce mkGettersSetters [] lfields)
    :stanzas      (reduce mkPrivateField   [] lfields)

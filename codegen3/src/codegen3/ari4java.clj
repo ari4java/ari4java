@@ -40,6 +40,28 @@
 ;; \TODO which models are "extends EventSource"?
 
 
+
+
+(def IMPORTS_GENERATED_MODELS [
+                               "ch.loway.oss.ari4java.generated.*"
+                               "com.fasterxml.jackson.databind.annotation.JsonDeserialize"
+                               "java.util.Date"
+                               "java.util.List"
+                               "java.util.Map" ])
+
+
+
+(def IMPORTS_INTERFACES_MODELS [
+                                "java.util.Date"
+                                "java.util.List"
+                                "java.util.Map"
+                                "java.util.ArrayList"
+                                "ch.loway.oss.ari4java.tools.RestException"
+                                "ch.loway.oss.ari4java.tools.AriCallback"
+                                "ch.loway.oss.ari4java.tools.tags.*"
+                                ])
+
+
 (defn models-for
   "A list of models for an ARI version.
   Models are held in:
@@ -159,6 +181,7 @@
 (defn get-property-description [prop]
   (str (:description prop)
        "\n"
+       "\n"
        "Supported versions: " (:versions prop)
        )
 
@@ -167,6 +190,7 @@
 
 (defn get-model-description [prop]
   (str (:dscr prop)
+       "\n"
        "\n"
        "Supported versions: " (:versions prop)
        )
@@ -193,12 +217,12 @@
 
 (defn generate-model-interface
   [model]
-  (prn "GMI" model)
   (jg/mkDataInterface
     "ch.loway.oss.ari4java.generated"
     (name (:model model))
-    "" ;; extends
+    nil ;; extends
     [] ;; implements
+    IMPORTS_INTERFACES_MODELS
     (get-model-description model)
 
     (mapv
@@ -235,8 +259,9 @@
 
     (str "ch.loway.oss.ari4java.generated." (name ari) ".models")
     (str (name (:model model)) "_impl_" (name ari))
-    "" ;; extends
-    [ (name (:model model)) "java.io.Serializable"] ;; implements
+    nil ;; extends
+    [ (name (:model model)) ] ;; implements
+    IMPORTS_GENERATED_MODELS
     (get-model-description model)
 
     (mapv
@@ -266,26 +291,6 @@
 
       )))
 
-
-
-(def IMPORTS_GENERATED_MODELS [
-  "ch.loway.oss.ari4java.generated.*"
-  "com.fasterxml.jackson.databind.annotation.JsonDeserialize"
-  "java.util.Date"
-  "java.util.List"
-  "java.util.Map" ])
-
-
-
-(def IMPORTS_INTERFACES_MODELS [
-  "java.util.Date"
-  "java.util.List"
-  "java.util.Map"
-  "java.util.ArrayList"
-  "ch.loway.oss.ari4java.tools.RestException"
-  "ch.loway.oss.ari4java.tools.AriCallback"
-  "ch.loway.oss.ari4java.tools.tags.*"
-])
 
 
 
