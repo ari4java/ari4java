@@ -4,7 +4,7 @@
   (:gen-class))
 
 ;(def BASE-CLASS-PATH "./gen-java")
-(def BASE-CLASS-PATH "../classes")
+(def BASE-CLASS-PATH "../classes2")
 
 (def PREAMBLE
   (str " - THIS CLASS IS AUTOMATICALLY GENERATED - \n"

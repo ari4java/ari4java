@@ -37,6 +37,8 @@
 ;;  - All the ARI version(s) it is present in
 ;;  - The description, as taken from most recent version
 ;;
+;; A fixed set of models extend EventSource (for tagging)
+;;
 ;; \TODO which models are "extends EventSource"?
 
 
@@ -62,20 +64,17 @@
                                 ])
 
 
-(defn models-for_
-  "A list of models for an ARI version.
-  Models are held in:
-    -> DB :ari_1_0_0 :applications :models
-    -> DB :ari_1_0_0 :events :models
+(defn eventSources
+  "At the moment the list of EventSources is fixed.
+  But it would be better to read it from the DB."
+  []
+  #{ :Bridge :Channel :Endpoint :DeviceState })
 
-  Returns a map of models indexed by  model name.
-  "
-  [DB version]
-  (let [am (-> DB version :applications :models)
-        em (-> DB version :events       :models)
-        ]
+(defn isEvtSource
+  "A set can be looked-up as a function of its members"
+  [model]
+  (some? ((eventSources) model)))
 
-    (into am em)))
 
 (defn models-for
   "A list of models for an ARI version.
@@ -90,7 +89,6 @@
     (reduce into {}
             (for [entry entries]
               (-> DB version entry :models)))))
-
 
 
 (defn model-names-for
@@ -110,7 +108,7 @@
                (all-ari-versions DB))))
 
 
-(defn get-model [DB version name]
+(defn get-model- [DB version name]
   "Reads a model given a version and a name.
   Annotates the ARI model with whether it's an event and
   the ARI version it comes from"
@@ -126,7 +124,22 @@
       :else
         (into {:cljid name :ver version :isevt true}  em))))
 
-(defn merge-property
+
+(defn get-model [DB version name]
+  "Reads a model given a version and a name.
+  Annotates the ARI model with whether it's an event and
+  the ARI version it comes from"
+
+  (let [entries  (-> DB version keys)
+        lzModels (map #(-> DB version % :models name) entries)
+        found    (first (filter some? lzModels))]
+    (cond
+      (nil? found)    nil
+      :else           (into {:cljid name :ver version :isevt false} found)
+      )))
+
+
+    (defn merge-property
   "Derives an annotated property from an existing annotated
   property p1 + a non-annotated property and a version.
   An annotated property has a name and
@@ -238,25 +251,32 @@
 
 (defn generate-model-interface
   [model]
-  ;(prn "Model interface" model)
-  (jg/mkDataClassInterface
-    "ch.loway.oss.ari4java.generated"
-    (name (:model model))
-    nil ;; extends
-    [] ;; implements
-    IMPORTS_INTERFACES_MODELS
-    (get-model-description model)
+  (let [modelName (:model model)]
 
-    (mapv
-      (fn [prop]
-        {:type (jg/swagger->java
-                 (:type prop) "")
-         :name (name (:name prop))
-         :comment (get-property-description prop)
-         :interfaceonly true })
-      (:properties model)
+    (jg/mkDataClassInterface
+      "ch.loway.oss.ari4java.generated"
+      (name modelName)
+      (if (isEvtSource modelName) " EventSource " nil ) ;; extends
+      [] ;; implements
+      IMPORTS_INTERFACES_MODELS
+      (get-model-description model)
 
-      )))
+      (mapv
+        (fn [prop]
+          {:type (jg/swagger->java
+                   (:type prop) "")
+           :name (name (:name prop))
+           :comment (get-property-description prop)
+           :interfaceonly true })
+        (:properties model)
+
+        ))
+
+
+
+    )
+
+  )
 
 
 (defn generate-model-interfaces
