@@ -264,8 +264,7 @@
 
 
 (defn mkGetterVal [field]
-  (let [_    (prn "mkGetter" field)
-        {t :type v :name c :comment ni :notimplemented io :interfaceonly} field]
+  (let [{t :type v :name c :comment ni :notimplemented io :interfaceonly} field]
   {
       :method     (camelName "get" v)
       :returns    t
@@ -318,18 +317,32 @@
   )
 
 
-(defn mkDataInterface
-  [package klass extends implements imports notes lfields]
+(defn mkCommonDataClass
+  [package klass extends implements imports notes]
   {
-   :isInterface  true
    :classname    klass
    :package      package
    :extends      extends
    :implements   implements
    :imports      imports
    :notes        notes
-   :functions    (reduce mkGettersSetters [] lfields)
    })
+
+(defn sortFields
+  "We keep fields in a sorted order so they
+  don't bounce around in different builds."
+  [lfields]
+  (sort-by :name lfields))
+
+
+(defn mkDataClassInterface
+  [package klass extends implements imports notes lfields]
+  (into
+    (mkCommonDataClass package klass extends implements imports notes)
+    {
+     :isInterface true
+     :functions   (reduce mkGettersSetters [] (sortFields lfields))
+     }))
 
 
 (defn mkDataClass
@@ -340,24 +353,21 @@
              )"
 
   [package klass extends implements imports notes lfields]
-  {
-   :classname    klass
-   :package      package
-   :extends      extends
-   :implements   implements
-   :imports      imports
-   :notes        notes
-   :functions    (reduce mkGettersSetters [] lfields)
-   :stanzas      (reduce mkPrivateField   [] lfields)
-   })
+  (into
+    (mkCommonDataClass package klass extends implements imports notes)
+
+
+    {
+     :functions (reduce mkGettersSetters [] (sortFields lfields))
+     :stanzas   (reduce mkPrivateField [] (sortFields lfields))
+     }))
 
 
 (defn writeOutKlass
   "Generates and writes a classfile on disk.
    Returns the filename."
   [klass]
-  (let [_                       (prn klass)
-        {:keys [filename body]} (genClassFile klass)
+  (let [{:keys [filename body]} (genClassFile klass)
         realPath (str BASE-CLASS-PATH "/" filename)]
     (clojure.java.io/make-parents realPath)
     (spit realPath body)

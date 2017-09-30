@@ -217,7 +217,7 @@
 
 (defn generate-model-interface
   [model]
-  (jg/mkDataInterface
+  (jg/mkDataClassInterface
     "ch.loway.oss.ari4java.generated"
     (name (:model model))
     nil ;; extends
