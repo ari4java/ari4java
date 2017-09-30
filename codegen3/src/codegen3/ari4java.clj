@@ -62,7 +62,7 @@
                                 ])
 
 
-(defn models-for
+(defn models-for_
   "A list of models for an ARI version.
   Models are held in:
     -> DB :ari_1_0_0 :applications :models
@@ -77,6 +77,22 @@
 
     (into am em)))
 
+(defn models-for
+  "A list of models for an ARI version.
+  Models are held in:
+    -> DB :ari_1_0_0 :applications :models
+    -> DB :ari_1_0_0 :events :models
+
+  Returns a map of models indexed by  model name.
+  "
+  [DB version]
+  (let [entries (-> DB version keys)]
+    (reduce into {}
+            (for [entry entries]
+              (-> DB version entry :models)))))
+
+
+
 (defn model-names-for
   [DB version]
   (keys (models-for DB version)))
@@ -90,7 +106,7 @@
   "Returns a list of all possible model names across all ARI versions"
   [DB]
   (reduce into #{}
-          (map (partial model-names-for DB )
+          (map (partial model-names-for DB)
                (all-ari-versions DB))))
 
 
@@ -113,17 +129,18 @@
 (defn merge-property
   "Derives an annotated property from an existing annotated
   property p1 + a non-annotated property and a version.
-  An annotated property has a list of versions it applies to.
+  An annotated property has a name and
+  a list of versions it applies to.
   "
-
   [ap1 p2 name version]
+
+  ;(prn "mergeprop" ap1 p2 name version)
 
   (cond
     (nil? ap1)
       (into {:versions [version] :name name} p2)
 
     :else
-
       (cond
         (= (:type ap1) (:type p2))
           (into ap1  {:versions (conj (:versions ap1) version)})
@@ -131,8 +148,8 @@
         :else-exception
           (throw (IllegalArgumentException.
                    (str "Different type in version: " version " for ap1:" ap1 " p2:" p2 ))))
-)
-)
+))
+
 
 
 (defn props-set
@@ -145,12 +162,14 @@
                       :name prop
                       :prop (get-in model [:properties prop])})
                       vModels)
+        ; a prop might not exist
+        allexistingprops (filter #(some? (:prop %)) allprops)
 
                    ]
 
     (reduce (fn [a v] (merge-property a (:prop v) prop (:ver v)))
             nil
-            allprops)
+            allexistingprops)
     )
 
   )
@@ -193,6 +212,8 @@
        "\n"
        "\n"
        "Supported versions: " (:versions prop)
+       "\n"
+       "DEBUG:" prop "\n"
        )
 
   )
@@ -217,6 +238,7 @@
 
 (defn generate-model-interface
   [model]
+  ;(prn "Model interface" model)
   (jg/mkDataClassInterface
     "ch.loway.oss.ari4java.generated"
     (name (:model model))

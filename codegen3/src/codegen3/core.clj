@@ -2,6 +2,7 @@
   (:require [clojure.data.json :as json])
   (:require [codegen3.methods :as meth])
   (:require [codegen3.javagen :as javagen])
+  (:require [codegen3.ari4java :as aj])
   (:require [com.rpl.specter :as spk])
   (:gen-class))
 
@@ -54,7 +55,13 @@
 ;; ALL KNOWN ARI VERSIONS
 (def ARI_VERSIONS
   ["ari_0_0_1"
-   "ari_1_0_0"])
+   "ari_1_0_0"
+   "ari_1_5_0"
+   "ari_1_6_0"
+   "ari_1_5_0"
+   "ari_1_7_0"
+   "ari_1_8_0"
+   ])
 
 
 (def ARI-VERSIONS-KW
@@ -63,11 +70,18 @@
 ;; ALL KNOWN ARI FILES
 (def ALL_FILES
   {"applications" {},
-;   "asterisk"     {},
-;   "bridges"      {},
-;   "channels"     {},
-;   "deviceStates" {},
+   "asterisk"     {},
+   "bridges"      {},
+   "channels"     {},
+   "deviceStates" {},
    "events"       {}
+   "playbacks"    {}
+   "sounds"       {}
+   "endpoints"    {}
+   "mailboxes"    {}
+   "recordings"   {}
+
+
    })
 
 

@@ -3,7 +3,8 @@
   (:require [clojure.string :as s])
   (:gen-class))
 
-(def BASE-CLASS-PATH "./gen-java")
+;(def BASE-CLASS-PATH "./gen-java")
+(def BASE-CLASS-PATH "../classes")
 
 (def PREAMBLE
   (str " - THIS CLASS IS AUTOMATICALLY GENERATED - \n"
@@ -188,9 +189,8 @@
                (if isInterface "interface " "class ")
                classname
                (mkSection " extends " "" extends)
-               " implements "
-               (mkSection "" ", " implements)
-               "java.io.Serializable "
+               (mkSection " implements " " " implements)
+
                " {\n"
 
           (mkSection "" "\n\n" stanzas)
@@ -278,17 +278,17 @@
                       (notImplemented)
                     :else
                       (str "return this." v ";"))
-
   }))
 
 (defn mkSetterVal [field]
   (let [{t :type v :name c :comment ni :notimplemented io :interfaceonly} field]
-
   {
       :method     (camelName "set" v)
       :returns    "void"
       :args       [field]
-      :annotation (mkSetterTypeAnnotation t)
+      :annotation (cond
+                    (true? io)  nil
+                    :else       (mkSetterTypeAnnotation t))
       :notes      (str "sets " v "\n" c)
       :isAbstract  (= true io)
       :body       (cond
