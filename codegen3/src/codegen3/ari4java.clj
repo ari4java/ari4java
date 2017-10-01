@@ -378,7 +378,7 @@
                   (fn [op] (into {:op_path        path
                                   :op_description descr
                                   :op_version     ari
-                                  :op_entity      ent} op))
+                                  :op_action      ent} op))
                   ops)))))))))
 
 
@@ -409,7 +409,7 @@
 
 ; How many methods have multiple parameters? just a few
 ;
-;(map #(vec [(:op_entity %) (:nickname %)])
+;(map #(vec [(:op_action %) (:nickname %)])
 ;     (aj/findParams
 ;       (filter #(= :ari_1_8_0 (:op_version %)) (aj/opsDb DB))
 ;       #(= true (:allowMultiple %) )  ))
@@ -423,7 +423,7 @@
 ;  [:events "userEvent"])
 
 ; How many methods have enums?
-;(map #(vec [(:op_entity %) (:nickname %)])
+;(map #(vec [(:op_action %) (:nickname %)])
 ;     (aj/findParams
 ;       (filter #(= :ari_1_8_0 (:op_version %)) (aj/opsDb DB))
 ;       #(= "LIST" (-> % :allowableValues :valueType) )  ))
@@ -594,7 +594,7 @@
   (s/keys :req-un [::op_path
                    ::op_description
                    ::op_version
-                   ::op_entity
+                   ::op_action
                    ::httpMethod
                    ::summary
                    ::nickname
@@ -609,7 +609,7 @@
 
 (defn allActions [ODB]
   (->> ODB
-       (map :op_entity)
+       (map :op_action)
        set
        sort
        vec ))
@@ -663,7 +663,7 @@
 
 (defn allSignaturesForAction
   [ODB action]
-  (let [odb (filter #(= action (:op_entity %)) ODB)]
+  (let [odb (filter #(= action (:op_action %)) ODB)]
     (groupTuples (mapv signature odb))))
 
 
