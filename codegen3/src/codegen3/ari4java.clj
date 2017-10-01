@@ -1,5 +1,7 @@
 (ns codegen3.ari4java
-  (:require [codegen3.javagen :as jg]))
+  (:require [codegen3.javagen :as jg]
+            [clojure.spec.alpha :as s]
+            [orchestra.spec.test :as st]))
 
 ;; This namespace runs the translation of
 ;; a swagger database (e.g. sample_db.clj) as read in core
@@ -629,3 +631,19 @@
 
 
   )
+
+
+
+;-----------
+; LEARN SOME SPEC
+;  https://blog.jeaye.com/2017/05/31/clojure-spec/
+
+(defn xinc [n]
+  (inc n))
+
+(s/fdef xinc
+        :args number?
+        :ret number?)
+
+; Orchestra instrumentation is active automagically
+(st/instrument)

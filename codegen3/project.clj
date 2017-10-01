@@ -3,7 +3,9 @@
   :url "http://example.com/FIXME"
   :license {:name "LGPL"}
   :dependencies [
-                 [org.clojure/clojure "1.8.0"]
+                 [org.clojure/clojure "1.9.0-alpha17"]
+                 [org.clojure/spec.alpha "0.1.123"]
+                 [orchestra "2017.08.13"]
                  [org.clojure/data.json "0.2.6"]
                  [com.rpl/specter "0.13.1"]]
   :main ^:skip-aot codegen3.core
