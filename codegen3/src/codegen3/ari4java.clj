@@ -468,6 +468,133 @@
       )))
 
 
+; ==================
+
+(defn generate-ari-builder-interface
+  "public abstract ActionApplications actionApplications();"
+  [allmods allactions]
+  (let [allObj (sort (into allmods allactions))]
+
+    {
+     :isInterface  true
+     :classname    "AriBuilder"
+     :package      "ch.loway.app.oss.ari4java.generated"
+     :imports      [ "ch.loway.oss.ari4java.ARI" ]
+     :notes        ""
+     :stanzas     (into
+                    ["public abstract ARI.ClassFactory getClassFactory();"]
+                    (map #(str "public abstract "
+                               (jg/className (name %))
+                               " "
+                               (jg/lcName (name %))
+                               "();")
+                         allObj))
+    }))
+
+(defn generate-ari-builder-impl
+  "public abstract ActionApplications actionApplications();"
+  [version DB allmods allactions]
+  (let [allObj (sort (into allmods allactions))
+        ver    (name version)
+        pkg    (str "ch.loway.app.oss.ari4java.generated." ver)
+        knownModels (set (model-names-for DB version))
+        ]
+
+    {
+     :classname    (str "AriBuilder_impl_" (name version))
+     :package      pkg
+     :imports      [ (str pkg ".models.*;")
+                    (str pkg ".actions.*;")
+                    "ch.loway.oss.ari4java.generated.*"
+                    "ch.loway.oss.ari4java.ARI" ]
+     :implements   "AriBuilder"
+     :notes        ""
+     :functions    (map (fn [x]
+                          {:method      (jg/lcName (name x))
+                           :returns     (jg/className (name x))
+                           :body (cond
+                                   (knownModels x)
+
+                                        (str "return new "
+                                      (jg/className (name x))
+                                      "_impl_"
+                                      ver
+                                      "();")
+
+                                    :else
+                                      "throw new UnsupportedOperationException();")
+
+                           })
+                        allObj)
+      :stanzas     (str "public ARI.ClassFactory getClassFactory() {\n"
+                        "return new ClassTranslator_impl_" ver  "();\n};\n")
+     }))
+
+
+(defn generate-class-translator-impl
+  ""
+  [version DB allmods allactions]
+  (let [allObj (sort (into allmods allactions))
+        ver    (name version)
+        pkg    (str "ch.loway.app.oss.ari4java.generated." ver)
+        knownModels (set (model-names-for DB version))
+        ]
+
+    {
+     :classname    (str "ClassTranslator_impl_" (name version))
+     :package      pkg
+     :imports      [ (str pkg ".models.*;")
+                    (str pkg ".actions.*;")
+                    "ch.loway.oss.ari4java.generated.*"
+                    "ch.loway.oss.ari4java.ARI" ]
+     :implements   "ARI.ClassFactory"
+     :notes        ""
+     :stanzas     (str "@Override\n"
+                       "public Class getImplementationFor(Class interfaceClass) { \n"
+                       (apply str (map (fn [o] (str "if ( interfaceClass.equals("
+                                         (name o) ".class) ) {\n"
+                                         "return (" (name o) "_impl_" ver ".class);\n"
+                                         "} else \n")) allObj))
+                       "{\n      return null;\n    } }"
+
+                       )
+     }))
+
+
+
+
+(defn generate-ari-builders
+  "We generate a generic AriBuilder interface for
+  all models plus an implementor for each ARI version."
+  [DB]
+  (let [allaris (all-ari-versions DB)
+        allmods (all-possible-model-names DB)
+        allacts [] ]
+
+    (flatten
+      [(generate-ari-builder-interface allmods allacts)
+      (map #(generate-ari-builder-impl % DB allmods allacts) allaris)
+      (map #(generate-class-translator-impl % DB allmods allacts) allaris)]
+
+      )
+
+
+
+      )
+
+
+
+
+
+
+
+
+
+
+  )
+
+
+
 
 
 
@@ -480,12 +607,18 @@
         mci (generate-model-implementations database)
         odb (opsDb database)
         enm (generate-enum-classes odb)
+        bld (generate-ari-builders database)
+
 
         all (-> []
                 (into mif)
                 (into mci)
                 (into enm)
+                (into bld)
                 )
+
+        _   (prn "Builder" bld)
+
         ]
 
 
