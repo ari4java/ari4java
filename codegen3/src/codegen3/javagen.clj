@@ -53,6 +53,12 @@
        (s/upper-case (subs v 0 1))
        (subs v 1)))
 
+(defn className
+  "A class' name is uppecased"
+  [c]
+  (camelName "" c))
+
+
 
 (defn mkSection
   "Crea una sezione con prefisso e suffisso.
@@ -164,6 +170,7 @@
    Inputs
         :classname    the class name
         :isInterface
+        :isEnum
         :package      the package name
         :imports      a list of imports
         :implements   a list of implementations
@@ -177,7 +184,7 @@
         :filename     the file name to store it to
    "
    [data]
-   (let [{:keys [classname isInterface package imports implements extends notes functions stanzas]} data]
+   (let [{:keys [classname isInterface isEnum package imports implements extends notes functions stanzas]} data]
    { :filename (genFilename package classname)
      :body
        (str
@@ -186,12 +193,16 @@
           "\n"
           (mkComment (str PREAMBLE notes))
           "public "
-               (if isInterface "interface " "class ")
-               classname
-               (mkSection " extends " "" extends)
-               (mkSection " implements " " " implements)
+          (cond
+            isInterface      " interface "
+            isEnum           " enum  "
+            :else            " class ")
 
-               " {\n"
+         classname
+         (mkSection " extends " "" extends)
+         (mkSection " implements " " " implements)
+
+         " {\n"
 
           (mkSection "" "\n\n" stanzas)
           (mkSection "" "\n\n" (map #(indent (genMethodBody %)) functions))
@@ -361,6 +372,46 @@
      :functions (reduce mkGettersSetters [] (sortFields lfields))
      :stanzas   (reduce mkPrivateField [] (sortFields lfields))
      }))
+
+
+(defn mkEnumEntry
+  "Creates an enum entry.
+   e.g. 'hold' -> HOLD('hold')
+        '*'    -> STAR('*')
+
+  The title is uppercased
+  and * and # are translated.
+  "
+  [v]
+
+  (let [t (-> v
+              (s/replace "*" "STAR")
+              (s/replace "#" "POUND")
+              (s/upper-case))]
+    (str " " t "(\"" v "\") " )))
+
+
+
+(defn mkEnum
+  [package klass notes values]
+
+  {
+   :isEnum       true
+   :classname    (className klass)
+   :package      package
+   :notes        notes
+   :stanzas      [ (s/join ",\n " (map mkEnumEntry (sort values)))
+                   ";"
+                   "public final String value;"
+                  (str "private " (className klass) "(String v) { this.value = v; }")
+                   "public String toString() { return this.value; }"
+
+                  ]
+   }
+
+
+  )
+
 
 
 (defn writeOutKlass

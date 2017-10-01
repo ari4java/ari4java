@@ -338,6 +338,136 @@
 
 
 ;; ACTIONS
+;; In order to work on actions, we first transform the Actions database
+;; so that it is a large list of Operations
+;; enriched with:
+;; :op_path
+;; :op_description
+;; :op_version        :ari_0_0_1
+;; :op_type           :bridges
+
+(defn dbDescr
+  "Loads a description of the DB in terms of aris and entities"
+
+  [DB]
+  (let [allaris (all-ari-versions DB)
+        allentities (reduce into #{}
+                            (map #(-> DB % keys) allaris)) ]
+    {:aris  (vec (sort allaris))
+     :ents  (vec (sort allentities))} ))
+
+
+
+(defn opsDb
+  "Loads a flat operations DB that can be easily filtered"
+  [DB]
+  (let [{aris :aris ents :ents} (dbDescr DB)]
+    (vec
+      (flatten
+        (for [ari aris
+              ent ents]
+          (let [apis (-> DB ari ent :apis)]
+            (for [api apis]
+              (let [path  (:path api)
+                    descr (:description api)
+                    ops   (:operations  api)]
+                (map
+                  (fn [op] (into {:op_path        path
+                                  :op_description descr
+                                  :op_version     ari
+                                  :op_entity      ent} op))
+                  ops)))))))))
+
+
+;; Here we have a litte tool to understand the contents of our DB
+
+;; (aj/findParams (aj/opsDb DB)  #(= "operation" (:name %) )  )
+(defn findParams
+  [odb pred]
+  (filter
+    #(pos? (count (filter pred (:parameters %)) )   )
+    odb
+    ))
+
+(defn viewMethod [odb ari name]
+
+  (let [predAri (cond
+                  (nil? ari)   #(= 1 1)
+                  :else        #(= ari (:op_version %)))
+        predName #(= name (:nickname %))
+        ]
+
+
+  (filter
+    #(and (predAri %) (predName %))
+    odb
+    )))
+
+
+; How many methods have multiple parameters? just a few
+;
+;(map #(vec [(:op_entity %) (:nickname %)])
+;     (aj/findParams
+;       (filter #(= :ari_1_8_0 (:op_version %)) (aj/opsDb DB))
+;       #(= true (:allowMultiple %) )  ))
+;
+; ([:applications "subscribe"]
+;  [:applications "unsubscribe"]
+;  [:asterisk "getInfo"]
+;  [:bridges "addChannel"]
+;  [:bridges "removeChannel"]
+;  [:events "eventWebsocket"]
+;  [:events "userEvent"])
+
+; How many methods have enums?
+;(map #(vec [(:op_entity %) (:nickname %)])
+;     (aj/findParams
+;       (filter #(= :ari_1_8_0 (:op_version %)) (aj/opsDb DB))
+;       #(= "LIST" (-> % :allowableValues :valueType) )  ))
+;
+; ([:asterisk "getInfo"]
+;  [:bridges "record"]
+;  [:channels "hangup"]
+;  [:channels "mute"]
+;  [:channels "unmute"]
+;  [:channels "record"]
+;  [:channels "snoopChannel"]
+;  [:channels "snoopChannelWithId"]
+;  [:deviceStates "update"]
+;  [:playbacks "control"])
+
+
+
+;; ----------  Enums ---------
+; Enums have a name that matches the field they go in.
+; If multiple enums have the same name, their fields are coalesced.
+;
+; To find enums, we scan all fields for ":allowableValues :valueType" = "LIST"
+; Enums are produced as a map of arrays:
+; {e1 [v1 v2 v3], e2 [v1 v2 v3]}
+
+(defn find-enums
+  [odb]
+  (let [parms (flatten (map :parameters odb))
+        wEnum (filter #(= "LIST" (-> % :allowableValues :valueType) ) parms)
+        tuples (map (fn [p]  [(:name p) (set (-> p :allowableValues :values)) ])  wEnum)
+        groups (group-by first tuples)
+        mapk   (map  (fn [[k v]]  [k  (reduce into #{} (map second v)) ] )  groups)
+        ]
+
+    (into {} mapk)))
+
+
+(defn generate-enum-classes [odb]
+  (let [ens (find-enums odb)]
+
+    (map
+      (fn [[k v]]
+        (jg/mkEnum "ch.loway.oss.ari4java.generated.enums" k  "-" v))
+      ens
+      )))
+
+
 
 
 
@@ -348,10 +478,14 @@
 
   (let [mif (generate-model-interfaces database)
         mci (generate-model-implementations database)
+        odb (opsDb database)
+        enm (generate-enum-classes odb)
 
         all (-> []
                 (into mif)
-                (into mci))
+                (into mci)
+                (into enm)
+                )
         ]
 
 
