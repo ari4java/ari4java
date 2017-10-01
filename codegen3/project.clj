@@ -5,6 +5,7 @@
   :dependencies [
                  [org.clojure/clojure "1.9.0-alpha17"]
                  [org.clojure/spec.alpha "0.1.123"]
+                 [org.clojure/test.check "0.9.0"]  ; should be in DEV
                  [orchestra "2017.08.13"]
                  [org.clojure/data.json "0.2.6"]
                  [com.rpl/specter "0.13.1"]]

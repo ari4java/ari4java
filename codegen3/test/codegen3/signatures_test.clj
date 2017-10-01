@@ -17,4 +17,42 @@
            ))))
 
 
+(def PARMS1 [{:name "a"
+              :required true
+              :allowMultiple true
+              :dataType "string" }
+             {:name "b"
+              :required true
+              :allowMultiple false
+              :dataType "int" }] )
+
+
+
+(deftest testSignatureExplosion
+  (testing "Multiple sigs exploded"
+    (is (= [["Collection<String>" "int" "AriCallback"]
+            ["Collection<String>" "int"]
+            ["String" "int" "AriCallback"]
+            ["String" "int"]]
+
+           (explode-parms PARMS1)
+
+           ))))
+
+
+
+(deftest testSignatureTests
+  (testing "hasCallback?"
+    (is (true? (hasCallback? ["Collection<String>" "int" "AriCallback"])))
+    (is (false? (hasCallback? ["Collection<String>" "int"]))))
+
+  (testing "hasCallback?"
+    (is (true?  (isMasterImplementation? PARMS1 ["Collection<String>" "int" "AriCallback"])))
+    (is (false? (isMasterImplementation? PARMS1 ["String" "int" "AriCallback"]))))
+  )
+
+
+
+
+
 
