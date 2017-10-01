@@ -1,7 +1,8 @@
 (ns codegen3.ari4java
   (:require [codegen3.javagen :as jg]
             [clojure.spec.alpha :as s]
-            [orchestra.spec.test :as st]))
+            [orchestra.spec.test :as st]
+            [codegen3.signatures :as sgn]))
 
 ;; This namespace runs the translation of
 ;; a swagger database (e.g. sample_db.clj) as read in core
@@ -471,6 +472,7 @@
 
 
 ; ==================
+; ARIBUILDERS and such things
 
 (defn generate-ari-builder-interface
   "public abstract ActionApplications actionApplications();"
@@ -578,27 +580,96 @@
       (map #(generate-ari-builder-impl % DB allmods allacts) allaris)
       (map #(generate-class-translator-impl % DB allmods allacts) allaris)]
 
-      )
+      )))
+
+
+; =================================================================
+; ACTIONS
+; Generation of all actions is based on an opsDb
+; when testing, you can:
+;    (def ODB (opsDb (codegen3.core/readAll)))
+;    (allSignaturesForAction ODB :applications)
+
+(s/def ::odb_entry
+  (s/keys :req-un [::op_path
+                   ::op_description
+                   ::op_version
+                   ::op_entity
+                   ::httpMethod
+                   ::summary
+                   ::nickname
+                   ::responseClass
+                   ;::parameters
+                   ]))
+
+(s/def ::odb
+  (s/coll-of ::odb_entry :kind sequential? ))
 
 
 
-      )
+(defn allActions [ODB]
+  (->> ODB
+       (map :op_entity)
+       set
+       sort
+       vec ))
+
+(s/fdef allActions
+        :args (s/cat :odb ::odb)
+        :ret  vector?)
+
+
+; op_entity -> op_action
+
+
+(s/fdef signature
+        :args (s/cat :dbe ::odb_entry))
+
+(defn signature
+  "Gets a signature tuple. [{:nick....} :ari_0]
+  As :parameters might not exist, we read it through a get
+  so we can put a default."
+  [dbe]
+  (let [p (get dbe :parameters [])]
+    [{:nickname      (:nickname dbe)
+      :parms         (sgn/explode-parms-permutations p)
+      :responseClass (:responseClass dbe)
+      }
+     (:op_version dbe)]
+    ))
+
+(s/def ::tuple
+  (s/and vector?
+         #(= 2 (count %)) ))
+
+(s/fdef groupTuples
+    :args (s/cat :tuples (s/coll-of ::tuple ))
+    :ret map?)
+
+(defn groupTuples
+  "Translates a sequence of [ [item tag]...]
+  into a map {item [tag...]}
+  "
+  [sTuples]
+  (into {}
+        (map
+          (fn [[k v]] [k (mapv second v)] )
+          (group-by first sTuples))))
+
+
+(s/fdef allSignaturesForAction
+        :args (s/cat :dbe ::odb
+                     :action keyword?))
+
+(defn allSignaturesForAction
+  [ODB action]
+  (let [odb (filter #(= action (:op_entity %)) ODB)]
+    (groupTuples (mapv signature odb))))
 
 
 
-
-
-
-
-
-
-
-  )
-
-
-
-
-
+; =================================================================
+; Try everything once.
 
 
 (defn process
@@ -618,32 +689,13 @@
                 (into enm)
                 (into bld)
                 )
-
-        _   (prn "Builder" bld)
-
         ]
 
-
     (map jg/writeOutKlass all)
-
-
-    )
-
-
-  )
+    ))
 
 
 
-;-----------
-; LEARN SOME SPEC
-;  https://blog.jeaye.com/2017/05/31/clojure-spec/
-
-(defn xinc [n]
-  (inc n))
-
-(s/fdef xinc
-        :args number?
-        :ret number?)
 
 ; Orchestra instrumentation is active automagically
 (st/instrument)
