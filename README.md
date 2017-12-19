@@ -8,7 +8,7 @@ The Asterisk REST Interface (ARI) bindings for Java.
 Description
 -----------
 
-ARI is an interface available on Asterisk 12/13 that lets you write applications
+ARI is an interface available on Asterisk 12/13/14/15 that lets you write applications
 that run externally and control call flow through REST calls while receiving
 events on a websocket.
 
@@ -39,7 +39,7 @@ If you use Gradle (or any tool using Maven dependencies) you can simply declare 
 
 
 	dependencies {
-	    compile 'ch.loway.oss.ari4java:ari4java:0.4.4'
+	    compile 'ch.loway.oss.ari4java:ari4java:0.4.5'
 	}
 
 This will download the package and all required dependencies.
@@ -67,7 +67,7 @@ In order to run codegen (class ch.loway.oss.ari4java.codegen.run), you need the 
 Testing and packaging
 ---------------------
 
-The easiest tway to build is simply using the Gradle script supplied.
+The easiest way to build is simply using the Gradle script supplied.
 
 		gradle clean build
 
@@ -87,6 +87,7 @@ The project requires:
 Status
 ------
 
+* 17.12.19 - Added support for ARI 3.0.0 (#78)
 * 17.02.04 - Added support for ARI 2.0.0 (#62) and quicker deserialization (#63)
 * 16.11.30 - Fixes on Graham's AutoReconnect patch - #60 - rel 0.4.3 
 * 16.10.21 - Fixing #55 and #57 - rel 0.4.2
