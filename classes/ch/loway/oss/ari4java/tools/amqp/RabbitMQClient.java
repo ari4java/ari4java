@@ -1,16 +1,21 @@
-package ch.loway.oss.ari4java;
+package ch.loway.oss.ari4java.tools.amqp;
+
+import ch.loway.oss.ari4java.tools.*;
+import ch.loway.oss.ari4java.tools.HttpResponse;
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.*;
 import com.rabbitmq.client.impl.VariableLinkedBlockingQueue;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 /**
- * Deals with go-ari-proxy application layer communications
+ * AMQP client implementation based on RabbitMQ
+ *
  */
-public class ARIProxyManager {
+public class RabbitMQClient implements GoAriNatsClient {
+
     private String exchangeName;
     private String queueName;
     private static final String EXCHANGE_TYPE = "direct";
@@ -20,10 +25,24 @@ public class ARIProxyManager {
     private Connection connection;
     private Channel channel;
 
-    public ARIProxyManager(Connection connection, String queueName) {
-        this.connection = connection;
-        this.exchangeName = queueName + "-xchng";
+    public RabbitMQClient(String exchangeName, String queueName, Connection connection) {
+        this.exchangeName = queueName + "-xchng";;
         this.queueName = queueName;
+        this.connection = connection;
+    }
+
+    // Synchronous HTTP action
+    @Override
+    public String httpActionSync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
+            List<HttpResponse> errors) throws RestException {
+        return null;
+    }
+
+    // Asynchronous HTTP action, response is passed to HttpResponseHandler
+    @Override
+    public void httpActionAsync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
+            final List<HttpResponse> errors, final HttpResponseHandler responseHandler)
+            throws RestException {
     }
 
     private void doExchangeQueueSetup() throws IOException {
@@ -63,4 +82,3 @@ public class ARIProxyManager {
         return replyHandoff.poll(4, TimeUnit.SECONDS);
     }
 }
-
