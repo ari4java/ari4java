@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
  *
  */
 public class RabbitDirectIntegrationTest {
-    private static final String RABBITMQ_HOST = "localhost";
+    private static final String RABBITMQ_HOST = "localhost"; // rabbitmq running on localhost can be used for AMQP integration testing
     private static final String VIRTUAL_HOST = "/";
     private static final String QUEUE_NAME = "test_queue";
     private static final String EXCHANGE_TOPIC = "test_topic";
@@ -24,11 +24,10 @@ public class RabbitDirectIntegrationTest {
 
     @Before
     public void setUp() throws IOException, TimeoutException {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost(RABBITMQ_HOST); // rabbitmq running on localhost can be used for AMQP integration testing
-        factory.setVirtualHost(VIRTUAL_HOST);
-        connection = factory.newConnection();
-        rabbitMQClient = new RabbitMQClient(QUEUE_NAME, EXCHANGE_TOPIC, connection);
+        rabbitMQClient = new RabbitMQClient();
+        rabbitMQClient.setQueueNameName(QUEUE_NAME);
+        rabbitMQClient.setExchangeName(EXCHANGE_TOPIC);
+        rabbitMQClient.setConnection(RABBITMQ_HOST, VIRTUAL_HOST);
     }
 
     @After

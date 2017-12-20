@@ -25,24 +25,36 @@ public class RabbitMQClient implements GoAriNatsClient {
     private Connection connection;
     private Channel channel;
 
-    public RabbitMQClient(String exchangeName, String queueName, Connection connection) {
-        this.exchangeName = queueName + "-xchng";;
-        this.queueName = queueName;
-        this.connection = connection;
+    public RabbitMQClient() {
     }
 
     // Synchronous HTTP action
     @Override
     public String httpActionSync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
-            List<HttpResponse> errors) throws RestException {
+                                 List<HttpResponse> errors) throws RestException {
         return null;
     }
 
     // Asynchronous HTTP action, response is passed to HttpResponseHandler
     @Override
     public void httpActionAsync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
-            final List<HttpResponse> errors, final HttpResponseHandler responseHandler)
+                                final List<HttpResponse> errors, final HttpResponseHandler responseHandler)
             throws RestException {
+    }
+
+    public void setExchangeName(String exchangeName){
+        this.exchangeName = exchangeName;
+    }
+
+    public void setQueueNameName(String queueName){
+        this.queueName = queueName;
+    }
+
+    public void setConnection(String rabbitMQHost, String virtualHost) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost(rabbitMQHost); // rabbitmq running on localhost can be used for AMQP integration testing
+        factory.setVirtualHost(virtualHost);
+        this.connection = factory.newConnection();
     }
 
     private void doExchangeQueueSetup() throws IOException {
