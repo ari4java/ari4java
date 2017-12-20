@@ -14,7 +14,7 @@ import com.rabbitmq.client.impl.VariableLinkedBlockingQueue;
  * AMQP client implementation based on RabbitMQ
  *
  */
-public class RabbitMQClient implements GoAriNatsClient {
+public class RabbitMQClient implements HttpClient {
 
     private String exchangeName;
     private String queueName;
