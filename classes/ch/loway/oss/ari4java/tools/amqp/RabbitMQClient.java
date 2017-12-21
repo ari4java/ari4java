@@ -50,11 +50,12 @@ public class RabbitMQClient implements HttpClient {
         this.queueName = queueName;
     }
 
-    public void setConnection(String rabbitMQHost, String virtualHost) throws IOException, TimeoutException {
+    public Connection setConnection(String rabbitMQHost, String virtualHost) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(rabbitMQHost); // rabbitmq running on localhost can be used for AMQP integration testing
         factory.setVirtualHost(virtualHost);
         this.connection = factory.newConnection();
+        return connection;
     }
 
     private void doExchangeQueueSetup() throws IOException {

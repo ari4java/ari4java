@@ -27,7 +27,7 @@ public class RabbitDirectIntegrationTest {
         rabbitMQClient = new RabbitMQClient();
         rabbitMQClient.setQueueNameName(QUEUE_NAME);
         rabbitMQClient.setExchangeName(EXCHANGE_TOPIC);
-        rabbitMQClient.setConnection(RABBITMQ_HOST, VIRTUAL_HOST);
+        connection = rabbitMQClient.setConnection(RABBITMQ_HOST, VIRTUAL_HOST);
     }
 
     @After
