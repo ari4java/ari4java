@@ -337,6 +337,21 @@
       )))
 
 
+(s/def ::odb_entry
+  (s/keys :req-un [::op_path
+                   ::op_description
+                   ::op_version
+                   ::op_action
+                   ::httpMethod
+                   ::summary
+                   ::nickname
+                   ::responseClass
+                   ::parameters
+                   ]))
+
+(s/def ::odb
+  (s/coll-of ::odb_entry :kind sequential? ))
+
 
 
 
@@ -360,9 +375,13 @@
      :ents  (vec (sort allentities))} ))
 
 
+(s/fdef opsDb
+        :ret  ::odb)
+
 
 (defn opsDb
-  "Loads a flat operations DB that can be easily filtered"
+  "Loads a flat operations DB that can be easily filtered.
+  As sometimes some keys are missing, we add them in."
   [DB]
   (let [{aris :aris ents :ents} (dbDescr DB)]
     (vec
@@ -375,10 +394,15 @@
                     descr (:description api)
                     ops   (:operations  api)]
                 (map
-                  (fn [op] (into {:op_path        path
+                  (fn [op] (let [parms (get op :parameters [])
+                                 newParms (map #(into {:required true :allowMultiple false} %) parms) ]
+                             (into {:op_path        path
                                   :op_description descr
                                   :op_version     ari
-                                  :op_action      ent} op))
+                                  :op_action      ent
+                                  ; sometimes those are missing
+                                  :parameters     []
+                                  } (into op {:parameters newParms}))))
                   ops)))))))))
 
 
@@ -590,21 +614,6 @@
 ;    (def ODB (opsDb (codegen3.core/readAll)))
 ;    (allSignaturesForAction ODB :applications)
 
-(s/def ::odb_entry
-  (s/keys :req-un [::op_path
-                   ::op_description
-                   ::op_version
-                   ::op_action
-                   ::httpMethod
-                   ::summary
-                   ::nickname
-                   ::responseClass
-                   ;::parameters
-                   ]))
-
-(s/def ::odb
-  (s/coll-of ::odb_entry :kind sequential? ))
-
 
 
 (defn allActions [ODB]
@@ -667,6 +676,100 @@
     (groupTuples (mapv signature odb))))
 
 
+(defn getMethodDetails [ODB action ariVer nick]
+  (let [methods (filter #(and (= ariVer (:op_version %))
+                              (= action (:op_action %))
+                              (= nick   (:nickname %)))
+                        ODB)
+        _       (cond
+                  (not= 1 (count methods))
+                  (throw (IllegalArgumentException.
+                         ("Multiple or missing methods " ariVer action nick " found:" (count methods)))))
+        method (first methods)]
+
+        method
+
+  ))
+
+
+(s/fdef generate-action-interface-methods
+        :args (s/cat :methodSig (s/keys :req-un [::nickname ::parms ::responseClass])
+                     :methodInAri ::odb_entry
+                     :available-in (s/coll-of keyword?)
+                     ))
+
+
+(defn generate-action-interface-methods
+  [methodSig methodInAri available-in]
+
+  (flatten
+    (let [parmNames (map :name (:parameters methodInAri))]
+      (for [parameters (sgn/string-perms (:parms methodSig))]
+        [
+         ; normal call
+         {:method  (:nickname methodSig)
+          :returns (:responseClass methodSig)
+          :args    (map (fn [name type] {:type type :name name}) parmNames parameters)
+          :notes   (str parameters)
+          }
+
+         ;ARI callback
+         {:method  (:nickname methodSig)
+          :returns "void"
+          :args    (map (fn [name type] {:type type :name name})
+                        (conj parmNames  "callback")
+                        (conj parameters (str "AriCallback<" (:responseClass methodSig) ">" )))
+          :notes   (str parameters)
+          }
+         ]
+        ))))
+
+
+
+(defn generate-action-interfaces
+  [ODB action]
+
+  (let [interfaceTuples (allSignaturesForAction ODB action)
+        method-sigs (sort-by :nickname (keys interfaceTuples))]
+
+    (flatten
+      (for [method-sig method-sigs
+            :let [available-in (get interfaceTuples method-sig)
+                  method-ari (getMethodDetails
+                               ODB
+                               action
+                               (first available-in)         ; any version of ARI
+                               (:nickname method-sig))]]
+
+        (generate-action-interface-methods method-sig method-ari available-in)
+
+        ))))
+
+
+(defn generate-action-interface-class
+  [ODB action]
+  {
+   :classname   (jg/camelName "Action" (name action))
+   :isInterface true
+   :package     "ch.loway.oss.ari4java.generated"
+   ;:imports      a list of imports
+   ;:implements   a list of implementations
+   ;:extends      the class to extend
+   :notes       ""
+   :functions    (generate-action-interfaces ODB action)
+   ;:stanzas      a list of text to implement (added after the methods)
+   }
+
+  )
+
+
+
+(defn generate-all-action-interfaces
+  [DB]
+  (let [odb        (opsDb DB)
+        allActions (allActions odb)]
+    (map #(generate-action-interface-class odb %) allActions)))
+
 
 ; =================================================================
 ; Try everything once.
@@ -681,6 +784,8 @@
         odb (opsDb database)
         enm (generate-enum-classes odb)
         bld (generate-ari-builders database)
+        aif (generate-all-action-interfaces database)
+
 
 
         all (-> []
@@ -688,9 +793,11 @@
                 (into mci)
                 (into enm)
                 (into bld)
+                (into aif)
                 )
         ]
 
+    ;(prn aif)
     (map jg/writeOutKlass all)
     ))
 

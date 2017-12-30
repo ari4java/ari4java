@@ -158,18 +158,21 @@
 
 (defn write$interfaces [DB]
   (for [file ALL-FILES-KW]
-    (javagen/writeInterface
-      file
-      "--comment--"
-      (vals (meth/allSigsForInterface DB file ARI-VERSIONS-KW)))))
 
-(defn write$models [DB]
+    (let [signatures (meth/allSigsForInterface DB file ARI-VERSIONS-KW)]
+      (javagen/writeInterface
+        file
+        "--comment--"
+        (vals signatures)))))
+
+(defn write$modelInterfaces [DB]
   (for [file ALL-FILES-KW]
-    1
+    (let [signatures (meth/allModelsForAriFile DB file ARI-VERSIONS-KW)]
+      (javagen/writeInterface
+        file
+        "--comment--"
+        (vals signatures)))))
 
-    )
-
-  )
 
 
 
@@ -177,7 +180,10 @@
   []
   (let [DB (readAll)]
     (do
-      (write$interfaces DB))))
+      (write$interfaces DB)
+      ;(write$models DB)
+
+      )))
 
 
 
@@ -187,7 +193,7 @@
 ;; 1. we read the contents of known files in all
 ;;    ari interface bindings. So we have all we need.
 ;; 2. we build the interface definitions. These are obtained by
-;;    joiing together all forms of all methods.
+;;    joining together all forms of all methods.
 ;; 3. we build events
 ;; 4. we build ???
 ;; 5. for each version of the interface, we build ...

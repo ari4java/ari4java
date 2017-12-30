@@ -35,11 +35,41 @@ Java code under
  * Must read them from oldest to newest version
  * Optional parameters
  * Use enums for multi-value items
- * Permutations: single/multiple parameters
+ * Permutations: single/multiple parameters (allowMultiple=true)
  * Permutations: sync/async methoods
  
+
+
+		"parameters": [
+			{
+				"name": "channelId",
+				"description": "Channel's id",
+				"paramType": "path",
+				"required": true,
+				"allowMultiple": false,
+				"dataType": "string"
+			}
+		], 
  
- 
+
+					{	
+							"name": "reason",
+							"description": "Reason for hanging up the channel",
+							"paramType": "query",
+							"required": false,
+							"allowMultiple": false,
+							"dataType": "string",
+							"defalutValue": "normal",
+							"allowableValues": {
+								"valueType": "LIST",
+								"values": [
+									"normal",
+									"busy",
+									"congestion"
+								]
+							}
+						}
+
 
 
 * Create equals() and hashCode() and toString() for generated models

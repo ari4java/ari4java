@@ -68,6 +68,7 @@
       :notes       summary
       :body        ""
       :isAbstract  true
+      :throws      ["RestException"]
     }))
 
 
@@ -149,7 +150,7 @@
 
 
 (defn allSigsForAriFile
-  "Tutte Le Signatures Per un file dato di un'ari data"
+  "Tutte Le Signatures Per un file dato di una versione ari data"
   [db ari-ver file]
   (let [file-paths (get-in db [ari-ver file :apis])]
     (flatten (mapv allSignsForPath file-paths))))
@@ -178,16 +179,61 @@
   ))
 
 
+(defn reduceSigsForModel
+  "Data una lista di modelli, li unifica per nome
+   tenendo tutte le loro proprties"
+
+  [lModels]
+
+  ;(group-by :id lModels)
+
+  (reduce (fn [acc m]
+            (let [model-id (:id m)
+                  model-in-acc (get acc model-id {:id model-id
+                                                  :properties {}})
+                  curr-props (:properties model-in-acc)
+                  props      (:properties m)
+                  new-props  (merge curr-props props)
+                  new-model  (assoc model-in-acc :properties new-props)
+                  ;_ (prn "Merging " model-in-acc m)
+                  ]
+
+              (assoc acc model-id new-model)
+
+              ))
+          {} lModels)
+
+  )
+
 
 (defn allSigsForModels
   "
   Ottiene tutte le signatures per tutti i modelli
   ricostruendole nelle varie versioni dell'ARI.
+
+  Ritorna una sequenza di modelli del tipo:
+
+  \"ChannelLeftBridge\" {:id \"ChannelLeftBridge\",
+                        :properties {:bridge {:required true, :type \"Bridge\"}, :channel {:required true, :type \"Channel\"}}},\n \"EndpointStateChange\" {:id \"EndpointStateChange\", :properties {:endpoint {:required true, :type \"Endpoint\"}}}}\n
+
+
+
   "
   [DB ari-versions]
 
 
-  )
+
+  (vals (reduceSigsForModel
+  (flatten
+  (for [ari ari-versions]
+    (let [appmods (vals (get-in DB [ari :applications :models]))
+          evtmods (vals (get-in DB [ari :events :models]))
+          allmods (into appmods evtmods)]
+           allmods
+
+    ))))))
+
+
 
 
 

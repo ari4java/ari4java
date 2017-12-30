@@ -1,13 +1,14 @@
 (ns codegen3.javagen
-  (:require [clojure.data.json :as json])
-  (:require [clojure.string :as s])
-  (:gen-class))
+  (:require [clojure.data.json :as json]
+            [clojure.string :as str]
+            [orchestra.spec.test :as orchestra]
+            [clojure.spec.alpha :as s]))
 
 ;(def BASE-CLASS-PATH "./gen-java")
-(def BASE-CLASS-PATH "../classes2")
+(def BASE-CLASS-PATH "../classes")
 
 (def PREAMBLE
-  (str " - THIS CLASS IS AUTOMATICALLY GENERATED - \n"
+  (str " - (clj) THIS CLASS IS AUTOMATICALLY GENERATED - \n"
        " - -    PLEASE DO NOT EDIT MANUALLY    - - \n\n"
        " Generated on: " (.toString (java.util.Date.))
        "\n\n"))
@@ -15,8 +16,8 @@
 
 
 ;ch.loway.oss.ari4java.generated
-(def BASE-GEN-PKG "gg")
-
+;(def BASE-GEN-PKG "gg")
+(def BASE-GEN-PKG "ch.loway.oss.ari4java.generated")
 
 (def IMPORTS-INTERFACE [
                         "java.util.Date"
@@ -44,6 +45,63 @@
 ;               :stanzas ["m;" ]  } )
 
 
+; ============= SPECS ============
+
+(defn existing-string? [s]
+  (and (string? s)
+         (pos? (count s))))
+
+(defn optional-bool? [b]
+  (or nil? boolean?))
+
+(defn optional-existing-string? [s]
+  (or nil? existing-string?))
+
+
+(s/def ::attr (s/and #(existing-string? (:name %))
+                     #(existing-string? (:type %))))
+
+
+(s/def ::method existing-string?)
+(s/def ::returns existing-string?)
+(s/def ::isPrivate boolean?)
+(s/def ::args (s/coll-of ::attr))
+(s/def ::notes string?)
+(s/def ::body string?)
+(s/def ::isAbstract boolean?)
+(s/def ::annotation string?)
+(s/def ::throws (s/coll-of existing-string?))
+
+(s/def ::methodBody
+  (s/keys :req-un [::method ::returns ::isPrivate ::args ::notes
+                   ::body ::isAbstract ]
+          :opt-un [::annotation ::throws]))
+
+
+(s/def ::classname existing-string?)
+(s/def ::isInterface boolean?)
+(s/def ::isEnum boolean?)
+(s/def ::package   existing-string?)
+(s/def ::imports  (s/coll-of existing-string?))
+(s/def ::implements (s/coll-of existing-string?))
+(s/def ::extends  existing-string?)
+
+(s/def ::functions  (s/coll-of ::methodBody))
+
+(s/def ::stanza existing-string?)
+(s/def ::stanzas  (s/coll-of ::stanza))
+
+(s/def ::classFile
+  (s/keys :req-un [::classname ::isInterface
+                   ::package ::imports
+                   ::notes ::functions]
+          :opt-un [::isEnum ::implements ::extends ::stanzas]
+
+          ))
+
+
+; =================================
+
 (defn camelNameInner
   "Creates a camelName - es getDate by joining 'get' (prefix)
   and 'date' (value)"
@@ -53,11 +111,26 @@
        (fnTrasformer (subs v 0 1))
        (subs v 1)))
 
+(s/fdef
+  camelNameInner
+  :args (s/cat :p string?
+               :v existing-string?
+               :fnTrasformer ifn?)
+  :ret string?)
+
+
 (defn camelName
   "Creates a camelName - es getDate by joining 'get' (prefix)
   and 'date' (value)"
   [p v]
-  (camelNameInner p v s/upper-case))
+  (camelNameInner p v str/upper-case))
+
+(s/fdef
+  camelName
+  :args (s/cat :p string?
+               :v (s/and string? #(-> % count pos?))))
+
+
 
 
 (defn className
@@ -65,8 +138,19 @@
   [c]
   (camelName "" c))
 
+(s/fdef
+  className
+  :args (s/cat :c (s/and string? #(-> % count pos?))))
+
+
+
 (defn lcName [c]
-  (camelNameInner "" c s/lower-case))
+  (camelNameInner "" c str/lower-case))
+
+(s/fdef
+  lcName
+  :args (s/cat :c (s/and string? #(-> % count pos?))))
+
 
 (defn mkSection
   "Crea una sezione con prefisso e suffisso.
@@ -79,8 +163,21 @@
              (string? items) [items]
              :else (vec items))]
     (reduce
-      #(str %1 itemprefix %2 itempostfix) ""
+      #(str %1 itemprefix %2 itempostfix)
+      ""
       i2)))
+
+(s/fdef
+  mkSection
+  :args (s/cat :itemprefix string?
+               :itempostfix string?
+               :items (s/or :nil    nil?
+                            :onestr string?
+                            :manystr (s/coll-of string?)))
+  :ret string?
+  )
+
+
 
 
 (defn mkImports
@@ -88,24 +185,38 @@
   [lImports]
   (mkSection "import " ";\n" lImports))
 
+(s/fdef
+  mkImports
+  :args (s/cat :lImports (s/coll-of string?)))
+
+
 (defn indent-prefix
   "Adds a given prefix to a block of text (string).
   Returns the string with prefix applied. "
   [prefix text]
   (cond
     (nil? text)  (indent-prefix prefix "")
-    :else (s/join "\n"
-            (map #(str prefix %) (s/split-lines text))))
+    :else (str/join "\n"
+            (map #(str prefix %) (str/split-lines text))))
 
     )
 
-
+(s/fdef
+  indent-prefix
+  :args (s/cat :prefix string?
+               :text   string?)
+  :ret string?)
 
 
 (defn indent
   "Indents a text by three spaces"
   [text]
   (indent-prefix "   " text))
+
+(s/fdef
+  indent
+  :args (s/cat :text string?))
+
 
 (defn mkComment
   "Creates a Java comment.
@@ -119,22 +230,30 @@
                  " " STARS "/" "\n\n"
                  ))))
 
+(s/fdef
+  mkComment
+  :args (s/cat :text string?))
 
 
 (defn genAttr
   "Generate an attribute. Checks that :type and :name are defined."
   [{t :type n :name}]
-  {:pre [(string? t) (string? n)]}
   (str t " " n))
 
+(s/fdef
+  genAttr
+  :args (s/cat :input ::attr))
 
 (defn genAttrs
   "The attributes for a method.
    data is a list of attributes."
   [data]
   (let [signatures (map genAttr data)]
-    (s/join ", " signatures)))
+    (str/join ", " signatures)))
 
+(s/fdef
+  genAttrs
+  :args (s/cat :data (s/coll-of ::attr)))
 
 (defn genMethodBody
   "Creates a Java method
@@ -146,9 +265,10 @@
       :body
       :isAbstract
       :annotation
+      :throws [eccezioni]
   "
   [data]
-  (let [{:keys [method returns isPrivate args notes body isAbstract annotation]} data]
+  (let [{:keys [method returns isPrivate args notes body isAbstract annotation throws]} data]
     (str
       "\n\n"
       (mkComment notes)
@@ -158,6 +278,13 @@
       method "("
       (genAttrs args)
       ")"
+      ; throws
+      (if (pos? (count throws))
+        (str " throws "
+             (str/join ", " throws))
+        ""
+        )
+
       (if isAbstract
         ";"
         (str
@@ -170,11 +297,26 @@
       )))
 
 
+(s/fdef
+  genMethodBody
+  :args (s/cat :data ::methodBody)
+  :ret existing-string?
+  )
+
+
+
+
 (defn genFilename
   "Returns the relative filename of a package + class"
   [pkgName kName]
-  (let [pkg (s/replace pkgName "." "/")]
+  (let [pkg (str/replace pkgName "." "/")]
     (str pkg "/" kName ".java")))
+
+
+(s/fdef
+  genFilename
+  :args (s/cat :pkgName existing-string?
+               :kName existing-string?))
 
 
 
@@ -228,6 +370,13 @@
                  "}\n\n")
      }
     ))
+
+(s/fdef
+  genClassFile
+  :args (s/cat :data ::classFile)
+  :ret (s/and #(existing-string? (:filename %))
+                    #(existing-string? (:body %)))
+  )
 
 
 (def knownSwaggerTypes
@@ -309,6 +458,12 @@
                    (str "return this." v ";"))
      }))
 
+(s/fdef
+  mkGetterVal
+  :args (s/cat :field existing-string?)
+  :ret  ::methodBody)
+
+
 (defn mkSetterVal [field]
   (let [{t :type v :name c :comment ni :notimplemented io :interfaceonly} field]
     {
@@ -328,6 +483,12 @@
                    :else
                    (str "this." v " = " v ";"))
      }))
+
+(s/fdef
+  mkSetterVal
+  :args (s/cat :field existing-string?)
+  :ret  ::methodBody)
+
 
 (defn mkPrivateField [acc field]
   (let [{t :type v :name} field]
@@ -356,6 +517,18 @@
    :imports    imports
    :notes      notes
    })
+
+(s/fdef
+  mkGetterVal
+  :args (s/cat :package existing-string?
+               :classname existing-string?
+               :extends string?
+               :implements string?
+               :imports (s/coll-of string?)
+               :notes string?)
+  :ret  ::classFile)
+
+
 
 (defn sortFields
   "We keep fields in a sorted order so they
@@ -392,6 +565,24 @@
      }))
 
 
+(defn mkDataClassForModelClass
+  "Crea una data class"
+  [{:keys [id properties]}]
+  (let [newProps (map (fn [[k v]]
+                        [:name (str k)
+                         :type (:type v)])
+                      properties)]
+
+
+
+    )
+
+
+
+
+  )
+
+
 (defn mkEnumEntry
   "Creates an enum entry.
    e.g. 'hold' -> HOLD('hold')
@@ -403,9 +594,9 @@
   [v]
 
   (let [t (-> v
-              (s/replace "*" "STAR")
-              (s/replace "#" "POUND")
-              (s/upper-case))]
+              (str/replace "*" "STAR")
+              (str/replace "#" "POUND")
+              (str/upper-case))]
     (str " " t "(\"" v "\") ")))
 
 
@@ -418,7 +609,7 @@
    :classname (className klass)
    :package   package
    :notes     notes
-   :stanzas   [(s/join ",\n " (map mkEnumEntry (sort values)))
+   :stanzas   [(str/join ",\n " (map mkEnumEntry (sort values)))
                ";"
                "public final String value;"
                (str "private " (className klass) "(String v) { this.value = v; }")
@@ -440,6 +631,11 @@
     (clojure.java.io/make-parents realPath)
     (spit realPath body)
     realPath))
+
+(s/fdef
+  writeOutKlass
+  :args (s/cat :klass ::classFile)
+  :ret  string?)
 
 
 
@@ -492,3 +688,6 @@
 ;; (let [file-name "path/to/whatever.txt"]
 ;;  (make-parents file-name)
 ;;  (spit file-name "whatever"))
+
+
+(orchestra/instrument)

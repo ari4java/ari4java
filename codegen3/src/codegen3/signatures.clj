@@ -90,7 +90,8 @@
         :args
         (s/or
           :arity1 (s/coll-of (s/and sequential?
-                                    #(pos? (count %)))
+                                    ;#(pos? (count %))
+                                    )
                              :kind sequential? )
           :arity2 (s/cat :ehead sequential?
                          :erest sequential?)))
