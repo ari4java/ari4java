@@ -116,9 +116,13 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         }, 250L, TimeUnit.MILLISECONDS);
     }
 
-    private String buildURL(String path, List<HttpParam> parametersQuery) throws UnsupportedEncodingException {
+    private String buildURL(String path, List<HttpParam> parametersQuery, boolean withAddress) throws UnsupportedEncodingException {
         StringBuilder uriBuilder = new StringBuilder();
-        uriBuilder.append(baseUri.getPath());
+        if (withAddress) {
+            uriBuilder.append(baseUri);
+        } else {
+            uriBuilder.append(baseUri.getPath());
+        }
         uriBuilder.append("ari");
         uriBuilder.append(path);
         uriBuilder.append("?api_key=");
@@ -140,9 +144,13 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
     // Factory for WS handshakes
     private WebSocketClientHandshaker getWsHandshake(String path, List<HttpParam> parametersQuery) throws UnsupportedEncodingException {
-        String url = buildURL(path, parametersQuery);
+        String url = buildURL(path, parametersQuery, true);
         try {
-            URI uri = new URI(url.replaceFirst("http", "ws"));
+            if (url.regionMatches(true, 0, "http", 0, 4)) {
+                // http(s):// -> ws(s)://
+                url = "ws" + url.substring(4);
+            }
+            URI uri = new URI(url);
             return WebSocketClientHandshakerFactory.newHandshaker(
                     uri, WebSocketVersion.V13, null, false, null);
         } catch (URISyntaxException e) {
@@ -153,7 +161,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
     // Build the HTTP request based on the given parameters
     private HttpRequest buildRequest(String path, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody) throws UnsupportedEncodingException {
-        String url = buildURL(path, parametersQuery);
+        String url = buildURL(path, parametersQuery, false);
         FullHttpRequest request = new DefaultFullHttpRequest(
                 HttpVersion.HTTP_1_1, HttpMethod.valueOf(method), url);
         //System.out.println(request.getUri());
