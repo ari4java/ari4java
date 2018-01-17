@@ -310,9 +310,22 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
                 if (future.isSuccess()) {
-                    callback.onChReadyToWrite();
-                    // reset the reconnect counter on successful connect
-                    reconnectCount = 0;
+                    wsHandler.handshakeFuture().addListener(new ChannelFutureListener() {
+                        @Override
+                        public void operationComplete(ChannelFuture future) throws Exception {
+                            if (future.isSuccess()) {
+                                callback.onChReadyToWrite();
+                                // reset the reconnect counter on successful connect
+                                reconnectCount = 0;
+                            } else {
+                                if (reconnectCount >= 10) {
+                                    callback.onFailure(future.cause());
+                                } else {
+                                    reconnectWs();
+                                }
+                            }
+                        }
+                    });
                 } else {
                     if (reconnectCount >= 10) {
                         callback.onFailure(future.cause());
