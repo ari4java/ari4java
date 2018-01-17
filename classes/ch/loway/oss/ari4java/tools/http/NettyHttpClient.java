@@ -318,20 +318,12 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                                 // reset the reconnect counter on successful connect
                                 reconnectCount = 0;
                             } else {
-                                if (reconnectCount >= 10) {
-                                    callback.onFailure(future.cause());
-                                } else {
-                                    reconnectWs();
-                                }
+                                reconnectWs(future.cause());
                             }
                         }
                     });
                 } else {
-                    if (reconnectCount >= 10) {
-                        callback.onFailure(future.cause());
-                    } else {
-                        reconnectWs();
-                    }
+                    reconnectWs(future.cause());
                 }
             }
         };
@@ -404,12 +396,18 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
 
     @Override
-    public void reconnectWs() {
+    public void reconnectWs(Throwable cause) {
         // cancel the ping timer
         if (wsPingTimer != null) {
             wsPingTimer.cancel(false);
             wsPingTimer = null;
         }
+
+        if (reconnectCount >= 10) {
+            wsCallback.onFailure(cause);
+            return;
+        }
+
         // if not shutdown reconnect, note the check not on the shutDownGroup
         if (!group.isShuttingDown()) {
             // schedule reconnect after a 2,5,10 seconds

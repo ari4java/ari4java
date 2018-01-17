@@ -55,7 +55,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         if (!shuttingDown) {
             if (this.wsClient != null) {
-                wsClient.reconnectWs();
+                wsClient.reconnectWs(null);
             } else {
                 wsCallback.onDisconnect();
             }
@@ -91,7 +91,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
             ch.close();
             if (!shuttingDown) {
                 if (this.wsClient != null) {
-                    wsClient.reconnectWs();
+                    wsClient.reconnectWs(null);
                 } else {
                     wsCallback.onDisconnect();
                 }
