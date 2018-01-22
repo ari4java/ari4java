@@ -13,16 +13,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.TimeoutException;
 
 public class TestGoARIProxy {
     private GoAriRabbitMQClient goAriClient = new GoAriRabbitMQClient();
     private ARI ari = new ARI();
 
     @Before
-    public void setUp() throws IOException, TimeoutException {
+    public void setUp() {
         goAriClient.initialize("localhost", 5672, "guest", "guest",
                 Arrays.asList("bridges"), "Asterisk");
     }
@@ -41,7 +39,7 @@ public class TestGoARIProxy {
     }
 
     @Test
-    public void get_asterisk_app_list_using_go_ari_sync() throws ARIException, IOException {
+    public void get_asterisk_app_list_using_go_ari_sync() throws ARIException {
         // This is an integration test. If not running a rabbitmq server and go-ari-proxy somewhere this can safely be set @Ignore
         ari.setHttpClient(goAriClient);
 //        ari.setWsClient(goAriClient);
@@ -54,7 +52,7 @@ public class TestGoARIProxy {
     }
 
     @Test
-    public void get_asterisk_info_using_go_ari_sync() throws ARIException, IOException {
+    public void get_asterisk_info_using_go_ari_sync() throws ARIException {
         // This is an integration test. If not running a rabbitmq server and go-ari-proxy somewhere this can safely be set @Ignore
         ari.setHttpClient(goAriClient);
 //        ari.setWsClient(goAriClient);
@@ -68,7 +66,7 @@ public class TestGoARIProxy {
     }
 
     @Test
-    public void get_asterisk_info_using_go_ari_async() throws ARIException, IOException {
+    public void get_asterisk_info_using_go_ari_async() throws ARIException {
         // This is an integration test. If not running a rabbitmq server and go-ari-proxy somewhere this can safely be set @Ignore
         ari.setHttpClient(goAriClient);
 //        ari.setWsClient(goAriClient);
@@ -86,5 +84,17 @@ public class TestGoARIProxy {
                 e.printStackTrace();
             }
         });
+    }
+
+    @Test
+    public void create_bridge_using_go_ari_proxy() throws  ARIException {
+        // This is an integration test. If not running a rabbitmq server and go-ari-proxy somewhere this can safely be set @Ignore
+        ari.setHttpClient(goAriClient);
+        ari.setVersion(AriVersion.ARI_2_0_0);
+        System.out.println("You have 10 seconds to generate MQ tunnels from Asterisk side, go-ari-proxy has one-way " +
+                "initialization at this time. For instance: start an app that causes StasisStart right after you start this test");
+        ActionBridges ab = ari.getActionImpl(ActionBridges.class);
+        Bridge bridgeCreated = ab.create("mixing","bridgeID2", "bridgeName2");
+        Assert.assertTrue(bridgeCreated.getId() != null);
     }
 }
