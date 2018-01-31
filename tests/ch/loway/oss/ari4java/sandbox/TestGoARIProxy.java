@@ -5,6 +5,7 @@ import ch.loway.oss.ari4java.AriVersion;
 import ch.loway.oss.ari4java.generated.*;
 import ch.loway.oss.ari4java.tools.ARIException;
 import ch.loway.oss.ari4java.tools.AriCallback;
+import ch.loway.oss.ari4java.tools.MessageQueue;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.amqp.GoAriRabbitMQClient;
 
@@ -96,5 +97,23 @@ public class TestGoARIProxy {
         ActionBridges ab = ari.getActionImpl(ActionBridges.class);
         Bridge bridgeCreated = ab.create("mixing","bridgeID2", "bridgeName2");
         Assert.assertTrue(bridgeCreated.getId() != null);
+    }
+
+    @Test
+    public void process_event_queue() throws ARIException, InterruptedException {
+        // Only requires that the client initialize() has been called; it should have been in setUp()
+        ari.setVersion(AriVersion.ARI_2_0_0);
+        System.out.println("You have 10 seconds to generate MQ tunnels from Asterisk side, go-ari-proxy has one-way " +
+                "initialization at this time. For instance: start an app that causes StasisStart right after you start this test");
+        MessageQueue mq = goAriClient.getEventMessageQueue(AriVersion.ARI_2_0_0);
+        Message m = mq.dequeueMax( GoAriRabbitMQClient.COMMAND_TIMEOUT_MILLIS, 20 );
+        if (m instanceof StasisStart) {
+            StasisStart event = (StasisStart) m;
+            Assert.assertNotNull(event.getChannel().getId());
+            Assert.assertNotNull(event.getChannel().getState());
+        } else {
+            System.out.println("Nothing seems to have generated a StasisStart event on the go-ari-proxy to Asterisk");
+            Assert.fail();
+        }
     }
 }

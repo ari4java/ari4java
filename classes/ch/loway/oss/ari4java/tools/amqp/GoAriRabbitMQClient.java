@@ -1,5 +1,7 @@
 package ch.loway.oss.ari4java.tools.amqp;
 
+import ch.loway.oss.ari4java.AriVersion;
+import ch.loway.oss.ari4java.generated.Message;
 import ch.loway.oss.ari4java.tools.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,6 +21,8 @@ public class GoAriRabbitMQClient implements HttpClient {
     public static final int COMMAND_TIMEOUT_MILLIS = 10000;
     private final String EMPTY_JSON_RESPONSE = "[]";
     private Optional<String> dialogId = Optional.empty();
+    final MessageQueue q = new MessageQueue();
+    private AriVersion ariVersion;
 
     // Synchronous HTTP action
     @Override
@@ -44,6 +48,11 @@ public class GoAriRabbitMQClient implements HttpClient {
                 e.printStackTrace();
             }
         }
+    }
+
+    public MessageQueue getEventMessageQueue (AriVersion ariVersion) {
+        this.ariVersion = ariVersion;
+        return q;
     }
 
     /**
@@ -112,7 +121,11 @@ public class GoAriRabbitMQClient implements HttpClient {
                                                         long deliveryTag = envelope.getDeliveryTag();
                                                         ObjectMapper mapper = new ObjectMapper();
                                                         Map jsonFields = mapper.readValue(body, HashMap.class);
-                                                        System.out.println(String.format("Saw %s from server: %s", jsonFields.get("type"), jsonFields.get("server_id")));
+                                                        try {
+                                                            q.queue((Message) handleResponse(String.format("%s", jsonFields.get("ari_body")), buildImplKlazzName(Message.class)));
+                                                        } catch (ClassNotFoundException e) {
+                                                            e.printStackTrace();
+                                                        }
                                                         if (jsonFields.get("type").equals("StasisEnd")) {
                                                             dialogId = Optional.empty(); // need to remove dialog_id, the whole set of go-ari-proxy driven queues is done
                                                             appEventThread.interrupt();
@@ -243,5 +256,26 @@ public class GoAriRabbitMQClient implements HttpClient {
 //        System.out.println(String.format("status_code: %s", jsonFields.get("status_code")));
 //        System.out.println(String.format("response_body: %s", jsonFields.get("response_body")));
         return String.format("%s", jsonFields.get("response_body"));
+    }
+
+    Object handleResponse(String json, Class klazz) {
+        Object result  = null;
+        try {
+            if (Void.class.equals(klazz)) {
+                result = null;
+            } else if (klazz != null) {
+                result = BaseAriAction.deserializeEvent(json, klazz);
+            }
+        } catch (RestException e) {
+            return e;
+        }
+        return result;
+    }
+
+    private Class buildImplKlazzName (Class klazz) throws ClassNotFoundException {
+        String ariVersionString = ariVersion.name().toLowerCase();
+        String pkgAndClassNameForGeneratedModels = klazz.getName().replace("generated", String.format("generated.%s.models", ariVersionString));
+        String implKlazzName = String.format("%s_impl_%s", pkgAndClassNameForGeneratedModels, ariVersion.name().toLowerCase() );
+        return Class.forName(implKlazzName);
     }
 }
