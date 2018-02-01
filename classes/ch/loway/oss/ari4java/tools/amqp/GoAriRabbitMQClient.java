@@ -20,13 +20,14 @@ public class GoAriRabbitMQClient implements HttpClient {
     private Connection conn;
     public static final int COMMAND_TIMEOUT_MILLIS = 10000;
     private final String EMPTY_JSON_RESPONSE = "[]";
-    private Optional<String> dialogId = Optional.empty();
+    private Map<String, Optional<String>> dialogIds = new HashMap<>();
     final MessageQueue q = new MessageQueue();
     private AriVersion ariVersion;
 
     // Synchronous HTTP action
     @Override
-    public String httpActionSync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
+    public String httpActionSync(String uri, String method, List<HttpParam> parametersQuery,
+                                 List<HttpParam> parametersForm, List<HttpParam> parametersBody,
                                  List<HttpResponse> errors) throws RestException {
         String response = EMPTY_JSON_RESPONSE;
         response = sendCommandToGoProxy(uri, method, parametersBody.toString());
@@ -35,10 +36,12 @@ public class GoAriRabbitMQClient implements HttpClient {
 
     // Asynchronous HTTP action, response is passed to HttpResponseHandler
     @Override
-    public void httpActionAsync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
+    public void httpActionAsync(String uri, String method, List<HttpParam> parametersQuery,
+                                List<HttpParam> parametersForm, List<HttpParam> parametersBody,
                                 final List<HttpResponse> errors, final HttpResponseHandler responseHandler)
             throws RestException {
-        Future<String> futureResponse = sendCommandToGoProxyAsync(uri, method, parametersBody.toString(), responseHandler);
+        Future<String> futureResponse = sendCommandToGoProxyAsync(uri, method, parametersBody.toString(),
+                responseHandler);
         if (futureResponse.isDone()) {
             try {
                 responseHandler.onSuccess(futureResponse.get());
@@ -77,7 +80,7 @@ public class GoAriRabbitMQClient implements HttpClient {
         Runnable appEventThreadRunner = new Runnable() {
             @Override
             public void run() {
-                try {
+                try{
                     ConnectionFactory factory = new ConnectionFactory();
                     factory.setUsername(username);
                     factory.setPassword(password);
@@ -85,61 +88,7 @@ public class GoAriRabbitMQClient implements HttpClient {
                     factory.setHost(rabbitHost);
                     factory.setPort(rabbitPort);
                     conn = factory.newConnection();
-                    String soloAppName = appNames.get(0); //TODO just using one app for now
-
-                    // channel for finding out about the three other channels go-ari-proxy will use
-                    Channel channel = conn.createChannel();
-                    channel.exchangeDeclare("AppConsumer", "direct", true);
-                    channel.queueDeclare(soloAppName, true, false, false, null);
-                    channel.queueBind(soloAppName, "AppConsumer", "standard-key");
-                    channel.basicConsume(soloAppName, true,
-                            new DefaultConsumer(channel) {
-                                @Override
-                                public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
-                                                           byte[] body)
-                                        throws IOException {
-                                    String routingKey = envelope.getRoutingKey();
-                                    String contentType = properties.getContentType();
-                                    long deliveryTag = envelope.getDeliveryTag();
-                                    ObjectMapper mapper = new ObjectMapper();
-                                    Map jsonFields = mapper.readValue(body, HashMap.class);
-                                    try {
-                                        dialogId = Optional.of((String) jsonFields.get("dialog_id"));
-                                        //events queue
-                                        String eventQueueName = String.format("events_%s", dialogId.get());
-                                        channel.exchangeDeclare("AppEventConsumer", "direct", true);
-                                        channel.queueDeclare(eventQueueName, true, false, false, null);
-                                        channel.queueBind(eventQueueName, "AppEventConsumer", "standard-key");
-                                        channel.basicConsume(eventQueueName, true,
-                                                new DefaultConsumer(channel) {
-                                                    @Override
-                                                    public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
-                                                                               byte[] body)
-                                                            throws IOException {
-                                                        String routingKey = envelope.getRoutingKey();
-                                                        String contentType = properties.getContentType();
-                                                        long deliveryTag = envelope.getDeliveryTag();
-                                                        ObjectMapper mapper = new ObjectMapper();
-                                                        Map jsonFields = mapper.readValue(body, HashMap.class);
-                                                        try {
-                                                            q.queue((Message) handleResponse(String.format("%s", jsonFields.get("ari_body")), buildImplKlazzName(Message.class)));
-                                                        } catch (ClassNotFoundException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        if (jsonFields.get("type").equals("StasisEnd")) {
-                                                            dialogId = Optional.empty(); // need to remove dialog_id, the whole set of go-ari-proxy driven queues is done
-                                                            appEventThread.interrupt();
-                                                        }
-                                                    }
-                                                });
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    } finally {
-                                        //nothing to do?
-                                    }
-
-                                }
-                            });
+                    createAppEventQueues(appNames);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (TimeoutException e) {
@@ -149,6 +98,79 @@ public class GoAriRabbitMQClient implements HttpClient {
         };
         appEventThread = new Thread(appEventThreadRunner);
         appEventThread.start();
+    }
+
+    private void createAppEventQueues(List<String> appList) {
+        appList.stream().forEach(appName -> {
+            try {
+                // channel for finding out about the three other channels go-ari-proxy will use (3 per app)
+                Channel channel = conn.createChannel();
+                channel.exchangeDeclare("AppConsumer", "direct", true);
+                channel.queueDeclare(appName, true, false, false, null);
+                channel.queueBind(appName, "AppConsumer", "standard-key");
+                channel.basicConsume(appName, true,
+                    new DefaultConsumer(channel) {
+                        @Override
+                        public void handleDelivery(String consumerTag,
+                                                   Envelope envelope,
+                                                   AMQP.BasicProperties properties,
+                                                   byte[] body)
+                                throws IOException {
+                            String routingKey = envelope.getRoutingKey();
+                            String contentType = properties.getContentType();
+                            long deliveryTag = envelope.getDeliveryTag();
+                            ObjectMapper mapper = new ObjectMapper();
+                            Map jsonFields = mapper.readValue(body, HashMap.class);
+                            try {
+                                dialogIds.put(appName, Optional.of((String) jsonFields.get("dialog_id")));
+                                //events queue
+                                String eventQueueName = String.format("events_%s", dialogIds.get(appName).get());
+                                channel.exchangeDeclare("AppEventConsumer", "direct", true);
+                                channel.queueDeclare(eventQueueName, true, false,
+                                        false, null);
+                                channel.queueBind(eventQueueName,
+                                        "AppEventConsumer",
+                                        "standard-key");
+                                channel.basicConsume(eventQueueName, true,
+                                    new DefaultConsumer(channel) {
+                                        @Override
+                                        public void handleDelivery(String consumerTag,
+                                                                   Envelope envelope,
+                                                                   AMQP.BasicProperties properties,
+                                                                   byte[] body)
+                                                throws IOException {
+                                            String routingKey = envelope.getRoutingKey();
+                                            String contentType = properties.getContentType();
+                                            long deliveryTag = envelope.getDeliveryTag();
+                                            ObjectMapper mapper = new ObjectMapper();
+                                            Map jsonFields = mapper.readValue(body, HashMap.class);
+                                            try {
+                                                q.queue((Message) handleResponse(String.format("%s",
+                                                        jsonFields.get("ari_body")),
+                                                        buildImplKlazzName(Message.class)));
+                                            } catch (ClassNotFoundException e) {
+                                                e.printStackTrace();
+                                            }
+                                            if (jsonFields.get("type").equals("StasisEnd")) {
+                                                // need to remove dialog_id,
+                                                // the whole set of go-ari-proxy driven queues is done
+                                                dialogIds.put(appName, Optional.empty());
+                                                appEventThread.interrupt(); //TODO that thread needs to handle this
+                                            }
+                                        }
+                                    });
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                //nothing to do?
+                            }
+
+                        }
+                    });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     /**
@@ -166,24 +188,34 @@ public class GoAriRabbitMQClient implements HttpClient {
         Runnable commandResponseThreadRunner = new Runnable() {
             @Override
             public void run() {
-                while (dialogId.equals(Optional.empty())){ //block til we've a pipe to talk on
+                //FIXME get first entry of dialogIds assumes sending on any random app's queue will be OK -- probably NOT true
+                Optional<String> firstAppDialogId = Optional.empty();
+                if (!dialogIds.isEmpty()) {
+                     firstAppDialogId =  dialogIds.entrySet().iterator().next().getValue();
+                }
+                while (!firstAppDialogId.isPresent()) { //block til we've a pipe to talk on
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                    if (!dialogIds.isEmpty()) {
+                        firstAppDialogId =  dialogIds.entrySet().iterator().next().getValue();
+                    }
                 }
                 try {
                     Channel channel = conn.createChannel();
                     // responses queue
-                    String responseQueueName = String.format("responses_%s", dialogId.get());
+                    String responseQueueName = String.format("responses_%s", firstAppDialogId.get());
                     channel.exchangeDeclare("AppResponseConsumer", "direct", true);
                     channel.queueDeclare(responseQueueName, true, false, false, null);
                     channel.queueBind(responseQueueName, "AppResponseConsumer", "standard-key");
                     channel.basicConsume(responseQueueName, true,
                             new DefaultConsumer(channel) {
                                 @Override
-                                public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
+                                public void handleDelivery(String consumerTag,
+                                                           Envelope envelope,
+                                                           AMQP.BasicProperties properties,
                                                            byte[] body)
                                         throws IOException {
                                     String routingKey = envelope.getRoutingKey();
@@ -194,11 +226,12 @@ public class GoAriRabbitMQClient implements HttpClient {
                             });
 
                     // commands queue - talk to this queue with basicPublish() as needed
-                    String commandQueueName = String.format("commands_%s", dialogId.get());
+                    String commandQueueName = String.format("commands_%s", firstAppDialogId.get());
                     channel.exchangeDeclare("AppCommandProducer", "direct", true);
                     channel.queueDeclare(commandQueueName, true, false, false, null);
                     channel.queueBind(commandQueueName, "AppCommandProducer", "standard-key");
-                    channel.basicPublish("AppCommandProducer", "standard-key", new AMQP.BasicProperties.Builder()
+                    channel.basicPublish("AppCommandProducer", "standard-key",
+                            new AMQP.BasicProperties.Builder()
                             .contentType("application/json")
                             .deliveryMode(2)
                             .priority(1)
@@ -245,7 +278,6 @@ public class GoAriRabbitMQClient implements HttpClient {
         node.put("url", uri);
         node.put("method", method);
         node.put("body", body);
-        System.out.println(String.format("Sending: %s", node.toString()));
         return mapper.writeValueAsBytes(node);
     }
 
@@ -274,8 +306,10 @@ public class GoAriRabbitMQClient implements HttpClient {
 
     private Class buildImplKlazzName (Class klazz) throws ClassNotFoundException {
         String ariVersionString = ariVersion.name().toLowerCase();
-        String pkgAndClassNameForGeneratedModels = klazz.getName().replace("generated", String.format("generated.%s.models", ariVersionString));
-        String implKlazzName = String.format("%s_impl_%s", pkgAndClassNameForGeneratedModels, ariVersion.name().toLowerCase() );
+        String pkgAndClassNameForGeneratedModels = klazz.getName().replace("generated",
+                String.format("generated.%s.models", ariVersionString));
+        String implKlazzName = String.format("%s_impl_%s", pkgAndClassNameForGeneratedModels,
+                ariVersion.name().toLowerCase() );
         return Class.forName(implKlazzName);
     }
 }

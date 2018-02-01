@@ -23,7 +23,7 @@ public class TestGoARIProxy {
     @Before
     public void setUp() {
         goAriClient.initialize("localhost", 5672, "guest", "guest",
-                Arrays.asList("bridges"), "Asterisk");
+                Arrays.asList("dialer", "bridges"), "Asterisk");
     }
 
     @After
