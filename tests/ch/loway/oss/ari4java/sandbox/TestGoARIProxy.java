@@ -100,6 +100,33 @@ public class TestGoARIProxy {
     }
 
     @Test
+    public void list_bridges_sync_using_go_ari_proxy() throws  ARIException {
+        // This is an integration test. If not running a rabbitmq server and go-ari-proxy somewhere this can safely be set @Ignore
+        ari.setHttpClient(goAriClient);
+        ari.setVersion(AriVersion.ARI_2_0_0);
+        System.out.println("You have 10 seconds to generate MQ tunnels from Asterisk side, go-ari-proxy has one-way " +
+                "initialization at this time. For instance: start an app that causes StasisStart right after you start this test");
+        ActionBridges ab = ari.getActionImpl(ActionBridges.class);
+        List<Bridge> bridgeList = ab.list();
+        bridgeList.forEach(bridge -> System.out.println(bridge.getId()));
+        Assert.assertNotNull(bridgeList.get(0).getId()); // bridgeList itself will always be non-null, so not good test
+    }
+
+    @Test
+    public void list_bridges_and_create_bridge_sync_using_go_ari_proxy() throws  ARIException {
+        // This is an integration test. If not running a rabbitmq server and go-ari-proxy somewhere this can safely be set @Ignore
+        ari.setHttpClient(goAriClient);
+        ari.setVersion(AriVersion.ARI_2_0_0);
+        System.out.println("You have 10 seconds to generate MQ tunnels from Asterisk side, go-ari-proxy has one-way " +
+                "initialization at this time. For instance: start an app that causes StasisStart right after you start this test");
+        ActionBridges ab = ari.getActionImpl(ActionBridges.class);
+        List<Bridge> bridgeList = ab.list();
+        bridgeList.stream().forEach(bridge -> System.out.println(bridge.getName()));
+        Bridge bridgeCreated = ab.create("mixing","bridgeID2", "bridgeName2");
+        Assert.assertTrue(bridgeCreated.getId() != null);
+    }
+
+    @Test
     public void process_event_queue() throws ARIException, InterruptedException {
         // Only requires that the client initialize() has been called; it should have been in setUp()
         ari.setVersion(AriVersion.ARI_2_0_0);

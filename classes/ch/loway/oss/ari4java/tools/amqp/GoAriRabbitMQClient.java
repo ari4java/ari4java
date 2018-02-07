@@ -23,6 +23,7 @@ public class GoAriRabbitMQClient implements HttpClient {
     private Map<String, Optional<String>> dialogIds = new HashMap<>();
     final MessageQueue q = new MessageQueue();
     private AriVersion ariVersion;
+    AtomicReference<String> response = new AtomicReference<String>(EMPTY_JSON_RESPONSE);
 
     // Synchronous HTTP action
     @Override
@@ -184,7 +185,7 @@ public class GoAriRabbitMQClient implements HttpClient {
      * @param body body to send to Asterisk via the go-ari-proxy
      */
     private String sendCommandToGoProxy(String uri, String method, String body) {
-        final AtomicReference<String> response = new AtomicReference<String>(EMPTY_JSON_RESPONSE);
+        response.set(EMPTY_JSON_RESPONSE);
         Runnable commandResponseThreadRunner = new Runnable() {
             @Override
             public void run() {
@@ -241,7 +242,12 @@ public class GoAriRabbitMQClient implements HttpClient {
                     e.printStackTrace();
                 }
                 while (response.get().equals(EMPTY_JSON_RESPONSE)) {
-                    //block, so call this with a timeout or it will block forever
+                    try {
+                        Thread.sleep(250);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    //block, so call this with a timeout or it will block forever on http failure
                 }
             }
         };
