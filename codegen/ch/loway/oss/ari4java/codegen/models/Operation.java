@@ -2,6 +2,8 @@
 package ch.loway.oss.ari4java.codegen.models;
 
 import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +52,7 @@ public class Operation {
         String stUri = parent.path;
         for ( Param p: parms ) {
             if ( p.type == ParamType.PATH ) {
-                stUri = stUri.replace("{" + p.name + "}", "\" + " + p.name + " + \"" );
+                stUri = stUri.replace("{" + p.name + "}", "\" + urlEncode(" + p.name + ") + \"" );
             }
         }
         // 1. Private helper method
