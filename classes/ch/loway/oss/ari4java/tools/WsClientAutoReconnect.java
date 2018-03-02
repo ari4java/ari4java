@@ -7,5 +7,5 @@ package ch.loway.oss.ari4java.tools;
  *
  */
 public interface WsClientAutoReconnect {
-	void reconnectWs();
+	void reconnectWs(Throwable cause);
 }

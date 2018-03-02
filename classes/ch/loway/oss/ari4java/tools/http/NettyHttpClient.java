@@ -310,15 +310,20 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
                 if (future.isSuccess()) {
-                    callback.onChReadyToWrite();
-                    // reset the reconnect counter on successful connect
-                    reconnectCount = 0;
+                    wsHandler.handshakeFuture().addListener(new ChannelFutureListener() {
+                        @Override
+                        public void operationComplete(ChannelFuture future) throws Exception {
+                            if (future.isSuccess()) {
+                                callback.onChReadyToWrite();
+                                // reset the reconnect counter on successful connect
+                                reconnectCount = 0;
+                            } else {
+                                reconnectWs(future.cause());
+                            }
+                        }
+                    });
                 } else {
-                    if (reconnectCount >= 10) {
-                        callback.onFailure(future.cause());
-                    } else {
-                        reconnectWs();
-                    }
+                    reconnectWs(future.cause());
                 }
             }
         };
@@ -391,16 +396,23 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
 
     @Override
-    public void reconnectWs() {
+    public void reconnectWs(Throwable cause) {
         // cancel the ping timer
         if (wsPingTimer != null) {
             wsPingTimer.cancel(false);
             wsPingTimer = null;
         }
+
+        if (reconnectCount >= 10) {
+            wsCallback.onFailure(cause);
+            return;
+        }
+
         // if not shutdown reconnect, note the check not on the shutDownGroup
         if (!group.isShuttingDown()) {
             // schedule reconnect after a 2,5,10 seconds
             long[] timeouts = {2L, 5L, 10L};
+            long timeout = reconnectCount >= timeouts.length ? timeouts[timeouts.length - 1] : timeouts[reconnectCount];
             reconnectCount++;
             shutDownGroup.schedule(new Runnable() {
                 @Override
@@ -415,7 +427,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                         wsCallback.onFailure(e);
                     }
                 }
-            }, reconnectCount >= timeouts.length ? timeouts[timeouts.length - 1] : timeouts[reconnectCount], TimeUnit.SECONDS);
+            }, timeout, TimeUnit.SECONDS);
         }
     }
 }
