@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconnect {
 
-    public static final int MAX_HTTP_REQUEST_KB = 256;
+    public static final int MAX_HTTP_REQUEST_KB = 16 * 1024;
     
     private Bootstrap bootStrap;
     private URI baseUri;
