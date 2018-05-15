@@ -23,15 +23,25 @@ import ch.loway.oss.ari4java.tools.ARIException;
 public enum AriVersion {
 
 
-    ARI_0_0_1 ( "0.0.1", new AriBuilder_impl_ari_0_0_1() ),   /** Asterisk 12 beta 1 */
-    ARI_1_0_0 ( "1.0.0", new AriBuilder_impl_ari_1_0_0() ),   /** Asterisk 12 */
-    ARI_1_5_0 ( "1.5.0", new AriBuilder_impl_ari_1_5_0() ),   /** Asterisk 13.0.0 */
-    ARI_1_6_0 ( "1.6.0", new AriBuilder_impl_ari_1_6_0() ),   /** Asterisk 13.1.0 */
-    ARI_1_7_0 ( "1.7.0", new AriBuilder_impl_ari_1_7_0() ),   /** Asterisk 13.2.0 */
-    ARI_1_8_0 ( "1.8.0", new AriBuilder_impl_ari_1_8_0() ),   /** Asterisk 13.5.0 */
-    ARI_1_9_0 ( "1.9.0", new AriBuilder_impl_ari_1_9_0() ),   /** Asterisk 13.7.0 */
-    ARI_1_10_0 ( "1.10.0", new AriBuilder_impl_ari_1_10_0() ),   /** Asterisk 14.0.0 */
-    ARI_2_0_0 ( "2.0.0", new AriBuilder_impl_ari_2_0_0() ),   /** Asterisk 14.2.1 */
+    /** Asterisk 12 beta 1 */
+    ARI_0_0_1 ( "0.0.1", new AriBuilder_impl_ari_0_0_1() ),
+    /** Asterisk 12 */
+    ARI_1_0_0 ( "1.0.0", new AriBuilder_impl_ari_1_0_0() ),
+    /** Asterisk 13.0.0 */
+    ARI_1_5_0 ( "1.5.0", new AriBuilder_impl_ari_1_5_0() ),
+    /** Asterisk 13.1.0 */
+    ARI_1_6_0 ( "1.6.0", new AriBuilder_impl_ari_1_6_0() ),
+    /** Asterisk 13.2.0 */
+    ARI_1_7_0 ( "1.7.0", new AriBuilder_impl_ari_1_7_0() ),
+    /** Asterisk 13.5.0 */
+    ARI_1_8_0 ( "1.8.0", new AriBuilder_impl_ari_1_8_0() ),
+    /** Asterisk 13.7.0 */
+    ARI_1_9_0 ( "1.9.0", new AriBuilder_impl_ari_1_9_0() ),
+    /** Asterisk 14.0.0 */
+    ARI_1_10_0 ( "1.10.0", new AriBuilder_impl_ari_1_10_0() ),
+    /** Asterisk 14.2.1 */
+    ARI_2_0_0 ( "2.0.0", new AriBuilder_impl_ari_2_0_0() ),
+    /** Asterisk 15.1.4 */
     ARI_3_0_0 ( "3.0.0", new AriBuilder_impl_ari_3_0_0() ),   /** Asterisk 15.1.4 */
     
     
