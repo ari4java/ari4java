@@ -165,7 +165,7 @@ public class BaseAriAction {
      * @param <A> The abstract type for members of the list.
      * @param <C> The concrete type for members of the list.
      * @param json Data in
-     * @param refConcreteType The reference concrete type, should be a List<C>
+     * @param refConcreteType The reference concrete type, should be a List&lt;C&gt;
      * @return a list of A's
      * @throws RestException
      */
