@@ -5,6 +5,15 @@ The Asterisk REST Interface (ARI) bindings for Java.
 
  [ ![Download](https://api.bintray.com/packages/lenz/maven/ari4java/images/download.png) ](https://bintray.com/lenz/maven/ari4java/_latestVersion)
 
+Project status: Looking for a new maintainer
+--------------------------------------------
+
+I am looking for a new maintainer to take over this project, as I currently have no
+time to handle it appropriately. **Looking for someone who is using the library in production, so
+they have a very good reason to keep it fit.** Any takers?
+
+
+
 Description
 -----------
 
