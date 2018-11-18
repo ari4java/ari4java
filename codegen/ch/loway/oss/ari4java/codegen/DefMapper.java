@@ -554,6 +554,7 @@ public class DefMapper {
                 Arrays.asList( new String[] {
                     "ch.loway.oss.ari4java.generated." + apiVersion + ".models.*" ,
                     "ch.loway.oss.ari4java.generated." + apiVersion + ".actions.*",
+                    "ch.loway.oss.ari4java.generated.Module",
                     "ch.loway.oss.ari4java.generated.*",
                     "ch.loway.oss.ari4java.ARI"
         }));
