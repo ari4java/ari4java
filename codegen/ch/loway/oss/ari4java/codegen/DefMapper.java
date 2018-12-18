@@ -111,6 +111,7 @@ public class DefMapper {
                 j = new JavaInterface();
                 j.pkgName = "ch.loway.oss.ari4java.generated";
                 j.className = m.getInterfaceName();
+                j.parent = m.extendsModel;
                 interfaces.put(m.getInterfaceName(), j);
             }
 
