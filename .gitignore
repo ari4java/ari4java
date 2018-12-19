@@ -6,7 +6,8 @@
 *.ear
 
 ari4java/*
-build/*
+build/
+bin/
 dist/*
 nbproject/*
 libs/*
@@ -24,3 +25,5 @@ build.xml
 # macbook
 .DS_Store
 
+# ignore generated code artifacts - they will be rebuilt by gradle as needed
+classes/ch/loway/oss/ari4java/generated/
