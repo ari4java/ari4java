@@ -9,7 +9,7 @@ def env = System.getenv()
 
 project.ext {
   webapp_name    = 'ari4java'
-  app_version    = '0.4.5'
+  app_version    = '0.5.0'
   build_number   = env["BUILD_NUMBER"]  
   version_class  = 'ch/loway/oss/ari4java/BUILD.java'
   build_time     = "" + new Date()
@@ -101,9 +101,9 @@ repositories {
 dependencies {
 	compile 'ari4java:codegen'
 
-	compile 'com.fasterxml.jackson.core:jackson-core:2.2.2'
-	compile 'com.fasterxml.jackson.core:jackson-databind:2.2.2'
-	compile 'com.fasterxml.jackson.core:jackson-annotations:2.2.2'
+	compile 'com.fasterxml.jackson.core:jackson-core:2.9.6'
+	compile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
+	compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.6'
 	compile 'io.netty:netty-all:4.0.25.Final'
 	compile 'javax.xml.bind:jaxb-api:2.1'
 
