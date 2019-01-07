@@ -368,7 +368,7 @@ public class ARI {
      */
 
     public void cleanup() throws ARIException {
-
+    	unsubscribeApplication();
         for (BaseAriAction liveAction : liveActionList) {
             try {
                 closeAction(liveAction);
@@ -387,6 +387,30 @@ public class ARI {
     }
 
     /**
+     * unsubscribe from all resources of the stasis application 
+     * @throws RestException
+     */
+    private void unsubscribeApplication() throws RestException {
+    	Application application = applications().get(appName);
+    	// unsubscribe from all channels
+    	for(int i = 0; i<application.getChannel_ids().size(); i++) {
+			applications().unsubscribe(appName, "channel:"+application.getChannel_ids().get(i));
+    	}    		
+    	// unsubscribe from all bridges
+    	for(int i = 0; i<application.getBridge_ids().size(); i++) {
+			applications().unsubscribe(appName, "bridge:"+application.getBridge_ids().get(i));
+    	}
+    	// unsubscribe from all endpoints
+    	for(int i = 0; i<application.getEndpoint_ids().size(); i++) {
+			applications().unsubscribe(appName, "endpoint:"+application.getEndpoint_ids().get(i));
+    	}
+    	// unsubscribe from all deviceState
+    	for(int i = 0; i<application.getDevice_names().size(); i++) {
+			applications().unsubscribe(appName, "deviceState:"+application.getDevice_names().get(i));
+    	} 
+	}
+
+	/**
      * Does the destruction of a client. In a sense, it is a reverse factory.
      *
      * @param client the client object
@@ -439,8 +463,6 @@ public class ARI {
         return q;
 
     }
-
-
 
     /**
      * Gets us a ready to use object.
@@ -629,9 +651,6 @@ public class ARI {
         subscriptions.unsubscribeAll(this);
     }
     
-    
-    
-    
     /**
      * This interface is used to go from an interface to its concrete 
      * implementation.
@@ -639,6 +658,4 @@ public class ARI {
     public static interface ClassFactory {
         public Class getImplementationFor( Class interfaceClass );
     }
-    
 }
-
