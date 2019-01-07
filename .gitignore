@@ -23,3 +23,5 @@ build.xml
 # macbook
 .DS_Store
 
+/bin/
+/build/

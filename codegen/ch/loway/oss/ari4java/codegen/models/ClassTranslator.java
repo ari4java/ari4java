@@ -24,6 +24,7 @@ public class ClassTranslator extends JavaPkgInfo {
         imports = new ArrayList<String>();
         className = "ClassTranslator";
         imports.add("ch.loway.oss.ari4java.ARI" );
+        imports.add("ch.loway.oss.ari4java.generated.Module");
         imports.add( "ch.loway.oss.ari4java.generated.*" );
     }
     

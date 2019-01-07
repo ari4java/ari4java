@@ -66,7 +66,8 @@ public class JavaInterface {
             "java.util.ArrayList",
             "ch.loway.oss.ari4java.tools.RestException",
             "ch.loway.oss.ari4java.tools.AriCallback",
-            "ch.loway.oss.ari4java.tools.tags.*"
+            "ch.loway.oss.ari4java.tools.tags.*",
+            "ch.loway.oss.ari4java.generated.Module"
         }));
 
         
