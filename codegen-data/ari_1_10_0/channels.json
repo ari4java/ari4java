@@ -2,7 +2,7 @@
 	"_copyright": "Copyright (C) 2012 - 2013, Digium, Inc.",
 	"_author": "David M. Lee, II <dlee@digium.com>",
 	"_svn_revision": "$Revision$",
-	"apiVersion": "1.7.0",
+	"apiVersion": "1.10.0",
 	"swaggerVersion": "1.1",
 	"basePath": "http://localhost:8088/ari",
 	"resourcePath": "/api-docs/channels.{format}",
@@ -142,76 +142,10 @@
 						{
 							"code": 400,
 							"reason": "Invalid parameters for originating a channel."
-						}
-					]
-				}
-			]
-		},
-		{
-			"path": "/channels/create",
-			"description": "Create a channel and place it in a Stasis app, but do not dial the channel yet.",
-			"operations": [
-				{
-					"httpMethod": "POST",
-					"summary": "Create channel.",
-					"nickname": "create",
-					"responseClass": "Channel",
-					"parameters": [
-						{
-							"name": "endpoint",
-							"description": "Endpoint for channel communication",
-							"paramType": "query",
-							"required": true,
-							"allowMultiple": false,
-							"dataType": "string"
 						},
 						{
-							"name": "app",
-							"description": "Stasis Application to place channel into",
-							"paramType": "query",
-							"required": true,
-							"allowMultiple": false,
-							"dataType": "string"
-						},
-						{
-							"name": "appArgs",
-							"description": "The application arguments to pass to the Stasis application provided by 'app'. Mutually exclusive with 'context', 'extension', 'priority', and 'label'.",
-							"paramType": "query",
-							"required": false,
-							"allowMultiple": false,
-							"dataType": "string"
-						},
-						{
-							"name": "channelId",
-							"description": "The unique id to assign the channel on creation.",
-							"paramType": "query",
-							"required": false,
-							"allowMultiple": false,
-							"dataType": "string"
-						},
-						{
-							"name": "otherChannelId",
-							"description": "The unique id to assign the second channel when using local channels.",
-							"paramType": "query",
-							"required": false,
-							"allowMultiple": false,
-							"dataType": "string"
-						},
-						{
-							"name": "originator",
-							"description": "Unique ID of the calling channel",
-							"paramType": "query",
-							"required": false,
-							"allowMultiple": false,
-							"dataType": "string"
-						},
-						{
-							"name": "formats",
-							"description": "The format name capability list to use if originator is not specified. Ex. \"ulaw,slin16\".  Format names can be found with \"core show codecs\".",
-							"paramType": "query",
-							"required": false,
-							"allowMultiple": false,
-							"dataType": "string"
+							"code": 409,
+							"reason": "Channel with given unique ID already exists."
 						}
 					]
 				}
@@ -368,9 +302,12 @@
 						{
 							"code": 400,
 							"reason": "Invalid parameters for originating a channel."
+						},
+						{
+							"code": 409,
+							"reason": "Channel with given unique ID already exists."
 						}
 					]
-
 				},
 				{
 					"httpMethod": "DELETE",
@@ -477,10 +414,6 @@
 						{
 							"code": 409,
 							"reason": "Channel not in a Stasis application"
-						},
-						{
-							"code": 412,
-							"reason": "Channel in invalid state"
 						}
 					]
 				}
@@ -529,10 +462,6 @@
 						{
 							"code": 422,
 							"reason": "Endpoint is not the same type as the channel"
-						},
-						{
-							"code": 412,
-							"reason": "Channel in invalid state"
 						}
 					]
 				}
@@ -565,10 +494,6 @@
 						{
 							"code": 409,
 							"reason": "Channel not in a Stasis application"
-						},
-						{
-							"code": 412,
-							"reason": "Channel in invalid state"
 						}
 					]
 				}
@@ -601,10 +526,6 @@
 						{
 							"code": 409,
 							"reason": "Channel not in a Stasis application"
-						},
-						{
-							"code": 412,
-							"reason": "Channel in invalid state"
 						}
 					]
 				},
@@ -631,10 +552,6 @@
 						{
 							"code": 409,
 							"reason": "Channel not in a Stasis application"
-						},
-						{
-							"code": 412,
-							"reason": "Channel in invalid state"
 						}
 					]
 				}
@@ -715,10 +632,6 @@
 						{
 							"code": 409,
 							"reason": "Channel not in a Stasis application"
-						},
-						{
-							"code": 412,
-							"reason": "Channel in invalid state"
 						}
 					]
 				}
@@ -768,10 +681,6 @@
 						{
 							"code": 409,
 							"reason": "Channel not in a Stasis application"
-						},
-						{
-							"code": 412,
-							"reason": "Channel in invalid state"
 						}
 					]
 				},
@@ -815,10 +724,6 @@
 						{
 							"code": 409,
 							"reason": "Channel not in a Stasis application"
-						},
-						{
-							"code": 412,
-							"reason": "Channel in invalid state"
 						}
 					]
 				}
@@ -851,10 +756,6 @@
 						{
 							"code": 409,
 							"reason": "Channel not in a Stasis application"
-						},
-						{
-							"code": 412,
-							"reason": "Channel in invalid state"
 						}
 					]
 				},
@@ -881,10 +782,6 @@
 						{
 							"code": 409,
 							"reason": "Channel not in a Stasis application"
-						},
-						{
-							"code": 412,
-							"reason": "Channel in invalid state"
 						}
 					]
 				}
@@ -926,10 +823,6 @@
 						{
 							"code": 409,
 							"reason": "Channel not in a Stasis application"
-						},
-						{
-							"code": 412,
-							"reason": "Channel in invalid state"
 						}
 					]
 				},
@@ -956,10 +849,6 @@
 						{
 							"code": 409,
 							"reason": "Channel not in a Stasis application"
-						},
-						{
-							"code": 412,
-							"reason": "Channel in invalid state"
 						}
 					]
 				}
@@ -993,10 +882,6 @@
 						{
 							"code": 409,
 							"reason": "Channel not in a Stasis application"
-						},
-						{
-							"code": 412,
-							"reason": "Channel in invalid state"
 						}
 					]
 				},
@@ -1023,10 +908,6 @@
 						{
 							"code": 409,
 							"reason": "Channel not in a Stasis application"
-						},
-						{
-							"code": 412,
-							"reason": "Channel in invalid state"
 						}
 					]
 				}
@@ -1053,10 +934,10 @@
 						},
 						{
 							"name": "media",
-							"description": "Media URIs to play.",
+							"description": "Media's URI to play.",
 							"paramType": "query",
 							"required": true,
-							"allowMultiple": true,
+							"allowMultiple": false,
 							"dataType": "string"
 						},
 						{
@@ -1069,7 +950,7 @@
 						},
 						{
 							"name": "offsetms",
-							"description": "Number of milliseconds to skip before playing. Only applies to the first URI if multiple media URIs are specified.",
+							"description": "Number of media to skip before playing.",
 							"paramType": "query",
 							"required": false,
 							"allowMultiple": false,
@@ -1101,10 +982,6 @@
 						{
 							"code": 409,
 							"reason": "Channel not in a Stasis application"
-						},
-						{
-							"code": 412,
-							"reason": "Channel in invalid state"
 						}
 					]
 				}
@@ -1139,10 +1016,10 @@
 						},
 						{
 							"name": "media",
-							"description": "Media URIs to play.",
+							"description": "Media's URI to play.",
 							"paramType": "query",
 							"required": true,
-							"allowMultiple": true,
+							"allowMultiple": false,
 							"dataType": "string"
 						},
 						{
@@ -1155,7 +1032,7 @@
 						},
 						{
 							"name": "offsetms",
-							"description": "Number of milliseconds to skip before playing. Only applies to the first URI if multiple media URIs are specified.",
+							"description": "Number of media to skip before playing.",
 							"paramType": "query",
 							"required": false,
 							"allowMultiple": false,
@@ -1179,10 +1056,6 @@
 						{
 							"code": 409,
 							"reason": "Channel not in a Stasis application"
-						},
-						{
-							"code": 412,
-							"reason": "Channel in invalid state"
 						}
 					]
 				}
@@ -1586,59 +1459,6 @@
 						{
 							"code": 404,
 							"reason": "Channel not found"
-						}
-					]
-				}
-			]
-		},
-		{
-			"path": "/channels/{channelId}/dial",
-			"description": "Dial a channel",
-			"operations": [
-				{
-					"httpMethod": "POST",
-					"summary": "Dial a created channel.",
-					"nickname": "dial",
-					"responseClass": "void",
-					"parameters": [
-						{
-							"name": "channelId",
-							"description": "Channel's id",
-							"paramType": "path",
-							"required": true,
-							"allowMultiple": false,
-							"dataType": "string"
-						},
-						{
-							"name": "caller",
-							"description": "Channel ID of caller",
-							"paramType": "query",
-							"required": false,
-							"allowMultiple": false,
-							"dataType": "string"
-						},
-						{
-							"name": "timeout",
-							"description": "Dial timeout",
-							"paramType": "query",
-							"required": false,
-							"allowMultiple": false,
-							"dataType": "int",
-							"defaultValue": 0,
-							"allowableValues": {
-								"valueType": "RANGE",
-								"min": 0
-							}
-						}
-					],
-					"errorResponses": [
-						{
-							"code": 404,
-							"reason": "Channel cannot be found."
-						},
-						{
-							"code": 409,
-							"reason": "Channel cannot be dialed."
 						}
 					]
 				}

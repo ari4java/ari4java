@@ -2,7 +2,7 @@
 	"_copyright": "Copyright (C) 2012 - 2013, Digium, Inc.",
 	"_author": "David M. Lee, II <dlee@digium.com>",
 	"_svn_revision": "$Revision$",
-	"apiVersion": "1.7.0",
+	"apiVersion": "1.10.0",
 	"swaggerVersion": "1.1",
 	"basePath": "http://localhost:8088/ari",
 	"resourcePath": "/api-docs/playbacks.{format}",
@@ -124,13 +124,8 @@
 				},
 				"media_uri": {
 					"type": "string",
-					"description": "The URI for the media currently being played back.",
+					"description": "URI for the media to play back.",
 					"required": true
-				},
-				"next_media_uri": {
-					"type": "string",
-					"description": "If a list of URIs is being played, the next media URI to be played back.",
-					"required": false
 				},
 				"target_uri": {
 					"type": "string",
@@ -150,8 +145,7 @@
 						"values": [
 							"queued",
 							"playing",
-							"continuing",
-							"done"
+							"complete"
 						]
 					}
 				}
