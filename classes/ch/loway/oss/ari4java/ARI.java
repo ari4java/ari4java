@@ -368,7 +368,11 @@ public class ARI {
      */
 
     public void cleanup() throws ARIException {
-    	unsubscribeApplication();
+        try {
+    	    unsubscribeApplication();
+        } catch (ARIException e) {
+            // ignore on cleanup...
+        }
         for (BaseAriAction liveAction : liveActionList) {
             try {
                 closeAction(liveAction);
