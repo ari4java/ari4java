@@ -24,8 +24,6 @@ across different versions.
   yours from https://github.com/l3nz/whaleware/tree/master/examples/asterisk-load-test
 
 
-**Tip:** join [our ari4java Google+ group](https://plus.google.com/u/0/communities/116130645492865479649) for news, help and plain bouncing of ideas around. 
-
 Using the library
 =================
 
@@ -39,7 +37,7 @@ If you use Gradle (or any tool using Maven dependencies) you can simply declare 
 
 
 	dependencies {
-	    compile 'ch.loway.oss.ari4java:ari4java:0.5.0'
+	    compile 'ch.loway.oss.ari4java:ari4java:0.5.1'
 	}
 
 This will download the package and all required dependencies.
@@ -79,6 +77,7 @@ The project requires:
 Status
 ------
 
+* 19.04.03 - Rel 0.5.1. Goodbye Naama!
 * 19.01.07 - Support java 9 (#108), code generation from gradle(#110), fixed unsubscribing from application correctly(#59), added event interface inheritance(#106) rel 0.5.0
 * 17.12.19 - Added support for ARI 3.0.0 (#78)
 * 17.02.04 - Added support for ARI 2.0.0 (#62) and quicker deserialization (#63)
