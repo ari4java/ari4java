@@ -10,20 +10,26 @@ import java.util.Map;
 public class JavaPkgInfo {
 
     public final static Map<String, String> TypeMap;
+    public final static Map<String, String> primitiveSignature;
 
     static {
         TypeMap = new HashMap<String, String>();
         TypeMap.put("string", "String");
-        TypeMap.put("long", "long");
-        TypeMap.put("int", "int");
-        TypeMap.put("double", "double");
+        TypeMap.put("long", "Long");
+        TypeMap.put("int", "Integer");
+        TypeMap.put("double", "Double");
         TypeMap.put("date", "Date");
         TypeMap.put("object", "Object");
-        TypeMap.put("boolean", "boolean");
+        TypeMap.put("boolean", "Boolean");
         TypeMap.put("binary", "byte[]");
         TypeMap.put("containers", "Map<String,String>");
+        
+        primitiveSignature = new HashMap<String, String>();
+        primitiveSignature.put("Boolean", "boolean");
+        primitiveSignature.put("Integer", "int");
+        primitiveSignature.put("Long", "long");
+        primitiveSignature.put("Double", "double");
     }
-
 
     String base = "ch.loway.oss.ari4java.generated";
     public String className = "";

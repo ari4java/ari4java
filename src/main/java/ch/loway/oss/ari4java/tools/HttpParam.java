@@ -31,15 +31,21 @@ public class HttpParam {
         return vars;
     }
 
-    public static HttpParam build(String n, int v) {
+    public static HttpParam build(String n, Integer v) {
+        if (null == v)
+            return build(n, (String)null);
         return build(n, Integer.toString(v));
     }
 
-    public static HttpParam build(String n, long v) {
+    public static HttpParam build(String n, Long v) {
+        if (null == v)
+            return build(n, (String)null);
         return build(n, Long.toString(v));
     }
 
-    public static HttpParam build(String n, boolean v) {
+    public static HttpParam build(String n, Boolean v) {
+        if (null == v)
+            return build(n, (String)null);
         return build(n, v ? "true" : "false");
     }
 
