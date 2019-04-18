@@ -165,6 +165,16 @@
 					"type": "List[string]",
 					"description": "Names of the devices subscribed to.",
 					"required": true
+				},
+				"events_allowed": {
+					"type": "List[object]",
+					"description": "Event types sent to the application.",
+					"required": true
+				},
+				"events_disallowed": {
+					"type": "List[object]",
+					"description": "Event types not sent to the application.",
+					"required": true
 				}
 			}
 		}
