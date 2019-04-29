@@ -734,6 +734,11 @@
 					"description": "Entity that created the bridge",
 					"required": true
 				},
+				"creationtime": {
+					"required": true,
+					"type": "Date",
+					"description": "Timestamp when bridge was created"
+				},
 				"name": {
 					"type": "string",
 					"description": "Name the creator gave the bridge",
