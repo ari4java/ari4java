@@ -47,7 +47,7 @@ public enum AriVersion {
     /** Asterisk 16.1.1 */
     ARI_4_0_0 ( "4.0.0", new AriBuilder_impl_ari_4_0_0() ),
      /** Asterisk 16.5.0 */
-    ARI_4_0_0 ( "4.0.2", new AriBuilder_impl_ari_4_0_2() ),
+    ARI_4_0_2 ( "4.0.2", new AriBuilder_impl_ari_4_0_2() ),
 
     
     IM_FEELING_LUCKY ( "", null );
