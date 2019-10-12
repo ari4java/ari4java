@@ -47,21 +47,20 @@ Building
 
 The code here is partially hand-written and partially generated out of Swagger definitions.
 
-* "classes/" contains Java code to be released (manually and automatically generated). All automatically
-generated classes are under "ch.loway.oss.ari4vaja.generated". They should not be hand-edited. 
-* "tests/" contains test cases for "classes/"
-* "codegen/" contains the Java code that creates auto-generated classes.
-* "codegen-data/" contains Swagger models from different versions of the interface (copied from Asterisk).
+* "src/main/java" contains Java code to be released (manually and automatically generated). 
+* "src/main/generated" Are all automatically generated classes, they should not be hand-edited. 
+* "src/test/java/" contains test cases for "src/main/java"
+* "codegen/" is a gradle sub-project that generates code in "src/main/generated"
 
 
 Testing and packaging
 ---------------------
 
-The easiest way to build is simply using the Gradle script supplied.
+The easiest way to build is simply using the Gradle Wrapper script supplied.
 
-		gradle clean build
+		./gradlew clean build
 
-This will compile, test and package the current version. It will not run the code generator (for the moment at least).
+This will compile, test and package the current version.
 You'll find the resulting jar file under 'build/libs'.
 
 Running

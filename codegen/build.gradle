@@ -1,21 +1,18 @@
 plugins {
-	id 'java'
-}
-
-sourceSets {
-	main {
-		java {
-			srcDirs "."
-		}
-	}
+    id 'java'
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	compile 'com.fasterxml.jackson.core:jackson-core:2.9.6'
-	compile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
-	compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.6'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.9.6'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.6'
+}
+
+task runCodegen(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'ch.loway.oss.ari4java.codegen.run'
 }

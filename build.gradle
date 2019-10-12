@@ -1,171 +1,48 @@
-apply plugin: 'java'
-apply plugin: 'findbugs'
-apply plugin: 'maven'
-def env = System.getenv()
-
-//
-// I defaults valgono per HUDSON
-//
-
-project.ext {
-  webapp_name    = 'ari4java'
-  app_version    = '0.5.1'
-  build_number   = env["BUILD_NUMBER"]  
-  version_class  = 'ch/loway/oss/ari4java/BUILD.java'
-  build_time     = "" + new Date()
+plugins {
+    id 'java'
+    id 'maven'
 }
+
+group = 'ch.loway.oss.ari4java'
+version = '0.5.1'
 
 sourceSets {
-
-	main {
-		java {
-			srcDirs "$buildDir/classes_subst"
-		}
-	}
-
-	test {
-		java {
-			srcDirs "./tests"
-		}
-	}
-}
-
-//artifacts {
-//    archives sourcesJar
-//    archives javadocJar
-//}
-
-task writeNewPom << {
-    pom {
-        project {
-            groupId 'ch.loway.oss.ari4java'
-            version project.ext.app_version
-            inceptionYear '2013'
-            packaging 'jar'
-            name 'ari4java'
-            description 'Asterisk ARI interface bindings for Java'
-            licenses {
-                license {
-                    name 'GNU LGPL v3'
-                }
-            }
-            scm {
-                url 'http://github.com/l3nz/ari4java'
-                connection 'http://github.com/l3nz/ari4java'
-            }
-            developers {
-                developer {
-                    name 'lenz e.'
-                    email 'nomail@home'
-                }
-            }
+    main {
+        java {
+            srcDir 'src/main/generated'
         }
-    }.writeTo("$buildDir/libs/ari4java-" + project.ext.app_version + ".pom")
+    }
 }
 
-
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from "$buildDir/classes_subst"
-    archiveName project.ext.webapp_name + "-" + project.ext.app_version + "-sources.jar"
+repositories {
+    mavenCentral()
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-    archiveName project.ext.webapp_name + "-" + project.ext.app_version + "-javadoc.jar"
+dependencies {
+    compile 'com.fasterxml.jackson.core:jackson-core:2.9.6'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.6'
+    compile 'io.netty:netty-all:4.0.25.Final'
+    compile 'javax.xml.bind:jaxb-api:2.1'
+
+    testCompile 'junit:junit:4.10'
 }
 
+compileJava.dependsOn ':codegen:runCodegen'
+compileJava.dependsOn 'buildProps'
 
+def build_number = 'x'
+if (System.getenv('BUILD_NUMBER') != null) {
+    build_number = System.getenv('BUILD_NUMBER')
+}
+task buildProps(type: WriteProperties) {
+    outputFile file('src/main/resources/build.properties')
+    property 'BUILD_NUMBER', build_number
+}
 
 jar {
     manifest {
-        attributes("Implementation-Title": project.ext.webapp_name, 
-                   "Implementation-Version": project.ext.app_version)
-    }
-    archiveName project.ext.webapp_name + "-" + project.ext.app_version + ".jar"
-    from( "$buildDir/classes_subst" )
-}
-jar.dependsOn writeNewPom
-jar.dependsOn sourcesJar
-jar.dependsOn javadocJar
-
-
-
-repositories {
-	mavenCentral()
-}
-
-
-dependencies {
-	compile 'ari4java:codegen'
-
-	compile 'com.fasterxml.jackson.core:jackson-core:2.9.6'
-	compile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
-	compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.6'
-	compile 'io.netty:netty-all:4.0.25.Final'
-	compile 'javax.xml.bind:jaxb-api:2.1'
-
-	testCompile 'junit:junit:4.10'
-}
-
-task buildCodegen {
-    dependsOn gradle.includedBuild('codegen').task(':build')
-}
-
-task runCodegen(type:JavaExec) {
-	main = 'ch.loway.oss.ari4java.codegen.run'
-	classpath sourceSets.main.compileClasspath
-}
-
-task setVersionInSources() {
-	doLast {
-		def cjd = new File( "$buildDir/classes_subst" )
-		cjd.mkdirs();
-
-		def FileTree tree = fileTree( dir: "./classes" )	
-		//tree.each { File file -> 	println file }
-		
-		copy {
-        from './classes'
-        into "$buildDir/classes_subst"                
-    }
-
-    ant.replace( file: "$buildDir/classes_subst/" + project.ext.version_class, 
-    	           token: "VERSION",
-    	           value: "VERSION = \"" + project.ext.app_version + "\"; //"    	           
-    	           )
-    
-    ant.replace( file: "$buildDir/classes_subst/" + project.ext.version_class, 
-    	           token: "BUILD_N",
-    	           value: "BUILD_N = \"" + project.ext.build_number + " - "  + project.ext.build_time  + "\"; //"
-    	           )  	  	
-	}
-}
-
-runCodegen.dependsOn buildCodegen
-setVersionInSources.dependsOn runCodegen
-compileJava.dependsOn setVersionInSources
-
-// decide what to see -only one can be enabled
-// get the HTML report from build/reports/findbugs/main.html
-tasks.withType(FindBugs) {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-    ignoreFailures = true
- }
-
-
-
-
-
-task downloadJars << {
-        copy {
-        from configurations.compile
-        into './libs'
-        include '**/*.jar'
+        attributes 'Implementation-Title': project.name,
+                   'Implementation-Version': project.version
     }
 }

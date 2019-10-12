@@ -86,8 +86,8 @@ public class ActonBridgesTest {
 
     /**
      * In this example we force the wrong result.
-     * The object caannot then be deserialized and we expect an exception to be thrown.
-     * 
+     * The object cannot then be deserialized and we expect an exception to be thrown.
+     *
      * @throws RestException
      */
 
