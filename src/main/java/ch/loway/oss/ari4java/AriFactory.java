@@ -1,50 +1,42 @@
-/*
- * 
- */
 package ch.loway.oss.ari4java;
 
-import ch.loway.oss.ari4java.tools.ARIException;
 import ch.loway.oss.ari4java.tools.http.NettyHttpClient;
+
 import java.net.URISyntaxException;
 
 /**
  * This class is a placeholder for convenience factory methods.
- * 
+ *
  * @author lenz
  */
 public class AriFactory {
 
     /**
      * Your default HTTP connector through Netty (without app).
-     * 
-     * @param uri
-     * @param login
-     * @param pass
-     * @param version
+     *
+     * @param uri     uri
+     * @param login   login
+     * @param pass    pass
+     * @param version version
      * @return a ready-to-use connector.
-     * @throws ARIException
-     * @throws URISyntaxException 
+     * @throws URISyntaxException when error
      */
-    
-    
-    public static ARI nettyHttp(String uri, String login, String pass, AriVersion version) throws ARIException, URISyntaxException {
+    public static ARI nettyHttp(String uri, String login, String pass, AriVersion version) throws URISyntaxException {
         return nettyHttp(uri, login, pass, version, "");
     }
-    
+
     /**
      * This connects to an application.
-     * 
-     * @param uri
-     * @param login
-     * @param pass
-     * @param version
-     * @param app
+     *
+     * @param uri     uri
+     * @param login   login
+     * @param pass    pass
+     * @param version version
+     * @param app     app
      * @return your ready-to-use connector.
-     * @throws ARIException
-     * @throws URISyntaxException 
+     * @throws URISyntaxException when error
      */
-
-    public static ARI nettyHttp(String uri, String login, String pass, AriVersion version, String app) throws ARIException, URISyntaxException {
+    public static ARI nettyHttp(String uri, String login, String pass, AriVersion version, String app) throws URISyntaxException {
         ARI ari = new ARI();
         ari.setAppName(app);
         NettyHttpClient hc = new NettyHttpClient();
@@ -57,5 +49,5 @@ public class AriFactory {
         hc.initialize(uri, login, pass);
         return ari;
     }
-    
+
 }

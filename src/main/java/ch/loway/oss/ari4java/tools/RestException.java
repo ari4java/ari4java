@@ -17,4 +17,8 @@ public class RestException extends ARIException {
     public RestException(Throwable cause) {
         super(cause);
     }
+
+    public RestException(String s, Throwable cause) {
+        super(s, cause);
+    }
 }

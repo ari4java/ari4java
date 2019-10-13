@@ -32,7 +32,7 @@ public class JavaInterface {
     public void iKnow( String signature, String method, String comment, String sinceVersion ) {
 
         StringBuilder sb = new StringBuilder();
-        JavaGen.addBanner(sb, comment, sinceVersion);
+        //JavaGen.addBanner(sb, comment, sinceVersion);
         sb.append( method ).append(";\n\n");
 
         if ( !definitions.containsKey(signature) ) {
@@ -119,7 +119,7 @@ public class JavaInterface {
 
     public String getCodeToImplementMissingSignatures() {
         if ( definitions.isEmpty() ) {
-            return "/** No missing signatures from interface */\n";
+            return "/* No missing signatures from interface */\n";
         } else {
 
             StringBuilder sb = new StringBuilder();

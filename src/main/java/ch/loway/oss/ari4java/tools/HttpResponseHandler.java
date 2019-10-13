@@ -25,14 +25,14 @@ public interface HttpResponseHandler {
     /**
      * All went well.
      *
-     * @param response
+     * @param response res
      */
     void onSuccess(String response);
 
     /**
      * Something bad happened.
      *
-     * @param e
+     * @param e exception
      */
     void onFailure(Throwable e);
 

@@ -19,9 +19,8 @@ public class MessageQueue {
     /**
      * Adds a message to the queue.
      * 
-     * @param msg
+     * @param msg the message
      */
-
     public synchronized void queue( Message msg ) {
         lEvents.add(msg);
     }
@@ -29,9 +28,8 @@ public class MessageQueue {
     /**
      * Adds an error to the queue, using a specilized message pleceholder.
      * 
-     * @param error
+     * @param error the error
      */
-
     public void queueError( String error ) {
         ErrorMessage err = new ErrorMessage();
         err.setType(error);
@@ -44,7 +42,6 @@ public class MessageQueue {
      * 
      * @return the message just removed.
      */
-
     public synchronized Message dequeue() {
         if ( lEvents.isEmpty() ) {
             return null;
@@ -60,11 +57,10 @@ public class MessageQueue {
      * a 'max' of ms polling every 'interval' ms.
      * This method in NOT synchronized - it only locks when calling dequeue().
      *
-     * @param max
-     * @param interval
+     * @param max max
+     * @param interval interval
      * @return the message.
      */
-
     public Message dequeueMax( int max, int interval ) {
         long endAfter = System.currentTimeMillis() + max;
         while ( System.currentTimeMillis() < endAfter ) {
@@ -79,10 +75,9 @@ public class MessageQueue {
     }
 
 
-    /*
-     * How many messages are queued?
+    /**
+     * @return How many messages are queued
      */
-
     public synchronized int size() {
         return lEvents.size();
     }
@@ -91,7 +86,6 @@ public class MessageQueue {
      * A placeholder for error messages.
      * 
      */
-
     public static class ErrorMessage implements Message {
 
         String type = "";

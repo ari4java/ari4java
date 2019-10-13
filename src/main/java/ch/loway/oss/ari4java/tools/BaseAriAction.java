@@ -58,7 +58,7 @@ public class BaseAriAction {
      * Initiate synchronous HTTP interaction with server
      *
      * @return Response from server
-     * @throws RestException
+     * @throws RestException when error
      */
     protected synchronized String httpActionSync() throws RestException {
         if (forcedResponse != null) {
@@ -124,9 +124,11 @@ public class BaseAriAction {
     /**
      * Deserialize a type
      *
-     * @param json
-     * @param klazz
+     * @param json the json string
+     * @param klazz the class to deserialize to
+     * @param <T> the class to deserialize to
      * @return Deserialized type
+     * @throws RestException when fail to deserialize
      */
     public static <T> T deserializeJson(String json, Class<T> klazz) throws RestException {
 
@@ -134,16 +136,18 @@ public class BaseAriAction {
             return mapper.readValue(json, klazz);
         } catch (IOException e) {
             e.printStackTrace(System.err);
-            throw new RestException("Decoding JSON: " + e.getMessage());
+            throw new RestException("Decoding JSON: " + e.getMessage(), e);
         }
     }
 
     /**
      * Deserialize a list
      *
-     * @param json
-     * @param klazzType
-     * @return Deserialized list
+     * @param json the json string
+     * @param klazzType the class to deserialize to
+     * @param <T> the class to deserialize to
+     * @return The deserialized list
+     * @throws RestException when fail to deserialize
      */
     public static <T> T deserializeJson(String json, TypeReference<T> klazzType) throws RestException {
 
@@ -167,7 +171,7 @@ public class BaseAriAction {
      * @param json Data in
      * @param refConcreteType The reference concrete type, should be a List&lt;C&gt;
      * @return a list of A's
-     * @throws RestException
+     * @throws RestException when fail to deserialize
      */
     public static <A, C extends A> List<A> deserializeJsonAsAbstractList(String json, TypeReference<List<C>> refConcreteType) throws RestException {
 
@@ -176,7 +180,7 @@ public class BaseAriAction {
             List<A> lA = (List<A>) lC;
             return lA;
         } catch (IOException e) {
-            throw new RestException("Decoding JSON list: " + e.toString());
+            throw new RestException("Decoding JSON list: " + e.toString(), e);
         }
 
     }
@@ -184,24 +188,24 @@ public class BaseAriAction {
     /**
      * Deserialize the event.
      *
-     * @param json
-     * @param klazz
+     * @param json the json string
+     * @param klazz the class to deserialize to
      * @return The event deserialized.
-     * @throws RestException
+     * @throws RestException when fail to deserialize
      */
     public static Message deserializeEvent(String json, Class<?> klazz) throws RestException {
         try {
             return (Message) mapper.readValue(json, klazz);
         } catch (IOException e) {
             e.printStackTrace(System.err);
-            throw new RestException("Decoding JSON event: " + e.toString());
+            throw new RestException("Decoding JSON event: " + e.toString(), e);
         }
     }
 
     /**
      * Close the WebSocket connection
      *
-     * @throws RestException
+     * @throws RestException when fail
      */
     public synchronized void disconnectWs() throws RestException {
         if (wsConnection != null) {
