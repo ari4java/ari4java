@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'ch.loway.oss.ari4java'
-version = '0.5.1'
+version = '0.6.0'
 
 sourceSets {
     main {
@@ -111,7 +111,7 @@ bintray {
     pkg {
         repo = 'maven'
         name = project.name
-        userOrg = System.getenv('BINTRAY_USER')
+        userOrg = 'ari4java'
         licenses = ['LGPL-3.0']
         vcsUrl = projectUrl
         version {
