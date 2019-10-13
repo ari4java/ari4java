@@ -24,4 +24,4 @@ build.xml
 # ignore generated code artifacts - they will be rebuilt by gradle as needed
 src/main/generated/
 src/main/resources/build.properties
-
+codegen/tmp/
