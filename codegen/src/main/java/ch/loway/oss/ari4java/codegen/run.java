@@ -34,6 +34,7 @@ public class run {
     private static void loadAsteriskDefs(DefMapper dm, File folder) {
         try {
             String srcVer = folder.getName();
+            System.out.println("Loading: " + folder.getAbsolutePath());
             dm.clean(srcVer);
             for (File definition : folder.listFiles()) {
                 if (definition.getName().endsWith(".json")) {

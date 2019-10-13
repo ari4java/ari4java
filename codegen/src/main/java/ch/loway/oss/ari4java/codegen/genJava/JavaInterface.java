@@ -119,7 +119,7 @@ public class JavaInterface {
 
     public String getCodeToImplementMissingSignatures() {
         if ( definitions.isEmpty() ) {
-            return "/* No missing signatures from interface */\n";
+            return "  /* No missing signatures from interface */\n";
         } else {
 
             StringBuilder sb = new StringBuilder();
@@ -128,7 +128,7 @@ public class JavaInterface {
             for ( String s: definitions.values() ) {
 
                 String replaceTo = "{\n"
-                        + "  throw new UnsupportedOperationException(\"Method availble from ...\");\n"
+                        + "  throw new UnsupportedOperationException(\"Method available from ...\");\n"
                         + "};";
 
                 s = s.replace(";", replaceTo);

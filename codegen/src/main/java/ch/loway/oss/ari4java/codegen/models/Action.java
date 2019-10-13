@@ -2,12 +2,11 @@
 package ch.loway.oss.ari4java.codegen.models;
 
 import ch.loway.oss.ari4java.codegen.genJava.JavaInterface;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- *
  * @author lenz
  */
 public class Action implements Comparable<Action> {
@@ -22,8 +21,8 @@ public class Action implements Comparable<Action> {
 
         StringBuilder sb = new StringBuilder();
 
-        for ( Operation o: operations ) {
-            sb.append( o.toJava(this) );
+        for (Operation o : operations) {
+            sb.append(o.toJava(this));
         }
 
         return sb.toString();
@@ -31,31 +30,26 @@ public class Action implements Comparable<Action> {
     }
 
     void registerInterfaces(JavaInterface j, String apiVersion) {
-        for ( Operation o: operations ) {
+        for (Operation o : operations) {
             String javaSignature = o.getSignature();
             String definition = o.getDefinition();
 
-            j.iKnow(javaSignature, definition, o.description, apiVersion );
+            j.iKnow(javaSignature, definition, o.description, apiVersion);
             j.iKnow(o.getSignatureAsync(), o.getDefinitionAsync(), "", apiVersion);
         }
     }
 
     /**
      * Per ordine alfabetico.
-     * 
+     *
      * @param o
-     * @return 
+     * @return
      */
-    
+
     @Override
     public int compareTo(Action o) {
-        return path.compareToIgnoreCase( o.path ); 
+        return path.compareToIgnoreCase(o.path);
     }
-
-
-    
-    
-
 
 }
 

@@ -13,7 +13,6 @@ public class JavaGen {
 
     public static void addPackage(StringBuilder sb, String myPackage) {
         sb.append("package ").append(myPackage).append(";\n\n");
-
         sb.append("// ----------------------------------------------------\n")
                 .append("//      THIS CLASS WAS GENERATED AUTOMATICALLY         \n")
                 .append("//               PLEASE DO NOT EDIT                    \n")
@@ -25,7 +24,6 @@ public class JavaGen {
     public static void importClasses(StringBuilder sb, String myPackage, List<String> imports) {
 
         addPackage(sb, myPackage);
-
         for (String pkg : imports) {
             sb.append("import ").append(pkg).append(";\n");
         }
@@ -36,9 +34,7 @@ public class JavaGen {
     public static void addBanner(StringBuilder sb, String multiLineBanner) {
 
         String[] rows = multiLineBanner.split("\n");
-
         sb.append("/**********************************************************\n");
-
         for (String row : rows) {
             sb.append(" * ").append(row).append("\n");
         }
@@ -50,7 +46,6 @@ public class JavaGen {
         multilineBanner += "\n\n@since " + sinceVersion;
         addBanner(sb, multilineBanner);
     }
-
 
     public static String addPrefixAndCapitalize(String prefix, String field) {
 

@@ -55,8 +55,6 @@ public class DefMapper {
      */
     public void parseJsonDefinition(File f, String apiVersion, boolean modelHasEvents) throws IOException {
 
-        System.out.println("Loading as: " + f.getAbsolutePath());
-
         if (!vers.contains(apiVersion)) {
             vers.add(apiVersion);
         }
@@ -81,22 +79,23 @@ public class DefMapper {
                 }
             }
 
-            String defs = "";
+            StringBuilder defs = new StringBuilder();
             for (Model m : otherModels) {
                 if (defs.length() > 0) {
-                    defs += ", ";
+                    defs.append(",\n");
                 }
-                defs += "@Type(value = " + m.getImplName() + ".class, name = \"" + m.getInterfaceName() + "\")\n";
+                defs.append("  @Type(value = ")
+                        .append(m.getImplName())
+                        .append(".class, name = \"")
+                        .append(m.getInterfaceName())
+                        .append("\")");
             }
 
-            typeMessage.additionalPreambleText = ""
-                    + " @JsonTypeInfo(  "
-                    + "     use = JsonTypeInfo.Id.NAME,  "
-                    + "     include = JsonTypeInfo.As.PROPERTY,  "
-                    + "     property = \"type\") \n "
-                    + " @JsonSubTypes({  "
+            typeMessage.additionalPreambleText = " @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,"
+                    + " property = \"type\", visible = true)\n "
+                    + "@JsonSubTypes({\n"
                     + defs
-                    + " })  \n\n";
+                    + "\n})\n";
 
             typeMessage.imports.add("com.fasterxml.jackson.annotation.JsonSubTypes");
             typeMessage.imports.add("com.fasterxml.jackson.annotation.JsonSubTypes.Type");
@@ -473,7 +472,6 @@ public class DefMapper {
     }
 
     private void cleanPath(String path) throws IOException {
-        System.out.println("clean: " + path);
         File p = new File(path);
         p.mkdirs();
         for (File f : p.listFiles()) {
