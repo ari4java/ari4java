@@ -4,6 +4,7 @@ import ch.loway.oss.ari4java.generated.Message;
 import ch.loway.oss.ari4java.tools.WsClient.WsClientConnection;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -225,6 +226,10 @@ public class BaseAriAction {
 
     public synchronized void setLiveActionList(List<BaseAriAction> liveActionList) {
         this.liveActionList = liveActionList;
+    }
+
+    public static void setObjectMapperLessStrict() {
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 }
 
