@@ -31,6 +31,8 @@ public class ModelField implements Comparable<ModelField> {
         if (typeConcrete.startsWith("List")) {
             String innerType = typeConcrete.substring(5, typeConcrete.length() - 1);
             sb.append("  @JsonDeserialize( contentAs=").append(innerType).append(".class )\n");
+        } else if ("Object".equals(typeConcrete)) {
+            sb.append("  @JsonDeserialize( using=com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer.class").append(" )\n");
         } else {
             sb.append("  @JsonDeserialize( as=").append(typeConcrete).append(".class )\n");
         }
