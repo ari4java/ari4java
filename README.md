@@ -3,12 +3,12 @@ ari4java
 
 The Asterisk REST Interface (ARI) bindings for Java.
 
- [ ![Download](https://api.bintray.com/packages/lenz/maven/ari4java/images/download.png) ](https://bintray.com/lenz/maven/ari4java/_latestVersion)
+[![Download](https://api.bintray.com/packages/ari4java/maven/ari4java/images/download.png)](https://bintray.com/ari4java/maven/ari4java/_latestVersion)
 
 Description
 -----------
 
-ARI is an interface available on Asterisk 12/13/14/15 that lets you write applications
+ARI is an interface available on Asterisk 11+ that lets you write applications
 that run externally and control call flow through REST calls while receiving
 events on a websocket.
 
@@ -29,16 +29,14 @@ Using the library
 
 If you use Gradle (or any tool using Maven dependencies) you can simply declare the lib as:
 
-
-	repositories {
+    repositories {
         mavenCentral()
         jcenter()
-	}
-
-
-	dependencies {
-	    compile 'ch.loway.oss.ari4java:ari4java:0.5.1'
-	}
+    }
+    
+    dependencies {
+        compile 'ch.loway.oss.ari4java:ari4java:0.6.0'
+    }
 
 This will download the package and all required dependencies.
 
@@ -47,21 +45,20 @@ Building
 
 The code here is partially hand-written and partially generated out of Swagger definitions.
 
-* "classes/" contains Java code to be released (manually and automatically generated). All automatically
-generated classes are under "ch.loway.oss.ari4vaja.generated". They should not be hand-edited. 
-* "tests/" contains test cases for "classes/"
-* "codegen/" contains the Java code that creates auto-generated classes.
-* "codegen-data/" contains Swagger models from different versions of the interface (copied from Asterisk).
+* "src/main/java" contains Java code to be released (manually and automatically generated). 
+* "src/main/generated" Are all automatically generated classes, they should not be hand-edited. 
+* "src/test/java/" contains test cases for "src/main/java"
+* "codegen/" is a gradle sub-project that generates code in "src/main/generated"
 
 
 Testing and packaging
 ---------------------
 
-The easiest way to build is simply using the Gradle script supplied.
+The easiest way to build is simply using the Gradle Wrapper script supplied.
 
-		gradle clean build
+    ./gradlew clean build
 
-This will compile, test and package the current version. It will not run the code generator (for the moment at least).
+This will compile, test and package the current version.
 You'll find the resulting jar file under 'build/libs'.
 
 Running
@@ -77,6 +74,7 @@ The project requires:
 Status
 ------
 
+* 19.10.13 - Rel 0.6.0. Project restructure and include all past and present versions of ARI
 * 19.04.03 - Rel 0.5.1. Goodbye Naama!
 * 19.01.07 - Support java 9 (#108), code generation from gradle(#110), fixed unsubscribing from application correctly(#59), added event interface inheritance(#106) rel 0.5.0
 * 17.12.19 - Added support for ARI 3.0.0 (#78)
@@ -108,50 +106,50 @@ To use the Netty.io HTTP+WS implementation, include netty-all-4.0.12.Final.jar o
 
 To initialize:
 
-		ARI ari = new ARI();
-		NettyHttpClient hc = new NettyHttpClient();
-		hc.initialize("http://my-pbx-ip:8088/", "admin", "admin");
-		ari.setHttpClient(hc);
-		ari.setWsClient(hc);
-		ari.setVersion(AriVersion.ARI_0_0_1);
+    ARI ari = new ARI();
+    NettyHttpClient hc = new NettyHttpClient();
+    hc.initialize("http://my-pbx-ip:8088/", "admin", "admin");
+    ari.setHttpClient(hc);
+    ari.setWsClient(hc);
+    ari.setVersion(AriVersion.ARI_0_0_1);
 
 or make your life easier by using the convenience method supplied in AriFactory.
-		
+
 Sample synchronous call:
 
-		ActionApplications ac = ari.getActionImpl(ActionApplications.class);
-		List<? extends Application> alist = ac.list();
+    ActionApplications ac = ari.getActionImpl(ActionApplications.class);
+    List<? extends Application> alist = ac.list();
 
 Sample asynchronous call:
 
-		ActionAsterisk aa = ari.getActionImpl(ActionAsterisk.class);
-		aa.getGlobalVar("AMPMGRPASS", new AriCallback<Variable>() {
-			@Override
-			public void onSuccess(Variable result) {
-				// Let's do something with the returned value
-			}
-			@Override
-			public void onFailure(RestException e) {
-				e.printStackTrace();
-			}
-		});
-		
+    ActionAsterisk aa = ari.getActionImpl(ActionAsterisk.class);
+    aa.getGlobalVar("AMPMGRPASS", new AriCallback<Variable>() {
+        @Override
+        public void onSuccess(Variable result) {
+            // Let's do something with the returned value
+        }
+        @Override
+        public void onFailure(RestException e) {
+            e.printStackTrace();
+        }
+    });
+
 Sample WebSocket connection, waiting for events on hello and goodbye apps:
 
-		ActionEvents ae = ari.getActionImpl(ActionEvents.class);
-		ae.eventWebsocket("hello,goodbye", new AriCallback<Message>() {
-			@Override
-			public void onSuccess(Message result) {
-				// Let's do something with the event
-			}
-			@Override
-			public void onFailure(RestException e) {
-				e.printStackTrace();
-			}
-		});
-		Thread.sleep(5000); // Wait 5 seconds for events
-		ari.closeAction(ae); // Now close the websocket
- 
+    ActionEvents ae = ari.getActionImpl(ActionEvents.class);
+    ae.eventWebsocket("hello,goodbye", new AriCallback<Message>() {
+        @Override
+        public void onSuccess(Message result) {
+            // Let's do something with the event
+        }
+        @Override
+        public void onFailure(RestException e) {
+            e.printStackTrace();
+        }
+    });
+    Thread.sleep(5000); // Wait 5 seconds for events
+    ari.closeAction(ae); // Now close the websocket
+
 The Message object in the code above will be one of the message subtypes, 
 you will have to introspect to find out which. 
 
@@ -167,11 +165,8 @@ To be done
 Useful links
 ------------
 
-* Asterisk 13 docs: https://wiki.asterisk.org/wiki/display/AST/Asterisk+13+Documentation
-* Asterisk 13 ARI docs: https://wiki.asterisk.org/wiki/display/AST/Asterisk+13+ARI
-* Asterisk 12 docs: https://wiki.asterisk.org/wiki/display/AST/Asterisk+12+Documentation
-* Official ARI docs for Asterisk 12: https://wiki.asterisk.org/wiki/display/AST/Asterisk+12+ARI
-* ari4java community on Google+: https://plus.google.com/u/0/communities/116130645492865479649
+* Asterisk REST Interface wiki: https://wiki.asterisk.org/wiki/pages/viewpage.action?pageId=29395573
+* Asterisk 16 ARI docs: https://wiki.asterisk.org/wiki/display/AST/Asterisk+16+ARI
 * Asterisk-app-dev archives: http://lists.digium.com/pipermail/asterisk-app-dev/
 
 

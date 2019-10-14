@@ -1,5 +1,2 @@
-includeBuild('codegen') {
-	dependencySubstitution {
-        substitute module('ari4java:codegen') with project(':')
-    }
-}
+rootProject.name = 'ari4java'
+include 'codegen'
