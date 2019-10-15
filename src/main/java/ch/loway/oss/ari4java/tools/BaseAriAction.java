@@ -3,11 +3,17 @@ package ch.loway.oss.ari4java.tools;
 import ch.loway.oss.ari4java.generated.Message;
 import ch.loway.oss.ari4java.tools.WsClient.WsClientConnection;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -229,7 +235,15 @@ public class BaseAriAction {
     }
 
     public static void setObjectMapperLessStrict() {
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.addHandler(new DeserializationProblemHandler() {
+            @Override
+            public boolean handleUnknownProperty(DeserializationContext ctxt, JsonParser p, JsonDeserializer<?> deserializer, Object beanOrClass, String propertyName) throws IOException {
+                Collection<Object> propIds = (deserializer == null) ? null : deserializer.getKnownPropertyNames();
+                UnrecognizedPropertyException e = UnrecognizedPropertyException.from(p, beanOrClass, propertyName, propIds);
+                // TODO log a warning, once there is a logger...
+                return e.toString().length() > 0;
+            }
+        });
     }
 }
 
