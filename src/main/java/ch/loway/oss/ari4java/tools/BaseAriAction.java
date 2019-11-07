@@ -3,10 +3,17 @@ package ch.loway.oss.ari4java.tools;
 import ch.loway.oss.ari4java.generated.Message;
 import ch.loway.oss.ari4java.tools.WsClient.WsClientConnection;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -122,6 +129,20 @@ public class BaseAriAction {
     }
 
     /**
+     * Serialize an object to json
+     *
+     * @param obj the Object
+     * @return String
+     */
+    public static String serializeToJson(Object obj) {
+        try {
+            return mapper.writeValueAsString(obj);
+        } catch (IOException e) {
+            throw new RuntimeException("Encoding JSON: " + e.getMessage(), e);
+        }
+    }
+
+    /**
      * Deserialize a type
      *
      * @param json the json string
@@ -225,6 +246,18 @@ public class BaseAriAction {
 
     public synchronized void setLiveActionList(List<BaseAriAction> liveActionList) {
         this.liveActionList = liveActionList;
+    }
+
+    public static void setObjectMapperLessStrict() {
+        mapper.addHandler(new DeserializationProblemHandler() {
+            @Override
+            public boolean handleUnknownProperty(DeserializationContext ctxt, JsonParser p, JsonDeserializer<?> deserializer, Object beanOrClass, String propertyName) throws IOException {
+                Collection<Object> propIds = (deserializer == null) ? null : deserializer.getKnownPropertyNames();
+                UnrecognizedPropertyException e = UnrecognizedPropertyException.from(p, beanOrClass, propertyName, propIds);
+                // TODO log a warning, once there is a logger...
+                return e.toString().length() > 0;
+            }
+        });
     }
 }
 

@@ -74,6 +74,7 @@ The project requires:
 Status
 ------
 
+* 19.11.07 - Rel 0.6.1. Codegen bug fixes for object and rebuild with latest ARI api docs
 * 19.10.13 - Rel 0.6.0. Project restructure and include all past and present versions of ARI
 * 19.04.03 - Rel 0.5.1. Goodbye Naama!
 * 19.01.07 - Support java 9 (#108), code generation from gradle(#110), fixed unsubscribing from application correctly(#59), added event interface inheritance(#106) rel 0.5.0
