@@ -30,15 +30,19 @@ Using the library
 If you use Gradle (or any tool using Maven dependencies) you can simply declare the lib as:
 
     repositories {
+        maven {
+            url  "https://dl.bintray.com/ari4java/maven" 
+        }
         mavenCentral()
         jcenter()
     }
     
     dependencies {
-        compile 'ch.loway.oss.ari4java:ari4java:0.6.0'
+        compile 'ch.loway.oss.ari4java:ari4java:0.6.1'
     }
 
 This will download the package and all required dependencies.
+*The 1st repo declaration is temporary as we sort out moving from a private repo to an organization*
 
 Building
 ========
