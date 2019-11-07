@@ -129,6 +129,20 @@ public class BaseAriAction {
     }
 
     /**
+     * Serialize an object to json
+     *
+     * @param obj the Object
+     * @return String
+     */
+    public static String serializeToJson(Object obj) {
+        try {
+            return mapper.writeValueAsString(obj);
+        } catch (IOException e) {
+            throw new RuntimeException("Encoding JSON: " + e.getMessage(), e);
+        }
+    }
+
+    /**
      * Deserialize a type
      *
      * @param json the json string
