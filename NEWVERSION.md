@@ -17,3 +17,17 @@ In the main source tree:
 - in ARI.java, edit the build() function to get you the correct objects
 
 
+
+
+
+## Deployment
+
+When a release is ready:
+
+
+		export BINTRAY_KEY={bintray.txt}
+
+		./gradlew clean test jar
+		./gradlew bintrayUpload
+
+

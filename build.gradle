@@ -86,6 +86,7 @@ publishing {
     publications {
         mavenPublication(MavenPublication) {
             from components.java
+            groupId = "ch.loway.oss.ari4java"
             artifact sourcesJar {
                 classifier "sources"
             }
@@ -104,14 +105,15 @@ publishing {
 }
 
 bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
+    user = "lenz" // System.getenv('BINTRAY_USER')
+    key =  System.getenv('BINTRAY_KEY')
     publications = ['mavenPublication']
     publish = true
     pkg {
         repo = 'maven'
         name = project.name
-        userOrg = 'ari4java'
+        group = "ch.loway.oss.ari4java"
+        //userOrg = 'ari4java'
         licenses = ['LGPL-3.0']
         vcsUrl = projectUrl
         version {
