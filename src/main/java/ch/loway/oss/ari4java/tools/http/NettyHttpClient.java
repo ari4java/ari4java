@@ -177,20 +177,32 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
         return request;
     }
-
+    
     private String makeBodyVariables(List<HttpParam> variables) {
         StringBuilder varBuilder = new StringBuilder();
-        varBuilder.append("{").append("\"variables\": {");
+        varBuilder.append("{").append("\"fields\": [");
         Iterator<HttpParam> entryIterator = variables.iterator();
-        while(entryIterator.hasNext()) {
+        while (entryIterator.hasNext()) {
             HttpParam param = entryIterator.next();
-            varBuilder.append("\"").append(param.name).append("\"").append(": ").append("\"").append(param.value).append("\"");
+            varBuilder.append("{\"")
+                    .append("attribute")
+                    .append("\"")
+                    .append(": ")
+                    .append("\"")
+                    .append(param.name)
+                    .append("\",")
+                    .append("\"")
+                    .append("value")
+                    .append("\"")
+                    .append(": ")
+                    .append("\"")
+                    .append(param.value)
+                    .append("\"}");
             if (entryIterator.hasNext()) {
                 varBuilder.append(",");
             }
         }
-        varBuilder.append("}}");
-
+        varBuilder.append("]}");
         return varBuilder.toString();
     }
 
