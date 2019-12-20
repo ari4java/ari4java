@@ -180,8 +180,8 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     }
     
     private String makeJson(List<HttpParam> variables) {
-        String jsonHeader = variables.remove(0).value;
-        return Objects.equals(jsonHeader, "fields") ? makeBodyFields(variables) : makeBodyVariables(variables);
+        String key = variables.remove(0).value;
+        return Objects.equals(key, "fields") ? makeBodyFields(variables) : makeBodyVariables(variables);
     }
     
     private String makeBodyVariables(List<HttpParam> variables) {
