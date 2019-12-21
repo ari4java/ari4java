@@ -8,6 +8,7 @@ import ch.loway.oss.ari4java.generated.ActionChannels;
 import ch.loway.oss.ari4java.generated.ActionDeviceStates;
 import ch.loway.oss.ari4java.generated.ActionEndpoints;
 import ch.loway.oss.ari4java.generated.ActionEvents;
+import ch.loway.oss.ari4java.generated.ActionMailboxes;
 import ch.loway.oss.ari4java.generated.ActionPlaybacks;
 import ch.loway.oss.ari4java.generated.ActionRecordings;
 import ch.loway.oss.ari4java.generated.ActionSounds;
@@ -493,6 +494,12 @@ public class ARI {
         return (ActionChannels) setupAction(version.builder().actionChannels());
     }
 
+    
+    public ActionMailboxes mailboxes() {
+        return (ActionMailboxes) setupAction(version.builder().actionMailboxes());
+    }
+    
+    
     /**
      * Gets us a ready to use object.
      *
