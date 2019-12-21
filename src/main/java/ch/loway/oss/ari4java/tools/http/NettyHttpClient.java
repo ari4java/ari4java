@@ -27,6 +27,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -166,7 +167,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                 HttpVersion.HTTP_1_1, HttpMethod.valueOf(method), url);
         //System.out.println(request.getUri());
         if (parametersBody != null && !parametersBody.isEmpty()) {
-            String vars = makeBodyVariables(parametersBody);
+            String vars = makeJson(parametersBody);
             ByteBuf bbuf = Unpooled.copiedBuffer(vars, StandardCharsets.UTF_8);
 
             request.headers().add(HttpHeaders.Names.CONTENT_TYPE, "application/json");
@@ -177,7 +178,12 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
         return request;
     }
-
+    
+    private String makeJson(List<HttpParam> variables) {
+        String key = variables.remove(0).value;
+        return Objects.equals(key, "fields") ? makeBodyFields(variables) : makeBodyVariables(variables);
+    }
+    
     private String makeBodyVariables(List<HttpParam> variables) {
         StringBuilder varBuilder = new StringBuilder();
         varBuilder.append("{").append("\"variables\": {");
@@ -190,7 +196,24 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             }
         }
         varBuilder.append("}}");
-
+        return varBuilder.toString();
+    }
+    
+    private String makeBodyFields(List<HttpParam> variables) {
+        StringBuilder varBuilder = new StringBuilder();
+        varBuilder.append("{").append("\"fields\": [");
+        Iterator<HttpParam> entryIterator = variables.iterator();
+        while (entryIterator.hasNext()) {
+            HttpParam param = entryIterator.next();
+            varBuilder.append("{")
+                      .append("\"").append("attribute").append("\"").append(": ").append("\"").append(param.name).append("\",")
+                      .append("\"").append("value").append("\"").append(": ").append("\"").append(param.value).append("\"")
+                      .append("}");
+            if (entryIterator.hasNext()) {
+                varBuilder.append(",");
+            }
+        }
+        varBuilder.append("]}");
         return varBuilder.toString();
     }
 
