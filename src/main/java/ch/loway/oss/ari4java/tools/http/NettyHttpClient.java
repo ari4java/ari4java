@@ -1,5 +1,6 @@
 package ch.loway.oss.ari4java.tools.http;
 
+import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.tools.*;
 import ch.loway.oss.ari4java.tools.HttpResponse;
 import io.netty.bootstrap.Bootstrap;
@@ -127,16 +128,16 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         uriBuilder.append("ari");
         uriBuilder.append(path);
         uriBuilder.append("?api_key=");
-        uriBuilder.append(URLEncoder.encode(username, "UTF-8"));
+        uriBuilder.append(URLEncoder.encode(username, ARI.ENCODING));
         uriBuilder.append(":");
-        uriBuilder.append(URLEncoder.encode(password, "UTF-8"));
+        uriBuilder.append(URLEncoder.encode(password, ARI.ENCODING));
         if (parametersQuery != null) {
             for (HttpParam hp : parametersQuery) {
                 if (hp.value != null && !hp.value.isEmpty()) {
                     uriBuilder.append("&");
                     uriBuilder.append(hp.name);
                     uriBuilder.append("=");
-                    uriBuilder.append(URLEncoder.encode(hp.value, "UTF-8"));
+                    uriBuilder.append(URLEncoder.encode(hp.value, ARI.ENCODING));
                 }
             }
         }
@@ -168,7 +169,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         //System.out.println(request.getUri());
         if (parametersBody != null && !parametersBody.isEmpty()) {
             String vars = makeJson(parametersBody);
-            ByteBuf bbuf = Unpooled.copiedBuffer(vars, StandardCharsets.UTF_8);
+            ByteBuf bbuf = Unpooled.copiedBuffer(vars, ARI.ENCODING);
 
             request.headers().add(HttpHeaders.Names.CONTENT_TYPE, "application/json");
             request.headers().set(HttpHeaders.Names.CONTENT_LENGTH, bbuf.readableBytes());
@@ -383,7 +384,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                 public void run() {
                     if (System.currentTimeMillis() - wsCallback.getLastResponseTime() > 15000) {
                         if (!wsChannelFuture.isCancelled() && wsChannelFuture.channel() != null) {
-                            WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer("ari4j".getBytes( StandardCharsets.UTF_8 )));
+                            WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer("ari4j".getBytes( ARI.ENCODING )));
                             wsChannelFuture.channel().writeAndFlush(frame);
                         }
                     }

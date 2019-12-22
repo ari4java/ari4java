@@ -26,6 +26,7 @@ import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.WsClient;
 import ch.loway.oss.ari4java.tools.http.NettyHttpClient;
 import ch.loway.oss.ari4java.tools.tags.EventSource;
+import io.netty.util.CharsetUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -34,6 +35,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,6 +49,7 @@ import java.util.regex.Pattern;
  */
 public class ARI {
 
+    public final static Charset ENCODING = StandardCharsets.UTF_8;
     private final static String ALLOWED_IN_UID = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private String appName = "";
@@ -275,7 +279,6 @@ public class ARI {
      */
     private static String doHttpGet(String urlWithParms, String user, String pwd) throws ARIException {
         URL url = null;
-        final String UTF8 = "UTF-8";
         try {
             url = new URL(urlWithParms);
         } catch (MalformedURLException e) {
@@ -291,43 +294,39 @@ public class ARI {
 
         StringBuilder response = new StringBuilder();
 
+        String userpass = user + ":" + pwd;
+        String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes(ARI.ENCODING));
+
+        uc.setRequestProperty("Authorization", basicAuth);
+        InputStream is = null;
         try {
-            String userpass = user + ":" + pwd;
-            String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes(UTF8));
-
-            uc.setRequestProperty("Authorization", basicAuth);
-            InputStream is = null;
-            try {
-                is = uc.getInputStream();
-            } catch (IOException e) {
-                throw new ARIException("Cannot connect: " + e.getMessage());
-            }
+            is = uc.getInputStream();
+        } catch (IOException e) {
+            throw new ARIException("Cannot connect: " + e.getMessage());
+        }
 
 
-            BufferedReader buffReader = new BufferedReader(new InputStreamReader(is, UTF8));
+        BufferedReader buffReader = new BufferedReader(new InputStreamReader(is, ARI.ENCODING));
 
-            String line = null;
+        String line = null;
+        try {
+            line = buffReader.readLine();
+        } catch (IOException e) {
+            throw new ARIException("IOException: " + e.getMessage());
+        }
+        while (line != null) {
+            response.append(line);
+            response.append('\n');
             try {
                 line = buffReader.readLine();
             } catch (IOException e) {
                 throw new ARIException("IOException: " + e.getMessage());
             }
-            while (line != null) {
-                response.append(line);
-                response.append('\n');
-                try {
-                    line = buffReader.readLine();
-                } catch (IOException e) {
-                    throw new ARIException("IOException: " + e.getMessage());
-                }
-            }
-            try {
-                buffReader.close();
-            } catch (IOException e) {
-                throw new ARIException("IOException: " + e.getMessage());
-            }
-        } catch (UnsupportedEncodingException e) {
-            throw new ARIException("Nobody is going to believe this: missing encoding UTF8 " + e.getMessage());
+        }
+        try {
+            buffReader.close();
+        } catch (IOException e) {
+            throw new ARIException("IOException: " + e.getMessage());
         }
 
         //System.out.println("Response: " + response.toString());

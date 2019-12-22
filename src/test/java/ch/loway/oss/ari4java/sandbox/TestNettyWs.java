@@ -1,5 +1,6 @@
 package ch.loway.oss.ari4java.sandbox;
 
+import ch.loway.oss.ari4java.ARI;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -82,7 +83,7 @@ public class TestNettyWs {
             if (msg instanceof FullHttpResponse) {
                 FullHttpResponse response = (FullHttpResponse) msg;
                 throw new Exception("Unexpected FullHttpResponse (getStatus=" + response.getStatus() + ", content="
-                        + response.content().toString(CharsetUtil.UTF_8) + ')');
+                        + response.content().toString(ARI.ENCODING) + ')');
             }
 
             WebSocketFrame frame = (WebSocketFrame) msg;

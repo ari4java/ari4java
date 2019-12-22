@@ -1,5 +1,6 @@
 package ch.loway.oss.ari4java.sandbox;
 
+import ch.loway.oss.ari4java.ARI;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -57,20 +58,20 @@ public class TestNettyHttp {
         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         }
 
-		@Override
-		protected void channelRead0(ChannelHandlerContext ctx, Object msg)
-				throws Exception {
+        @Override
+        protected void channelRead0(ChannelHandlerContext ctx, Object msg)
+                throws Exception {
             Channel ch = ctx.channel();
 
             if (msg instanceof FullHttpResponse) {
                 FullHttpResponse response = (FullHttpResponse) msg;
-            	System.out.println("msg="+response);
+                System.out.println("msg=" + response);
                 BaseAriAction ba = new BaseAriAction();
                 try {
-                	AsteriskInfo m = ba.deserializeJson(response.content().toString(Charset.defaultCharset()), AsteriskInfo_impl_ari_0_0_1.class);
-                	System.out.println(m);
+                    AsteriskInfo m = ba.deserializeJson(response.content().toString(ARI.ENCODING), AsteriskInfo_impl_ari_0_0_1.class);
+                    System.out.println(m);
                 } catch (RestException e) {
-                	e.printStackTrace();
+                    e.printStackTrace();
                 }
             } else {
             }
@@ -85,10 +86,11 @@ public class TestNettyHttp {
         }
 
     }
-	public static void main(String[] args) {
-		EventLoopGroup group = new NioEventLoopGroup();
-    	try {
-    		URI uri = new URI("http://192.168.0.194:8088/");
+
+    public static void main(String[] args) {
+        EventLoopGroup group = new NioEventLoopGroup();
+        try {
+            URI uri = new URI("http://192.168.0.194:8088/");
             Bootstrap b = new Bootstrap();
             String protocol = uri.getScheme();
             if (!"http".equals(protocol)) {
@@ -96,16 +98,16 @@ public class TestNettyHttp {
             }
             final HttpClientHandler handler = new HttpClientHandler();
             b.group(group)
-            .channel(NioSocketChannel.class)
-            .handler(new ChannelInitializer<SocketChannel>() {
-                @Override
-                public void initChannel(SocketChannel ch) throws Exception {
-                    ChannelPipeline pipeline = ch.pipeline();
-                    pipeline.addLast("http-codec", new HttpClientCodec());
-                    pipeline.addLast("aggregator", new HttpObjectAggregator(8192));
-                    pipeline.addLast("http-handler", handler);
-                }
-            });
+                    .channel(NioSocketChannel.class)
+                    .handler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        public void initChannel(SocketChannel ch) throws Exception {
+                            ChannelPipeline pipeline = ch.pipeline();
+                            pipeline.addLast("http-codec", new HttpClientCodec());
+                            pipeline.addLast("aggregator", new HttpObjectAggregator(8192));
+                            pipeline.addLast("http-handler", handler);
+                        }
+                    });
 
             System.out.println("HTTP Client connecting");
             Channel ch = b.connect(uri.getHost(), uri.getPort()).sync().channel();
@@ -117,11 +119,11 @@ public class TestNettyHttp {
             ch.writeAndFlush(request);
             ch.closeFuture().sync();
 
-		
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
             group.shutdownGracefully();
-		}
-	}
+        }
+    }
 }
