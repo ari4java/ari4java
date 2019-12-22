@@ -7,8 +7,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 
-import java.nio.charset.Charset;
-
 /**
  * HttpClientHandler handles the asynchronous response from the remote
  * HTTP server.

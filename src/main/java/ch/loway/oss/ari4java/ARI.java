@@ -26,12 +26,10 @@ import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.WsClient;
 import ch.loway.oss.ari4java.tools.http.NettyHttpClient;
 import ch.loway.oss.ari4java.tools.tags.EventSource;
-import io.netty.util.CharsetUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URLConnection;

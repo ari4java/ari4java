@@ -50,14 +50,14 @@ public class Operation {
         String stUri = parent.path;
         for (Param p : parms) {
             if (p.type == ParamType.PATH) {
-                stUri = stUri.replace("{" + p.name + "}", "\" + " + p.name + " + \"");
+                stUri = stUri.replace("{" + p.name + "}", "\" + URLEncoder.encode(" + p.name + ", ARI.ENCODING) + \"");
             }
         }
         // 1. Private helper method
         String helperName = JavaGen.addPrefixAndCapitalize("build", nickname);
         sb.append("private void ");
         sb.append(helperName);
-        sb.append("(" + toParmList(true) + ") {\n");
+        sb.append("(").append(toParmList(true)).append(") {\n");
         sb.append("reset();\n");
         sb.append("url = \"").append(stUri).append("\";\n");
         sb.append("method = \"").append(method).append("\";\n");

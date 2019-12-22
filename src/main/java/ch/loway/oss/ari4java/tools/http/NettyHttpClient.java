@@ -25,7 +25,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -117,7 +116,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         }, 250L, TimeUnit.MILLISECONDS);
     }
 
-    private String buildURL(String path, List<HttpParam> parametersQuery, boolean withAddress) throws UnsupportedEncodingException {
+    private String buildURL(String path, List<HttpParam> parametersQuery, boolean withAddress) {
         StringBuilder uriBuilder = new StringBuilder();
         if (withAddress) {
             uriBuilder.append(baseUri);

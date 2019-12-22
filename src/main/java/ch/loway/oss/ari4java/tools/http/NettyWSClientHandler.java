@@ -10,9 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
-import io.netty.util.CharsetUtil;
 
-import java.nio.charset.Charset;
 
 /**
  * NettyWSClientHandler handles the transactions with the remote

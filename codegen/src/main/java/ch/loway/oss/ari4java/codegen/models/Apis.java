@@ -30,6 +30,8 @@ public class Apis extends JavaPkgInfo {
                 "java.util.List",
                 "java.util.Map",
                 "java.util.ArrayList",
+                "java.net.URLEncoder",
+                "ch.loway.oss.ari4java.ARI",
                 "ch.loway.oss.ari4java.tools.BaseAriAction",
                 "ch.loway.oss.ari4java.tools.RestException",
                 "ch.loway.oss.ari4java.tools.AriCallback",

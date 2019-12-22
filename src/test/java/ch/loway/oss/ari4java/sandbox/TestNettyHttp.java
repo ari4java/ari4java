@@ -3,11 +3,9 @@ package ch.loway.oss.ari4java.sandbox;
 import ch.loway.oss.ari4java.ARI;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
-import io.netty.channel.ChannelPromise;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -21,20 +19,11 @@ import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpVersion;
-import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
-import io.netty.handler.codec.http.websocketx.WebSocketFrame;
-import io.netty.util.CharsetUtil;
 
 import java.net.URI;
-import java.nio.charset.Charset;
 
 import ch.loway.oss.ari4java.generated.AsteriskInfo;
-import ch.loway.oss.ari4java.generated.Message;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.models.AsteriskInfo_impl_ari_0_0_1;
-import ch.loway.oss.ari4java.generated.ari_0_0_1.models.Message_impl_ari_0_0_1;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
 
