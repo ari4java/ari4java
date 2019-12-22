@@ -348,7 +348,7 @@ public class ARI {
         if (m.find()) {
             return m.group(1);
         } else {
-            throw new ARIException("Cound not match apiVersion ");
+            throw new ARIException("Could not match apiVersion ");
         }
     }
 
