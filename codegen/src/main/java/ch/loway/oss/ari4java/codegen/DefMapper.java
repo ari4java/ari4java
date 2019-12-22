@@ -250,6 +250,9 @@ public class DefMapper {
         sbVerEnum.append("      return builder;\n");
         sbVerEnum.append("    }\n");
         sbVerEnum.append("  }\n\n");
+        sbVerEnum.append("  public String version() {\n");
+        sbVerEnum.append("    return versionString;\n");
+        sbVerEnum.append("  }\n\n");
         sbVerEnum.append("  public static AriVersion fromVersionString(String version) throws ARIException {\n");
         sbVerEnum.append("    for (AriVersion av: AriVersion.values()) {\n");
         sbVerEnum.append("      if (av.builder != null) {\n");
