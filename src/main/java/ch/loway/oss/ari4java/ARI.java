@@ -423,6 +423,10 @@ public class ARI {
         }
     }
 
+    public MessageQueue getWebsocketQueue() throws ARIException {
+        return getWebsocketQueue(false);
+    }
+
     /**
      * In order to avoid multi-threading for users, you can get a
      * MessageQueue object and poll on it for new messages.
@@ -432,7 +436,7 @@ public class ARI {
      * @return The MQ connected to your websocket.
      * @throws ARIException when error
      */
-    public MessageQueue getWebsocketQueue() throws ARIException {
+    public MessageQueue getWebsocketQueue(boolean subscribeAll) throws ARIException {
 
         if (liveActionEvent != null) {
             throw new ARIException("Websocket already present");
@@ -440,7 +444,7 @@ public class ARI {
 
         final MessageQueue q = new MessageQueue();
 
-        events().eventWebsocket(appName, new AriCallback<Message>() {
+        AriCallback callback = new AriCallback<Message>() {
 
             @Override
             public void onSuccess(Message result) {
@@ -451,7 +455,13 @@ public class ARI {
             public void onFailure(RestException e) {
                 q.queueError("Err:" + e.getMessage());
             }
-        });
+        };
+
+        try {
+            events().eventWebsocket(appName, subscribeAll, callback);
+        } catch (UnsupportedOperationException e) {
+            events().eventWebsocket(appName, callback);
+        }
 
         return q;
 
