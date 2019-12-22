@@ -80,6 +80,20 @@ public class BaseAriAction {
     }
 
     /**
+     * Initiate synchronous HTTP interaction with server
+     *
+     * @return Response from server
+     * @throws RestException when error
+     */
+    protected synchronized byte[] httpActionSyncAsBytes() throws RestException {
+        if (httpClient == null) {
+            throw new RestException("HTTP client implementation not set");
+        } else {
+            return httpClient.httpActionSyncAsBytes(this.url, this.method, this.lParamQuery, this.lParamForm, this.lParamBody, this.lE);
+        }
+    }
+
+    /**
      * Initiate asynchronous HTTP or WebSocket interaction with server
      *
      * @param asyncHandler
@@ -107,7 +121,8 @@ public class BaseAriAction {
             asyncHandler.getCallback().onFailure(new RestException("HTTP client implementation not set"));
         } else {
             try {
-                httpClient.httpActionAsync(this.url, this.method, this.lParamQuery, this.lParamForm, this.lParamBody, this.lE, asyncHandler);
+                boolean binary = byte[].class.equals(asyncHandler.getType());
+                httpClient.httpActionAsync(this.url, this.method, this.lParamQuery, this.lParamForm, this.lParamBody, this.lE, asyncHandler, binary);
             } catch (RestException e) {
                 asyncHandler.getCallback().onFailure(e);
             }
@@ -156,7 +171,7 @@ public class BaseAriAction {
         try {
             return mapper.readValue(json, klazz);
         } catch (IOException e) {
-            e.printStackTrace(System.err);
+            //e.printStackTrace(System.err);
             throw new RestException("Decoding JSON: " + e.getMessage(), e);
         }
     }

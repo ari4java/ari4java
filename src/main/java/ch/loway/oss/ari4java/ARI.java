@@ -348,7 +348,7 @@ public class ARI {
         if (m.find()) {
             return m.group(1);
         } else {
-            throw new ARIException("Cound not match apiVersion ");
+            throw new ARIException("Could not match apiVersion ");
         }
     }
 
@@ -494,16 +494,10 @@ public class ARI {
         return (ActionChannels) setupAction(version.builder().actionChannels());
     }
 
-    
-    public ActionMailboxes mailboxes() {
-        return (ActionMailboxes) setupAction(version.builder().actionMailboxes());
-    }
-    
-    
     /**
      * Gets us a ready to use object.
      *
-     * @return a deviceSTates object.
+     * @return a DeviceStates object.
      */
     public ActionDeviceStates deviceStates() {
         return (ActionDeviceStates) setupAction(version.builder().actionDeviceStates());
@@ -526,6 +520,15 @@ public class ARI {
     public ActionEvents events() {
         liveActionEvent = (ActionEvents) setupAction(version.builder().actionEvents());
         return liveActionEvent;
+    }
+
+    /**
+     * Gets us a ready to use object.
+     *
+     * @return a Mailboxes object.
+     */
+    public ActionMailboxes mailboxes() {
+        return (ActionMailboxes) setupAction(version.builder().actionMailboxes());
     }
 
     /**
