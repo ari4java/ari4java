@@ -96,21 +96,23 @@ public class Operation {
         if (!wsUpgrade) {
             // 2. Synchronous method
             sb.append(helperName + "(" + toParmList(false) + ");\n");
-            sb.append("String json = httpActionSync();\n");
-            if (!responseInterface.equalsIgnoreCase("void")) {
+            if (responseInterface.equalsIgnoreCase("byte[]")) {
+                sb.append("return httpActionSyncAsBytes();\n");
+            } else {
+                sb.append("String json = httpActionSync();\n");
 
-                String deserializationType = responseConcreteClass + ".class";
-
-                if (responseConcreteClass.startsWith("List<")) {
-                    //  (List<Interface>) mapper.readValue( string, new TypeReference<List<Concrete>>() {});
-                    deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
-                    sb.append("return deserializeJsonAsAbstractList( json,\n   ")
-                            .append(deserializationType)
-                            .append(" ); \n");
-                } else {
-                    sb.append("return deserializeJson( json, ")
-                            .append(deserializationType)
-                            .append(" ); \n");
+                if (!responseInterface.equalsIgnoreCase("void")) {
+                    String deserializationType = responseConcreteClass + ".class";
+                    if (responseConcreteClass.startsWith("List<")) {
+                        deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
+                        sb.append("return deserializeJsonAsAbstractList( json,\n   ")
+                                .append(deserializationType)
+                                .append(" ); \n");
+                    } else {
+                        sb.append("return deserializeJson( json, ")
+                                .append(deserializationType)
+                                .append(" ); \n");
+                    }
                 }
             }
         } else {
@@ -128,7 +130,6 @@ public class Operation {
         if (!responseInterface.equalsIgnoreCase("void")) {
             String deserializationType = responseConcreteClass + ".class";
             if (responseConcreteClass.startsWith("List<")) {
-                //  (List<Interface>) mapper.readValue( string, new TypeReference<List<Concrete>>() {});
                 deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
             }
             sb.append(", " + deserializationType);

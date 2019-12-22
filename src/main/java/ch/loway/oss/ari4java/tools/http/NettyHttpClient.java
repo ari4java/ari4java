@@ -212,16 +212,29 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     @Override
     public String httpActionSync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
             List<HttpResponse> errors) throws RestException {
+        NettyHttpClientHandler handler = httpActionSyncHandler(uri, method, parametersQuery, parametersForm, parametersBody, errors);
+        return handler.getResponseText();
+    }
+
+    // Synchronous HTTP action
+    @Override
+    public byte[] httpActionSyncAsBytes(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
+            List<HttpResponse> errors) throws RestException {
+        NettyHttpClientHandler handler = httpActionSyncHandler(uri, method, parametersQuery, parametersForm, parametersBody, errors);
+        return handler.getResponseBytes();
+    }
+
+    private NettyHttpClientHandler httpActionSyncHandler(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
+            List<HttpResponse> errors) throws RestException {
         Channel ch;
         try {
             HttpRequest request = buildRequest(uri, method, parametersQuery, parametersForm, parametersBody);
-            //handler.reset();
             ch = bootStrap.connect(baseUri.getHost(), baseUri.getPort()).sync().channel();
             NettyHttpClientHandler handler = (NettyHttpClientHandler) ch.pipeline().get("http-handler");
             ch.writeAndFlush(request);
             ch.closeFuture().sync();
             if ( httpResponseOkay(handler.getResponseStatus())) {
-                return handler.getResponseText();
+                return handler;
             } else {
                 throw makeException(handler.getResponseStatus(), handler.getResponseText(), errors);
             }
@@ -235,7 +248,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     // Asynchronous HTTP action, response is passed to HttpResponseHandler
     @Override
     public void httpActionAsync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
-            final List<HttpResponse> errors, final HttpResponseHandler responseHandler)
+            final List<HttpResponse> errors, final HttpResponseHandler responseHandler, boolean binary)
             throws RestException {
         try {
             final HttpRequest request = buildRequest(uri, method, parametersQuery, parametersForm, parametersBody);
@@ -259,7 +272,11 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                                     HttpResponseStatus rStatus = handler.getResponseStatus();
 
                                     if ( httpResponseOkay(rStatus)) {
-                                        responseHandler.onSuccess(handler.getResponseText());
+                                        if (binary) {
+                                            responseHandler.onSuccess(handler.getResponseBytes());
+                                        } else {
+                                            responseHandler.onSuccess(handler.getResponseText());
+                                        }
                                     } else {
                                         responseHandler.onFailure(makeException(handler.getResponseStatus(), handler.getResponseText(), errors));
                                     }

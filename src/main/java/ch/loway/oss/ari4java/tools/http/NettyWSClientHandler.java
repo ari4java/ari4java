@@ -11,6 +11,8 @@ import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
 
+import java.nio.charset.Charset;
+
 /**
  * NettyWSClientHandler handles the transactions with the remote
  * WebSocket, forwarding to the client HttpResponseHandler interface.
@@ -85,7 +87,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
         WebSocketFrame frame = (WebSocketFrame) msg;
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-            responseText = textFrame.text();
+            responseBytes = textFrame.text().getBytes(Charset.defaultCharset());
             wsCallback.onSuccess(textFrame.text());
         } else if (frame instanceof CloseWebSocketFrame) {
             ch.close();

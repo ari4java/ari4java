@@ -5,6 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
+
 import java.nio.charset.Charset;
 
 /**
@@ -17,34 +18,38 @@ import java.nio.charset.Charset;
 
 @ChannelHandler.Sharable
 public class NettyHttpClientHandler extends SimpleChannelInboundHandler<Object> {
-    protected String responseText;
+    protected byte[] responseBytes;
     protected HttpResponseStatus responseStatus;
 
     public void reset() {
-        responseText = null;
+        responseBytes = null;
         responseStatus = null;
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-        //Channel ch = ctx.channel();
         if (msg instanceof FullHttpResponse) {
             FullHttpResponse response = (FullHttpResponse) msg;
-            responseText = response.content().toString(Charset.defaultCharset());
+            responseBytes = new byte[response.content().readableBytes()];
+            response.content().readBytes(responseBytes);
             responseStatus = response.getStatus();
-            
-            //System.out.println( "S:" + responseStatus + " T:" + responseText);
-            
         } else {
             // TODO: what?
-            if ( msg != null ) {
-                System.out.println( "Unknown object:" + msg);
+            if (msg != null) {
+                System.out.println("Unknown object:" + msg);
             }
         }
     }
 
     public String getResponseText() {
-        return responseText;
+        if (responseBytes == null || responseBytes.length == 0) {
+            return null;
+        }
+        return new String(responseBytes, Charset.defaultCharset());
+    }
+
+    public byte[] getResponseBytes() {
+        return responseBytes;
     }
 
     public HttpResponseStatus getResponseStatus() {

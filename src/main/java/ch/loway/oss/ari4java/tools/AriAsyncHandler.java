@@ -66,6 +66,11 @@ public class AriAsyncHandler<T> implements HttpResponseHandler {
     }
 
     @Override
+    public void onSuccess(byte[] response) {
+        this.callback.onSuccess((T) response);
+    }
+
+    @Override
     public void onFailure(Throwable e) {
         this.callback.onFailure(new RestException(e));
     }
@@ -75,6 +80,10 @@ public class AriAsyncHandler<T> implements HttpResponseHandler {
         return lastResponseTime;
     }
 
+    @Override
+    public Class getType() {
+        return klazz;
+    }
 }
 
 // $Log$
