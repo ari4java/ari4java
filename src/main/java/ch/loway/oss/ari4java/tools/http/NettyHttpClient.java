@@ -33,19 +33,18 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * HTTP and WebSocket client implementation based on netty.io.
- * 
+ * <p>
  * Threading is handled by NioEventLoopGroup, which selects on multiple
  * sockets and provides threads to handle the events on the sockets.
- * 
+ * <p>
  * Requires netty-all-4.0.12.Final.jar
- * 
- * @author mwalton
  *
+ * @author mwalton
  */
 public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconnect {
 
     public static final int MAX_HTTP_REQUEST_KB = 16 * 1024;
-    
+
     private Bootstrap bootStrap;
     private URI baseUri;
     private EventLoopGroup group;
@@ -86,7 +85,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
                 pipeline.addLast("http-codec", new HttpClientCodec());
-                pipeline.addLast("aggregator", new HttpObjectAggregator( MAX_HTTP_REQUEST_KB * 1024));
+                pipeline.addLast("aggregator", new HttpObjectAggregator(MAX_HTTP_REQUEST_KB * 1024));
                 pipeline.addLast("http-handler", new NettyHttpClientHandler());
             }
         });
@@ -179,17 +178,17 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
         return request;
     }
-    
+
     private String makeJson(List<HttpParam> variables) {
         String key = variables.remove(0).value;
         return Objects.equals(key, "fields") ? makeBodyFields(variables) : makeBodyVariables(variables);
     }
-    
+
     private String makeBodyVariables(List<HttpParam> variables) {
         StringBuilder varBuilder = new StringBuilder();
         varBuilder.append("{").append("\"variables\": {");
         Iterator<HttpParam> entryIterator = variables.iterator();
-        while(entryIterator.hasNext()) {
+        while (entryIterator.hasNext()) {
             HttpParam param = entryIterator.next();
             varBuilder.append("\"").append(param.name).append("\"").append(": ").append("\"").append(param.value).append("\"");
             if (entryIterator.hasNext()) {
@@ -199,7 +198,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         varBuilder.append("}}");
         return varBuilder.toString();
     }
-    
+
     private String makeBodyFields(List<HttpParam> variables) {
         StringBuilder varBuilder = new StringBuilder();
         varBuilder.append("{").append("\"fields\": [");
@@ -207,9 +206,9 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         while (entryIterator.hasNext()) {
             HttpParam param = entryIterator.next();
             varBuilder.append("{")
-                      .append("\"").append("attribute").append("\"").append(": ").append("\"").append(param.name).append("\",")
-                      .append("\"").append("value").append("\"").append(": ").append("\"").append(param.value).append("\"")
-                      .append("}");
+                    .append("\"").append("attribute").append("\"").append(": ").append("\"").append(param.name).append("\",")
+                    .append("\"").append("value").append("\"").append(": ").append("\"").append(param.value).append("\"")
+                    .append("}");
             if (entryIterator.hasNext()) {
                 varBuilder.append(",");
             }
@@ -219,23 +218,24 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     }
 
     private RestException makeException(HttpResponseStatus status, String response, List<HttpResponse> errors) {
-        
-        if (status == null ) {            
+
+        if (status == null) {
             return new RestException("Shutdown: " + response);
         }
 
         for (HttpResponse hr : errors) {
             if (hr.code == status.code()) {
-                return new RestException(hr.description);
+                return new RestException(hr.description, response, status.code());
             }
         }
-        return new RestException(response);
+
+        return new RestException(response, status.code());
     }
 
     // Synchronous HTTP action
     @Override
     public String httpActionSync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
-            List<HttpResponse> errors) throws RestException {
+                                 List<HttpResponse> errors) throws RestException {
         NettyHttpClientHandler handler = httpActionSyncHandler(uri, method, parametersQuery, parametersForm, parametersBody, errors);
         return handler.getResponseText();
     }
@@ -243,13 +243,13 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     // Synchronous HTTP action
     @Override
     public byte[] httpActionSyncAsBytes(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
-            List<HttpResponse> errors) throws RestException {
+                                        List<HttpResponse> errors) throws RestException {
         NettyHttpClientHandler handler = httpActionSyncHandler(uri, method, parametersQuery, parametersForm, parametersBody, errors);
         return handler.getResponseBytes();
     }
 
     private NettyHttpClientHandler httpActionSyncHandler(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
-            List<HttpResponse> errors) throws RestException {
+                                                         List<HttpResponse> errors) throws RestException {
         Channel ch;
         try {
             HttpRequest request = buildRequest(uri, method, parametersQuery, parametersForm, parametersBody);
@@ -257,7 +257,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             NettyHttpClientHandler handler = (NettyHttpClientHandler) ch.pipeline().get("http-handler");
             ch.writeAndFlush(request);
             ch.closeFuture().sync();
-            if ( httpResponseOkay(handler.getResponseStatus())) {
+            if (httpResponseOkay(handler.getResponseStatus())) {
                 return handler;
             } else {
                 throw makeException(handler.getResponseStatus(), handler.getResponseText(), errors);
@@ -272,7 +272,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     // Asynchronous HTTP action, response is passed to HttpResponseHandler
     @Override
     public void httpActionAsync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,
-            final List<HttpResponse> errors, final HttpResponseHandler responseHandler, boolean binary)
+                                final List<HttpResponse> errors, final HttpResponseHandler responseHandler, boolean binary)
             throws RestException {
         try {
             final HttpRequest request = buildRequest(uri, method, parametersQuery, parametersForm, parametersBody);
@@ -295,7 +295,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                                     NettyHttpClientHandler handler = (NettyHttpClientHandler) future.channel().pipeline().get("http-handler");
                                     HttpResponseStatus rStatus = handler.getResponseStatus();
 
-                                    if ( httpResponseOkay(rStatus)) {
+                                    if (httpResponseOkay(rStatus)) {
                                         if (binary) {
                                             responseHandler.onSuccess(handler.getResponseBytes());
                                         } else {
@@ -384,7 +384,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                 public void run() {
                     if (System.currentTimeMillis() - wsCallback.getLastResponseTime() > 15000) {
                         if (!wsChannelFuture.isCancelled() && wsChannelFuture.channel() != null) {
-                            WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer("ari4j".getBytes( ARI.ENCODING )));
+                            WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer("ari4j".getBytes(ARI.ENCODING)));
                             wsChannelFuture.channel().writeAndFlush(frame);
                         }
                     }
@@ -414,11 +414,11 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         }
         return this.wsClientConnection;
     }
-    
+
     /**
      * Checks if a response is okay.
      * All 2XX responses are supposed to be okay.
-     * 
+     *
      * @param status
      * @return whether it is a 2XX code or not (error!)
      */
