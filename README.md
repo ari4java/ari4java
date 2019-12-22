@@ -38,7 +38,7 @@ If you use Gradle (or any tool using Maven dependencies) you can simply declare 
     }
     
     dependencies {
-        compile 'ch.loway.oss.ari4java:ari4java:0.6.1'
+        compile 'ch.loway.oss.ari4java:ari4java:0.7.0'
     }
 
 This will download the package and all required dependencies.
@@ -78,6 +78,7 @@ The project requires:
 Status
 ------
 
+* 19.12.22 - Rel 0.7.0. Treat `fields` as `fields` not `variables` in body parameters; fix `ActionRecordings.getStoredFile()` for `byte[]` & add `ARI.mailboxes()`
 * 19.11.07 - Rel 0.6.1. Codegen bug fixes for object and rebuild with latest ARI api docs
 * 19.10.13 - Rel 0.6.0. Project restructure and include all past and present versions of ARI
 * 19.04.03 - Rel 0.5.1. Goodbye Naama!
