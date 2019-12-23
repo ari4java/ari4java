@@ -34,16 +34,20 @@ public class JavaGen {
     public static void addBanner(StringBuilder sb, String multiLineBanner) {
 
         String[] rows = multiLineBanner.split("\n");
-        sb.append("/**********************************************************\n");
+        sb.append("/**\n");
         for (String row : rows) {
-            sb.append(" * ").append(row).append("\n");
+            if (!row.isEmpty()) {
+                row = row.replaceAll("<br /><br />", "\n * ");
+                row = row.replaceAll("<br />", "\n * ");
+                sb.append(" * ").append(row).append("\n");
+            }
         }
-        sb.append(" *********************************************************/\n");
+        sb.append(" */\n");
 
     }
 
     public static void addBanner(StringBuilder sb, String multilineBanner, String sinceVersion) {
-        multilineBanner += "\n\n@since " + sinceVersion;
+        multilineBanner += "\n@since " + sinceVersion;
         addBanner(sb, multilineBanner);
     }
 

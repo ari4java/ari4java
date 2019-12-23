@@ -19,14 +19,18 @@ public class ClassTranslator extends JavaPkgInfo {
     public Map<String, String> mInterfaces;
     public List<String> imports;
 
-    public ClassTranslator() {
+    public ClassTranslator(String version) {
         super();
+        apiVersion = version;
         mInterfaces = new HashMap<String, String>();
         imports = new ArrayList<String>();
         className = "ClassTranslator";
         imports.add("ch.loway.oss.ari4java.ARI");
-        imports.add("ch.loway.oss.ari4java.generated.Module");
-        imports.add("ch.loway.oss.ari4java.generated.*");
+        imports.add("ch.loway.oss.ari4java.generated.actions.*");
+        imports.add("ch.loway.oss.ari4java.generated.models.Module");
+        imports.add("ch.loway.oss.ari4java.generated.models.*");
+        imports.add("ch.loway.oss.ari4java.generated." + apiVersion + ".actions.*");
+        imports.add("ch.loway.oss.ari4java.generated." + apiVersion + ".models.*");
     }
 
     public void setClass(String ifName, String implementation) {
@@ -36,8 +40,6 @@ public class ClassTranslator extends JavaPkgInfo {
     @Override
     public String toString() {
 
-        imports.add("ch.loway.oss.ari4java.generated." + apiVersion + ".models.*");
-        imports.add("ch.loway.oss.ari4java.generated." + apiVersion + ".actions.*");
         StringBuilder sb = new StringBuilder();
         JavaGen.importClasses(sb, getBaseApiPackage(), imports);
         JavaGen.addBanner(sb, "This is a class translator." + "\n\n");
@@ -73,4 +75,13 @@ public class ClassTranslator extends JavaPkgInfo {
         return sb.toString();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof String) {
+            return this.apiVersion.equals(obj);
+        } else if (obj instanceof ClassTranslator) {
+            return this.apiVersion.equals(((ClassTranslator) obj).apiVersion);
+        }
+        return super.equals(obj);
+    }
 }

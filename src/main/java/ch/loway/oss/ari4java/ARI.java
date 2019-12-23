@@ -1,19 +1,9 @@
 package ch.loway.oss.ari4java;
 
+import ch.loway.oss.ari4java.generated.actions.requests.EventsEventWebsocketGetRequest;
 import ch.loway.oss.ari4java.tools.ARIException;
-import ch.loway.oss.ari4java.generated.ActionApplications;
-import ch.loway.oss.ari4java.generated.ActionAsterisk;
-import ch.loway.oss.ari4java.generated.ActionBridges;
-import ch.loway.oss.ari4java.generated.ActionChannels;
-import ch.loway.oss.ari4java.generated.ActionDeviceStates;
-import ch.loway.oss.ari4java.generated.ActionEndpoints;
-import ch.loway.oss.ari4java.generated.ActionEvents;
-import ch.loway.oss.ari4java.generated.ActionMailboxes;
-import ch.loway.oss.ari4java.generated.ActionPlaybacks;
-import ch.loway.oss.ari4java.generated.ActionRecordings;
-import ch.loway.oss.ari4java.generated.ActionSounds;
-import ch.loway.oss.ari4java.generated.Application;
-import ch.loway.oss.ari4java.generated.Message;
+import ch.loway.oss.ari4java.generated.actions.*;
+import ch.loway.oss.ari4java.generated.models.*;
 import ch.loway.oss.ari4java.tools.AriCallback;
 
 import java.io.IOException;
@@ -200,27 +190,12 @@ public class ARI {
      * @throws ARIException If the url is invalid, or the version of ARI is not supported.
      */
     public static ARI build(String url, String app, String user, String pass, AriVersion version) throws ARIException {
-
         if (version == AriVersion.IM_FEELING_LUCKY) {
-
             AriVersion currentVersion = detectAriVersion(url, user, pass);
             return build(url, app, user, pass, currentVersion);
-
         } else {
-
             try {
-
-                ARI ari = new ARI();
-                ari.appName = app;
-                NettyHttpClient hc = new NettyHttpClient();
-                hc.initialize(url, user, pass);
-                ari.setHttpClient(hc);
-                ari.setWsClient(hc);
-                ari.setVersion(version);
-                ari.setUrl(url);
-
-                return ari;
-
+                return AriFactory.nettyHttp(url, user, pass, version, app);
             } catch (URISyntaxException e) {
                 throw new ARIException("Wrong URI format: " + url);
             }
@@ -385,22 +360,22 @@ public class ARI {
      * @throws RestException when error
      */
     private void unsubscribeApplication() throws RestException {
-        Application application = applications().get(appName);
+        Application application = applications().get(appName).execute();
         // unsubscribe from all channels
         for (int i = 0; i < application.getChannel_ids().size(); i++) {
-            applications().unsubscribe(appName, "channel:" + application.getChannel_ids().get(i));
+            applications().unsubscribe(appName, "channel:" + application.getChannel_ids().get(i)).execute();
         }
         // unsubscribe from all bridges
         for (int i = 0; i < application.getBridge_ids().size(); i++) {
-            applications().unsubscribe(appName, "bridge:" + application.getBridge_ids().get(i));
+            applications().unsubscribe(appName, "bridge:" + application.getBridge_ids().get(i)).execute();
         }
         // unsubscribe from all endpoints
         for (int i = 0; i < application.getEndpoint_ids().size(); i++) {
-            applications().unsubscribe(appName, "endpoint:" + application.getEndpoint_ids().get(i));
+            applications().unsubscribe(appName, "endpoint:" + application.getEndpoint_ids().get(i)).execute();
         }
         // unsubscribe from all deviceState
         for (int i = 0; i < application.getDevice_names().size(); i++) {
-            applications().unsubscribe(appName, "deviceState:" + application.getDevice_names().get(i));
+            applications().unsubscribe(appName, "deviceState:" + application.getDevice_names().get(i)).execute();
         }
     }
 
@@ -431,6 +406,7 @@ public class ARI {
      * This makes sure you don't really need to synchonize or be worried by
      * threading issues
      *
+     * @param subscribeAll subscribe to all events
      * @return The MQ connected to your websocket.
      * @throws ARIException when error
      */
@@ -455,11 +431,13 @@ public class ARI {
             }
         };
 
+        EventsEventWebsocketGetRequest eventsRequest = events().eventWebsocket(appName);
         try {
-            events().eventWebsocket(appName, subscribeAll, callback);
+            eventsRequest.setSubscribeAll(subscribeAll);
         } catch (UnsupportedOperationException e) {
-            events().eventWebsocket(appName, callback);
+            // ignore
         }
+        eventsRequest.execute(callback);
 
         return q;
 

@@ -15,6 +15,7 @@ public class Action implements Comparable<Action> {
     public String description = "";
     public List<Operation> operations = new ArrayList<Operation>();
     public String javaFile = "";
+    public Apis api;
 
     @Override
     public String toString() {
@@ -22,7 +23,7 @@ public class Action implements Comparable<Action> {
         StringBuilder sb = new StringBuilder();
 
         for (Operation o : operations) {
-            sb.append(o.toJava(this));
+            sb.append(o.toJava());
         }
 
         return sb.toString();
@@ -33,9 +34,7 @@ public class Action implements Comparable<Action> {
         for (Operation o : operations) {
             String javaSignature = o.getSignature();
             String definition = o.getDefinition();
-
             j.iKnow(javaSignature, definition, o.description, apiVersion);
-            j.iKnow(o.getSignatureAsync(), o.getDefinitionAsync(), "", apiVersion);
         }
     }
 

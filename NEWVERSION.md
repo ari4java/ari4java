@@ -1,30 +1,16 @@
-When adding a new version of the ARI:
+## ARI Versions
 
-- Copy the files from "Asterisk/rest-api/api-docs" to the right folder under "codegen_data"
-- Add the ARI version in run.java under the code generator
-- Create folders like "generated.ARI_1_2_3", "generated.ARI_1_2_3.actions" and "generated.ARI_1_2_3.models"
-  or the code generator will fail
-- Run the code generator
+In the `codegen` folder there is a bash script: `getApis.sh` 
+that will get and recurse the Asterisk source generating the data required for the APIs
 
-In the main source tree:
-
-- create the version to be used in AriVersion.java
-
-
-
-(Obsolete)
-
-- in ARI.java, edit the build() function to get you the correct objects
-
-
-
-
+Commit the changes as the Gradle build script always builds from those files
 
 ## Deployment
 
 When a release is ready:
 
 
+		export BINTRAY_USER=<user>
 		export BINTRAY_KEY={bintray.txt}
 
 		./gradlew clean test jar

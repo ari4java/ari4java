@@ -51,9 +51,7 @@ public class DeserializeToListOfInterfaceTest {
         
         List<? extends Tuple_if> l = BaseAriAction.deserializeJson( STR_TUPLE, 
                 new TypeReference<List<Tuple_impl>>() {} );
-        
-        List<Tuple_if> x2 = (List<Tuple_if>) l;
-        
+
         assertEquals( "Size", 2, l.size() );
         assertEquals( "El 1 A", "x1", l.get(0).getA() );
         assertEquals( "El 2 B", "y2", l.get(1).getB() );

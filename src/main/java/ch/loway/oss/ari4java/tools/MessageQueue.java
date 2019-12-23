@@ -2,7 +2,7 @@
 package ch.loway.oss.ari4java.tools;
 
 import ch.loway.oss.ari4java.ARI;
-import ch.loway.oss.ari4java.generated.Message;
+import ch.loway.oss.ari4java.generated.models.Message;
 import java.util.LinkedList;
 import java.util.List;
 

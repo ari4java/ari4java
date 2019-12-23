@@ -24,21 +24,20 @@ public class Apis extends JavaPkgInfo {
         JavaInterface ji = getBaseInterface();
 
         JavaGen.importClasses(sb, getActionsPackage(), Arrays.asList(new String[]{
-                "ch.loway.oss.ari4java.generated.Module",
-                "ch.loway.oss.ari4java.generated.*",
                 "java.util.Date",
                 "java.util.List",
                 "java.util.Map",
                 "java.util.ArrayList",
                 "java.net.URLEncoder",
                 "ch.loway.oss.ari4java.ARI",
-                "ch.loway.oss.ari4java.tools.BaseAriAction",
-                "ch.loway.oss.ari4java.tools.RestException",
-                "ch.loway.oss.ari4java.tools.AriCallback",
-                "ch.loway.oss.ari4java.tools.HttpParam",
-                "ch.loway.oss.ari4java.tools.HttpResponse",
-                "com.fasterxml.jackson.core.type.TypeReference",
-                getModelPackage() + ".*"
+                "ch.loway.oss.ari4java.tools.*",
+                "ch.loway.oss.ari4java.generated.actions.*",
+                "ch.loway.oss.ari4java.generated.actions.requests.*",
+                "ch.loway.oss.ari4java.generated.models.Module",
+                "ch.loway.oss.ari4java.generated.models.*",
+                getActionsPackage() + ".requests.*",
+                getModelPackage() + ".*",
+                "com.fasterxml.jackson.core.type.TypeReference"
         }));
 
         JavaGen.addBanner(sb, "\n"
@@ -59,7 +58,6 @@ public class Apis extends JavaPkgInfo {
 
             for (Operation o : a.operations) {
                 ji.removeSignature(o.getSignature());
-                ji.removeSignature(o.getSignatureAsync());
             }
 
             sb.append(a.toString());
@@ -67,7 +65,7 @@ public class Apis extends JavaPkgInfo {
 
         sb.append(ji.getCodeToImplementMissingSignatures());
 
-        sb.append("};\n");
+        sb.append("}\n");
         return sb.toString();
 
     }

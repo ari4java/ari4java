@@ -37,15 +37,15 @@ public class AriFactory {
      * @throws URISyntaxException when error
      */
     public static ARI nettyHttp(String uri, String login, String pass, AriVersion version, String app) throws URISyntaxException {
+        if (AriVersion.IM_FEELING_LUCKY.equals(version)) {
+            throw new UnsupportedOperationException("IM_FEELING_LUCKY not a valid option here");
+        }
         ARI ari = new ARI();
         ari.setAppName(app);
         NettyHttpClient hc = new NettyHttpClient();
-
         ari.setHttpClient(hc);
         ari.setWsClient(hc);
-
         ari.setVersion(version);
-
         hc.initialize(uri, login, pass);
         return ari;
     }

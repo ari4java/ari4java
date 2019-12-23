@@ -1,10 +1,6 @@
 package ch.loway.oss.ari4java;
 
-import ch.loway.oss.ari4java.generated.Application;
-import ch.loway.oss.ari4java.generated.Bridge;
-import ch.loway.oss.ari4java.generated.Channel;
-import ch.loway.oss.ari4java.generated.DeviceState;
-import ch.loway.oss.ari4java.generated.Endpoint;
+import ch.loway.oss.ari4java.generated.models.*;
 import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.tags.EventSource;
 
@@ -21,7 +17,7 @@ public class AriSubscriber {
     public Application subscribe(ARI ari, EventSource m) throws RestException {
 
         String model = toModelName(m);
-        Application a = ari.applications().subscribe(ari.getAppName(), model);
+        Application a = ari.applications().subscribe(ari.getAppName(), model).execute();
         subscriptions.add(model);
         return a;
     }

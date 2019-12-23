@@ -22,7 +22,7 @@ import io.netty.handler.codec.http.HttpVersion;
 
 import java.net.URI;
 
-import ch.loway.oss.ari4java.generated.AsteriskInfo;
+import ch.loway.oss.ari4java.generated.models.AsteriskInfo;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.models.AsteriskInfo_impl_ari_0_0_1;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;

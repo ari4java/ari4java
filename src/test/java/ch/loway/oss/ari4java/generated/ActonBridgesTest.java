@@ -1,6 +1,8 @@
 package ch.loway.oss.ari4java.generated;
 
+import ch.loway.oss.ari4java.generated.actions.ActionBridges;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.actions.ActionBridges_impl_ari_0_0_1;
+import ch.loway.oss.ari4java.generated.models.*;
 import ch.loway.oss.ari4java.tools.RestException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -60,7 +62,7 @@ public class ActonBridgesTest {
 
     private ActionBridges createWForcedResponse( String response ) {
         ActionBridges_impl_ari_0_0_1 a = new ActionBridges_impl_ari_0_0_1();
-        a.forceResponse( response );
+        a.setForcedResponse( response );
 
         ActionBridges aa = (ActionBridges) a;
         return aa;
@@ -76,7 +78,7 @@ public class ActonBridgesTest {
     public void generateABridge() throws RestException {
         ActionBridges aa = createWForcedResponse(jsonBridge);
 
-        Bridge b = aa.get("abcd");
+        Bridge b = aa.get("abcd").execute();
 
         assertEquals("Id", "aaa", b.getId() );
         assertEquals("N channels", 3, b.getChannels().size() );
@@ -99,7 +101,7 @@ public class ActonBridgesTest {
         boolean exceptionRaised = false;
 
         try {
-            Playback pb = aa.play("aaa", "sss", "en", 0, 0);
+            Playback pb = aa.play("aaa", "sss").execute();
         } catch ( RestException e ) {
             exceptionRaised = true;
         }

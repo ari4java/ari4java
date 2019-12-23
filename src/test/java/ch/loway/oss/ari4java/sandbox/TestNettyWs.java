@@ -30,7 +30,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 
 import java.net.URI;
 
-import ch.loway.oss.ari4java.generated.Message;
+import ch.loway.oss.ari4java.generated.models.Message;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.models.Message_impl_ari_0_0_1;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
