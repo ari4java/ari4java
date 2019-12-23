@@ -105,8 +105,11 @@ public class JavaInterface {
         }
     }
 
-
     public String getCodeToImplementMissingSignatures() {
+        return getCodeToImplementMissingSignatures(false);
+    }
+
+    public String getCodeToImplementMissingSignatures(boolean addJsonIgnore) {
         if (definitions.isEmpty()) {
             return "  /* No missing signatures from interface */\n";
         } else {
@@ -121,6 +124,10 @@ public class JavaInterface {
                         + "  }\n\n";
 
                 s = s.replace(";", replaceTo);
+
+                if (addJsonIgnore) {
+                    s = s.replace("public", "@JsonIgnore public");
+                }
 
                 sb.append(s);
             }
