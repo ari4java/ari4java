@@ -1,12 +1,10 @@
-ari4java
-========
+# ari4java
 
 The Asterisk REST Interface (ARI) bindings for Java.
 
 [![Download](https://api.bintray.com/packages/ari4java/maven/ari4java/images/download.png)](https://bintray.com/ari4java/maven/ari4java/_latestVersion)
 
-Description
------------
+## Description
 
 ARI is an interface available on Asterisk 11+ that lets you write applications
 that run externally and control call flow through REST calls while receiving
@@ -16,68 +14,53 @@ In order to support different versions of the API, what we do is we maintain con
 for each version of the API, but we also have general interfaces that are used to work with objects
 across different versions.
 
-**Getting started?**
-
-* Start from the "Hello ARI World" tutorial at https://github.com/l3nz/ari4java/blob/master/docs/HELLOWORLD.md
-* Read our FAQs at https://github.com/l3nz/ari4java/blob/master/docs/FAQ.md
-* Want to run a ready-made Asterisk image? This will make your life easier when developing! get
-  yours from https://github.com/l3nz/whaleware/tree/master/examples/asterisk-load-test
-
-
-Using the library
-=================
+## Using the library
 
 If you use Gradle (or any tool using Maven dependencies) you can simply declare the lib as:
-
-    repositories {
-        maven {
-            url  "https://dl.bintray.com/ari4java/maven" 
-        }
-        mavenCentral()
-        jcenter()
+```
+repositories {
+    maven {
+        url  "https://dl.bintray.com/ari4java/maven" 
     }
-    
-    dependencies {
-        compile 'ch.loway.oss.ari4java:ari4java:0.7.0'
-    }
+    mavenCentral()
+    jcenter()
+}
 
+dependencies {
+    compile 'ch.loway.oss.ari4java:ari4java:0.8.0'
+}
+```
 This will download the package and all required dependencies.
 *The 1st repo declaration is temporary as we sort out moving from a private repo to an organization*
 
-Building
-========
+### Getting started?
 
+- Start from the ["Hello ARI World"](https://github.com/l3nz/ari4java/blob/master/docs/HELLOWORLD.md) tutorial at 
+- Read our [FAQs](https://github.com/l3nz/ari4java/blob/master/docs/FAQ.md)
+- Check out more detailed [USAGE](https://github.com/l3nz/ari4java/blob/master/docs/USAGE.md)
+- Want to run a ready-made Asterisk image? This will make your life easier when developing! get
+  yours from https://github.com/l3nz/whaleware/tree/master/examples/asterisk-load-test
+
+## Building
 The code here is partially hand-written and partially generated out of Swagger definitions.
 
-* "src/main/java" contains Java code to be released (manually and automatically generated). 
-* "src/main/generated" Are all automatically generated classes, they should not be hand-edited. 
-* "src/test/java/" contains test cases for "src/main/java"
-* "codegen/" is a gradle sub-project that generates code in "src/main/generated"
+### Folders:
+- "src/main/java" contains Java code to be released (manually and automatically generated). 
+- "src/main/generated" Are all automatically generated classes, they should not be hand-edited. 
+- "src/test/java/" contains test cases for "src/main/java"
+- "codegen/" is a gradle sub-project that generates code in "src/main/generated"
 
-
-Testing and packaging
----------------------
-
+### Build and test
 The easiest way to build is simply using the Gradle Wrapper script supplied.
+```
+./gradlew clean build
+```
+This will generate, compile, test and package the current version.
+You'll find the resulting jar file under the `build/libs` folder.
 
-    ./gradlew clean build
+## Status
 
-This will compile, test and package the current version.
-You'll find the resulting jar file under 'build/libs'.
-
-Running
--------
-
-The project requires:
-
-- jackson-core-2.9.6
-- jackson-databind-2.9.6
-- jackson-annotations-2.9.6
-- netty-all-4.0.25-Final
-
-Status
-------
-
+* 19.12.23 - Rel 0.8.0. :exclamation: **!! BREAKING CHANGES !!** API Actions signatures only contain manditory params and returns a Request object which follows the builder/factory pattern
 * 19.12.22 - Rel 0.7.0. Treat `fields` as `fields` not `variables` in body parameters; fix `ActionRecordings.getStoredFile()` for `byte[]` & add `ARI.mailboxes()`
 * 19.11.07 - Rel 0.6.1. Codegen bug fixes for object and rebuild with latest ARI api docs
 * 19.10.13 - Rel 0.6.0. Project restructure and include all past and present versions of ARI
@@ -105,80 +88,13 @@ Status
 * 13.10.18 - Auto-generates all classes and compiles them.
 
 
-Using
------
-
-To use the Netty.io HTTP+WS implementation, include netty-all-4.0.12.Final.jar or newer in your classpath.
-
-To initialize:
-
-    ARI ari = new ARI();
-    NettyHttpClient hc = new NettyHttpClient();
-    hc.initialize("http://my-pbx-ip:8088/", "admin", "admin");
-    ari.setHttpClient(hc);
-    ari.setWsClient(hc);
-    ari.setVersion(AriVersion.ARI_0_0_1);
-
-or make your life easier by using the convenience method supplied in AriFactory.
-
-Sample synchronous call:
-
-    ActionApplications ac = ari.getActionImpl(ActionApplications.class);
-    List<? extends Application> alist = ac.list();
-
-Sample asynchronous call:
-
-    ActionAsterisk aa = ari.getActionImpl(ActionAsterisk.class);
-    aa.getGlobalVar("AMPMGRPASS", new AriCallback<Variable>() {
-        @Override
-        public void onSuccess(Variable result) {
-            // Let's do something with the returned value
-        }
-        @Override
-        public void onFailure(RestException e) {
-            e.printStackTrace();
-        }
-    });
-
-Sample WebSocket connection, waiting for events on hello and goodbye apps:
-
-    ActionEvents ae = ari.getActionImpl(ActionEvents.class);
-    ae.eventWebsocket("hello,goodbye", new AriCallback<Message>() {
-        @Override
-        public void onSuccess(Message result) {
-            // Let's do something with the event
-        }
-        @Override
-        public void onFailure(RestException e) {
-            e.printStackTrace();
-        }
-    });
-    Thread.sleep(5000); // Wait 5 seconds for events
-    ari.closeAction(ae); // Now close the websocket
-
-The Message object in the code above will be one of the message subtypes, 
-you will have to introspect to find out which. 
-
-To be done
-----------
-
-* Parameters that could be multiple are handled as only one item. I would like to have 
-  both ways, so that you do not have to create a List in the very common case that 
-  you need to pass only one parameter - see https://github.com/l3nz/ari4java/issues/10
-* Misc open bugs here: https://github.com/l3nz/ari4java/issues?q=is%3Aopen
-
-
-Useful links
-------------
-
+## Useful links
 * Asterisk REST Interface wiki: https://wiki.asterisk.org/wiki/pages/viewpage.action?pageId=29395573
 * Asterisk 16 ARI docs: https://wiki.asterisk.org/wiki/display/AST/Asterisk+16+ARI
 * Asterisk-app-dev archives: http://lists.digium.com/pipermail/asterisk-app-dev/
 
 
-Similar & Interesting projects
-------------------------------
-
+## Similar & Interesting projects
 * AstAryPy - a Python library - https://github.com/asterisk/ast-ari-py
 * AsterNET.ARI	- C# / .NET - https://github.com/skrusty/AsterNET.ARI
 * node-ari-client - JavaScript (node) - https://github.com/asterisk/node-ari-client
@@ -186,9 +102,7 @@ Similar & Interesting projects
 * asterisk-ari-client - Ruby - https://github.com/svoboda-jan/asterisk-ari
 
 
-Licensing
----------
-
+## Licensing
 The library is released under the GNU LGPL (see LICENSE file).
 Files under codegen-data come from the Asterisk project and are licensed under the GPLv2 (see LICENSE.asterisk file therein).
 They are only used to build the classes and are not distribuited in any form with Ari4Java.
