@@ -1,6 +1,6 @@
 package ch.loway.oss.ari4java.tools;
 
-import ch.loway.oss.ari4java.generated.Message;
+import ch.loway.oss.ari4java.generated.models.Message;
 import ch.loway.oss.ari4java.tools.WsClient.WsClientConnection;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -29,79 +29,92 @@ import java.util.List;
  */
 public class BaseAriAction {
 
+    public class AriRequest {
+        private List<HttpParam> lParamQuery = new ArrayList<HttpParam>();
+        private List<HttpParam> lParamForm = new ArrayList<HttpParam>();
+        private List<HttpParam> lParamBody = new ArrayList<HttpParam>();
+        private List<HttpResponse> lE = new ArrayList<HttpResponse>();
+        private String url;
+        private String method;
+        private boolean wsUpgrade = false;
+
+        public AriRequest(String url, String method) {
+            this.url = url;
+            this.method = method;
+        }
+
+        public void addParamQuery(HttpParam param) {
+            lParamQuery.add(param);
+        }
+
+        public void addParamBody(HttpParam param) {
+            lParamBody.add(param);
+        }
+
+        public void addParamBody(List<ch.loway.oss.ari4java.tools.HttpParam> params) {
+            lParamBody.addAll(params);
+        }
+
+        public void addErrorResponse(HttpResponse res) {
+            lE.add(res);
+        }
+
+        public void setWsUpgrade(boolean wsUpgrade) {
+            this.wsUpgrade = wsUpgrade;
+        }
+    }
+
     // Shared ObjectMapper
     private static final ObjectMapper mapper = new ObjectMapper();
 
     private String forcedResponse = null;
     private HttpClient httpClient;
     private WsClient wsClient;
-    protected List<HttpParam> lParamQuery;
-    protected List<HttpParam> lParamForm;
-    protected List<HttpParam> lParamBody;
-    protected List<HttpResponse> lE;
-    protected String url;
-    protected String method;
-    protected boolean wsUpgrade = false;
     protected WsClientConnection wsConnection;
     private List<BaseAriAction> liveActionList;
 
     /**
-     * Reset contents in preparation for new RPC
-     */
-    protected synchronized void reset() {
-        lParamQuery = new ArrayList<HttpParam>();
-        lParamForm = new ArrayList<HttpParam>();
-        lParamBody = new ArrayList<HttpParam>();
-        lE = new ArrayList<HttpResponse>();
-        url = null;
-        wsUpgrade = false;
-    }
-
-    public synchronized void forceResponse(String r) {
-        forcedResponse = r;
-    }
-
-    /**
      * Initiate synchronous HTTP interaction with server
-     *
+     * @param request the request object
      * @return Response from server
      * @throws RestException when error
      */
-    protected synchronized String httpActionSync() throws RestException {
+    protected synchronized String httpActionSync(AriRequest request) throws RestException {
         if (forcedResponse != null) {
             return forcedResponse;
         } else {
             if (httpClient == null) {
                 throw new RestException("HTTP client implementation not set");
             } else {
-                return httpClient.httpActionSync(this.url, this.method, this.lParamQuery, this.lParamForm, this.lParamBody, this.lE);
+                return httpClient.httpActionSync(request.url, request.method, request.lParamQuery, request.lParamForm, request.lParamBody, request.lE);
             }
         }
     }
 
     /**
      * Initiate synchronous HTTP interaction with server
-     *
+     * @param request the request object
      * @return Response from server
      * @throws RestException when error
      */
-    protected synchronized byte[] httpActionSyncAsBytes() throws RestException {
+    protected synchronized byte[] httpActionSyncAsBytes(AriRequest request) throws RestException {
         if (httpClient == null) {
             throw new RestException("HTTP client implementation not set");
         } else {
-            return httpClient.httpActionSyncAsBytes(this.url, this.method, this.lParamQuery, this.lParamForm, this.lParamBody, this.lE);
+            return httpClient.httpActionSyncAsBytes(request.url, request.method, request.lParamQuery, request.lParamForm, request.lParamBody, request.lE);
         }
     }
 
     /**
      * Initiate asynchronous HTTP or WebSocket interaction with server
      *
-     * @param asyncHandler
+     * @param request the request object
+     * @param asyncHandler the handler
      */
-    private synchronized void httpActionAsync(AriAsyncHandler<?> asyncHandler) {
+    private synchronized void httpActionAsync(AriRequest request, AriAsyncHandler<?> asyncHandler) {
         if (forcedResponse != null) {
             asyncHandler.handleResponse(forcedResponse);
-        } else if (wsUpgrade) {
+        } else if (request.wsUpgrade) {
             // Websocket connection
             if (wsClient == null) {
                 asyncHandler.getCallback().onFailure(new RestException("WebSocket client implementation not set"));
@@ -112,7 +125,7 @@ public class BaseAriAction {
                 return;
             }
             try {
-                wsConnection = wsClient.connect(asyncHandler, this.url, this.lParamQuery);
+                wsConnection = wsClient.connect(asyncHandler, request.url, request.lParamQuery);
                 liveActionList.add(this);
             } catch (RestException e) {
                 asyncHandler.getCallback().onFailure(e);
@@ -122,7 +135,7 @@ public class BaseAriAction {
         } else {
             try {
                 boolean binary = byte[].class.equals(asyncHandler.getType());
-                httpClient.httpActionAsync(this.url, this.method, this.lParamQuery, this.lParamForm, this.lParamBody, this.lE, asyncHandler, binary);
+                httpClient.httpActionAsync(request.url, request.method, request.lParamQuery, request.lParamForm, request.lParamBody, request.lE, asyncHandler, binary);
             } catch (RestException e) {
                 asyncHandler.getCallback().onFailure(e);
             }
@@ -130,17 +143,17 @@ public class BaseAriAction {
     }
 
     // Different styled asynchronous methods
-    protected void httpActionAsync(AriCallback<Void> callback) {
-        httpActionAsync(new AriAsyncHandler<Void>(callback, Void.class));
+    protected void httpActionAsync(AriRequest request, AriCallback<Void> callback) {
+        httpActionAsync(request, new AriAsyncHandler<Void>(callback, Void.class));
     }
 
-    protected <S, T extends S> void httpActionAsync(AriCallback<S> callback, Class<T> klazz) {
-        httpActionAsync(new AriAsyncHandler<T>(callback, klazz));
+    protected <S, T extends S> void httpActionAsync(AriRequest request, AriCallback<S> callback, Class<T> klazz) {
+        httpActionAsync(request, new AriAsyncHandler<T>(callback, klazz));
     }
 
     protected <A, C extends A> void httpActionAsync(
-            AriCallback<List<A>> callback, TypeReference<List<C>> klazzType) {
-        httpActionAsync(new AriAsyncHandler(callback, klazzType));
+            AriRequest request, AriCallback<List<A>> callback, TypeReference<List<C>> klazzType) {
+        httpActionAsync(request, new AriAsyncHandler(callback, klazzType));
     }
 
     /**
@@ -255,12 +268,32 @@ public class BaseAriAction {
         this.httpClient = httpClient;
     }
 
+    public synchronized HttpClient getHttpClient() {
+        return this.httpClient;
+    }
+
     public synchronized void setWsClient(WsClient wsClient) {
         this.wsClient = wsClient;
     }
 
+    public synchronized WsClient getWsClient() {
+        return this.wsClient;
+    }
+
     public synchronized void setLiveActionList(List<BaseAriAction> liveActionList) {
         this.liveActionList = liveActionList;
+    }
+
+    public synchronized List<BaseAriAction> getLiveActionList() {
+        return this.liveActionList;
+    }
+
+    public synchronized void setForcedResponse(String forcedResponse) {
+        this.forcedResponse = forcedResponse;
+    }
+
+    public String getForcedResponse() {
+        return this.forcedResponse;
     }
 
     public static void setObjectMapperLessStrict() {

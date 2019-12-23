@@ -1,12 +1,11 @@
 package ch.loway.oss.ari4java.tools.http;
 
+import ch.loway.oss.ari4java.ARI;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
-
-import java.nio.charset.Charset;
 
 /**
  * HttpClientHandler handles the asynchronous response from the remote
@@ -45,7 +44,7 @@ public class NettyHttpClientHandler extends SimpleChannelInboundHandler<Object> 
         if (responseBytes == null || responseBytes.length == 0) {
             return null;
         }
-        return new String(responseBytes, Charset.defaultCharset());
+        return new String(responseBytes, ARI.ENCODING);
     }
 
     public byte[] getResponseBytes() {

@@ -44,11 +44,6 @@ public class HttpParam {
     }
 
 }
-//            public AriConnector daddy = null;
-//
-//        public void configure(AriConnector connector) {
-//            daddy = connector;
-//        }
 
 // $Log$
 //

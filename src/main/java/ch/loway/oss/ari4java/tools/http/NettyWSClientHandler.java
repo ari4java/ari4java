@@ -1,5 +1,6 @@
 package ch.loway.oss.ari4java.tools.http;
 
+import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.tools.HttpResponseHandler;
 import ch.loway.oss.ari4java.tools.WsClientAutoReconnect;
 import io.netty.channel.Channel;
@@ -9,9 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
-import io.netty.util.CharsetUtil;
 
-import java.nio.charset.Charset;
 
 /**
  * NettyWSClientHandler handles the transactions with the remote
@@ -76,7 +75,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
         
         if (msg instanceof FullHttpResponse) {
             FullHttpResponse response = (FullHttpResponse) msg;
-            String error = "Unexpected FullHttpResponse (getStatus=" + response.getStatus() + ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')';
+            String error = "Unexpected FullHttpResponse (getStatus=" + response.getStatus() + ", content=" + response.content().toString(ARI.ENCODING) + ')';
             System.err.println(error);
             throw new Exception(error);
         }
@@ -87,7 +86,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
         WebSocketFrame frame = (WebSocketFrame) msg;
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-            responseBytes = textFrame.text().getBytes(Charset.defaultCharset());
+            responseBytes = textFrame.text().getBytes(ARI.ENCODING);
             wsCallback.onSuccess(textFrame.text());
         } else if (frame instanceof CloseWebSocketFrame) {
             ch.close();

@@ -23,7 +23,8 @@ public class AriBuilderInterface {
         StringBuilder sb = new StringBuilder();
         JavaGen.importClasses(sb, "ch.loway.oss.ari4java.generated",
                 Arrays.asList(new String[]{
-                        "ch.loway.oss.ari4java.ARI"
+                        "ch.loway.oss.ari4java.ARI",
+                        "ch.loway.oss.ari4java.generated.actions.*"
                 })
         );
 
@@ -32,12 +33,12 @@ public class AriBuilderInterface {
         Collections.sort(knownInterfaces);
 
         for (String iface : knownInterfaces) {
-            sb.append("    public abstract ").append(iface)
+            sb.append("  public abstract ").append(iface)
                     .append(" ").append(lcFirst(iface)).append("();\n");
         }
 
         sb.append("\n\n"
-                + "\tpublic abstract ARI.ClassFactory getClassFactory();\n\n");
+                + "  public abstract ARI.ClassFactory getClassFactory();\n\n");
 
 
         sb.append("\n}\n");

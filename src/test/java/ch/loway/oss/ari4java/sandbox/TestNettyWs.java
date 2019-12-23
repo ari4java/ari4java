@@ -1,5 +1,6 @@
 package ch.loway.oss.ari4java.sandbox;
 
+import ch.loway.oss.ari4java.ARI;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -26,16 +27,13 @@ import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
-import io.netty.util.CharsetUtil;
 
 import java.net.URI;
-import java.util.concurrent.CountDownLatch;
 
-import ch.loway.oss.ari4java.generated.Message;
+import ch.loway.oss.ari4java.generated.models.Message;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.models.Message_impl_ari_0_0_1;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
-//import ch.loway.oss.ari4java.generated.Channel;
 
 public class TestNettyWs {
     
@@ -82,7 +80,7 @@ public class TestNettyWs {
             if (msg instanceof FullHttpResponse) {
                 FullHttpResponse response = (FullHttpResponse) msg;
                 throw new Exception("Unexpected FullHttpResponse (getStatus=" + response.getStatus() + ", content="
-                        + response.content().toString(CharsetUtil.UTF_8) + ')');
+                        + response.content().toString(ARI.ENCODING) + ')');
             }
 
             WebSocketFrame frame = (WebSocketFrame) msg;

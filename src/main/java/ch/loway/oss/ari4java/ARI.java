@@ -1,19 +1,9 @@
 package ch.loway.oss.ari4java;
 
+import ch.loway.oss.ari4java.generated.actions.requests.EventsEventWebsocketGetRequest;
 import ch.loway.oss.ari4java.tools.ARIException;
-import ch.loway.oss.ari4java.generated.ActionApplications;
-import ch.loway.oss.ari4java.generated.ActionAsterisk;
-import ch.loway.oss.ari4java.generated.ActionBridges;
-import ch.loway.oss.ari4java.generated.ActionChannels;
-import ch.loway.oss.ari4java.generated.ActionDeviceStates;
-import ch.loway.oss.ari4java.generated.ActionEndpoints;
-import ch.loway.oss.ari4java.generated.ActionEvents;
-import ch.loway.oss.ari4java.generated.ActionMailboxes;
-import ch.loway.oss.ari4java.generated.ActionPlaybacks;
-import ch.loway.oss.ari4java.generated.ActionRecordings;
-import ch.loway.oss.ari4java.generated.ActionSounds;
-import ch.loway.oss.ari4java.generated.Application;
-import ch.loway.oss.ari4java.generated.Message;
+import ch.loway.oss.ari4java.generated.actions.*;
+import ch.loway.oss.ari4java.generated.models.*;
 import ch.loway.oss.ari4java.tools.AriCallback;
 
 import java.io.IOException;
@@ -30,10 +20,11 @@ import ch.loway.oss.ari4java.tools.tags.EventSource;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,6 +37,7 @@ import java.util.regex.Pattern;
  */
 public class ARI {
 
+    public final static Charset ENCODING = StandardCharsets.UTF_8;
     private final static String ALLOWED_IN_UID = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private String appName = "";
@@ -198,27 +190,12 @@ public class ARI {
      * @throws ARIException If the url is invalid, or the version of ARI is not supported.
      */
     public static ARI build(String url, String app, String user, String pass, AriVersion version) throws ARIException {
-
         if (version == AriVersion.IM_FEELING_LUCKY) {
-
             AriVersion currentVersion = detectAriVersion(url, user, pass);
             return build(url, app, user, pass, currentVersion);
-
         } else {
-
             try {
-
-                ARI ari = new ARI();
-                ari.appName = app;
-                NettyHttpClient hc = new NettyHttpClient();
-                hc.initialize(url, user, pass);
-                ari.setHttpClient(hc);
-                ari.setWsClient(hc);
-                ari.setVersion(version);
-                ari.setUrl(url);
-
-                return ari;
-
+                return AriFactory.nettyHttp(url, user, pass, version, app);
             } catch (URISyntaxException e) {
                 throw new ARIException("Wrong URI format: " + url);
             }
@@ -275,7 +252,6 @@ public class ARI {
      */
     private static String doHttpGet(String urlWithParms, String user, String pwd) throws ARIException {
         URL url = null;
-        final String UTF8 = "UTF-8";
         try {
             url = new URL(urlWithParms);
         } catch (MalformedURLException e) {
@@ -291,43 +267,39 @@ public class ARI {
 
         StringBuilder response = new StringBuilder();
 
+        String userpass = user + ":" + pwd;
+        String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes(ARI.ENCODING));
+
+        uc.setRequestProperty("Authorization", basicAuth);
+        InputStream is = null;
         try {
-            String userpass = user + ":" + pwd;
-            String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes(UTF8));
-
-            uc.setRequestProperty("Authorization", basicAuth);
-            InputStream is = null;
-            try {
-                is = uc.getInputStream();
-            } catch (IOException e) {
-                throw new ARIException("Cannot connect: " + e.getMessage());
-            }
+            is = uc.getInputStream();
+        } catch (IOException e) {
+            throw new ARIException("Cannot connect: " + e.getMessage());
+        }
 
 
-            BufferedReader buffReader = new BufferedReader(new InputStreamReader(is, UTF8));
+        BufferedReader buffReader = new BufferedReader(new InputStreamReader(is, ARI.ENCODING));
 
-            String line = null;
+        String line = null;
+        try {
+            line = buffReader.readLine();
+        } catch (IOException e) {
+            throw new ARIException("IOException: " + e.getMessage());
+        }
+        while (line != null) {
+            response.append(line);
+            response.append('\n');
             try {
                 line = buffReader.readLine();
             } catch (IOException e) {
                 throw new ARIException("IOException: " + e.getMessage());
             }
-            while (line != null) {
-                response.append(line);
-                response.append('\n');
-                try {
-                    line = buffReader.readLine();
-                } catch (IOException e) {
-                    throw new ARIException("IOException: " + e.getMessage());
-                }
-            }
-            try {
-                buffReader.close();
-            } catch (IOException e) {
-                throw new ARIException("IOException: " + e.getMessage());
-            }
-        } catch (UnsupportedEncodingException e) {
-            throw new ARIException("Nobody is going to believe this: missing encoding UTF8 " + e.getMessage());
+        }
+        try {
+            buffReader.close();
+        } catch (IOException e) {
+            throw new ARIException("IOException: " + e.getMessage());
         }
 
         //System.out.println("Response: " + response.toString());
@@ -388,22 +360,22 @@ public class ARI {
      * @throws RestException when error
      */
     private void unsubscribeApplication() throws RestException {
-        Application application = applications().get(appName);
+        Application application = applications().get(appName).execute();
         // unsubscribe from all channels
         for (int i = 0; i < application.getChannel_ids().size(); i++) {
-            applications().unsubscribe(appName, "channel:" + application.getChannel_ids().get(i));
+            applications().unsubscribe(appName, "channel:" + application.getChannel_ids().get(i)).execute();
         }
         // unsubscribe from all bridges
         for (int i = 0; i < application.getBridge_ids().size(); i++) {
-            applications().unsubscribe(appName, "bridge:" + application.getBridge_ids().get(i));
+            applications().unsubscribe(appName, "bridge:" + application.getBridge_ids().get(i)).execute();
         }
         // unsubscribe from all endpoints
         for (int i = 0; i < application.getEndpoint_ids().size(); i++) {
-            applications().unsubscribe(appName, "endpoint:" + application.getEndpoint_ids().get(i));
+            applications().unsubscribe(appName, "endpoint:" + application.getEndpoint_ids().get(i)).execute();
         }
         // unsubscribe from all deviceState
         for (int i = 0; i < application.getDevice_names().size(); i++) {
-            applications().unsubscribe(appName, "deviceState:" + application.getDevice_names().get(i));
+            applications().unsubscribe(appName, "deviceState:" + application.getDevice_names().get(i)).execute();
         }
     }
 
@@ -424,16 +396,21 @@ public class ARI {
         }
     }
 
+    public MessageQueue getWebsocketQueue() throws ARIException {
+        return getWebsocketQueue(false);
+    }
+
     /**
      * In order to avoid multi-threading for users, you can get a
      * MessageQueue object and poll on it for new messages.
      * This makes sure you don't really need to synchonize or be worried by
      * threading issues
      *
+     * @param subscribeAll subscribe to all events
      * @return The MQ connected to your websocket.
      * @throws ARIException when error
      */
-    public MessageQueue getWebsocketQueue() throws ARIException {
+    public MessageQueue getWebsocketQueue(boolean subscribeAll) throws ARIException {
 
         if (liveActionEvent != null) {
             throw new ARIException("Websocket already present");
@@ -441,7 +418,7 @@ public class ARI {
 
         final MessageQueue q = new MessageQueue();
 
-        events().eventWebsocket(appName, new AriCallback<Message>() {
+        AriCallback callback = new AriCallback<Message>() {
 
             @Override
             public void onSuccess(Message result) {
@@ -452,7 +429,15 @@ public class ARI {
             public void onFailure(RestException e) {
                 q.queueError("Err:" + e.getMessage());
             }
-        });
+        };
+
+        EventsEventWebsocketGetRequest eventsRequest = events().eventWebsocket(appName);
+        try {
+            eventsRequest.setSubscribeAll(subscribeAll);
+        } catch (UnsupportedOperationException e) {
+            // ignore
+        }
+        eventsRequest.execute(callback);
 
         return q;
 
