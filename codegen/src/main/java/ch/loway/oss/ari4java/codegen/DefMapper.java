@@ -433,6 +433,8 @@ public class DefMapper {
                     for (JsonNode parameter : parameters) {
                         Operation.Param p = new Operation.Param();
                         p.javaType = remapAbstractType(txt(parameter.get("dataType")));
+                        p.methodArgumentType = JavaPkgInfo.primitiveSignature.containsKey(p.javaType) ?
+                                JavaPkgInfo.primitiveSignature.get(p.javaType) : p.javaType;
                         p.name = txt(parameter.get("name"));
                         p.required = txt(parameter.get("required")).equalsIgnoreCase("true");
                         p.type = Operation.ParamType.build(txt(parameter.get("paramType")));
