@@ -31,7 +31,7 @@ public class RestException extends ARIException {
 
     public RestException(String s, String r, int code) {
         this(s, code);
-        String msg = extractError(r);
+        String msg = extractError(message = r);
         if (!msg.equals(r)) {
             message = msg;
         }
