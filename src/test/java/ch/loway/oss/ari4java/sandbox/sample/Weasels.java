@@ -13,10 +13,10 @@ import java.util.concurrent.TimeUnit;
 
 public class Weasels {
 
-    private static final String ARI_URL  = "http://192.168.56.44:8088/"; // "http://192.168.99.100:18088/";
-    private static final String ARI_USER = "asterisk"; //""ari4java";
-    private static final String ARI_PASS = "asterisk"; //""yothere";
-    private static final String ARI_APP = "dl-dialer"; //"weasels-app";
+    private static final String ARI_URL  = "http://192.168.99.100:18088/";
+    private static final String ARI_USER = "ari4java";
+    private static final String ARI_PASS = "yothere";
+    private static final String ARI_APP = "weasels-app";
 
     private ARI ari;
 

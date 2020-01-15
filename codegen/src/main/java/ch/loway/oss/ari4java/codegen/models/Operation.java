@@ -296,6 +296,7 @@ public class Operation {
         public String name = "";
         public ParamType type = ParamType.PATH;
         public String javaType = "";
+        public String methodArgumentType = "";
         public boolean required = true;
 
         public String getSignature(String returnType) {
@@ -308,7 +309,7 @@ public class Operation {
         public String getDefinition(String returnType) {
             StringBuilder sb = new StringBuilder();
             sb.append("  public ").append(returnType).append(" ").append(JavaGen.addPrefixAndCapitalize("set", name))
-                    .append("(").append(javaType).append(" ").append(name).append(")");
+                    .append("(").append(methodArgumentType).append(" ").append(name).append(")");
             return sb.toString();
         }
         
