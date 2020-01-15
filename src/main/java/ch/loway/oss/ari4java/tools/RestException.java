@@ -39,6 +39,7 @@ public class RestException extends ARIException {
 
     public RestException(Throwable cause) {
         super(cause);
+        message = cause.getMessage();
     }
 
     public RestException(String s, Throwable cause) {
