@@ -184,7 +184,6 @@ public class BaseAriAction {
         try {
             return mapper.readValue(json, klazz);
         } catch (IOException e) {
-            //e.printStackTrace(System.err);
             throw new RestException("Decoding JSON: " + e.getMessage(), e);
         }
     }
@@ -203,7 +202,7 @@ public class BaseAriAction {
         try {
             return mapper.readValue(json, klazzType);
         } catch (IOException e) {
-            throw new RestException("Decoding JSON list: " + e.toString());
+            throw new RestException("Decoding JSON list: " + e.getMessage(), e);
         }
 
     }
@@ -229,7 +228,7 @@ public class BaseAriAction {
             List<A> lA = (List<A>) lC;
             return lA;
         } catch (IOException e) {
-            throw new RestException("Decoding JSON list: " + e.toString(), e);
+            throw new RestException("Decoding JSON list: " + e.getMessage(), e);
         }
 
     }
@@ -246,8 +245,7 @@ public class BaseAriAction {
         try {
             return (Message) mapper.readValue(json, klazz);
         } catch (IOException e) {
-            e.printStackTrace(System.err);
-            throw new RestException("Decoding JSON event: " + e.toString(), e);
+            throw new RestException("Decoding JSON event: " + e.getMessage(), e);
         }
     }
 
