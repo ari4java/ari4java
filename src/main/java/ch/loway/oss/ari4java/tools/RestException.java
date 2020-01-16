@@ -32,18 +32,19 @@ public class RestException extends ARIException {
     public RestException(String s, String r, int code) {
         this(s, code);
         String msg = extractError(r);
-        if (!msg.equals(r)) {
+        if (msg != null && !msg.equals(r)) {
             message = msg;
         }
     }
 
     public RestException(Throwable cause) {
         super(cause);
+        message = cause.toString();
     }
 
     public RestException(String s, Throwable cause) {
         super(s, cause);
-        message = extractError(s);
+        message = s;
     }
 
     /**

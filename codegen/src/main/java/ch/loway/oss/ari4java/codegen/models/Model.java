@@ -36,6 +36,7 @@ public class Model extends JavaPkgInfo {
         imports.add("ch.loway.oss.ari4java.generated.models.Module");
         imports.add("ch.loway.oss.ari4java.generated.models.*");
         imports.add("com.fasterxml.jackson.databind.annotation.JsonDeserialize");
+        imports.add("com.fasterxml.jackson.annotation.JsonIgnore");
     }
 
 
@@ -88,7 +89,7 @@ public class Model extends JavaPkgInfo {
             sb.append(mf.toString());
         }
 
-        sb.append(ji.getCodeToImplementMissingSignatures());
+        sb.append(ji.getCodeToImplementMissingSignatures(true));
 
         sb.append("}\n");
         return sb.toString();
