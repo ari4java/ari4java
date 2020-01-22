@@ -98,7 +98,7 @@ public class Operation {
         String stUri = action.path;
         for (Param p : params) {
             if (p.type == ParamType.PATH) {
-                stUri = stUri.replace("{" + p.name + "}", "\" + URLEncoder.encode(" + p.name + ", ARI.ENCODING) + \"");
+                stUri = stUri.replace("{" + p.name + "}", "\" + encodeUrlPart(" + p.name + ") + \"");
             }
         }
         sb.append("  private AriRequest build() {\n");
