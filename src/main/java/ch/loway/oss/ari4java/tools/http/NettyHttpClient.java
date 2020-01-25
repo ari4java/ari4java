@@ -218,8 +218,10 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
     private RestException makeException(HttpResponseStatus status, String response, List<HttpResponse> errors) {
 
-        if (status == null) {
-            return new RestException("Shutdown: " + response);
+        if (status == null && response == null) {
+            return new RestException("Client Shutdown");
+        } else if (status == null) {
+            return new RestException("Client Shutdown: " + response);
         }
 
         for (HttpResponse hr : errors) {
