@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    compile 'ch.loway.oss.ari4java:ari4java:0.8.0'
+    compile 'ch.loway.oss.ari4java:ari4java:0.8.1'
 }
 ```
 This will download the package and all required dependencies.
@@ -60,6 +60,7 @@ You'll find the resulting jar file under the `build/libs` folder.
 
 ## Status
 
+* 20.01.25 - Rel 0.8.1. Java 8 Compatibility, better exception messages
 * 19.12.23 - Rel 0.8.0. :exclamation: **!! BREAKING CHANGES !!** API Actions signatures only contain manditory params and returns a Request object which follows the builder/factory pattern
 * 19.12.22 - Rel 0.7.0. Treat `fields` as `fields` not `variables` in body parameters; fix `ActionRecordings.getStoredFile()` for `byte[]` & add `ARI.mailboxes()`
 * 19.11.07 - Rel 0.6.1. Codegen bug fixes for object and rebuild with latest ARI api docs
