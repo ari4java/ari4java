@@ -5,7 +5,12 @@ plugins {
 }
 
 group = 'ch.loway.oss.ari4java'
-version = '0.8.0'
+version = '0.8.1'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 sourceSets {
     main {
