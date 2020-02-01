@@ -7,6 +7,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 
+import java.util.Arrays;
+
 /**
  * HttpClientHandler handles the asynchronous response from the remote
  * HTTP server.
@@ -48,7 +50,10 @@ public class NettyHttpClientHandler extends SimpleChannelInboundHandler<Object> 
     }
 
     public byte[] getResponseBytes() {
-        return responseBytes;
+        if (responseBytes == null || responseBytes.length == 0) {
+            return null;
+        }
+        return Arrays.copyOf(responseBytes, responseBytes.length);
     }
 
     public HttpResponseStatus getResponseStatus() {

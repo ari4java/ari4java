@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class BaseAriAction {
 
-    public class AriRequest {
+    public static class AriRequest {
         private List<HttpParam> lParamQuery = new ArrayList<HttpParam>();
         private List<HttpParam> lParamForm = new ArrayList<HttpParam>();
         private List<HttpParam> lParamBody = new ArrayList<HttpParam>();
@@ -308,7 +308,7 @@ public class BaseAriAction {
         this.forcedResponse = forcedResponse;
     }
 
-    public String getForcedResponse() {
+    public synchronized String getForcedResponse() {
         return this.forcedResponse;
     }
 

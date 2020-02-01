@@ -142,8 +142,10 @@ public class Operation {
             if (responseInterface.equalsIgnoreCase("byte[]")) {
                 sb.append("    return httpActionSyncAsBytes(build());\n");
             } else {
-                sb.append("    String json = httpActionSync(build());\n");
-                if (!responseInterface.equalsIgnoreCase("void")) {
+                if (responseInterface.equalsIgnoreCase("void")) {
+                    sb.append("    httpActionSync(build());\n");
+                } else {
+                    sb.append("    String json = httpActionSync(build());\n");
                     String deserializationType = responseConcreteClass + ".class";
                     if (responseConcreteClass.startsWith("List<")) {
                         deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
