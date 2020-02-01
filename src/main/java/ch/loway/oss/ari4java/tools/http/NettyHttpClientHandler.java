@@ -1,6 +1,6 @@
 package ch.loway.oss.ari4java.tools.http;
 
-import ch.loway.oss.ari4java.ARI;
+import ch.loway.oss.ari4java.tools.ARIEncoder;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -46,7 +46,7 @@ public class NettyHttpClientHandler extends SimpleChannelInboundHandler<Object> 
         if (responseBytes == null || responseBytes.length == 0) {
             return null;
         }
-        return new String(responseBytes, ARI.ENCODING);
+        return new String(responseBytes, ARIEncoder.ENCODING);
     }
 
     public byte[] getResponseBytes() {

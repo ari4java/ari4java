@@ -1,6 +1,6 @@
 package ch.loway.oss.ari4java.sandbox;
 
-import ch.loway.oss.ari4java.ARI;
+import ch.loway.oss.ari4java.tools.ARIEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -57,7 +57,7 @@ public class TestNettyHttp {
                 System.out.println("msg=" + response);
                 BaseAriAction ba = new BaseAriAction();
                 try {
-                    AsteriskInfo m = ba.deserializeJson(response.content().toString(ARI.ENCODING), AsteriskInfo_impl_ari_0_0_1.class);
+                    AsteriskInfo m = ba.deserializeJson(response.content().toString(ARIEncoder.ENCODING), AsteriskInfo_impl_ari_0_0_1.class);
                     System.out.println(m);
                 } catch (RestException e) {
                     e.printStackTrace();

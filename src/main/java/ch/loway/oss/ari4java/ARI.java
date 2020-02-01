@@ -1,19 +1,13 @@
 package ch.loway.oss.ari4java;
 
 import ch.loway.oss.ari4java.generated.actions.requests.EventsEventWebsocketGetRequest;
-import ch.loway.oss.ari4java.tools.ARIException;
+import ch.loway.oss.ari4java.tools.*;
 import ch.loway.oss.ari4java.generated.actions.*;
 import ch.loway.oss.ari4java.generated.models.*;
-import ch.loway.oss.ari4java.tools.AriCallback;
 
 import java.io.IOException;
 import java.net.URL;
 
-import ch.loway.oss.ari4java.tools.BaseAriAction;
-import ch.loway.oss.ari4java.tools.MessageQueue;
-import ch.loway.oss.ari4java.tools.HttpClient;
-import ch.loway.oss.ari4java.tools.RestException;
-import ch.loway.oss.ari4java.tools.WsClient;
 import ch.loway.oss.ari4java.tools.http.NettyHttpClient;
 import ch.loway.oss.ari4java.tools.tags.EventSource;
 
@@ -23,8 +17,6 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,7 +29,6 @@ import java.util.regex.Pattern;
  */
 public class ARI {
 
-    public final static Charset ENCODING = StandardCharsets.UTF_8;
     private final static String ALLOWED_IN_UID = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private String appName = "";
@@ -268,7 +259,7 @@ public class ARI {
         StringBuilder response = new StringBuilder();
 
         String userpass = user + ":" + pwd;
-        String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes(ARI.ENCODING));
+        String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes(ARIEncoder.ENCODING));
 
         uc.setRequestProperty("Authorization", basicAuth);
         InputStream is = null;
@@ -279,7 +270,7 @@ public class ARI {
         }
 
 
-        BufferedReader buffReader = new BufferedReader(new InputStreamReader(is, ARI.ENCODING));
+        BufferedReader buffReader = new BufferedReader(new InputStreamReader(is, ARIEncoder.ENCODING));
 
         String line = null;
         try {

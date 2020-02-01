@@ -1,6 +1,5 @@
 package ch.loway.oss.ari4java.tools;
 
-import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.generated.models.Message;
 import ch.loway.oss.ari4java.tools.WsClient.WsClientConnection;
 
@@ -13,8 +12,6 @@ import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -80,15 +77,10 @@ public class BaseAriAction {
      * Exception safe way to encode url parts
      * @param urlPart the part to encode
      * @return a encoded string
-     * @see ARI#ENCODING
+     * @see ARIEncoder#ENCODING
      */
     protected String encodeUrlPart(String urlPart) {
-        try {
-            return URLEncoder.encode(urlPart, ARI.ENCODING.name());
-        } catch (UnsupportedEncodingException e) {
-            // this should happen, but if so return the input
-            return urlPart;
-        }
+        return ARIEncoder.encodeUrl(urlPart);
     }
 
     /**

@@ -1,6 +1,5 @@
 package ch.loway.oss.ari4java.tools.http;
 
-import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.tools.*;
 import ch.loway.oss.ari4java.tools.HttpResponse;
 import io.netty.bootstrap.Bootstrap;
@@ -17,6 +16,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.*;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import io.netty.util.concurrent.ScheduledFuture;
@@ -24,7 +24,6 @@ import io.netty.util.concurrent.ScheduledFuture;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -126,16 +125,16 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         uriBuilder.append("ari");
         uriBuilder.append(path);
         uriBuilder.append("?api_key=");
-        uriBuilder.append(URLEncoder.encode(username, ARI.ENCODING));
+        uriBuilder.append(ARIEncoder.encodeUrl(username));
         uriBuilder.append(":");
-        uriBuilder.append(URLEncoder.encode(password, ARI.ENCODING));
+        uriBuilder.append(ARIEncoder.encodeUrl(password));
         if (parametersQuery != null) {
             for (HttpParam hp : parametersQuery) {
                 if (hp.value != null && !hp.value.isEmpty()) {
                     uriBuilder.append("&");
                     uriBuilder.append(hp.name);
                     uriBuilder.append("=");
-                    uriBuilder.append(URLEncoder.encode(hp.value, ARI.ENCODING));
+                    uriBuilder.append(ARIEncoder.encodeUrl(hp.value));
                 }
             }
         }
@@ -167,7 +166,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         //System.out.println(request.getUri());
         if (parametersBody != null && !parametersBody.isEmpty()) {
             String vars = makeJson(parametersBody);
-            ByteBuf bbuf = Unpooled.copiedBuffer(vars, ARI.ENCODING);
+            ByteBuf bbuf = Unpooled.copiedBuffer(vars, ARIEncoder.ENCODING);
 
             request.headers().add(HttpHeaders.Names.CONTENT_TYPE, "application/json");
             request.headers().set(HttpHeaders.Names.CONTENT_LENGTH, bbuf.readableBytes());
@@ -385,7 +384,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                 public void run() {
                     if (System.currentTimeMillis() - wsCallback.getLastResponseTime() > 15000) {
                         if (!wsChannelFuture.isCancelled() && wsChannelFuture.channel() != null) {
-                            WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer("ari4j".getBytes(ARI.ENCODING)));
+                            WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer("ari4j".getBytes(ARIEncoder.ENCODING)));
                             wsChannelFuture.channel().writeAndFlush(frame);
                         }
                     }
