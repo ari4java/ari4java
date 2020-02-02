@@ -6,6 +6,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.timeout.ReadTimeoutException;
 
 import java.util.Arrays;
 
@@ -21,6 +22,7 @@ import java.util.Arrays;
 public class NettyHttpClientHandler extends SimpleChannelInboundHandler<Object> {
     protected byte[] responseBytes;
     protected HttpResponseStatus responseStatus;
+    private Throwable exception;
 
     public void reset() {
         responseBytes = null;
@@ -60,9 +62,17 @@ public class NettyHttpClientHandler extends SimpleChannelInboundHandler<Object> 
         return responseStatus;
     }
 
+    public Throwable getException() {
+        return exception;
+    }
+
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
+        this.exception = cause;
+        if (!(cause instanceof ReadTimeoutException)) {
+            cause.printStackTrace();
+        }
+        ctx.fireExceptionCaught(cause);
         ctx.close();
     }
 

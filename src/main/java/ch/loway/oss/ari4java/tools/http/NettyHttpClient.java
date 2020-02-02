@@ -41,6 +41,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconnect {
 
+    public static final int CONNECTION_TIMEOUT_SEC = 10;
+    public static final int READ_TIMEOUT_SEC = 30;
     public static final int MAX_HTTP_REQUEST_KB = 16 * 1024;
 
     private Bootstrap bootStrap;
@@ -59,6 +61,10 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     private ScheduledFuture<?> wsPingTimer = null;
     private NettyWSClientHandler wsHandler;
     private ChannelFutureListener wsFuture;
+
+    private int pongFailureCount = 0;
+    private long lastPong = 0;
+    private static boolean autoReconnect = true;
 
     public NettyHttpClient() {
         group = new NioEventLoopGroup();
@@ -82,6 +88,8 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
+                ch.config().setConnectTimeoutMillis(CONNECTION_TIMEOUT_SEC * 1000);
+                pipeline.addLast("read-timeout", new ReadTimeoutHandler(READ_TIMEOUT_SEC));
                 pipeline.addLast("http-codec", new HttpClientCodec());
                 pipeline.addLast("aggregator", new HttpObjectAggregator(MAX_HTTP_REQUEST_KB * 1024));
                 pipeline.addLast("http-handler", new NettyHttpClientHandler());
@@ -218,7 +226,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     private RestException makeException(HttpResponseStatus status, String response, List<HttpResponse> errors) {
 
         if (status == null && response == null) {
-            return new RestException("Client Shutdown");
+                return new RestException("Client Shutdown");
         } else if (status == null) {
             return new RestException("Client Shutdown: " + response);
         }
@@ -257,14 +265,17 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             NettyHttpClientHandler handler = (NettyHttpClientHandler) ch.pipeline().get("http-handler");
             ch.writeAndFlush(request);
             ch.closeFuture().sync();
-            if (httpResponseOkay(handler.getResponseStatus())) {
+            if (handler.getException() != null) {
+                throw new RestException(handler.getException());
+            } else if (httpResponseOkay(handler.getResponseStatus())) {
                 return handler;
             } else {
                 throw makeException(handler.getResponseStatus(), handler.getResponseText(), errors);
             }
-        } catch (UnsupportedEncodingException e) {
-            throw new RestException(e);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
+            if (e instanceof RestException) {
+                throw (RestException) e;
+            }
             throw new RestException(e);
         }
     }
@@ -340,6 +351,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
+                ch.config().setConnectTimeoutMillis(CONNECTION_TIMEOUT_SEC * 1000);
                 pipeline.addLast("http-codec", new HttpClientCodec());
                 pipeline.addLast("aggregator", new HttpObjectAggregator(MAX_HTTP_REQUEST_KB * 1024));
                 pipeline.addLast("ws-handler", wsHandler);
@@ -379,17 +391,42 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
     private void startPing() {
         if (wsPingTimer == null) {
+            pongFailureCount = 0;
             wsPingTimer = group.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
-                    if (System.currentTimeMillis() - wsCallback.getLastResponseTime() > 15000) {
+                    if ((System.currentTimeMillis() - wsCallback.getLastResponseTime()) > 15000) {
                         if (!wsChannelFuture.isCancelled() && wsChannelFuture.channel() != null) {
                             WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer("ari4j".getBytes(ARIEncoder.ENCODING)));
+//                            System.out.println("Send Ping at " + System.currentTimeMillis());
                             wsChannelFuture.channel().writeAndFlush(frame);
+                            boolean noPong = true;
+                            for (int i = 0; i < 10; i++) {
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    // probably from the reconnect, so stop running...
+                                    return;
+                                }
+                                if ((System.currentTimeMillis() - lastPong) < 10000) {
+//                                    System.out.println("Pong at " + lastPong);
+                                    pongFailureCount = 0;
+                                    noPong = false;
+                                    break;
+                                } else {
+//                                    System.out.println("No Pong at " + System.currentTimeMillis());
+                                }
+                            }
+                            if (noPong) {
+                                pongFailureCount++;
+                                if (pongFailureCount > 1) {
+                                    reconnectWs(new RestException("No Ping response from server"));
+                                }
+                            }
                         }
                     }
                 }
-            }, 5, 5, TimeUnit.MINUTES);
+            }, 1, 5, TimeUnit.MINUTES);
         }
     }
 
@@ -435,16 +472,15 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
     }
 
-
     @Override
     public void reconnectWs(Throwable cause) {
         // cancel the ping timer
         if (wsPingTimer != null) {
-            wsPingTimer.cancel(false);
+            wsPingTimer.cancel(true);
             wsPingTimer = null;
         }
 
-        if (reconnectCount >= 10) {
+        if (!autoReconnect || reconnectCount >= 10) {
             wsCallback.onFailure(cause);
             return;
         }
@@ -471,4 +507,18 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             }, timeout, TimeUnit.SECONDS);
         }
     }
+
+    @Override
+    public void pong() {
+        lastPong = System.currentTimeMillis();
+    }
+
+    /**
+     * The ability to turn on/off the websocket auto reconnect, defaulted to on
+     * @param val auto reconnect
+     */
+    public static void setAutoReconnect(boolean val) {
+        NettyHttpClient.autoReconnect = val;
+    }
+
 }

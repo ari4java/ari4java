@@ -97,6 +97,13 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
                     wsCallback.onDisconnect();
                 }
             }
+        } else if (frame instanceof PongWebSocketFrame) {
+            wsClient.pong();
+            // TODO log
+//            System.out.println("PongWebSocketFrame at " + System.currentTimeMillis());
+        } else {
+            // TODO log unhandled frame...
+//            System.out.println("Unhandled WebSocketFrame: " + frame.getClass().toString());
         }
         
     }
@@ -109,6 +116,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
         if (!handshakeFuture.isDone()) {
             handshakeFuture.setFailure(cause);
         }
+        ctx.fireExceptionCaught(cause);
         ctx.close();
         wsCallback.onFailure(cause);
     }
