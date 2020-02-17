@@ -31,7 +31,6 @@ public class BaseAriAction {
 
     public static class AriRequest {
         private List<HttpParam> lParamQuery = new ArrayList<HttpParam>();
-        private List<HttpParam> lParamForm = new ArrayList<HttpParam>();
         private List<HttpParam> lParamBody = new ArrayList<HttpParam>();
         private List<HttpResponse> lE = new ArrayList<HttpResponse>();
         private String url;
@@ -96,7 +95,7 @@ public class BaseAriAction {
             if (httpClient == null) {
                 throw new RestException("HTTP client implementation not set");
             } else {
-                return httpClient.httpActionSync(request.url, request.method, request.lParamQuery, request.lParamForm, request.lParamBody, request.lE);
+                return httpClient.httpActionSync(request.url, request.method, request.lParamQuery, request.lParamBody, request.lE);
             }
         }
     }
@@ -111,7 +110,7 @@ public class BaseAriAction {
         if (httpClient == null) {
             throw new RestException("HTTP client implementation not set");
         } else {
-            return httpClient.httpActionSyncAsBytes(request.url, request.method, request.lParamQuery, request.lParamForm, request.lParamBody, request.lE);
+            return httpClient.httpActionSyncAsBytes(request.url, request.method, request.lParamQuery, request.lParamBody, request.lE);
         }
     }
 
@@ -145,7 +144,7 @@ public class BaseAriAction {
         } else {
             try {
                 boolean binary = byte[].class.equals(asyncHandler.getType());
-                httpClient.httpActionAsync(request.url, request.method, request.lParamQuery, request.lParamForm, request.lParamBody, request.lE, asyncHandler, binary);
+                httpClient.httpActionAsync(request.url, request.method, request.lParamQuery, request.lParamBody, request.lE, asyncHandler, binary);
             } catch (RestException e) {
                 asyncHandler.getCallback().onFailure(e);
             }

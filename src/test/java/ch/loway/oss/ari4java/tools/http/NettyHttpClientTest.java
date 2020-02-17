@@ -59,13 +59,15 @@ public class NettyHttpClientTest {
     public void testBuildURL() {
         List<HttpParam> queryParams = new ArrayList<>();
         queryParams.add(HttpParam.build("a", "b/c"));
+        queryParams.add(HttpParam.build("d", "e"));
         String url = client.buildURL("/channels", queryParams, false);
-        assertEquals("/ari/channels?api_key=user:p%40ss&a=b%2Fc", url);
+        assertEquals("/ari/channels?a=b%2Fc&d=e", url);
     }
 
     private void setupSync(NettyHttpClientHandler h) throws Exception {
         cf = mock(ChannelFuture.class);
-        when(cf.sync()).thenReturn(cf);
+        when(cf.addListener(any())).thenReturn(cf);
+        when(cf.syncUninterruptibly()).thenReturn(cf);
         Channel ch = mock(Channel.class);
         when(ch.closeFuture()).thenReturn(cf);
         when(cf.channel()).thenReturn(ch);
@@ -80,7 +82,7 @@ public class NettyHttpClientTest {
         setupSync(h);
         h.responseStatus = HttpResponseStatus.OK;
         h.responseBytes = "testing".getBytes(ARIEncoder.ENCODING);
-        String res = client.httpActionSync("", "GET", new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        String res = client.httpActionSync("", "GET", null, null, null);
         assertEquals("testing", res);
     }
 
@@ -104,8 +106,9 @@ public class NettyHttpClientTest {
 
     private void pingValidate(EmbeddedChannel channel, AsteriskPing res) {
         String data = ((ByteBuf) channel.readOutbound()).toString(ARIEncoder.ENCODING);
-        String expecting = "GET /ari/asterisk/ping?api_key=user:p%40ss HTTP/1.1";
+        String expecting = "GET /ari/asterisk/ping HTTP/1.1";
         assertTrue("HTTP Request Data does not start with " + expecting, data.startsWith(expecting));
+        assertTrue("Expected HTTP Auth Header", data.contains("authorization: Basic dXNlcjpwQHNz"));
         assertEquals("pong", res.getPing());
         assertEquals("test_asterisk", res.getAsterisk_id());
     }
@@ -120,13 +123,15 @@ public class NettyHttpClientTest {
     }
 
     @Test
-    public void testHttpActionAsyncPing() {
+    public void testHttpActionAsyncPing() throws InterruptedException {
         EmbeddedChannel channel = createTestChannel();
         AsteriskPingGetRequest req = pingSetup(channel);
+        final boolean[] callback = {false};
         req.execute(new AriCallback<AsteriskPing>() {
             @Override
             public void onSuccess(AsteriskPing res) {
                 pingValidate(channel, res);
+                callback[0] = true;
             }
 
             @Override
@@ -134,6 +139,8 @@ public class NettyHttpClientTest {
                 fail(e.toString());
             }
         });
+        channel.runPendingTasks();
+        assertTrue("No onSuccess Callback", callback[0]);
     }
 
     @Test

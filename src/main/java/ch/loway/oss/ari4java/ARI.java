@@ -226,7 +226,7 @@ public class ARI {
         try {
             NettyHttpClient hc = new NettyHttpClient();
             hc.initialize(url, user, pass);
-            String response = hc.httpActionSync("/api-docs/resources.json", "GET", null, null, null, null);
+            String response = hc.httpActionSync("/api-docs/resources.json", "GET", null, null, null);
             hc.destroy();
             String version = findVersionString(response);
             return AriVersion.fromVersionString(version);
