@@ -13,9 +13,13 @@ import java.util.concurrent.TimeUnit;
 
 public class Weasels {
 
-    private static final String ARI_URL  = "http://192.168.99.100:18088/";
-    private static final String ARI_USER = "ari4java";
-    private static final String ARI_PASS = "yothere";
+//    private static final String ARI_URL  = "http://192.168.99.100:18088/";
+//    private static final String ARI_USER = "ari4java";
+//    private static final String ARI_PASS = "yothere";
+    private static final String ARI_URL  = "http://asterisk1.local:8088/";
+//    private static final String ARI_URL  = "http://localhost:8088/";
+    private static final String ARI_USER = "asterisk";
+    private static final String ARI_PASS = "asterisk";
     private static final String ARI_APP = "weasels-app";
 
     private ARI ari;
@@ -49,10 +53,11 @@ public class Weasels {
 
     private boolean connect() {
         try {
-            ari = ARI.build(ARI_URL, ARI_APP, ARI_USER, ARI_PASS, AriVersion.IM_FEELING_LUCKY);
+//            ari = ARI.build(ARI_URL, ARI_APP, ARI_USER, ARI_PASS, AriVersion.IM_FEELING_LUCKY);
+            ari = ARI.build(ARI_URL, ARI_APP, ARI_USER, ARI_PASS, AriVersion.ARI_5_0_0);
             log("Detect Server ARI Version: " + ari.getVersion().version());
-            AsteriskInfo info = ari.asterisk().getInfo().execute();
-            log("System up since " + info.getStatus().getStartup_time());
+//            AsteriskInfo info = ari.asterisk().getInfo().execute();
+//            log("System up since " + info.getStatus().getStartup_time());
             return true;
         } catch (Throwable t) {
             log("Error: " + t.getMessage());
@@ -89,7 +94,7 @@ public class Weasels {
         });
         // usually we would not terminate and run indefinitely
         // waiting for 5 minutes before shutting down...
-        threadPool.awaitTermination(5, TimeUnit.MINUTES);
+        threadPool.awaitTermination(2, TimeUnit.MINUTES);
     }
 
     private void handleStart(StasisStart start) throws RestException {
