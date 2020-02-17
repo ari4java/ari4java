@@ -2,6 +2,7 @@ package ch.loway.oss.ari4java.tools.http;
 
 import ch.loway.oss.ari4java.tools.ARIEncoder;
 import ch.loway.oss.ari4java.tools.HttpResponseHandler;
+import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.WsClientAutoReconnect;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -10,6 +11,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -27,6 +30,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
     final HttpResponseHandler wsCallback;
     private WsClientAutoReconnect wsClient = null;
     private boolean shuttingDown = false;
+    private Logger logger = LoggerFactory.getLogger(NettyWSClientHandler.class);
 
     public NettyWSClientHandler(WebSocketClientHandshaker handshaker, HttpResponseHandler wsCallback, WsClientAutoReconnect wsClient) {
         this(handshaker, wsCallback);
@@ -56,7 +60,8 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         if (!shuttingDown) {
             if (this.wsClient != null) {
-                wsClient.reconnectWs(null);
+                logger.debug("WS channel inactive - {}", ctx.toString());
+                wsClient.reconnectWs(new RestException("WS channel inactive"));
             } else {
                 wsCallback.onDisconnect();
             }
@@ -84,6 +89,8 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
         wsCallback.onResponseReceived();
         
         WebSocketFrame frame = (WebSocketFrame) msg;
+        logger.debug("Received WebSocketFrame - {}", frame.getClass().getSimpleName());
+
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
             responseBytes = textFrame.text().getBytes(ARIEncoder.ENCODING);
@@ -99,11 +106,8 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
             }
         } else if (frame instanceof PongWebSocketFrame) {
             wsClient.pong();
-            // TODO log
-//            System.out.println("PongWebSocketFrame at " + System.currentTimeMillis());
         } else {
-            // TODO log unhandled frame...
-//            System.out.println("Unhandled WebSocketFrame: " + frame.getClass().toString());
+            logger.warn("Unhandled WebSocketFrame: {}", frame.getClass().toString());
         }
         
     }

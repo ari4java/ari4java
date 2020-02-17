@@ -31,12 +31,16 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.10.1'
     compile 'io.netty:netty-all:4.1.44.Final'
     compile 'javax.xml.bind:jaxb-api:2.3.1'
+    compile 'org.slf4j:slf4j-api:1.7.30'
+    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.13.0'
 
     testCompile 'junit:junit:4.10'
+    testImplementation 'org.mockito:mockito-core:2.28.2'
+
 }
 
-compileJava.dependsOn ':codegen:runCodegen'
-compileJava.dependsOn 'buildProps'
+//compileJava.dependsOn ':codegen:runCodegen'
+//compileJava.dependsOn 'buildProps'
 
 def build_number = 'x'
 if (System.getenv('BUILD_NUMBER') != null) {
