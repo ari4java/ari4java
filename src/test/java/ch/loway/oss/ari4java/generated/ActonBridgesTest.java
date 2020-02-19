@@ -75,7 +75,7 @@ public class ActonBridgesTest {
         boolean exceptionRaised = false;
 
         try {
-            Playback pb = aa.play("aaa", "sss").execute();
+            aa.play("aaa", "sss").execute();
         } catch (RestException e) {
             exceptionRaised = true;
         }

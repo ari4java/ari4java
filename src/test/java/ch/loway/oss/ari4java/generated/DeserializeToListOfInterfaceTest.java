@@ -51,8 +51,7 @@ public class DeserializeToListOfInterfaceTest {
         assertEquals("El 2 B", "y2", l.get(1).getB());
     }
 
-
-    public static String STR_TUPLE = "[\n" +
+    public static final String STR_TUPLE = "[\n" +
             "	{\"a\": \"x1\", \"b\": \"x2\" },\n" +
             "	{\"a\": \"y1\", \"b\": \"y2\" }\n" +
             "]";

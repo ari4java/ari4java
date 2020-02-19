@@ -15,7 +15,7 @@ public class NettyHttpClientHandlerTest {
         NettyHttpClientHandler h = new NettyHttpClientHandler();
         EmbeddedChannel channel = new EmbeddedChannel();
         channel.pipeline().addLast("http-codec", new HttpClientCodec());
-        channel.pipeline().addLast("aggregator", new HttpObjectAggregator(NettyHttpClient.MAX_HTTP_REQUEST_KB * 1024));
+        channel.pipeline().addLast("http-aggregator", new HttpObjectAggregator(NettyHttpClient.MAX_HTTP_REQUEST));
         channel.pipeline().addLast("http-handler", h);
         channel.writeInbound(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.copiedBuffer("test", ARIEncoder.ENCODING)));
         assertEquals("test", h.getResponseText());

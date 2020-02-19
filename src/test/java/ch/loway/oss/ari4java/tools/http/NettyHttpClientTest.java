@@ -1,8 +1,7 @@
 package ch.loway.oss.ari4java.tools.http;
 
 import ch.loway.oss.ari4java.generated.actions.requests.AsteriskPingGetRequest;
-import ch.loway.oss.ari4java.generated.ari_6_0_0.actions.requests.ApplicationsGetRequest_impl_ari_6_0_0;
-import ch.loway.oss.ari4java.generated.ari_6_0_0.actions.requests.AsteriskPingGetRequest_impl_ari_6_0_0;
+import ch.loway.oss.ari4java.generated.ari_6_0_0.actions.requests.*;
 import ch.loway.oss.ari4java.generated.models.AsteriskPing;
 import ch.loway.oss.ari4java.tools.ARIEncoder;
 import ch.loway.oss.ari4java.tools.AriCallback;
@@ -21,7 +20,9 @@ import org.junit.Test;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -89,7 +90,7 @@ public class NettyHttpClientTest {
     private EmbeddedChannel createTestChannel() {
         EmbeddedChannel channel = new EmbeddedChannel();
         channel.pipeline().addLast("http-codec", new HttpClientCodec());
-        channel.pipeline().addLast("aggregator", new HttpObjectAggregator(NettyHttpClient.MAX_HTTP_REQUEST_KB * 1024));
+        channel.pipeline().addLast("http-aggregator", new HttpObjectAggregator(NettyHttpClient.MAX_HTTP_REQUEST));
         channel.pipeline().addLast("http-handler", new NettyHttpClientHandler());
         cf = channel.closeFuture();
         ((DefaultChannelPromise) cf).setSuccess(null);
@@ -98,7 +99,9 @@ public class NettyHttpClientTest {
 
     private AsteriskPingGetRequest pingSetup(EmbeddedChannel channel) {
         channel.writeInbound(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK,
-                Unpooled.copiedBuffer("{\"ping\":\"pong\",\"timestamp\":\"2020-01-01T00:00:00.000+0000\",\"asterisk_id\":\"test_asterisk\"}", ARIEncoder.ENCODING)));
+                Unpooled.copiedBuffer(
+                        "{\"ping\":\"pong\",\"timestamp\":\"2020-01-01T00:00:00.000+0000\",\"asterisk_id\":\"test_asterisk\"}",
+                        ARIEncoder.ENCODING)));
         AsteriskPingGetRequest_impl_ari_6_0_0 req = new AsteriskPingGetRequest_impl_ari_6_0_0();
         req.setHttpClient(client);
         return req;
@@ -115,7 +118,6 @@ public class NettyHttpClientTest {
 
     @Test
     public void testHttpActionSyncPing() throws Exception {
-        System.out.println("TEST: testHttpActionSyncPing");
         EmbeddedChannel channel = createTestChannel();
         AsteriskPingGetRequest req = pingSetup(channel);
         AsteriskPing res = req.execute();
@@ -170,6 +172,62 @@ public class NettyHttpClientTest {
             exception = true;
         }
         assertTrue("Expecting an exception", exception);
+    }
+
+    @Test
+    public void testBodyFieldSerialisation() throws RestException {
+        EmbeddedChannel channel = createTestChannel();
+        channel.writeInbound(new DefaultFullHttpResponse(
+                HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.copiedBuffer("[]", ARIEncoder.ENCODING)));
+        AsteriskUpdateObjectPutRequest_impl_ari_6_0_0 req = new AsteriskUpdateObjectPutRequest_impl_ari_6_0_0(
+                "cc", "ot", "id");
+        req.setHttpClient(client);
+        req.addFields("key1", "val1").addFields("key2", "val2").execute();
+        validateBody(channel, "fields");
+    }
+
+    @Test
+    public void testBodyVariableSerialisation() throws RestException {
+        EmbeddedChannel channel = createTestChannel();
+        channel.writeInbound(new DefaultFullHttpResponse(
+                HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.copiedBuffer("{}", ARIEncoder.ENCODING)));
+
+        EndpointsSendMessagePutRequest_impl_ari_6_0_0 req = new EndpointsSendMessagePutRequest_impl_ari_6_0_0("to", "from");
+        req.setHttpClient(client);
+        req.addVariables("key1", "val1").addVariables("key2", "val2").execute();
+        validateBody(channel, "variables");
+    }
+
+    @Test
+    public void testBodyObjectSerialisation() throws RestException {
+        EmbeddedChannel channel = createTestChannel();
+        channel.writeInbound(new DefaultFullHttpResponse(
+                HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.copiedBuffer("{}", ARIEncoder.ENCODING)));
+
+        Map<String, String> map = new HashMap<>();
+        map.put("key1", "val1");
+        map.put("key2", "val2");
+        ApplicationsFilterPutRequest_impl_ari_6_0_0 req = new ApplicationsFilterPutRequest_impl_ari_6_0_0("app");
+        req.setHttpClient(client);
+        req.setFilter(map).execute();
+        validateBody(channel, "filter");
+    }
+
+    private void validateBody(EmbeddedChannel channel, String field) {
+        String expected = "{\"" + field + "\":{\"key1\":\"val1\",\"key2\":\"val2\"}}";
+        if ("fields".equals(field)) {
+            expected = "{\"fields\":[{\"attribute\":\"key1\",\"value\":\"val1\"},{\"attribute\":\"key2\",\"value\":\"val2\"}]}";
+        }
+        StringBuffer buffer = new StringBuffer();
+        ByteBuf data = channel.readOutbound();
+        while (data != null) {
+            if (data.readableBytes() > 0) {
+                buffer.append(data.toString(ARIEncoder.ENCODING));
+            }
+            data = channel.readOutbound();
+        }
+        String[] lines = buffer.toString().split("\n");
+        assertEquals(expected, lines[lines.length - 1].trim());
     }
 
 }
