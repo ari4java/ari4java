@@ -47,6 +47,13 @@ public class AriAsyncHandler<T> implements HttpResponseHandler {
     @Override
     public void onChReadyToWrite() {
         lastResponseTime = System.currentTimeMillis();
+        connectionEvent(AriConnectionEvent.WS_CONNECTED);
+    }
+
+    private void connectionEvent(AriConnectionEvent event) {
+        if (this.callback instanceof AriWSCallback<?>) {
+            ((AriWSCallback<?>) this.callback).onConnectionEvent(event);
+        }
     }
 
     @Override
@@ -56,8 +63,7 @@ public class AriAsyncHandler<T> implements HttpResponseHandler {
 
     @Override
     public void onDisconnect() {
-        // this is from channelInactive on the websocket raise an error so the client can reconnect if need be
-        this.callback.onFailure(new RestException("Asterisk WS is disconnected. Please retry."));
+        connectionEvent(AriConnectionEvent.WS_DISCONNECTED);
     }
 
     @Override
@@ -72,7 +78,11 @@ public class AriAsyncHandler<T> implements HttpResponseHandler {
 
     @Override
     public void onFailure(Throwable e) {
-        this.callback.onFailure(new RestException(e));
+        if (e instanceof RestException) {
+            this.callback.onFailure((RestException) e);
+        } else {
+            this.callback.onFailure(new RestException(e));
+        }
     }
 
     @Override

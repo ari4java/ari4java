@@ -26,7 +26,13 @@ public class ModelField implements Comparable<ModelField> {
         sb.append("  private ").append(typeInterface).append(" ").append(field).append(";\n");
 
         sb.append(getDeclarationGet()).append(" {\n");
-        sb.append("    return ").append(field).append(";\n  }\n");
+        sb.append("    return ");
+        if ("Date".equals(typeConcrete)) {
+            sb.append("new Date(").append(field).append(".getTime())");
+        } else {
+            sb.append(field);
+        }
+        sb.append(";\n  }\n");
 
         if (typeConcrete.startsWith("List")) {
             String innerType = typeConcrete.substring(5, typeConcrete.length() - 1);
@@ -37,7 +43,13 @@ public class ModelField implements Comparable<ModelField> {
             sb.append("  @JsonDeserialize( as=").append(typeConcrete).append(".class )\n");
         }
         sb.append(getDeclarationSet()).append("  {\n");
-        sb.append("    ").append(field).append(" = val;\n  }\n\n");
+        sb.append("    ").append(field);
+        if ("Date".equals(typeConcrete)) {
+            sb.append(" = new Date(val.getTime())");
+        } else {
+            sb.append(" = val");
+        }
+        sb.append(";\n  }\n\n");
 
         return sb.toString();
     }

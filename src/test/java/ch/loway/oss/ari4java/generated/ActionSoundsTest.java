@@ -2,16 +2,12 @@ package ch.loway.oss.ari4java.generated;
 
 import ch.loway.oss.ari4java.generated.actions.ActionSounds;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.actions.ActionSounds_impl_ari_0_0_1;
-import ch.loway.oss.ari4java.generated.models.*;
+import ch.loway.oss.ari4java.generated.models.Sound;
 import ch.loway.oss.ari4java.tools.AriCallback;
 import ch.loway.oss.ari4java.tools.RestException;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author lenz
@@ -29,25 +25,6 @@ public class ActionSoundsTest {
             + " ]     "
             + " }     ");
 
-    public ActionSoundsTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Strings in a JSON object need the double quotes.
      * Unfortunately using double quotes in Java is a PITA.
@@ -56,11 +33,9 @@ public class ActionSoundsTest {
      * @param s
      * @return Translating 's to "s
      */
-
     public static String requoteString(String s) {
         return s.replace("'", "\"");
     }
-
 
     private ActionSounds createWForcedResponse(String response) {
         ActionSounds_impl_ari_0_0_1 a = new ActionSounds_impl_ari_0_0_1();
@@ -74,7 +49,6 @@ public class ActionSoundsTest {
     /**
      * Tries generating a bridge.
      */
-
     @Test
     public void generateSound() throws RestException {
         ActionSounds aa = createWForcedResponse(jsonSounds);
@@ -101,6 +75,5 @@ public class ActionSoundsTest {
         });
 
     }
-
 
 }

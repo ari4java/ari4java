@@ -6,13 +6,13 @@ import java.util.List;
  * Interface to pluggable HTTP client implementation
  *
  * @author mwalton
- *
  */
 public interface HttpClient {
 
-    String httpActionSync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,List<HttpResponse> errors) throws RestException;
+    String httpActionSync(String uri, String method, List<HttpParam> parametersQuery, String body, List<HttpResponse> errors) throws RestException;
 
-    byte[] httpActionSyncAsBytes(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody,List<HttpResponse> errors) throws RestException;
+    byte[] httpActionSyncAsBytes(String uri, String method, List<HttpParam> parametersQuery, String body, List<HttpResponse> errors) throws RestException;
 
-    void httpActionAsync(String uri, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersForm, List<HttpParam> parametersBody, List<HttpResponse> errors, HttpResponseHandler responseHandler, boolean binary) throws RestException;
+    void httpActionAsync(String uri, String method, List<HttpParam> parametersQuery, String body, List<HttpResponse> errors, HttpResponseHandler responseHandler, boolean binary) throws RestException;
+
 }

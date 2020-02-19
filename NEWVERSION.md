@@ -13,7 +13,6 @@ When a release is ready:
 		export BINTRAY_USER=<user>
 		export BINTRAY_KEY={bintray.txt}
 
-		./gradlew clean test jar
-		./gradlew bintrayUpload
+		./gradlew clean :codegen:runCodegen buildProps build bintrayUpload
 
 

@@ -2,68 +2,67 @@ package ch.loway.oss.ari4java.sandbox.sample;
 
 import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.AriVersion;
-import ch.loway.oss.ari4java.generated.models.*;
-import ch.loway.oss.ari4java.tools.AriCallback;
+import ch.loway.oss.ari4java.generated.models.AsteriskInfo;
+import ch.loway.oss.ari4java.generated.models.Message;
+import ch.loway.oss.ari4java.generated.models.PlaybackFinished;
+import ch.loway.oss.ari4java.generated.models.StasisStart;
+import ch.loway.oss.ari4java.tools.AriConnectionEvent;
+import ch.loway.oss.ari4java.tools.AriWSCallback;
 import ch.loway.oss.ari4java.tools.RestException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class Weasels {
 
-    private static final String ARI_URL  = "http://192.168.99.100:18088/";
-    private static final String ARI_USER = "ari4java";
-    private static final String ARI_PASS = "yothere";
     private static final String ARI_APP = "weasels-app";
 
     private ARI ari;
+    private Logger logger = LoggerFactory.getLogger(Weasels.class);
 
     public static void main(String[] args) {
-        new Weasels().start();
+        if (args.length != 3) {
+            System.out.println("Expecting 3 arguments: url user pass");
+            System.exit(1);
+        }
+        new Weasels().start(args[0], args[1], args[2]);
     }
 
-    private void start() {
-        log("THE START");
-        boolean connected = connect();
+    private void start(String url, String user, String pass) {
+        logger.info("THE START");
+        boolean connected = connect(url, user, pass);
         if (connected) {
             try {
                 weasels();
             } catch (Throwable t) {
-                log("Error: " + t.getMessage());
-                t.printStackTrace();
+                logger.error("Error: {}", t.getMessage(), t);
             } finally {
-                log("ARI cleanup");
+                logger.info("ARI cleanup");
                 ari.cleanup();
             }
         }
-        log("THE END");
+        logger.info("THE END");
     }
 
-    private void log(String message) {
-        String time = LocalDateTime.now().toString();
-        String thread = Thread.currentThread().getName();
-        System.out.println(time + " - [" + thread + "] - " + message);
-    }
-
-    private boolean connect() {
+    private boolean connect(String url, String user, String pass) {
         try {
-            ari = ARI.build(ARI_URL, ARI_APP, ARI_USER, ARI_PASS, AriVersion.IM_FEELING_LUCKY);
-            log("Detect Server ARI Version: " + ari.getVersion().version());
+            ari = ARI.build(url, ARI_APP, user, pass, AriVersion.IM_FEELING_LUCKY);
+            logger.info("ARI Version: {}", ari.getVersion().version());
             AsteriskInfo info = ari.asterisk().getInfo().execute();
-            log("System up since " + info.getStatus().getStartup_time());
+            logger.info("AsteriskInfo up since {}", info.getStatus().getStartup_time());
             return true;
         } catch (Throwable t) {
-            log("Error: " + t.getMessage());
-            t.printStackTrace();
+            logger.error("Error: {}", t.getMessage(), t);
         }
         return false;
     }
 
     private void weasels() throws InterruptedException, RestException {
         final ExecutorService threadPool = Executors.newFixedThreadPool(10);
-        ari.events().eventWebsocket(ARI_APP).execute(new AriCallback<Message>() {
+        ari.events().eventWebsocket(ARI_APP).execute(new AriWSCallback<Message>() {
             @Override
             public void onSuccess(Message message) {
                 threadPool.execute(() -> {
@@ -73,18 +72,23 @@ public class Weasels {
                         } else if (message instanceof PlaybackFinished) {
                             handlePlaybackFinished((PlaybackFinished) message);
                         } else {
-                            log("Unhandled Event - " + message.getType());
+                            logger.info("Unhandled Event - {}", message.getType());
                         }
                     } catch (Throwable e) {
-                        log("Error: " + e.getMessage());
-                        e.printStackTrace();
+                        logger.error("Error: {}", e.getMessage(), e);
                     }
                 });
             }
+
             @Override
             public void onFailure(RestException e) {
-                log("Error: " + e.getMessage());
-                e.printStackTrace();
+                logger.error("Error: {}", e.getMessage(), e);
+                threadPool.shutdown();
+            }
+
+            @Override
+            public void onConnectionEvent(AriConnectionEvent event) {
+                logger.debug(event.name());
             }
         });
         // usually we would not terminate and run indefinitely
@@ -93,20 +97,20 @@ public class Weasels {
     }
 
     private void handleStart(StasisStart start) throws RestException {
-        log("Stasis Start Channel: " + start.getChannel().getId());
+        logger.info("Stasis Start Channel: {}", start.getChannel().getId());
         ARI.sleep(300); // a slight pause before we start the playback ...
         ari.channels().play(start.getChannel().getId(), "sound:weasels-eaten-phonesys").execute();
     }
 
     private void handlePlaybackFinished(PlaybackFinished playback) throws RestException {
-        log("PlaybackFinished - " + playback.getPlayback().getTarget_uri());
+        logger.info("PlaybackFinished - {}", playback.getPlayback().getTarget_uri());
         if (playback.getPlayback().getTarget_uri().indexOf("channel:") == 0) {
             String chanId = playback.getPlayback().getTarget_uri().split(":")[1];
-            log("Hangup Channel: " + chanId);
+            logger.info("Hangup Channel: {}", chanId);
             ARI.sleep(300); // a slight pause before we hangup ...
             ari.channels().hangup(chanId).execute();
         } else {
-            log("Error: Cannot handle URI - " + playback.getPlayback().getTarget_uri());
+            logger.error("Cannot handle URI - {}", playback.getPlayback().getTarget_uri());
         }
     }
 

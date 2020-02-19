@@ -43,7 +43,7 @@ An ARI application is pretty much useless unless you subscribe to and handle the
 so you need to create the websocket and choose to subscribe to all events or only events for actions made by your app.
 This must use the asynchronous execution as the events are asynchronous.
 ```java
-AriCallback<Message> callback = new AriCallback<Message>() {
+AriCallback<Message> callback = new AriWSCallback<Message>() {
     @Override
     public void onSuccess(Message message) {
         // code to handle the events ...
@@ -51,6 +51,10 @@ AriCallback<Message> callback = new AriCallback<Message>() {
     @Override
     public void onFailure(RestException e) {
         e.printStackTrace();
+    }
+    @Override
+    public void onConnectionEvent(AriConnectionEvent event) {
+        // FYI
     }
 };
 ari.events().eventWebsocket("app-name").execute(callback);

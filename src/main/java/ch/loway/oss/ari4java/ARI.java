@@ -1,19 +1,13 @@
 package ch.loway.oss.ari4java;
 
 import ch.loway.oss.ari4java.generated.actions.requests.EventsEventWebsocketGetRequest;
-import ch.loway.oss.ari4java.tools.ARIException;
+import ch.loway.oss.ari4java.tools.*;
 import ch.loway.oss.ari4java.generated.actions.*;
 import ch.loway.oss.ari4java.generated.models.*;
-import ch.loway.oss.ari4java.tools.AriCallback;
 
 import java.io.IOException;
 import java.net.URL;
 
-import ch.loway.oss.ari4java.tools.BaseAriAction;
-import ch.loway.oss.ari4java.tools.MessageQueue;
-import ch.loway.oss.ari4java.tools.HttpClient;
-import ch.loway.oss.ari4java.tools.RestException;
-import ch.loway.oss.ari4java.tools.WsClient;
 import ch.loway.oss.ari4java.tools.http.NettyHttpClient;
 import ch.loway.oss.ari4java.tools.tags.EventSource;
 
@@ -23,8 +17,6 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,7 +29,6 @@ import java.util.regex.Pattern;
  */
 public class ARI {
 
-    public final static Charset ENCODING = StandardCharsets.UTF_8;
     private final static String ALLOWED_IN_UID = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private String appName = "";
@@ -232,78 +223,19 @@ public class ARI {
      * @throws ARIException if the version is not supported
      */
     protected static AriVersion detectAriVersion(String url, String user, String pass) throws ARIException {
-
-        String response = doHttpGet(url + "ari/api-docs/resources.json", user, pass);
-        String version = findVersionString(response);
-        return AriVersion.fromVersionString(version);
-
-    }
-
-    /**
-     * Runs an HTTP GET and returns the text downloaded.
-     * <p>
-     * \TODO does it really belong here?
-     *
-     * @param urlWithParms urlWithParms
-     * @param user         user
-     * @param pwd          pwd
-     * @return The body of the HTTP request.
-     * @throws ARIException when error
-     */
-    private static String doHttpGet(String urlWithParms, String user, String pwd) throws ARIException {
-        URL url = null;
         try {
-            url = new URL(urlWithParms);
-        } catch (MalformedURLException e) {
-            throw new ARIException("MalformedUrlException: " + e.getMessage());
-        }
-
-        URLConnection uc = null;
-        try {
-            uc = url.openConnection();
-        } catch (IOException e) {
-            throw new ARIException("IOException: " + e.getMessage());
-        }
-
-        StringBuilder response = new StringBuilder();
-
-        String userpass = user + ":" + pwd;
-        String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes(ARI.ENCODING));
-
-        uc.setRequestProperty("Authorization", basicAuth);
-        InputStream is = null;
-        try {
-            is = uc.getInputStream();
-        } catch (IOException e) {
-            throw new ARIException("Cannot connect: " + e.getMessage());
-        }
-
-
-        BufferedReader buffReader = new BufferedReader(new InputStreamReader(is, ARI.ENCODING));
-
-        String line = null;
-        try {
-            line = buffReader.readLine();
-        } catch (IOException e) {
-            throw new ARIException("IOException: " + e.getMessage());
-        }
-        while (line != null) {
-            response.append(line);
-            response.append('\n');
-            try {
-                line = buffReader.readLine();
-            } catch (IOException e) {
-                throw new ARIException("IOException: " + e.getMessage());
+            NettyHttpClient hc = new NettyHttpClient();
+            hc.initialize(url, user, pass);
+            String response = hc.httpActionSync("/api-docs/resources.json", "GET", null, null, null);
+            hc.destroy();
+            String version = findVersionString(response);
+            return AriVersion.fromVersionString(version);
+        } catch (Exception e) {
+            if (e instanceof ARIException) {
+                throw (ARIException) e;
             }
+            throw new ARIException(e.getMessage(), e);
         }
-        try {
-            buffReader.close();
-        } catch (IOException e) {
-            throw new ARIException("IOException: " + e.getMessage());
-        }
-
-        //System.out.println("Response: " + response.toString());
-        return response.toString();
     }
 
     /**

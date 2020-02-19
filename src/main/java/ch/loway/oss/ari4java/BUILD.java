@@ -2,6 +2,7 @@
 package ch.loway.oss.ari4java;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -15,12 +16,19 @@ public class BUILD {
 
     static {
         String number = "x";
+        InputStream stream = BUILD.class.getResourceAsStream("build.properties");
         try {
             Properties p = new Properties();
-            p.load(BUILD.class.getResourceAsStream("build.properties"));
+            p.load(stream);
             number = p.getProperty("BUILD_NUMBER");
         } catch (IOException e) {
             // oh well
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                // oh well
+            }
         }
         BUILD_N = number;
     }

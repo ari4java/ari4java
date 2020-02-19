@@ -53,6 +53,7 @@ public class Operation {
                 "java.util.Date",
                 "java.util.List",
                 "java.util.Map",
+                "java.util.HashMap",
                 "java.util.ArrayList",
                 "java.net.URLEncoder",
                 "ch.loway.oss.ari4java.ARI",
@@ -91,6 +92,16 @@ public class Operation {
                     .append("    return this;\n")
                     .append("  }\n\n");
             interfaces.removeSignature(p.getSignature(getInterfaceName()));
+            if (p.javaType.equals("Map<String,String>")) {
+                sb.append(p.getDefinitionForAddToMap(getInterfaceName())).append(" {\n")
+                        .append("    if (this.").append(p.name).append(" == null) {\n")
+                        .append("        this.").append(p.name).append(" = new HashMap<>();\n")
+                        .append("    }\n")
+                        .append("    this.").append(p.name).append(".put(key, value);\n")
+                        .append("    return this;\n")
+                        .append("  }\n\n");
+                interfaces.removeSignature(p.getSignatureForAddToMap(getInterfaceName()));
+            }
         }
 
         // 1. Private build method
@@ -107,20 +118,9 @@ public class Operation {
             if (p.type == ParamType.QUERY) {
                 sb.append("    ariRequest.addParamQuery(HttpParam.build( \"").append(p.name)
                         .append("\", ").append(p.name).append("));\n");
-            } else if (p.type == ParamType.FORM) {
-                sb.append("    ariRequest.addParamForm(HttpParam.build( \"").append(p.name)
-                        .append("\", ").append(p.name).append("));\n");
             } else if (p.type == ParamType.BODY) {
-                if ("Map<String,String>".equals(p.javaType)) {
-                    sb.append("    ariRequest.addParamBody(HttpParam.build( \"").append(p.name)
-                            .append("\", ").append(p.name).append("));\n");
-                } else if ("Object".equals(p.javaType)) {
-                    sb.append("    ariRequest.addParamBody(HttpParam.build(\"").append(p.name)
-                            .append("\", serializeToJson( ").append(p.name).append(")));\n");
-                } else {
-                    sb.append("    ariRequest.addParamBody(HttpParam.build( \"").append(p.name)
-                            .append("\", ").append(p.name).append("));\n");
-                }
+                sb.append("    ariRequest.setBodyField(\"").append(p.name)
+                        .append("\", ").append(p.name).append(");\n");
             }
         }
         for (ErrorResp er : errorCodes) {
@@ -142,8 +142,10 @@ public class Operation {
             if (responseInterface.equalsIgnoreCase("byte[]")) {
                 sb.append("    return httpActionSyncAsBytes(build());\n");
             } else {
-                sb.append("    String json = httpActionSync(build());\n");
-                if (!responseInterface.equalsIgnoreCase("void")) {
+                if (responseInterface.equalsIgnoreCase("void")) {
+                    sb.append("    httpActionSync(build());\n");
+                } else {
+                    sb.append("    String json = httpActionSync(build());\n");
                     String deserializationType = responseConcreteClass + ".class";
                     if (responseConcreteClass.startsWith("List<")) {
                         deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
@@ -284,6 +286,11 @@ public class Operation {
             String javaSignature = p.getSignature(getInterfaceName());
             String definition = p.getDefinition(getInterfaceName());
             j.iKnow(javaSignature, definition, "", apiVersion);
+            if (p.javaType.equals("Map<String,String>")) {
+                javaSignature = p.getSignatureForAddToMap(getInterfaceName());
+                definition = p.getDefinitionForAddToMap(getInterfaceName());
+                j.iKnow(javaSignature, definition, "", apiVersion);
+            }
         }
         j.iKnow(getSyncExecuteSignature(), getSyncExecuteDefinition(), "", apiVersion);
         j.iKnow(getAsyncExecuteSignature(), getAsyncExecuteDefinition(), "", apiVersion);
@@ -312,7 +319,20 @@ public class Operation {
                     .append("(").append(methodArgumentType).append(" ").append(name).append(")");
             return sb.toString();
         }
-        
+
+        public String getSignatureForAddToMap(String returnType) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(returnType).append(" ").append(JavaGen.addPrefixAndCapitalize("add", name));
+            sb.append(" ").append(javaType);
+            return sb.toString();
+        }
+
+        public String getDefinitionForAddToMap(String returnType) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("  public ").append(returnType).append(" ").append(JavaGen.addPrefixAndCapitalize("add", name))
+                    .append("(String key, String value)");
+            return sb.toString();
+        }
     }
 
     public static enum ParamType {
