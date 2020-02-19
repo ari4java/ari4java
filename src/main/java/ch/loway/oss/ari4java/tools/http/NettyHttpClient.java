@@ -4,6 +4,7 @@ import ch.loway.oss.ari4java.tools.HttpResponse;
 import ch.loway.oss.ari4java.tools.*;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -12,6 +13,9 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.base64.Base64;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.*;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
@@ -19,6 +23,7 @@ import io.netty.util.concurrent.ScheduledFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.SSLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
@@ -54,11 +59,12 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     private String wsEventsUrl;
     private List<HttpParam> wsEventsParamQuery;
     private WsClientConnection wsClientConnection;
-    private int reconnectCount = 0;
+    private int reconnectCount = -1;
     private ChannelFuture wsChannelFuture;
     private ScheduledFuture<?> wsPingTimer = null;
     private NettyWSClientHandler wsHandler;
     private ChannelFutureListener wsFuture;
+    private static SslContext sslContext;
 
     private int pongFailureCount = 0;
     private long lastPong = 0;
@@ -73,8 +79,8 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         logger.debug("initialize url: {}, user: {}", baseUrl, username);
         baseUri = new URI(baseUrl);
         String protocol = baseUri.getScheme();
-        if (!"http".equals(protocol)) {
-            logger.warn("Not http, protocol: {}", protocol);
+        if (!"http".equalsIgnoreCase(protocol) && !"https".equalsIgnoreCase(protocol)) {
+            logger.warn("Not http(s), protocol: {}", protocol);
             throw new IllegalArgumentException("Unsupported protocol: " + protocol);
         }
         this.auth = "Basic " + Base64.encode(Unpooled.copiedBuffer((username + ":" + password), ARIEncoder.ENCODING)).toString(ARIEncoder.ENCODING);
@@ -84,32 +90,60 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     protected void bootstrap() {
         // Bootstrap is the factory for HTTP connections
         logger.debug("Bootstrap with\n" +
-                " connection timeout: {},\n" +
-                " read timeout: {},\n" +
-                " aggregator max-length: {}\n ",
-                (CONNECTION_TIMEOUT_SEC * 1000),
+                        " connection timeout: {},\n" +
+                        " read timeout: {},\n" +
+                        " aggregator max-length: {}",
+                CONNECTION_TIMEOUT_SEC,
                 READ_TIMEOUT_SEC,
                 (MAX_HTTP_REQUEST_KB * 1024));
         bootStrap = new Bootstrap();
-        bootStrap.group(group);
-        bootStrap.channel(NioSocketChannel.class);
+        bootstrapOptions(bootStrap);
         bootStrap.handler(new ChannelInitializer<SocketChannel>() {
-
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
-                ch.config().setConnectTimeoutMillis(CONNECTION_TIMEOUT_SEC * 1000);
+                addSSLIfRequired(pipeline);
                 pipeline.addLast("read-timeout", new ReadTimeoutHandler(READ_TIMEOUT_SEC));
                 pipeline.addLast("http-codec", new HttpClientCodec());
-                pipeline.addLast("aggregator", new HttpObjectAggregator(MAX_HTTP_REQUEST_KB * 1024));
+                pipeline.addLast("http-aggregator", new HttpObjectAggregator(MAX_HTTP_REQUEST_KB * 1024));
                 pipeline.addLast("http-handler", new NettyHttpClientHandler());
             }
         });
     }
 
+    private void bootstrapOptions(Bootstrap bootStrap) {
+        bootStrap.group(group);
+        bootStrap.channel(NioSocketChannel.class);
+        bootStrap.option(ChannelOption.TCP_NODELAY, true);
+        bootStrap.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+        bootStrap.option(ChannelOption.SO_REUSEADDR, false);
+        bootStrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, CONNECTION_TIMEOUT_SEC * 1000);
+    }
+
+    private void addSSLIfRequired(ChannelPipeline pipeline) throws SSLException {
+        if ("https".equalsIgnoreCase(baseUri.getScheme())) {
+            if (sslContext == null) {
+                sslContext = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+            }
+            pipeline.addLast("ssl", sslContext.newHandler(pipeline.channel().alloc()));
+        }
+    }
+
+    private int getPort() {
+        int port = baseUri.getPort();
+        if (port == -1) {
+            if ("http".equalsIgnoreCase(baseUri.getScheme())) {
+                port = 80;
+            } else if ("https".equalsIgnoreCase(baseUri.getScheme())) {
+                port = 443;
+            }
+        }
+        return port;
+    }
+
     protected ChannelFuture httpConnect() {
         logger.debug("HTTP Connect uri: {}", baseUri.toString());
-        return bootStrap.connect(baseUri.getHost(), baseUri.getPort());
+        return bootStrap.connect(baseUri.getHost(), getPort());
     }
 
     public void destroy() {
@@ -118,6 +152,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         shutDownGroup.schedule(new Runnable() {
             @Override
             public void run() {
+                logger.debug("running shutdown...");
                 if (wsPingTimer != null) {
                     logger.debug("cancel ping...");
                     wsPingTimer.cancel(true);
@@ -137,6 +172,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                     group.shutdownGracefully(5, 10, TimeUnit.SECONDS).addListener(new GenericFutureListener() {
                         @Override
                         public void operationComplete(Future future) throws Exception {
+                            logger.debug("group shutdown complete");
                             shutDownGroup.shutdownGracefully(5, 10, TimeUnit.SECONDS);
                             shutDownGroup = null;
                         }
@@ -253,7 +289,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     private RestException makeException(HttpResponseStatus status, String response, List<HttpResponse> errors) {
 
         if (status == null && response == null) {
-                return new RestException("Client Shutdown");
+            return new RestException("Client Shutdown");
         } else if (status == null) {
             return new RestException("Client Shutdown: " + response);
         }
@@ -285,15 +321,17 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
     private NettyHttpClientHandler httpActionSyncHandler(String uri, String method, List<HttpParam> parametersQuery,
                                                          List<HttpParam> parametersBody, List<HttpResponse> errors) throws RestException {
-        logger.debug("Sync Action, uri: {}, method: {}",  uri, method);
+        logger.debug("Sync Action, uri: {}, method: {}", uri, method);
         HttpRequest request = buildRequest(uri, method, parametersQuery, parametersBody);
         Channel ch = httpConnect().addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
                 if (future.isSuccess()) {
                     logger.debug("HTTP connected");
+                } else if (future.cause() != null) {
+                    logger.error("HTTP Connection Error - {}", future.cause().getMessage(), future.cause());
                 } else {
-                    logger.warn("HTTP Connection Error - {}", future.cause().getMessage());
+                    logger.error("HTTP Connection Error - Unknown");
                 }
             }
         }).syncUninterruptibly().channel();
@@ -315,7 +353,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                                 List<HttpParam> parametersBody, final List<HttpResponse> errors,
                                 final HttpResponseHandler responseHandler, boolean binary) {
 
-        logger.debug("Async Action, uri: {}, method: {}",  uri, method);
+        logger.debug("Async Action, uri: {}, method: {}", uri, method);
         final HttpRequest request = buildRequest(uri, method, parametersQuery, parametersBody);
         // Get future channel
         ChannelFuture cf = httpConnect();
@@ -362,7 +400,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     @Override
     public WsClientConnection connect(final HttpResponseHandler callback, final String url, final List<HttpParam> lParamQuery) {
 
-            WebSocketClientHandshaker handshake = getWsHandshake(url, lParamQuery);
+        WebSocketClientHandshaker handshake = getWsHandshake(url, lParamQuery);
         logger.debug("WS Connect uri: {}, ver: {}", handshake.uri().toString(), handshake.version().toString());
         this.wsHandler = new NettyWSClientHandler(handshake, callback, this);
         this.wsCallback = callback;
@@ -370,21 +408,19 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         this.wsEventsParamQuery = lParamQuery;
 
         Bootstrap wsBootStrap = new Bootstrap();
-        wsBootStrap.group(group);
-        wsBootStrap.channel(NioSocketChannel.class);
+        bootstrapOptions(wsBootStrap);
         wsBootStrap.handler(new ChannelInitializer<SocketChannel>() {
-
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
-                ch.config().setConnectTimeoutMillis(CONNECTION_TIMEOUT_SEC * 1000);
+                addSSLIfRequired(pipeline);
                 pipeline.addLast("http-codec", new HttpClientCodec());
                 pipeline.addLast("aggregator", new HttpObjectAggregator(MAX_HTTP_REQUEST_KB * 1024));
                 pipeline.addLast("ws-handler", wsHandler);
             }
         });
 
-        wsChannelFuture = wsBootStrap.connect(baseUri.getHost(), baseUri.getPort());
+        wsChannelFuture = wsBootStrap.connect(baseUri.getHost(), getPort());
         wsFuture = new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
@@ -467,10 +503,13 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                     wsHandler.setShuttingDown(true);
                     Channel ch = wsChannelFuture.channel();
                     if (ch != null) {
-                        // NettyWSClientHandler will close the connection when the server
-                        // responds to the CloseWebSocketFrame.
-                        logger.debug("Send CloseWebSocketFrame ...");
-                        ch.writeAndFlush(new CloseWebSocketFrame());
+                        // if connected send CloseWebSocketFrame as NettyWSClientHandler will close the connection when the server responds to it
+                        if (reconnectCount == 0) {
+                            logger.debug("Send CloseWebSocketFrame ...");
+                            // set to -1 so we don't try send another close frame
+                            reconnectCount = -1;
+                            ch.writeAndFlush(new CloseWebSocketFrame());
+                        }
                         // if the server is no longer there then close any way
                         ch.close();
                     }
@@ -509,12 +548,8 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             wsPingTimer = null;
         }
 
-        if (!autoReconnect || reconnectCount >= 10) {
-            if (!autoReconnect) {
-                logger.error("Tried reconnecting 10 times, executing failure callback");
-            } else {
-                logger.warn("autoReconnect set, executing failure callback");
-            }
+        if (!autoReconnect || reconnectCount == -1 || reconnectCount >= 10) {
+            logger.warn("Cannot connect: {} - executing failure callback", cause.getMessage());
             wsCallback.onFailure(cause);
             return;
         }
@@ -549,10 +584,20 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
     /**
      * The ability to turn on/off the websocket auto reconnect, defaulted to on
+     *
      * @param val auto reconnect
      */
     public static void setAutoReconnect(boolean val) {
         NettyHttpClient.autoReconnect = val;
+    }
+
+    /**
+     * The ability to provide a custom SSL Contect for
+     *
+     * @param sslContext the ssl context
+     */
+    public static void setSslContext(SslContext sslContext) {
+        NettyHttpClient.sslContext = sslContext;
     }
 
 }
