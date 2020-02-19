@@ -26,9 +26,7 @@ import org.slf4j.LoggerFactory;
 import javax.net.ssl.SSLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -45,7 +43,8 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
     public static final int CONNECTION_TIMEOUT_SEC = 10;
     public static final int READ_TIMEOUT_SEC = 30;
-    public static final int MAX_HTTP_REQUEST_KB = 16 * 1024;
+    public static final int MAX_HTTP_REQUEST = 16 * 1024 * 1024; // 16MB
+    public static final int MAX_HTTP_BIN_REQUEST = 150 * 1024 * 1024; // 150MB
 
     private Logger logger = LoggerFactory.getLogger(NettyHttpClient.class);
 
@@ -95,7 +94,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                         " aggregator max-length: {}",
                 CONNECTION_TIMEOUT_SEC,
                 READ_TIMEOUT_SEC,
-                (MAX_HTTP_REQUEST_KB * 1024));
+                MAX_HTTP_REQUEST);
         bootStrap = new Bootstrap();
         bootstrapOptions(bootStrap);
         bootStrap.handler(new ChannelInitializer<SocketChannel>() {
@@ -105,7 +104,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                 addSSLIfRequired(pipeline);
                 pipeline.addLast("read-timeout", new ReadTimeoutHandler(READ_TIMEOUT_SEC));
                 pipeline.addLast("http-codec", new HttpClientCodec());
-                pipeline.addLast("http-aggregator", new HttpObjectAggregator(MAX_HTTP_REQUEST_KB * 1024));
+                pipeline.addLast("http-aggregator", new HttpObjectAggregator(MAX_HTTP_REQUEST));
                 pipeline.addLast("http-handler", new NettyHttpClientHandler());
             }
         });
@@ -232,12 +231,11 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     }
 
     // Build the HTTP request based on the given parameters
-    private HttpRequest buildRequest(String path, String method, List<HttpParam> parametersQuery, List<HttpParam> parametersBody) {
+    private HttpRequest buildRequest(String path, String method, List<HttpParam> parametersQuery, String body) {
         String url = buildURL(path, parametersQuery, false);
         FullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.valueOf(method), url);
-        if (parametersBody != null && !parametersBody.isEmpty()) {
-            String vars = makeJson(parametersBody);
-            ByteBuf bbuf = Unpooled.copiedBuffer(vars, ARIEncoder.ENCODING);
+        if (body != null && !body.isEmpty()) {
+            ByteBuf bbuf = Unpooled.copiedBuffer(body, ARIEncoder.ENCODING);
             request.headers().add(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON);
             request.headers().set(HttpHeaderNames.CONTENT_LENGTH, bbuf.readableBytes());
             request.content().clear().writeBytes(bbuf);
@@ -245,45 +243,8 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         request.headers().set(HttpHeaderNames.HOST, baseUri.getHost());
         request.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.CLOSE);
         request.headers().set(HttpHeaderNames.AUTHORIZATION, this.auth);
+        HTTPLogger.traceRequest(request, body);
         return request;
-    }
-
-    private String makeJson(List<HttpParam> variables) {
-        String key = variables.remove(0).value;
-        return Objects.equals(key, "fields") ? makeBodyFields(variables) : makeBodyVariables(variables);
-    }
-
-    private String makeBodyVariables(List<HttpParam> variables) {
-        StringBuilder varBuilder = new StringBuilder();
-        varBuilder.append("{").append("\"variables\": {");
-        Iterator<HttpParam> entryIterator = variables.iterator();
-        while (entryIterator.hasNext()) {
-            HttpParam param = entryIterator.next();
-            varBuilder.append("\"").append(param.name).append("\"").append(": ").append("\"").append(param.value).append("\"");
-            if (entryIterator.hasNext()) {
-                varBuilder.append(",");
-            }
-        }
-        varBuilder.append("}}");
-        return varBuilder.toString();
-    }
-
-    private String makeBodyFields(List<HttpParam> variables) {
-        StringBuilder varBuilder = new StringBuilder();
-        varBuilder.append("{").append("\"fields\": [");
-        Iterator<HttpParam> entryIterator = variables.iterator();
-        while (entryIterator.hasNext()) {
-            HttpParam param = entryIterator.next();
-            varBuilder.append("{")
-                    .append("\"").append("attribute").append("\"").append(": ").append("\"").append(param.name).append("\",")
-                    .append("\"").append("value").append("\"").append(": ").append("\"").append(param.value).append("\"")
-                    .append("}");
-            if (entryIterator.hasNext()) {
-                varBuilder.append(",");
-            }
-        }
-        varBuilder.append("]}");
-        return varBuilder.toString();
     }
 
     private RestException makeException(HttpResponseStatus status, String response, List<HttpResponse> errors) {
@@ -306,28 +267,38 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     // Synchronous HTTP action
     @Override
     public String httpActionSync(String uri, String method, List<HttpParam> parametersQuery,
-                                 List<HttpParam> parametersBody, List<HttpResponse> errors) throws RestException {
-        NettyHttpClientHandler handler = httpActionSyncHandler(uri, method, parametersQuery, parametersBody, errors);
+                                 String body, List<HttpResponse> errors) throws RestException {
+        NettyHttpClientHandler handler = httpActionSyncHandler(uri, method, parametersQuery, body, errors);
         return handler.getResponseText();
     }
 
     // Synchronous HTTP action
     @Override
     public byte[] httpActionSyncAsBytes(String uri, String method, List<HttpParam> parametersQuery,
-                                        List<HttpParam> parametersBody, List<HttpResponse> errors) throws RestException {
-        NettyHttpClientHandler handler = httpActionSyncHandler(uri, method, parametersQuery, parametersBody, errors);
+                                        String body, List<HttpResponse> errors) throws RestException {
+        NettyHttpClientHandler handler = httpActionSyncHandler(uri, method, parametersQuery, body, errors, true);
         return handler.getResponseBytes();
     }
 
     private NettyHttpClientHandler httpActionSyncHandler(String uri, String method, List<HttpParam> parametersQuery,
-                                                         List<HttpParam> parametersBody, List<HttpResponse> errors) throws RestException {
+                                                         String body, List<HttpResponse> errors) throws RestException {
+        return httpActionSyncHandler(uri, method, parametersQuery, body, errors, false);
+    }
+
+    private NettyHttpClientHandler httpActionSyncHandler(String uri, String method, List<HttpParam> parametersQuery,
+                                                         String body, List<HttpResponse> errors, boolean binary) throws RestException {
         logger.debug("Sync Action, uri: {}, method: {}", uri, method);
-        HttpRequest request = buildRequest(uri, method, parametersQuery, parametersBody);
+        HttpRequest request = buildRequest(uri, method, parametersQuery, body);
         Channel ch = httpConnect().addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
                 if (future.isSuccess()) {
                     logger.debug("HTTP connected");
+                    if (binary) {
+                        logger.debug("Is Binary, replace http-aggregator ...");
+                        future.channel().pipeline().replace(
+                                "http-aggregator", "http-aggregator", new HttpObjectAggregator(MAX_HTTP_BIN_REQUEST));
+                    }
                 } else if (future.cause() != null) {
                     logger.error("HTTP Connection Error - {}", future.cause().getMessage(), future.cause());
                 } else {
@@ -350,11 +321,11 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     // Asynchronous HTTP action, response is passed to HttpResponseHandler
     @Override
     public void httpActionAsync(String uri, String method, List<HttpParam> parametersQuery,
-                                List<HttpParam> parametersBody, final List<HttpResponse> errors,
+                                String body, final List<HttpResponse> errors,
                                 final HttpResponseHandler responseHandler, boolean binary) {
 
         logger.debug("Async Action, uri: {}, method: {}", uri, method);
-        final HttpRequest request = buildRequest(uri, method, parametersQuery, parametersBody);
+        final HttpRequest request = buildRequest(uri, method, parametersQuery, body);
         // Get future channel
         ChannelFuture cf = httpConnect();
         cf.addListener(new ChannelFutureListener() {
@@ -364,18 +335,22 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                 if (future.isSuccess()) {
                     logger.debug("HTTP connected");
                     Channel ch = future.channel();
+                    if (binary) {
+                        logger.debug("Is Binary, replace http-aggregator ...");
+                        future.channel().pipeline().replace(
+                                "http-aggregator", "http-aggregator", new HttpObjectAggregator(MAX_HTTP_BIN_REQUEST));
+                    }
                     responseHandler.onChReadyToWrite();
                     ch.writeAndFlush(request);
                     ch.closeFuture().addListener(new ChannelFutureListener() {
-
                         @Override
                         public void operationComplete(ChannelFuture future) throws Exception {
                             responseHandler.onResponseReceived();
                             if (future.isSuccess()) {
                                 NettyHttpClientHandler handler = (NettyHttpClientHandler) future.channel().pipeline().get("http-handler");
-                                HttpResponseStatus rStatus = handler.getResponseStatus();
-
-                                if (httpResponseOkay(rStatus)) {
+                                if (handler.getException() != null) {
+                                    responseHandler.onFailure(new RestException(handler.getException()));
+                                } else if (httpResponseOkay(handler.getResponseStatus())) {
                                     if (binary) {
                                         responseHandler.onSuccess(handler.getResponseBytes());
                                     } else {
@@ -415,11 +390,16 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                 ChannelPipeline pipeline = ch.pipeline();
                 addSSLIfRequired(pipeline);
                 pipeline.addLast("http-codec", new HttpClientCodec());
-                pipeline.addLast("aggregator", new HttpObjectAggregator(MAX_HTTP_REQUEST_KB * 1024));
                 pipeline.addLast("ws-handler", wsHandler);
             }
         });
 
+        final ScheduledFuture<?> connectionTimeout = group.schedule(new Runnable() {
+            @Override
+            public void run() {
+                reconnectWs(new RestException("WS Connect Timeout"));
+            }
+        }, CONNECTION_TIMEOUT_SEC, TimeUnit.SECONDS);
         wsChannelFuture = wsBootStrap.connect(baseUri.getHost(), getPort());
         wsFuture = new ChannelFutureListener() {
             @Override
@@ -430,9 +410,11 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                         public void operationComplete(ChannelFuture future) throws Exception {
                             if (future.isSuccess()) {
                                 logger.debug("WS connected...");
-                                callback.onChReadyToWrite();
-                                // reset the reconnect counter on successful connect
+                                // cancel the connection timeout, start a ping and reset reconnect counter
+                                connectionTimeout.cancel(true);
+                                startPing();
                                 reconnectCount = 0;
+                                callback.onChReadyToWrite();
                             } else {
                                 reconnectWs(future.cause());
                             }
@@ -444,9 +426,6 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             }
         };
         wsChannelFuture.addListener(wsFuture);
-
-        // start a ws ping schedule
-        startPing();
 
         // Provide disconnection handle to client
         return createWsClientConnection();
@@ -482,7 +461,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                             }
                             if (noPong) {
                                 pongFailureCount++;
-                                if (pongFailureCount > 1) {
+                                if (pongFailureCount >= 1) {
                                     logger.warn("No Ping response from server, reconnect...");
                                     reconnectWs(new RestException("No Ping response from server"));
                                 }

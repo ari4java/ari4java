@@ -19,7 +19,6 @@ import java.util.Arrays;
  * HTTP server.
  *
  * @author mwalton
- *
  */
 
 @ChannelHandler.Sharable
@@ -39,12 +38,10 @@ public class NettyHttpClientHandler extends SimpleChannelInboundHandler<Object> 
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof FullHttpResponse) {
             FullHttpResponse response = (FullHttpResponse) msg;
-            if (logger.isTraceEnabled()) {
-                logger.trace("Headers: {}", response.headers().toString());
-            }
             responseBytes = new byte[response.content().readableBytes()];
             response.content().readBytes(responseBytes);
             responseStatus = response.status();
+            HTTPLogger.traceResponse(response, responseBytes);
             if (response.headers().get(HttpHeaderNames.CONTENT_LENGTH) != null) {
                 if (responseBytes.length != response.headers().getInt(HttpHeaderNames.CONTENT_LENGTH)) {
                     logger.error("HTTP Content-Length: {}, but body read: {}",

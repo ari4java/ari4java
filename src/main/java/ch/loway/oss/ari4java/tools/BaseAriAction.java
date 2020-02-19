@@ -10,18 +10,18 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Base functionality for ARI actions
- *
+ * <p>
  * Provides asynchronous and synchronous methods for forwarding requests to the
  * HTTP or WebSocket server.
- *
+ * <p>
  * Provides serialize/deserialize interface for JSON encoded objects
  *
  * @author lenz
@@ -29,10 +29,12 @@ import java.util.List;
  */
 public class BaseAriAction {
 
+    private static Logger logger = LoggerFactory.getLogger(BaseAriAction.class);
+
     public static class AriRequest {
-        private List<HttpParam> lParamQuery = new ArrayList<HttpParam>();
-        private List<HttpParam> lParamBody = new ArrayList<HttpParam>();
-        private List<HttpResponse> lE = new ArrayList<HttpResponse>();
+        private List<HttpParam> queryParams = new ArrayList<>();
+        private Map<String, Object> bodyFields = new HashMap<>();
+        private List<HttpResponse> lE = new ArrayList<>();
         private String url;
         private String method;
         private boolean wsUpgrade = false;
@@ -43,15 +45,24 @@ public class BaseAriAction {
         }
 
         public void addParamQuery(HttpParam param) {
-            lParamQuery.add(param);
+            queryParams.add(param);
         }
 
-        public void addParamBody(HttpParam param) {
-            lParamBody.add(param);
-        }
-
-        public void addParamBody(List<ch.loway.oss.ari4java.tools.HttpParam> params) {
-            lParamBody.addAll(params);
+        public void setBodyField(String field, Object value) {
+            if ("fields".equals(field) && value instanceof Map) {
+                ArrayList<Map<String, String>> list = new ArrayList<>();
+                Iterator<Map.Entry<String, String>> entryIterator = ((Map<String, String>) value).entrySet().iterator();
+                while (entryIterator.hasNext()) {
+                    Map.Entry<String, String> item = entryIterator.next();
+                    Map<String, String> f = new HashMap<>();
+                    f.put("attribute", item.getKey());
+                    f.put("value", item.getValue());
+                    list.add(f);
+                }
+                bodyFields.put(field, list);
+            } else {
+                bodyFields.put(field, value);
+            }
         }
 
         public void addErrorResponse(HttpResponse res) {
@@ -74,6 +85,7 @@ public class BaseAriAction {
 
     /**
      * Exception safe way to encode url parts
+     *
      * @param urlPart the part to encode
      * @return a encoded string
      * @see ARIEncoder#ENCODING
@@ -84,6 +96,7 @@ public class BaseAriAction {
 
     /**
      * Initiate synchronous HTTP interaction with server
+     *
      * @param request the request object
      * @return Response from server
      * @throws RestException when error
@@ -95,13 +108,14 @@ public class BaseAriAction {
             if (httpClient == null) {
                 throw new RestException("HTTP client implementation not set");
             } else {
-                return httpClient.httpActionSync(request.url, request.method, request.lParamQuery, request.lParamBody, request.lE);
+                return httpClient.httpActionSync(request.url, request.method, request.queryParams, serializeToJson(request.bodyFields), request.lE);
             }
         }
     }
 
     /**
      * Initiate synchronous HTTP interaction with server
+     *
      * @param request the request object
      * @return Response from server
      * @throws RestException when error
@@ -110,14 +124,14 @@ public class BaseAriAction {
         if (httpClient == null) {
             throw new RestException("HTTP client implementation not set");
         } else {
-            return httpClient.httpActionSyncAsBytes(request.url, request.method, request.lParamQuery, request.lParamBody, request.lE);
+            return httpClient.httpActionSyncAsBytes(request.url, request.method, request.queryParams, serializeToJson(request.bodyFields), request.lE);
         }
     }
 
     /**
      * Initiate asynchronous HTTP or WebSocket interaction with server
      *
-     * @param request the request object
+     * @param request      the request object
      * @param asyncHandler the handler
      */
     private synchronized void httpActionAsync(AriRequest request, AriAsyncHandler<?> asyncHandler) {
@@ -134,7 +148,7 @@ public class BaseAriAction {
                 return;
             }
             try {
-                wsConnection = wsClient.connect(asyncHandler, request.url, request.lParamQuery);
+                wsConnection = wsClient.connect(asyncHandler, request.url, request.queryParams);
                 liveActionList.add(this);
             } catch (RestException e) {
                 asyncHandler.getCallback().onFailure(e);
@@ -144,7 +158,7 @@ public class BaseAriAction {
         } else {
             try {
                 boolean binary = byte[].class.equals(asyncHandler.getType());
-                httpClient.httpActionAsync(request.url, request.method, request.lParamQuery, request.lParamBody, request.lE, asyncHandler, binary);
+                httpClient.httpActionAsync(request.url, request.method, request.queryParams, serializeToJson(request.bodyFields), request.lE, asyncHandler, binary);
             } catch (RestException e) {
                 asyncHandler.getCallback().onFailure(e);
             }
@@ -172,6 +186,12 @@ public class BaseAriAction {
      * @return String
      */
     public static String serializeToJson(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        if (obj instanceof Map && ((Map) obj).size() == 0) {
+            return null;
+        }
         try {
             return mapper.writeValueAsString(obj);
         } catch (IOException e) {
@@ -182,14 +202,13 @@ public class BaseAriAction {
     /**
      * Deserialize a type
      *
-     * @param json the json string
+     * @param json  the json string
      * @param klazz the class to deserialize to
-     * @param <T> the class to deserialize to
+     * @param <T>   the class to deserialize to
      * @return Deserialized type
      * @throws RestException when fail to deserialize
      */
     public static <T> T deserializeJson(String json, Class<T> klazz) throws RestException {
-
         try {
             return mapper.readValue(json, klazz);
         } catch (IOException e) {
@@ -200,38 +219,35 @@ public class BaseAriAction {
     /**
      * Deserialize a list
      *
-     * @param json the json string
+     * @param json      the json string
      * @param klazzType the class to deserialize to
-     * @param <T> the class to deserialize to
+     * @param <T>       the class to deserialize to
      * @return The deserialized list
      * @throws RestException when fail to deserialize
      */
     public static <T> T deserializeJson(String json, TypeReference<T> klazzType) throws RestException {
-
         try {
             return mapper.readValue(json, klazzType);
         } catch (IOException e) {
             throw new RestException("Decoding JSON list: " + e.getMessage(), e);
         }
-
     }
 
     /**
      * Deserialize an object as a list of interface. Class erasure in Java plain
      * sucks, I tell ya.
-     *
+     * <p>
      * In theory we should be safe given the condition that A extends C. I hope
      * at least. This is bug #17 - Avoid Lists of ? extends something
      *
-     * @param <A> The abstract type for members of the list.
-     * @param <C> The concrete type for members of the list.
-     * @param json Data in
+     * @param <A>             The abstract type for members of the list.
+     * @param <C>             The concrete type for members of the list.
+     * @param json            Data in
      * @param refConcreteType The reference concrete type, should be a List&lt;C&gt;
      * @return a list of A's
      * @throws RestException when fail to deserialize
      */
     public static <A, C extends A> List<A> deserializeJsonAsAbstractList(String json, TypeReference<List<C>> refConcreteType) throws RestException {
-
         try {
             List<C> lC = mapper.readValue(json, refConcreteType);
             List<A> lA = (List<A>) lC;
@@ -239,13 +255,12 @@ public class BaseAriAction {
         } catch (IOException e) {
             throw new RestException("Decoding JSON list: " + e.getMessage(), e);
         }
-
     }
 
     /**
      * Deserialize the event.
      *
-     * @param json the json string
+     * @param json  the json string
      * @param klazz the class to deserialize to
      * @return The event deserialized.
      * @throws RestException when fail to deserialize
@@ -309,7 +324,7 @@ public class BaseAriAction {
             public boolean handleUnknownProperty(DeserializationContext ctxt, JsonParser p, JsonDeserializer<?> deserializer, Object beanOrClass, String propertyName) throws IOException {
                 Collection<Object> propIds = (deserializer == null) ? null : deserializer.getKnownPropertyNames();
                 UnrecognizedPropertyException e = UnrecognizedPropertyException.from(p, beanOrClass, propertyName, propIds);
-                // TODO log a warning, once there is a logger...
+                logger.warn(e.toString());
                 return e.toString().length() > 0;
             }
         });

@@ -61,41 +61,43 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
         if (!shuttingDown) {
             if (this.wsClient != null) {
                 logger.debug("WS channel inactive - {}", ctx.toString());
-                wsClient.reconnectWs(new RestException("WS channel inactive"));
-            } else {
                 wsCallback.onDisconnect();
+                wsClient.reconnectWs(new RestException("WS channel inactive"));
             }
         }
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+        logger.debug("Received Message - {}", msg.getClass().getSimpleName());
         Channel ch = ctx.channel();
-        
-        if (!handshaker.isHandshakeComplete()) {
-            handshaker.finishHandshake(ch, (FullHttpResponse) msg);
-            handshakeFuture.setSuccess();
-            return;
-        }
-        
+
         if (msg instanceof FullHttpResponse) {
             FullHttpResponse response = (FullHttpResponse) msg;
-            String error = "Unexpected FullHttpResponse (getStatus=" + response.getStatus() + ", content=" + response.content().toString(ARIEncoder.ENCODING) + ')';
-            System.err.println(error);
+            responseBytes = new byte[response.content().readableBytes()];
+            response.content().readBytes(responseBytes);
+            HTTPLogger.traceResponse(response, responseBytes);
+            if (!handshaker.isHandshakeComplete()) {
+                logger.debug("Finish WS Handshake...");
+                handshaker.finishHandshake(ch, response);
+                handshakeFuture.setSuccess();
+                return;
+            }
+            String error = "Unexpected FullHttpResponse (getStatus=" + response.status().toString() + ", content=" + getResponseText() + ')';
+            logger.error(error);
             throw new Exception(error);
         }
 
         // call this so we can set the last received time
         wsCallback.onResponseReceived();
-        
-        WebSocketFrame frame = (WebSocketFrame) msg;
-        logger.debug("Received WebSocketFrame - {}", frame.getClass().getSimpleName());
 
-        if (frame instanceof TextWebSocketFrame) {
-            TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-            responseBytes = textFrame.text().getBytes(ARIEncoder.ENCODING);
-            wsCallback.onSuccess(textFrame.text());
-        } else if (frame instanceof CloseWebSocketFrame) {
+        if (msg instanceof TextWebSocketFrame) {
+            TextWebSocketFrame textFrame = (TextWebSocketFrame) msg;
+            String text = textFrame.content().toString(ARIEncoder.ENCODING);
+            HTTPLogger.traceWebSocketFrame(text);
+            responseBytes = text.getBytes(ARIEncoder.ENCODING);
+            wsCallback.onSuccess(text);
+        } else if (msg instanceof CloseWebSocketFrame) {
             ch.close();
             if (!shuttingDown) {
                 if (this.wsClient != null) {
@@ -104,19 +106,18 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
                     wsCallback.onDisconnect();
                 }
             }
-        } else if (frame instanceof PongWebSocketFrame) {
+        } else if (msg instanceof PongWebSocketFrame) {
             wsClient.pong();
         } else {
-            logger.warn("Unhandled WebSocketFrame: {}", frame.getClass().toString());
+            logger.warn("Unhandled WebSocketFrame: {}", msg.getClass().toString());
         }
-        
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         if (!shuttingDown)
             return;
-        cause.printStackTrace();
+        logger.error("exceptionCaught: {}", cause.getMessage(), cause);
         if (!handshakeFuture.isDone()) {
             handshakeFuture.setFailure(cause);
         }
