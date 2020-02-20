@@ -24,3 +24,9 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew :codegen:runCodegen build
+
+    - name: Archive Reports
+      uses: actions/upload-artifact@v1
+      with:
+        name: report-folder
+        path: build/reports
