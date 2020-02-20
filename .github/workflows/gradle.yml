@@ -8,6 +8,8 @@ on:
   pull_request:
     branches: 
       - master
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -15,6 +17,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/cache@v1
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
@@ -22,7 +30,15 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew :codegen:runCodegen build
+      run: ./gradlew clean :codegen:runCodegen build
+      if: github.event_name != 'release'
+    - name: Build & Publish with Gradle
+      env:
+        BUILD_NUMBER: ${{ GITHUB_RUN_NUMBER }}
+        BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
+        BINTRAY_KEY: ${{ secrets.BINTRAY_KEY }}
+      run: ./gradlew clean :codegen:runCodegen buildProps build bintrayUpload
+      if: github.event_name == 'release'
     - name: Archive Reports
       uses: actions/upload-artifact@v1
       with:
