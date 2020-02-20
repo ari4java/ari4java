@@ -34,7 +34,7 @@ jobs:
       if: github.event_name != 'release'
     - name: Build & Publish with Gradle
       env:
-        BUILD_NUMBER: ${{ GITHUB_RUN_NUMBER }}
+        BUILD_NUMBER: ${{ env.GITHUB_RUN_NUMBER }}
         BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
         BINTRAY_KEY: ${{ secrets.BINTRAY_KEY }}
       run: ./gradlew clean :codegen:runCodegen buildProps build bintrayUpload
