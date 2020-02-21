@@ -164,6 +164,20 @@ public class ARI {
     }
 
     /**
+     * @see ARI#build(String, String, String, String, AriVersion, boolean)
+     * @param url     url
+     * @param app     app
+     * @param user    user
+     * @param pass    The password
+     * @param version The required version
+     * @return instance
+     * @throws ARIException exception
+     */
+    public static ARI build(String url, String app, String user, String pass, AriVersion version) throws ARIException {
+        return build(url, app, user, pass, version, true);
+    }
+
+    /**
      * Builds a connector object for the specified ARI version.
      * If the version is set as IM_FEELING_LUCKY, then it will first try connecting,
      * will detect the current ARI version and will then connect to it.
@@ -172,21 +186,22 @@ public class ARI {
      * As this sets everything up but does not do anything, we do not have any
      * information on whether this connection is valid or not.
      *
-     * @param url     The URL of the Asterisk web server, e.g. http://10.10.5.8:8088/ - defined in http.conf
-     * @param app     The app
-     * @param user    The user name (defined in ari.conf)
-     * @param pass    The password
-     * @param version The required version
-     * @return a connection object
+     * @param url            The URL of the Asterisk web server, e.g. http://10.10.5.8:8088/ - defined in http.conf
+     * @param app            The app
+     * @param user           The user name (defined in ari.conf)
+     * @param pass           The password
+     * @param version        The required version
+     * @param testConnection Test the connection details by executing the ping operation
+     * @return an instance
      * @throws ARIException If the url is invalid, or the version of ARI is not supported.
      */
-    public static ARI build(String url, String app, String user, String pass, AriVersion version) throws ARIException {
+    public static ARI build(String url, String app, String user, String pass, AriVersion version, boolean testConnection) throws ARIException {
         if (version == AriVersion.IM_FEELING_LUCKY) {
             AriVersion currentVersion = detectAriVersion(url, user, pass);
-            return build(url, app, user, pass, currentVersion);
+            return build(url, app, user, pass, currentVersion, testConnection);
         } else {
             try {
-                return AriFactory.nettyHttp(url, user, pass, version, app);
+                return AriFactory.nettyHttp(url, user, pass, version, app, testConnection);
             } catch (URISyntaxException e) {
                 throw new ARIException("Wrong URI format: " + url);
             }
