@@ -101,7 +101,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
             ch.close();
             if (!shuttingDown) {
                 if (this.wsClient != null) {
-                    wsClient.reconnectWs(null);
+                    wsClient.reconnectWs(new RestException("CloseWebSocketFrame received"));
                 } else {
                     wsCallback.onDisconnect();
                 }
@@ -109,7 +109,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
         } else if (msg instanceof PongWebSocketFrame) {
             wsClient.pong();
         } else {
-            logger.warn("Unhandled WebSocketFrame: {}", msg.getClass().toString());
+            logger.warn("Unhandled: {}", msg.getClass().toString());
         }
     }
 
