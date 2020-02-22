@@ -294,11 +294,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             public void operationComplete(ChannelFuture future) throws Exception {
                 if (future.isSuccess()) {
                     logger.debug("HTTP connected");
-                    if (binary) {
-                        logger.debug("Is Binary, replace http-aggregator ...");
-                        future.channel().pipeline().replace(
-                                "http-aggregator", "http-aggregator", new HttpObjectAggregator(MAX_HTTP_BIN_REQUEST));
-                    }
+                    replaceAggregator(binary, future.channel());
                 } else if (future.cause() != null) {
                     logger.error("HTTP Connection Error - {}", future.cause().getMessage(), future.cause());
                 } else {
@@ -315,6 +311,14 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             return handler;
         } else {
             throw makeException(handler.getResponseStatus(), handler.getResponseText(), errors);
+        }
+    }
+
+    private void replaceAggregator(boolean binary, Channel ch) {
+        if (binary) {
+            logger.debug("Is Binary, replace http-aggregator ...");
+            ch.pipeline().replace(
+                    "http-aggregator", "http-aggregator", new HttpObjectAggregator(MAX_HTTP_BIN_REQUEST));
         }
     }
 
@@ -335,11 +339,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                 if (future.isSuccess()) {
                     logger.debug("HTTP connected");
                     Channel ch = future.channel();
-                    if (binary) {
-                        logger.debug("Is Binary, replace http-aggregator ...");
-                        future.channel().pipeline().replace(
-                                "http-aggregator", "http-aggregator", new HttpObjectAggregator(MAX_HTTP_BIN_REQUEST));
-                    }
+                    replaceAggregator(binary, ch);
                     responseHandler.onChReadyToWrite();
                     ch.writeAndFlush(request);
                     ch.closeFuture().addListener(new ChannelFutureListener() {
@@ -376,7 +376,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     public WsClientConnection connect(final HttpResponseHandler callback, final String url, final List<HttpParam> lParamQuery) {
 
         WebSocketClientHandshaker handshake = getWsHandshake(url, lParamQuery);
-        logger.debug("WS Connect uri: {}, ver: {}", handshake.uri().toString(), handshake.version().toString());
+        logger.debug("WS Connect uri: {}", handshake.uri().toString());
         this.wsHandler = new NettyWSClientHandler(handshake, callback, this);
         this.wsCallback = callback;
         this.wsEventsUrl = url;
@@ -390,6 +390,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                 ChannelPipeline pipeline = ch.pipeline();
                 addSSLIfRequired(pipeline);
                 pipeline.addLast("http-codec", new HttpClientCodec());
+                pipeline.addLast("http-aggregator", new HttpObjectAggregator(MAX_HTTP_REQUEST));
                 pipeline.addLast("ws-handler", wsHandler);
             }
         });
