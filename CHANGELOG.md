@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 [Unreleased]: https://github.com/l3nz/ari4java/compare/REL-0.9.0...HEAD
+### Added
+- Test connection when creating ARI #19
+### Fixed
+- Mistakenly removed the http aggregator
 
 ## [0.9.0] - 2020-02-20
 [0.9.0]: https://github.com/l3nz/ari4java/compare/REL-0.8.1...REL-0.9.0

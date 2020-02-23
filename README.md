@@ -34,10 +34,10 @@ dependencies {
 *The 1st repo declaration is temporary as we sort out moving from a private repo to an organization*
 
 # Documentation
-- [Releases](https://github.com/l3nz/ari4java/releases) and the [CHANGELOG](https://github.com/l3nz/ari4java/blob/master/CHANGELOG.md)
+- The [CHANGELOG](https://github.com/l3nz/ari4java/blob/master/CHANGELOG.md)
 - The [Wiki](https://github.com/l3nz/ari4java/wiki) has some more info on how to use the project
-    - [Examples]()
-    - [Build]()
+    - [Getting Started](https://github.com/l3nz/ari4java/wiki/Getting-Started)
+    - [Examples](https://github.com/l3nz/ari4java/wiki/Examples)
 
 ## Licensing
 The library is released under the GNU LGPL (see [LICENSE](https://github.com/l3nz/ari4java/blob/master/LICENSE) file).
