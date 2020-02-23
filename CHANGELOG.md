@@ -1,7 +1,10 @@
 # ARI4Java Changelog
 
 ## [Unreleased]
-[Unreleased]: https://github.com/l3nz/ari4java/compare/REL-0.9.0...HEAD
+[Unreleased]: https://github.com/l3nz/ari4java/compare/REL-0.9.1...HEAD
+
+## [0.9.1] - 2020-02-23
+[0.9.0]: https://github.com/l3nz/ari4java/compare/REL-0.9.0...REL-0.9.1
 ### Added
 - Test connection when creating ARI #19
 ### Fixed
