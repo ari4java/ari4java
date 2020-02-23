@@ -1,0 +1,7 @@
+if (file(".build-local").exists()) {
+    includeBuild("../") {
+        dependencySubstitution {
+            substitute(module("ch.loway.oss.ari4java:ari4java")).with(project(":"))
+        }
+    }
+}

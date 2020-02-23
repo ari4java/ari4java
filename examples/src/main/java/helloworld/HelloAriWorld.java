@@ -6,8 +6,9 @@ package helloworld;
 import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.AriFactory;
 import ch.loway.oss.ari4java.AriVersion;
-import ch.loway.oss.ari4java.generated.AsteriskInfo;
-import ch.loway.oss.ari4java.generated.Channel;
+import ch.loway.oss.ari4java.generated.models.AsteriskInfo;
+import ch.loway.oss.ari4java.generated.models.Channel;
+
 import java.util.List;
 
 /**
@@ -31,8 +32,8 @@ public class HelloAriWorld {
                     "ari4java", "yothere", 
                     AriVersion.ARI_1_5_0);
             
-            AsteriskInfo info = ari.asterisk().getInfo("");
-            List<Channel> channels = ari.channels().list();
+            AsteriskInfo info = ari.asterisk().getInfo().execute();
+            List<Channel> channels = ari.channels().list().execute();
             
             System.out.println("There are " + channels.size() + " active channels now.");
             System.out.println( "System up since " + info.getStatus().getStartup_time() );

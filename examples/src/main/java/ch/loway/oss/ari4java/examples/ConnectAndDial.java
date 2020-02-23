@@ -1,4 +1,4 @@
-package ch.loway.oss.ari4java.sandbox.sample;
+package ch.loway.oss.ari4java.examples;
 
 import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.tools.ARIException;
