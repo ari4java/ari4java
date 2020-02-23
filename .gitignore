@@ -25,3 +25,5 @@ build.xml
 src/main/generated/
 src/main/resources/build.properties
 codegen/tmp/
+
+.build-local

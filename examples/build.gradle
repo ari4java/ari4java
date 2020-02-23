@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    maven {
+        url  "https://dl.bintray.com/ari4java/maven"
+    }
+    jcenter()
+}
+
+dependencies {
+    compile 'ch.loway.oss.ari4java:ari4java:+'
+    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.13.0'
+}
+
+//task runWeaselsExample(type: JavaExec) {
+//    classpath = sourceSets.main.runtimeClasspath
+//    main = 'ch.loway.oss.ari4java.examples.Weasels'
+//}

@@ -1,4 +1,4 @@
-package ch.loway.oss.ari4java.sandbox.sample;
+package ch.loway.oss.ari4java.examples;
 
 import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.AriVersion;
@@ -23,17 +23,21 @@ public class Weasels {
     private ARI ari;
     private Logger logger = LoggerFactory.getLogger(Weasels.class);
 
-    public static void main(String[] args) {
-        if (args.length != 3) {
-            System.out.println("Expecting 3 arguments: url user pass");
+    public static void main(String[] args) throws Exception {
+        if (args.length < 3) {
+            System.err.println("** Expecting at least 3 arguments:\n  url user pass [ariversion]");
             System.exit(1);
         }
-        new Weasels().start(args[0], args[1], args[2]);
+        AriVersion ver = AriVersion.IM_FEELING_LUCKY;
+        if (args.length == 4) {
+            ver = AriVersion.fromVersionString(args[3]);
+        }
+        new Weasels().start(args[0], args[1], args[2], ver);
     }
 
-    private void start(String url, String user, String pass) {
+    private void start(String url, String user, String pass, AriVersion ver) {
         logger.info("THE START");
-        boolean connected = connect(url, user, pass);
+        boolean connected = connect(url, user, pass, ver);
         if (connected) {
             try {
                 weasels();
@@ -47,9 +51,9 @@ public class Weasels {
         logger.info("THE END");
     }
 
-    private boolean connect(String url, String user, String pass) {
+    private boolean connect(String url, String user, String pass, AriVersion ver) {
         try {
-            ari = ARI.build(url, ARI_APP, user, pass, AriVersion.IM_FEELING_LUCKY);
+            ari = ARI.build(url, ARI_APP, user, pass, ver);
             logger.info("ARI Version: {}", ari.getVersion().version());
             AsteriskInfo info = ari.asterisk().getInfo().execute();
             logger.info("AsteriskInfo up since {}", info.getStatus().getStartup_time());
