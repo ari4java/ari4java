@@ -33,7 +33,7 @@ dependencies {
 ```
 *The 1st repo declaration is temporary as we sort out moving from a private repo to an organization*
 
-# Documentation
+## Documentation
 - The [CHANGELOG](https://github.com/l3nz/ari4java/blob/master/CHANGELOG.md)
 - The [Wiki](https://github.com/l3nz/ari4java/wiki) has some more info on how to use the project
     - [Getting Started](https://github.com/l3nz/ari4java/wiki/Getting-Started)
