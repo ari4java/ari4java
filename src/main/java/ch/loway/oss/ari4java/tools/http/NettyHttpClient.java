@@ -255,9 +255,11 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             return new RestException("Client Shutdown: " + response);
         }
 
-        for (HttpResponse hr : errors) {
-            if (hr.code == status.code()) {
-                return new RestException(hr.description, response, status.code());
+        if (errors != null) {
+            for (HttpResponse hr : errors) {
+                if (hr.code == status.code()) {
+                    return new RestException(hr.description, response, status.code());
+                }
             }
         }
 
@@ -406,6 +408,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
                 if (future.isSuccess()) {
+                    logger.debug("HTTP connected, waiting for WS Upgrade...");
                     wsHandler.handshakeFuture().addListener(new ChannelFutureListener() {
                         @Override
                         public void operationComplete(ChannelFuture future) throws Exception {
@@ -417,12 +420,24 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                                 reconnectCount = 0;
                                 callback.onChReadyToWrite();
                             } else {
-                                reconnectWs(future.cause());
+                                if (future.cause() != null) {
+                                    logger.error("WS Upgrade Error - {}", future.cause().getMessage(), future.cause());
+                                    reconnectWs(future.cause());
+                                } else {
+                                    logger.error("WS Upgrade Error - Unknown");
+                                    reconnectWs(new RestException("WS Upgrade Error - Unknown"));
+                                }
                             }
                         }
                     });
                 } else {
-                    reconnectWs(future.cause());
+                    if (future.cause() != null) {
+                        logger.error("WS/HTTP Connection Error - {}", future.cause().getMessage(), future.cause());
+                        reconnectWs(future.cause());
+                    } else {
+                        logger.error("WS/HTTP Connection Error - Unknown");
+                        reconnectWs(new RestException("WS/HTTP Connection Error - Unknown"));
+                    }
                 }
             }
         };

@@ -109,7 +109,10 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
         } else if (msg instanceof PongWebSocketFrame) {
             wsClient.pong();
         } else {
-            logger.warn("Unhandled: {}", msg.getClass().toString());
+            HTTPLogger.traceWebSocketFrame(msg.toString());
+            String error = "Not expecting: " + msg.getClass().getSimpleName();
+            logger.error(error);
+            throw new Exception(error);
         }
     }
 
