@@ -443,6 +443,7 @@ public class DefMapper {
                         p.methodArgumentType = JavaPkgInfo.primitiveSignature.containsKey(p.javaType) ?
                                 JavaPkgInfo.primitiveSignature.get(p.javaType) : p.javaType;
                         p.name = txt(parameter.get("name"));
+                        p.description = txt(parameter.get("description"));
                         p.required = txt(parameter.get("required")).equalsIgnoreCase("true");
                         p.type = Operation.ParamType.build(txt(parameter.get("paramType")));
                         op.params.add(p);

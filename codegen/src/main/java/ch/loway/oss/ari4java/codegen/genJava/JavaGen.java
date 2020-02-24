@@ -39,6 +39,7 @@ public class JavaGen {
             if (!row.isEmpty()) {
                 row = row.replaceAll("<br /><br />", "\n * ");
                 row = row.replaceAll("<br />", "\n * ");
+                row = row.replaceAll("<", "&gt;").replaceAll(">", "&lt;");
                 sb.append(" * ").append(row).append("\n");
             }
         }
@@ -47,7 +48,7 @@ public class JavaGen {
     }
 
     public static void addBanner(StringBuilder sb, String multilineBanner, String sinceVersion) {
-        multilineBanner += "\n@since " + sinceVersion;
+        multilineBanner += "\n@since " + sinceVersion.toUpperCase();
         addBanner(sb, multilineBanner);
     }
 

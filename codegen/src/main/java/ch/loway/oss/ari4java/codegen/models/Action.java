@@ -34,7 +34,7 @@ public class Action implements Comparable<Action> {
         for (Operation o : operations) {
             String javaSignature = o.getSignature();
             String definition = o.getDefinition();
-            j.iKnow(javaSignature, definition, o.description, apiVersion);
+            j.iKnow(javaSignature, definition, o.getComment(), apiVersion);
         }
     }
 

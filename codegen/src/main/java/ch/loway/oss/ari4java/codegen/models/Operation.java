@@ -27,11 +27,15 @@ public class Operation {
     public Action action;
     private JavaInterface ji;
 
-    private String toParmList(boolean withType, boolean onlyRequired) {
+    private String toParmList(boolean withType, boolean forComment) {
         StringBuilder sb = new StringBuilder();
         boolean firstItem = true;
         for (Param p : params) {
-            if (onlyRequired && !p.required) {
+            if (!p.required) {
+                continue;
+            }
+            if (forComment) {
+                sb.append(p.getParamComment(null));
                 continue;
             }
             if (firstItem) {
@@ -42,6 +46,9 @@ public class Operation {
             if (withType)
                 sb.append(p.javaType).append(" ");
             sb.append(p.name);
+        }
+        if (forComment) {
+            sb.append("@return ").append(getInterfaceName()).append("\n");
         }
         return sb.toString();
     }
@@ -221,7 +228,7 @@ public class Operation {
         sb.append(getDefinition());
         sb.append(" {\n  ");
         sb.append(getImplName()).append("  request = new ").append(getImplName()).append("(");
-        sb.append(toParmList(false, true)).append(");\n");
+        sb.append(toParmList(false, false)).append(");\n");
         sb.append("  request.setHttpClient(this.getHttpClient());\n");
         sb.append("  request.setWsClient(this.getWsClient());\n");
         sb.append("  request.setLiveActionList(this.getLiveActionList());\n");
@@ -249,7 +256,7 @@ public class Operation {
     public String getConstructorDefinition() {
         StringBuilder sb = new StringBuilder();
         sb.append("public ").append(getImplName()).append("(")
-                .append(toParmList(true, true)).append(")");
+                .append(toParmList(true, false)).append(")");
         return sb.toString();
     }
 
@@ -260,7 +267,7 @@ public class Operation {
                 .append(" ").append(nickname)
                 .append("(");
 
-        sb.append(toParmList(true, true));
+        sb.append(toParmList(true, false));
 
         sb.append(") throws RestException");
         return sb.toString();
@@ -285,15 +292,25 @@ public class Operation {
         for (Param p : params) {
             String javaSignature = p.getSignature(getInterfaceName());
             String definition = p.getDefinition(getInterfaceName());
-            j.iKnow(javaSignature, definition, "", apiVersion);
+            j.iKnow(javaSignature, definition,p.getParamComment(getInterfaceName()), apiVersion);
             if (p.javaType.equals("Map<String,String>")) {
                 javaSignature = p.getSignatureForAddToMap(getInterfaceName());
                 definition = p.getDefinitionForAddToMap(getInterfaceName());
-                j.iKnow(javaSignature, definition, "", apiVersion);
+                j.iKnow(javaSignature, definition, "@param key the attribute name\n" +
+                        "@param value the attribute value\n" +
+                        "@return " + getInterfaceName() + "\n", apiVersion);
             }
         }
-        j.iKnow(getSyncExecuteSignature(), getSyncExecuteDefinition(), "", apiVersion);
-        j.iKnow(getAsyncExecuteSignature(), getAsyncExecuteDefinition(), "", apiVersion);
+        String returnComment = "\n@return " + responseInterface;
+        if ("void".equalsIgnoreCase(responseInterface)) {
+            returnComment = "";
+        }
+        j.iKnow(getSyncExecuteSignature(), getSyncExecuteDefinition(), "@throws RestException an error" + returnComment, apiVersion);
+        j.iKnow(getAsyncExecuteSignature(), getAsyncExecuteDefinition(), "@param callback AriCallback&gt;" + responseInterface.replaceAll("^void$", "Void") + "&lt;", apiVersion);
+    }
+
+    public String getComment() {
+        return description + "\n" + toParmList(false, true) + "\n@throws RestException an error";
     }
 
     /**
@@ -301,6 +318,7 @@ public class Operation {
      */
     public static class Param {
         public String name = "";
+        public String description = "";
         public ParamType type = ParamType.PATH;
         public String javaType = "";
         public String methodArgumentType = "";
@@ -331,6 +349,21 @@ public class Operation {
             StringBuilder sb = new StringBuilder();
             sb.append("  public ").append(returnType).append(" ").append(JavaGen.addPrefixAndCapitalize("add", name))
                     .append("(String key, String value)");
+            return sb.toString();
+        }
+
+        public String getParamComment(String returnType) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("@param ").append(name).append(" ");
+            if (description == null || description.trim().isEmpty()) {
+                sb.append(name);
+            } else {
+                sb.append(description);
+            }
+            sb.append("\n");
+            if (returnType != null) {
+                sb.append("@return ").append(returnType).append("\n");
+            }
             return sb.toString();
         }
     }

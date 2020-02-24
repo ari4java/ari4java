@@ -21,13 +21,12 @@ public class Model extends JavaPkgInfo {
     public String extendsModel = "";
     public Set<String> subTypes;
     public String comesFromFile = "";
-    public List<String> implementsInterafaces = new ArrayList<String>();
+    public List<String> implementsInterfaces = new ArrayList<String>();
 
     public List<String> imports = new ArrayList<String>();
     public List<ModelField> fields = new ArrayList<ModelField>();
 
     public String additionalPreambleText = "";
-
 
     public Model() {
         imports.add("java.util.Date");
@@ -45,7 +44,7 @@ public class Model extends JavaPkgInfo {
 
         Collections.sort(imports);
         Collections.sort(fields);
-        Collections.sort(implementsInterafaces);
+        Collections.sort(implementsInterfaces);
 
         JavaInterface ji = getBaseInterface();
 
@@ -74,7 +73,7 @@ public class Model extends JavaPkgInfo {
         sb.append(" implements ");
 
 
-        for (String inf : implementsInterafaces) {
+        for (String inf : implementsInterfaces) {
             sb.append(inf).append(", ");
         }
 
@@ -82,14 +81,36 @@ public class Model extends JavaPkgInfo {
         sb.append("java.io.Serializable {\n");
         sb.append("  private static final long serialVersionUID = 1L;\n");
 
+        boolean hasId = false;
+        boolean hasName = false;
         for (ModelField mf : fields) {
             ji.removeSignature(mf.getSignatureGet());
             ji.removeSignature(mf.getSignatureSet());
-
             sb.append(mf.toString());
+            if ("id".equalsIgnoreCase(mf.field)) {
+                hasId = true;
+            } else if ("name".equalsIgnoreCase(mf.field)) {
+                hasName = true;
+            }
         }
 
         sb.append(ji.getCodeToImplementMissingSignatures(true));
+
+        if (hasId || hasName) {
+            sb.append("  public String toString() {\n    return ");
+            sb.append("\"").append(getInterfaceName()).append("[");
+            if (hasId) {
+                sb.append("id=\" + id + \"");
+            }
+            if (hasId && hasName) {
+                sb.append(", ");
+            }
+            if (hasName) {
+                sb.append("name=\" + name + \"");
+            }
+            sb.append("]\"");
+            sb.append(";\n  }\n\n");
+        }
 
         sb.append("}\n");
         return sb.toString();
@@ -102,16 +123,14 @@ public class Model extends JavaPkgInfo {
         for (ModelField mf : fields) {
             String signature = mf.getSignatureGet();
             String declaration = mf.getDeclarationGet();
-            String comment = mf.comment;
-
+            String comment = mf.comment + "\n@return " + mf.typeInterface;
             j.iKnow(signature, declaration, comment, apiVersion);
         }
 
         for (ModelField mf : fields) {
             String signature = mf.getSignatureSet();
             String declaration = mf.getDeclarationSet();
-            String comment = mf.comment;
-
+            String comment = "@param val " + (mf.comment.trim().isEmpty() ? "the value" : mf.comment);
             j.iKnow(signature, declaration, comment, apiVersion);
         }
 

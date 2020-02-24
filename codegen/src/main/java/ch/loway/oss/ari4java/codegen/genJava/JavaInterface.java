@@ -111,19 +111,27 @@ public class JavaInterface {
 
     public String getCodeToImplementMissingSignatures(boolean addJsonIgnore) {
         if (definitions.isEmpty()) {
-            return "  /* No missing signatures from interface */\n";
+            return "  /* No missing signatures from interface */\n\n";
         } else {
 
             StringBuilder sb = new StringBuilder();
 
             // generate empty methods that just throw an UnsupportedOperationException
             for (String s : definitions.values()) {
-
-                String replaceTo = " {\n"
-                        + "    throw new UnsupportedOperationException(\"Method available from ...\");\n"
+                String ver = extractSinceVersion(s);
+                String error = "Method not available in this version";
+                if (ver != null) {
+                    error = "Method available from " + ver;
+                }
+                String replaceEnd = ")";
+                if (s.endsWith("throws RestException;")) {
+                    replaceEnd = ") throws RestException";
+                }
+                String replaceTo = replaceEnd + " {\n"
+                        + "    throw new UnsupportedOperationException(\"" + error + "\");\n"
                         + "  }\n\n";
 
-                s = s.replace(";", replaceTo);
+                s = s.replace((replaceEnd + ";"), replaceTo);
 
                 if (addJsonIgnore) {
                     s = s.replace("public", "@JsonIgnore public");
@@ -135,6 +143,16 @@ public class JavaInterface {
             return sb.toString();
 
         }
+    }
+
+    private String extractSinceVersion(String input) {
+        String[] lines = input.trim().split("\n");
+        for (String line: lines) {
+            if (line.startsWith(" * @since ")) {
+                return line.substring(10);
+            }
+        }
+        return null;
     }
 
 }

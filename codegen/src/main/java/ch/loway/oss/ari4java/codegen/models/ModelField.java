@@ -20,11 +20,9 @@ public class ModelField implements Comparable<ModelField> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("  /**  ")
-                .append(comment)
-                .append("  */\n");
         sb.append("  private ").append(typeInterface).append(" ").append(field).append(";\n");
 
+        JavaGen.addBanner(sb, comment + "\n@return " + typeInterface);
         sb.append(getDeclarationGet()).append(" {\n");
         sb.append("    return ");
         if ("Date".equals(typeConcrete)) {
@@ -32,7 +30,9 @@ public class ModelField implements Comparable<ModelField> {
         } else {
             sb.append(field);
         }
-        sb.append(";\n  }\n");
+        sb.append(";\n  }\n\n");
+
+        JavaGen.addBanner(sb, "@param val " + (comment.trim().isEmpty() ? " the value" : comment));
 
         if (typeConcrete.startsWith("List")) {
             String innerType = typeConcrete.substring(5, typeConcrete.length() - 1);
@@ -78,7 +78,7 @@ public class ModelField implements Comparable<ModelField> {
 
     public String getDeclarationSet() {
         StringBuilder sb = new StringBuilder();
-        sb.append("  public void ").append(setterName(field)).append("(").append(typeInterface).append(" val )");
+        sb.append("  public void ").append(setterName(field)).append("(").append(typeInterface).append(" val)");
         return sb.toString();
     }
 
