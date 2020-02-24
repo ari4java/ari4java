@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 [Unreleased]: https://github.com/l3nz/ari4java/compare/REL-0.9.1...HEAD
+### Fixed
+- UnsupportedOperationException #15
+- Javadoc warnings #149
+### Added
+- toString for generated model if there is an `id` or `name` field
 
 ## [0.9.1] - 2020-02-23
 [0.9.1]: https://github.com/l3nz/ari4java/compare/REL-0.9.0...REL-0.9.1
