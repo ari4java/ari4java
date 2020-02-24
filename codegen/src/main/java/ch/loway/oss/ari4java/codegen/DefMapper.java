@@ -59,6 +59,13 @@ public class DefMapper {
         }
 
         JsonNode rootNode = om.readTree(f);
+
+        // check swagger version as the parser, Asterisk is currently using 1.1
+        String currentVer = rootNode.get("swaggerVersion").asText();
+        if (!"1.1".equalsIgnoreCase(currentVer) && !"1.2".equalsIgnoreCase(currentVer)) {
+            throw new RuntimeException("Unsupported Swagger Version: " + rootNode.get("swaggerVersion").asText() + " for file " + f.getAbsolutePath());
+        }
+
         List<Model> lModels = loadModels(rootNode.get("models"), f, apiVersion);
         Apis api1 = loadApis(rootNode.get("apis"), f, apiVersion);
 
