@@ -5,6 +5,7 @@
 ### Fixed
 - UnsupportedOperationException #15
 - Javadoc warnings #149
+- If Url doesn't end with a slash add one #150
 ### Added
 - toString for generated model if there is an `id` or `name` field
 
