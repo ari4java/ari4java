@@ -10,13 +10,14 @@ then
   cd asterisk
 else
   cd tmp/asterisk
-  git pull
+  git checkout master --force
+  git pull origin master
 fi
 
 git log --reverse --pretty=oneline --all -- rest-api/resources.json | while read log
 do
   IFS=' ' read -r -a array <<< "$log"
-  git checkout ${array[0]} > /dev/null
+  git checkout ${array[0]} --force > /dev/null
   VER=`cat rest-api/resources.json | jq -r '.apiVersion'`
   FOLDER="${VER//./_}"
   echo $FOLDER
