@@ -3,7 +3,7 @@
 The Asterisk REST Interface (ARI) bindings for Java.
 
 [![Download](https://api.bintray.com/packages/ari4java/maven/ari4java/images/download.png)](https://bintray.com/ari4java/maven/ari4java/_latestVersion)
-[![Build](https://github.com/l3nz/ari4java/workflows/ARI4Java%20Build/badge.svg)](https://github.com/l3nz/ari4java/workflows/ARI4Java%20Build/badge.svg)
+[![Build](https://github.com/l3nz/ari4java/workflows/ARI4Java%20Build/badge.svg?branch=master&event=push)](https://github.com/l3nz/ari4java/actions?query=workflow%3A%22ARI4Java+Build%22)
 
 ## Description
 
