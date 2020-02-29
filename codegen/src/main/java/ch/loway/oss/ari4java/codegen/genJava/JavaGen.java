@@ -18,21 +18,17 @@ public class JavaGen {
                 .append("//               PLEASE DO NOT EDIT                    \n")
                 .append("//    Generated on: ").append((new Date()).toString()).append("\n")
                 .append("// ----------------------------------------------------\n\n");
-
     }
 
     public static void importClasses(StringBuilder sb, String myPackage, List<String> imports) {
-
         addPackage(sb, myPackage);
         for (String pkg : imports) {
             sb.append("import ").append(pkg).append(";\n");
         }
         sb.append("\n");
-
     }
 
     public static void addBanner(StringBuilder sb, String multiLineBanner) {
-
         String[] rows = multiLineBanner.split("\n");
         sb.append("/**\n");
         for (String row : rows) {
@@ -44,7 +40,6 @@ public class JavaGen {
             }
         }
         sb.append(" */\n");
-
     }
 
     public static void addBanner(StringBuilder sb, String multilineBanner, String sinceVersion) {
@@ -53,10 +48,7 @@ public class JavaGen {
     }
 
     public static String addPrefixAndCapitalize(String prefix, String field) {
-
         return prefix + field.substring(0, 1).toUpperCase() + field.substring(1);
-
-
     }
 
     public static String addAsyncCallback(String response) {
@@ -64,17 +56,7 @@ public class JavaGen {
     }
 
     public static void emptyLines(StringBuilder sb, int nLines) {
-        for (int i = 0; i < nLines; i++) {
-            sb.append("\n");
-        }
+        sb.append("\n".repeat(Math.max(0, nLines)));
     }
-
-    public static void emptyLine(StringBuilder sb) {
-        emptyLines(sb, 1);
-    }
-
 
 }
-
-// $Log$
-//

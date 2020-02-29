@@ -15,44 +15,27 @@ import java.util.List;
  */
 public class AriBuilderInterface {
 
-    public List<String> knownInterfaces = new ArrayList<String>();
+    public List<String> knownInterfaces = new ArrayList<>();
 
     @Override
     public String toString() {
-
         StringBuilder sb = new StringBuilder();
         JavaGen.importClasses(sb, "ch.loway.oss.ari4java.generated",
-                Arrays.asList(new String[]{
-                        "ch.loway.oss.ari4java.ARI",
-                        "ch.loway.oss.ari4java.generated.actions.*"
-                })
+                Arrays.asList("ch.loway.oss.ari4java.ARI",
+                        "ch.loway.oss.ari4java.generated.actions.*")
         );
-
         sb.append("public interface AriBuilder {\n");
-
         Collections.sort(knownInterfaces);
-
         for (String iface : knownInterfaces) {
             sb.append("  public abstract ").append(iface)
                     .append(" ").append(lcFirst(iface)).append("();\n");
         }
-
         sb.append("\n\n"
                 + "  public abstract ARI.ClassFactory getClassFactory();\n\n");
-
-
         sb.append("\n}\n");
-
         return sb.toString();
-
     }
 
-    /**
-     * Rende minuscolo il primo carattere.
-     *
-     * @param s
-     * @return
-     */
     private static String lcFirst(String s) {
         if (s.length() > 1) {
             String s1 = s.substring(0, 1);
@@ -64,18 +47,13 @@ public class AriBuilderInterface {
     }
 
     public static String getMethod(String ifName, String apiVer) {
-        String s = "public " + ifName + " " + lcFirst(ifName) + "() {\n"
+        return "public " + ifName + " " + lcFirst(ifName) + "() {\n"
                 + "  return new " + ifName + "_impl_" + apiVer + "();\n };\n\n";
-        return s;
     }
 
     public static String getUnimplemented(String ifName) {
-        String s = "public " + ifName + " " + lcFirst(ifName) + "() {\n"
+        return "public " + ifName + " " + lcFirst(ifName) + "() {\n"
                 + "  throw new UnsupportedOperationException();\n };\n\n";
-        return s;
     }
 
 }
-
-// $Log$
-//

@@ -13,7 +13,7 @@ public class JavaPkgInfo {
     public final static Map<String, String> primitiveSignature;
 
     static {
-        TypeMap = new HashMap<String, String>();
+        TypeMap = new HashMap<>();
         TypeMap.put("string", "String");
         TypeMap.put("long", "Long");
         TypeMap.put("int", "Integer");
@@ -24,7 +24,7 @@ public class JavaPkgInfo {
         TypeMap.put("binary", "byte[]");
         TypeMap.put("containers", "Map<String,String>");
         
-        primitiveSignature = new HashMap<String, String>();
+        primitiveSignature = new HashMap<>();
         primitiveSignature.put("Boolean", "boolean");
         primitiveSignature.put("Integer", "int");
         primitiveSignature.put("Long", "long");
@@ -41,10 +41,6 @@ public class JavaPkgInfo {
         apiVersion = apiV;
     }
 
-    public String getInterfacePackage() {
-        return base + "." + className;
-    }
-
     public String getBaseApiPackage() {
         return base + "." + apiVersion;
     }
@@ -58,8 +54,7 @@ public class JavaPkgInfo {
     }
 
     public String getInterfaceName() {
-        String s = className.substring(0, 1).toUpperCase() + className.substring(1);
-        return s;
+        return className.substring(0, 1).toUpperCase() + className.substring(1);
     }
 
     public String getImplName() {
@@ -68,8 +63,7 @@ public class JavaPkgInfo {
 
     /**
      * This is a "minimal" interface that has to be implemented at all costs.
-     *
-     * @param i
+     * @param i interface
      */
     public void setMinimalInterface(JavaInterface i) {
         minimalIf = i;
@@ -78,8 +72,7 @@ public class JavaPkgInfo {
     /**
      * Gets a copy of the current base interface.
      * This is meant to have signatures removed as they are written.
-     *
-     * @return
+     * @return JavaInterface
      */
     public JavaInterface getBaseInterface() {
         if (minimalIf == null) {
