@@ -55,6 +55,17 @@ jar {
     }
 }
 
+javadoc {
+    def inc = [
+        'ch/loway/oss/ari4java/generated/AriVersion.java',
+        'ch/loway/oss/ari4java/generated/actions/*',
+        'ch/loway/oss/ari4java/generated/models/*',
+        'ch/loway/oss/ari4java/*',
+        'ch/loway/oss/ari4java/tools/*'
+    ]
+    includes = inc.toSet()
+}
+
 task sourcesJar(type: Jar, dependsOn: classes) {
     archiveClassifier.set('sources')
     from sourceSets.main.allSource

@@ -38,7 +38,7 @@ public class AriFactory {
      * @throws URISyntaxException when error
      */
     public static ARI nettyHttp(String uri, String login, String pass, AriVersion version, String app) throws URISyntaxException {
-        return nettyHttp(uri, login, pass, version, "", true);
+        return nettyHttp(uri, login, pass, version, app, true);
     }
 
     /**

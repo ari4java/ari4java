@@ -5,7 +5,10 @@ import ch.loway.oss.ari4java.generated.actions.ActionBridges;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.actions.ActionAsterisk_impl_ari_0_0_1;
 import ch.loway.oss.ari4java.generated.ari_0_0_1.actions.ActionBridges_impl_ari_0_0_1;
 import ch.loway.oss.ari4java.generated.ari_1_0_0.actions.ActionAsterisk_impl_ari_1_0_0;
+import ch.loway.oss.ari4java.tools.ARIException;
+import ch.loway.oss.ari4java.tools.HttpClient;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import static org.junit.Assert.*;
 
@@ -15,25 +18,32 @@ import static org.junit.Assert.*;
 public class ARITest {
 
     @Test
-    public void testImplementationFactory() {
-        ARI.ClassFactory factory = new ARI.ClassFactory() {
-            @Override
-            public Class getImplementationFor(Class interfaceClass) {
-                if (interfaceClass.equals(ActionBridges.class)) {
-                    return ActionBridges_impl_ari_0_0_1.class;
-                } else {
-                    return null;
-                }
-            }
-        };
-        assertEquals(ActionBridges_impl_ari_0_0_1.class, factory.getImplementationFor(ActionBridges.class));
-        assertNull(factory.getImplementationFor(String.class));
+    public void testImplementationFactory() throws Exception {
+        ARI ari = new ARI();
+        ari.setVersion(AriVersion.ARI_0_0_1);
+        assertEquals(ActionBridges_impl_ari_0_0_1.class, ari.getModelImpl(ActionBridges.class).getClass());
+        boolean exception = false;
+        try {
+            ari.getModelImpl(String.class);
+        } catch (ARIException e) {
+            exception = e.getMessage().contains("No concrete implementation");
+        }
+        assertTrue("Expected 'No concrete implementation' exception for getModelImpl(String.class)", exception);
+        exception = false;
+        try {
+            ari.getActionImpl(String.class);
+        } catch (ARIException e) {
+            exception = e.getMessage().contains("Invalid Class");
+        }
+        assertTrue("Expected 'Invalid Class' exception for getModelImpl(String.class)", exception);
+        assertNotNull("Expected Action", ari.getActionImpl(ActionAsterisk.class));
     }
 
     @Test
     public void testBuildAction() {
         ARI ari = new ARI();
         ari.setVersion(AriVersion.ARI_0_0_1);
+        ari.setHttpClient(Mockito.mock(HttpClient.class));
 
         ActionAsterisk asterisk = ari.asterisk();
         assertEquals(ActionAsterisk_impl_ari_0_0_1.class.toString(), asterisk.getClass().toString());
@@ -41,6 +51,7 @@ public class ARITest {
         ari.setVersion(AriVersion.ARI_1_0_0);
         asterisk = ari.asterisk();
         assertEquals(ActionAsterisk_impl_ari_1_0_0.class.toString(), asterisk.getClass().toString());
+        assertNotNull("Expecting HttpClient to be set", ((ActionAsterisk_impl_ari_1_0_0)asterisk).getHttpClient());
     }
 
     @Test
