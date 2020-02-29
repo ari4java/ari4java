@@ -56,7 +56,9 @@ public class JavaGen {
     }
 
     public static void emptyLines(StringBuilder sb, int nLines) {
-        sb.append("\n".repeat(Math.max(0, nLines)));
+        for (int i = 0; i < nLines; i++) {
+            sb.append("\n");
+        }
     }
 
 }
