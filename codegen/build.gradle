@@ -13,6 +13,11 @@ dependencies {
     compile 'com.google.googlejavaformat:google-java-format:1.7'
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 task runCodegen(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'ch.loway.oss.ari4java.codegen.run'
