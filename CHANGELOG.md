@@ -1,10 +1,22 @@
 # ARI4Java Changelog
 
 ## [Unreleased]
-[Unreleased]: https://github.com/l3nz/ari4java/compare/REL-0.9.1...HEAD
+[Unreleased]: https://github.com/l3nz/ari4java/compare/v0.10.0...HEAD
+
+## [0.10.0]
+[0.10.0]: https://github.com/l3nz/ari4java/compare/v0.9.1...v0.10.0
+### Fixed
+- UnsupportedOperationException #15
+- Javadoc warnings #149
+- If Url doesn't end with a slash add one #150
+- Set `codegen` and `examples` to Java8 compatibility
+### Added
+- toString for generated model if there is an `id` or `name` field
+- `AriWSHelper` class for convenient `onMessage` methods for each type #23
+- Script to map Asterisk versions to ARI version
 
 ## [0.9.1] - 2020-02-23
-[0.9.1]: https://github.com/l3nz/ari4java/compare/REL-0.9.0...REL-0.9.1
+[0.9.1]: https://github.com/l3nz/ari4java/compare/REL-0.9.0...v0.9.1
 ### Added
 - Test connection when creating ARI #19
 ### Fixed

@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class AriSubscriber {
 
-    List<String> subscriptions = new ArrayList();
+    List<String> subscriptions = new ArrayList<>();
 
     public Application subscribe(ARI ari, EventSource m) throws RestException {
 

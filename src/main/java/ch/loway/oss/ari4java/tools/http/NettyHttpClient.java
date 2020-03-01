@@ -75,6 +75,9 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     }
 
     public void initialize(String baseUrl, String username, String password) throws URISyntaxException {
+        if (!baseUrl.endsWith("/")) {
+            baseUrl = baseUrl + "/";
+        }
         logger.debug("initialize url: {}, user: {}", baseUrl, username);
         baseUri = new URI(baseUrl);
         String protocol = baseUri.getScheme();
@@ -289,8 +292,8 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
     private NettyHttpClientHandler httpActionSyncHandler(String uri, String method, List<HttpParam> parametersQuery,
                                                          String body, List<HttpResponse> errors, boolean binary) throws RestException {
-        logger.debug("Sync Action, uri: {}, method: {}", uri, method);
         HttpRequest request = buildRequest(uri, method, parametersQuery, body);
+        logger.debug("Sync Action - {} to {}", request.method().toString(), request.uri());
         Channel ch = httpConnect().addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
@@ -330,8 +333,8 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                                 String body, final List<HttpResponse> errors,
                                 final HttpResponseHandler responseHandler, boolean binary) {
 
-        logger.debug("Async Action, uri: {}, method: {}", uri, method);
         final HttpRequest request = buildRequest(uri, method, parametersQuery, body);
+        logger.debug("Async Action - {} to {}", request.method().toString(), request.uri());
         // Get future channel
         ChannelFuture cf = httpConnect();
         cf.addListener(new ChannelFutureListener() {

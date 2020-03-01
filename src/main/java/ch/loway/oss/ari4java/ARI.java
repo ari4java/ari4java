@@ -1,22 +1,14 @@
 package ch.loway.oss.ari4java;
 
-import ch.loway.oss.ari4java.generated.actions.requests.EventsEventWebsocketGetRequest;
-import ch.loway.oss.ari4java.tools.*;
 import ch.loway.oss.ari4java.generated.actions.*;
-import ch.loway.oss.ari4java.generated.models.*;
-
-import java.io.IOException;
-import java.net.URL;
-
+import ch.loway.oss.ari4java.generated.actions.requests.EventsEventWebsocketGetRequest;
+import ch.loway.oss.ari4java.generated.models.Application;
+import ch.loway.oss.ari4java.generated.models.Message;
+import ch.loway.oss.ari4java.tools.*;
 import ch.loway.oss.ari4java.tools.http.NettyHttpClient;
 import ch.loway.oss.ari4java.tools.tags.EventSource;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.net.URLConnection;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,7 +24,6 @@ public class ARI {
     private final static String ALLOWED_IN_UID = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private String appName = "";
-    private String url = "";
     private AriVersion version;
     private HttpClient httpClient;
     private WsClient wsClient;
@@ -40,38 +31,40 @@ public class ARI {
     private AriSubscriber subscriptions = new AriSubscriber();
     private final CopyOnWriteArrayList<BaseAriAction> liveActionList = new CopyOnWriteArrayList<>();
 
+    /**
+     * Sets the client
+     *
+     * @param httpClient the http client
+     */
     public void setHttpClient(HttpClient httpClient) {
         this.httpClient = httpClient;
     }
 
+    /**
+     * Sets the client
+     *
+     * @param wsClient the ws client
+     */
     public void setWsClient(WsClient wsClient) {
         this.wsClient = wsClient;
     }
 
+    /**
+     * Sets the Version
+     *
+     * @param version the version
+     */
     public void setVersion(AriVersion version) {
         this.version = version;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     /**
-     * Returns the current ARI version.
+     * Returns the current ARI version
      *
-     * @return the ARI version currently used.
+     * @return the version
      */
     public AriVersion getVersion() {
         return version;
-    }
-
-    /**
-     * Returns the server and port the websocket is connected to.
-     *
-     * @return the server currently being used.
-     */
-    public String getUrl() {
-        return url;
     }
 
     /**
@@ -84,16 +77,14 @@ public class ARI {
      */
     @SuppressWarnings("unchecked")
     public <T> T getActionImpl(Class<T> klazz) throws ARIException {
-
-        // use the events method as we ref it for cleanup
-        if (klazz == ActionEvents.class) {
-            return (T) events();
+        if (!klazz.getName().startsWith("ch.loway.oss.ari4java.generated.actions.Action")) {
+            throw new ARIException("Invalid Class for action " + klazz);
         }
-
-        BaseAriAction action = (BaseAriAction) buildConcreteImplementation(klazz);
-        action.setHttpClient(this.httpClient);
-        action.setWsClient(this.wsClient);
-        action.setLiveActionList(this.liveActionList);
+        Object action = buildConcreteImplementation(klazz);
+        setupAction(action);
+        if (klazz == ActionEvents.class) {
+            liveActionEvent = (ActionEvents) action;
+        }
         return (T) action;
     }
 
@@ -118,31 +109,20 @@ public class ARI {
      * @return the concrete implementation for that interface under the ARI in use.
      * @throws ARIException when error
      */
-    private Object buildConcreteImplementation(Class klazz) throws ARIException {
-
+    private Object buildConcreteImplementation(Class<?> klazz) throws ARIException {
         if (version == null) {
-            throw new ARIException("API version not set");
+            throw new ARIException("AriVersion not set");
         }
-
-        Class concrete = version.builder.getClassFactory().getImplementationFor(klazz);
+        Class<?> concrete = version.builder.getClassFactory().getImplementationFor(klazz);
         if (concrete == null) {
             throw new ARIException("No concrete implementation in " + version.name() + " for " + klazz);
         }
-
         try {
-            return concrete.newInstance();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            // Do nothing
-            e.printStackTrace();
+            return concrete.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new ARIException("Unable to build concrete implementation for "
+                    + klazz.getName() + " in " + version.name(), e);
         }
-        throw new ARIException("Unable to build concrete implementation "
-                + "for " + klazz.getName()
-                + " in " + version.name()
-        );
     }
 
     /**
@@ -164,7 +144,8 @@ public class ARI {
     }
 
     /**
-     * @see ARI#build(String, String, String, String, AriVersion, boolean)
+     * Minimal helper to build an instance of ARI
+     *
      * @param url     url
      * @param app     app
      * @param user    user
@@ -172,24 +153,21 @@ public class ARI {
      * @param version The required version
      * @return instance
      * @throws ARIException exception
+     * @see ARI#build(String, String, String, String, AriVersion, boolean)
      */
     public static ARI build(String url, String app, String user, String pass, AriVersion version) throws ARIException {
         return build(url, app, user, pass, version, true);
     }
 
     /**
-     * Builds a connector object for the specified ARI version.
-     * If the version is set as IM_FEELING_LUCKY, then it will first try connecting,
-     * will detect the current ARI version and will then connect to it.
-     * This method uses Netty for both websocket and HTTP.
-     * <p>
-     * As this sets everything up but does not do anything, we do not have any
-     * information on whether this connection is valid or not.
+     * Helper to build an instance of ARI.
+     * If the version is set as IM_FEELING_LUCKY the ARI version will be determined by 1st connecting
+     * to the server and requesting the resources.json to extract the version number.
      *
-     * @param url            The URL of the Asterisk web server, e.g. http://10.10.5.8:8088/ - defined in http.conf
+     * @param url            The URL of the Asterisk web server, e.g. http://10.10.5.8:8088/ (defined in http.conf)
      * @param app            The app
      * @param user           The user name (defined in ari.conf)
-     * @param pass           The password
+     * @param pass           The password (defined in ari.conf)
      * @param version        The required version
      * @param testConnection Test the connection details by executing the ping operation
      * @return an instance
@@ -229,7 +207,7 @@ public class ARI {
     /**
      * Connect and detect the current ARI version.
      * If the ARI version is not supported,
-     * will raise an excepttion as we have no bindings for it.
+     * will raise an exception as we have no bindings for it.
      *
      * @param url  url
      * @param user user
@@ -262,12 +240,11 @@ public class ARI {
      */
     private static String findVersionString(String response) throws ARIException {
         Pattern p = Pattern.compile(".apiVersion.:\\s*\"(.+?)\"", Pattern.MULTILINE + Pattern.CASE_INSENSITIVE);
-
         Matcher m = p.matcher(response);
         if (m.find()) {
             return m.group(1);
         } else {
-            throw new ARIException("Could not match apiVersion ");
+            throw new ARIException("Could find apiVersion");
         }
     }
 
@@ -343,6 +320,12 @@ public class ARI {
         }
     }
 
+    /**
+     * Gets an instance of a message queue
+     *
+     * @return MessageQueue
+     * @throws ARIException when error
+     */
     public MessageQueue getWebsocketQueue() throws ARIException {
         return getWebsocketQueue(false);
     }
@@ -358,15 +341,11 @@ public class ARI {
      * @throws ARIException when error
      */
     public MessageQueue getWebsocketQueue(boolean subscribeAll) throws ARIException {
-
         if (liveActionEvent != null) {
             throw new ARIException("Websocket already present");
         }
-
         final MessageQueue q = new MessageQueue();
-
-        AriCallback callback = new AriCallback<Message>() {
-
+        AriCallback<Message> callback = new AriCallback<Message>() {
             @Override
             public void onSuccess(Message result) {
                 q.queue(result);
@@ -377,7 +356,6 @@ public class ARI {
                 q.queueError("Err:" + e.getMessage());
             }
         };
-
         EventsEventWebsocketGetRequest eventsRequest = events().eventWebsocket(appName);
         try {
             eventsRequest.setSubscribeAll(subscribeAll);
@@ -385,31 +363,29 @@ public class ARI {
             // ignore
         }
         eventsRequest.execute(callback);
-
         return q;
-
     }
 
     /**
-     * Gets us a ready to use object.
+     * Gets a ready to use Applications Action.
      *
-     * @return an Applications object.
+     * @return ActionApplications
      */
     public ActionApplications applications() {
         return (ActionApplications) setupAction(version.builder().actionApplications());
     }
 
     /**
-     * Gets us a ready to use object.
+     * Gets a ready to use Asterisk Action.
      *
-     * @return an Asterisk object.
+     * @return ActionAsterisk
      */
     public ActionAsterisk asterisk() {
         return (ActionAsterisk) setupAction(version.builder().actionAsterisk());
     }
 
     /**
-     * Gets us a ready to use object.
+     * Gets a ready to use Bridges Action.
      *
      * @return a Bridges object.
      */
@@ -418,36 +394,36 @@ public class ARI {
     }
 
     /**
-     * Gets us a ready to use object.
+     * Gets a ready to use Channels Action.
      *
-     * @return a Channels object.
+     * @return ActionChannels
      */
     public ActionChannels channels() {
         return (ActionChannels) setupAction(version.builder().actionChannels());
     }
 
     /**
-     * Gets us a ready to use object.
+     * Gets a ready to use Device States Action.
      *
-     * @return a DeviceStates object.
+     * @return ActionDeviceStates
      */
     public ActionDeviceStates deviceStates() {
         return (ActionDeviceStates) setupAction(version.builder().actionDeviceStates());
     }
 
     /**
-     * Gets us a ready to use object.
+     * Gets a ready to use Endpoints Action.
      *
-     * @return an Endpoints object.
+     * @return ActionEndpoints
      */
     public ActionEndpoints endpoints() {
         return (ActionEndpoints) setupAction(version.builder().actionEndpoints());
     }
 
     /**
-     * Gets us a ready to use object.
+     * Gets a ready to use Events Action.
      *
-     * @return an Events object.
+     * @return ActionEvents
      */
     public ActionEvents events() {
         liveActionEvent = (ActionEvents) setupAction(version.builder().actionEvents());
@@ -455,55 +431,49 @@ public class ARI {
     }
 
     /**
-     * Gets us a ready to use object.
+     * Gets a ready to use Mailboxes Action.
      *
-     * @return a Mailboxes object.
+     * @return ActionMailboxes
      */
     public ActionMailboxes mailboxes() {
         return (ActionMailboxes) setupAction(version.builder().actionMailboxes());
     }
 
     /**
-     * Gets us a ready to use object.
+     * Gets a ready to use Playbacks Action.
      *
-     * @return a Playbacks object.
+     * @return ActionPlaybacks
      */
     public ActionPlaybacks playbacks() {
         return (ActionPlaybacks) setupAction(version.builder().actionPlaybacks());
     }
 
     /**
-     * Gets us a ready to use object.
+     * Gets a ready to use Recordings Action.
      *
-     * @return a Recordings object.
+     * @return ActionRecordings
      */
     public ActionRecordings recordings() {
         return (ActionRecordings) setupAction(version.builder().actionRecordings());
     }
 
     /**
-     * Gets us a ready to use object.
+     * Gets a ready to use Sounds Action.
      *
-     * @return a Sounds object.
+     * @return ActionSounds
      */
     public ActionSounds sounds() {
         return (ActionSounds) setupAction(version.builder().actionSounds());
     }
 
     /**
-     * This code REALLY smells bad.
-     * Most likely we should either implement an interface, or push the clients
-     * to the default builder.
-     * <p>
-     * See the getActionImpl() method here.
-     * <p>
-     * \TODO
+     * Checks if a BaseAriAction and sets the base properties
      *
-     * @param a the object
+     * @param a the action object
      * @return an Action object on which we'll set the default clients.
      * @throws IllegalArgumentException when error
      */
-    public Object setupAction(Object a) throws IllegalArgumentException {
+    private Object setupAction(Object a) throws IllegalArgumentException {
         if (a instanceof BaseAriAction) {
             BaseAriAction action = (BaseAriAction) a;
             action.setHttpClient(this.httpClient);
@@ -568,7 +538,6 @@ public class ARI {
      */
     public void unsubscribe(EventSource m) throws RestException {
         subscriptions.unsubscribe(this, m);
-
     }
 
     /**
@@ -581,10 +550,9 @@ public class ARI {
     }
 
     /**
-     * This interface is used to go from an interface to its concrete
-     * implementation.
+     * This interface is used to go from an interface to its concrete implementation.
      */
-    public static interface ClassFactory {
-        public Class getImplementationFor(Class interfaceClass);
+    public interface ClassFactory {
+        public Class<?> getImplementationFor(Class<?> interfaceClass);
     }
 }

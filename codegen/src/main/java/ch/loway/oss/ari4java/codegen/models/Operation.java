@@ -21,17 +21,21 @@ public class Operation {
     public String responseConcreteClass = "";
     public String responseInterface = "";
     public String description = "";
-    public List<Param> params = new ArrayList<Param>();
-    public List<ErrorResp> errorCodes = new ArrayList<ErrorResp>();
+    public List<Param> params = new ArrayList<>();
+    public List<ErrorResp> errorCodes = new ArrayList<>();
     public String apiVersion;
     public Action action;
     private JavaInterface ji;
 
-    private String toParmList(boolean withType, boolean onlyRequired) {
+    private String toParmList(boolean withType, boolean forComment) {
         StringBuilder sb = new StringBuilder();
         boolean firstItem = true;
         for (Param p : params) {
-            if (onlyRequired && !p.required) {
+            if (!p.required) {
+                continue;
+            }
+            if (forComment) {
+                sb.append(p.getParamComment(null));
                 continue;
             }
             if (firstItem) {
@@ -43,14 +47,16 @@ public class Operation {
                 sb.append(p.javaType).append(" ");
             sb.append(p.name);
         }
+        if (forComment) {
+            sb.append("@return ").append(getInterfaceName()).append("\n");
+        }
         return sb.toString();
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        JavaGen.importClasses(sb, getPackage(), Arrays.asList(new String[]{
-                "java.util.Date",
+        JavaGen.importClasses(sb, getPackage(), Arrays.asList("java.util.Date",
                 "java.util.List",
                 "java.util.Map",
                 "java.util.HashMap",
@@ -66,8 +72,7 @@ public class Operation {
                 "ch.loway.oss.ari4java.generated.models.*",
                 "ch.loway.oss.ari4java.generated." + apiVersion + ".actions.*",
                 "ch.loway.oss.ari4java.generated." + apiVersion + ".actions.requests.*",
-                "ch.loway.oss.ari4java.generated." + apiVersion + ".models.*"
-        }));
+                "ch.loway.oss.ari4java.generated." + apiVersion + ".models.*"));
 
         JavaGen.emptyLines(sb, 2);
 
@@ -171,7 +176,8 @@ public class Operation {
             if (responseConcreteClass.startsWith("List<")) {
                 deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
             }
-            sb.append(", " + deserializationType);
+            sb.append(", ");
+            sb.append(deserializationType);
         }
         sb.append(");\n");
         sb.append("  }\n\n");
@@ -185,27 +191,19 @@ public class Operation {
     }
 
     private String getSyncExecuteSignature() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(responseInterface).append(" execute");
-        return sb.toString();
+        return responseInterface + " execute";
     }
 
     private String getSyncExecuteDefinition() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("public ").append(responseInterface).append(" execute() throws RestException");
-        return sb.toString();
+        return "public " + responseInterface + " execute() throws RestException";
     }
 
     private String getAsyncExecuteSignature() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("void execute ").append(JavaGen.addAsyncCallback(responseInterface));
-        return sb.toString();
+        return "void execute " + JavaGen.addAsyncCallback(responseInterface);
     }
 
     private String getAsyncExecuteDefinition() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("public void execute(").append(JavaGen.addAsyncCallback(responseInterface)).append(")");
-        return sb.toString();
+        return "public void execute(" + JavaGen.addAsyncCallback(responseInterface) + ")";
     }
 
     public String getPackage() {
@@ -221,7 +219,7 @@ public class Operation {
         sb.append(getDefinition());
         sb.append(" {\n  ");
         sb.append(getImplName()).append("  request = new ").append(getImplName()).append("(");
-        sb.append(toParmList(false, true)).append(");\n");
+        sb.append(toParmList(false, false)).append(");\n");
         sb.append("  request.setHttpClient(this.getHttpClient());\n");
         sb.append("  request.setWsClient(this.getWsClient());\n");
         sb.append("  request.setLiveActionList(this.getLiveActionList());\n");
@@ -247,23 +245,12 @@ public class Operation {
     }
 
     public String getConstructorDefinition() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("public ").append(getImplName()).append("(")
-                .append(toParmList(true, true)).append(")");
-        return sb.toString();
+        return "public " + getImplName() + "(" + toParmList(true, false) + ")";
     }
 
     public String getDefinition() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("public ").append(getInterfaceName())
-                .append(" ").append(nickname)
-                .append("(");
-
-        sb.append(toParmList(true, true));
-
-        sb.append(") throws RestException");
-        return sb.toString();
+        return "public " + getInterfaceName() + " " + nickname + "(" + toParmList(true, false) +
+                ") throws RestException";
     }
 
     public String getInterfaceName() {
@@ -285,15 +272,25 @@ public class Operation {
         for (Param p : params) {
             String javaSignature = p.getSignature(getInterfaceName());
             String definition = p.getDefinition(getInterfaceName());
-            j.iKnow(javaSignature, definition, "", apiVersion);
+            j.iKnow(javaSignature, definition,p.getParamComment(getInterfaceName()), apiVersion);
             if (p.javaType.equals("Map<String,String>")) {
                 javaSignature = p.getSignatureForAddToMap(getInterfaceName());
                 definition = p.getDefinitionForAddToMap(getInterfaceName());
-                j.iKnow(javaSignature, definition, "", apiVersion);
+                j.iKnow(javaSignature, definition, "@param key the attribute name\n" +
+                        "@param value the attribute value\n" +
+                        "@return " + getInterfaceName() + "\n", apiVersion);
             }
         }
-        j.iKnow(getSyncExecuteSignature(), getSyncExecuteDefinition(), "", apiVersion);
-        j.iKnow(getAsyncExecuteSignature(), getAsyncExecuteDefinition(), "", apiVersion);
+        String returnComment = "\n@return " + responseInterface;
+        if ("void".equalsIgnoreCase(responseInterface)) {
+            returnComment = "";
+        }
+        j.iKnow(getSyncExecuteSignature(), getSyncExecuteDefinition(), "@throws RestException an error" + returnComment, apiVersion);
+        j.iKnow(getAsyncExecuteSignature(), getAsyncExecuteDefinition(), "@param callback AriCallback&gt;" + responseInterface.replaceAll("^void$", "Void") + "&lt;", apiVersion);
+    }
+
+    public String getComment() {
+        return description + "\n" + toParmList(false, true) + "\n@throws RestException an error";
     }
 
     /**
@@ -301,41 +298,47 @@ public class Operation {
      */
     public static class Param {
         public String name = "";
+        public String description = "";
         public ParamType type = ParamType.PATH;
         public String javaType = "";
         public String methodArgumentType = "";
         public boolean required = true;
 
         public String getSignature(String returnType) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(returnType).append(" ").append(JavaGen.addPrefixAndCapitalize("set", name));
-            sb.append(" ").append(javaType);
-            return sb.toString();
+            return returnType + " " + JavaGen.addPrefixAndCapitalize("set", name) + " " + javaType;
         }
         
         public String getDefinition(String returnType) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("  public ").append(returnType).append(" ").append(JavaGen.addPrefixAndCapitalize("set", name))
-                    .append("(").append(methodArgumentType).append(" ").append(name).append(")");
-            return sb.toString();
+            return "  public " + returnType + " " + JavaGen.addPrefixAndCapitalize("set", name) +
+                    "(" + methodArgumentType + " " + name + ")";
         }
 
         public String getSignatureForAddToMap(String returnType) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(returnType).append(" ").append(JavaGen.addPrefixAndCapitalize("add", name));
-            sb.append(" ").append(javaType);
-            return sb.toString();
+            return returnType + " " + JavaGen.addPrefixAndCapitalize("add", name) + " " + javaType;
         }
 
         public String getDefinitionForAddToMap(String returnType) {
+            return "  public " + returnType + " " + JavaGen.addPrefixAndCapitalize("add", name) +
+                    "(String key, String value)";
+        }
+
+        public String getParamComment(String returnType) {
             StringBuilder sb = new StringBuilder();
-            sb.append("  public ").append(returnType).append(" ").append(JavaGen.addPrefixAndCapitalize("add", name))
-                    .append("(String key, String value)");
+            sb.append("@param ").append(name).append(" ");
+            if (description == null || description.trim().isEmpty()) {
+                sb.append(name);
+            } else {
+                sb.append(description);
+            }
+            sb.append("\n");
+            if (returnType != null) {
+                sb.append("@return ").append(returnType).append("\n");
+            }
             return sb.toString();
         }
     }
 
-    public static enum ParamType {
+    public enum ParamType {
         PATH,
         QUERY,
         BODY,
@@ -364,6 +367,3 @@ public class Operation {
     }
 
 }
-
-// $Log$
-//

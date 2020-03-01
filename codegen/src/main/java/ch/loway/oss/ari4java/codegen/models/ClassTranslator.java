@@ -22,8 +22,8 @@ public class ClassTranslator extends JavaPkgInfo {
     public ClassTranslator(String version) {
         super();
         apiVersion = version;
-        mInterfaces = new HashMap<String, String>();
-        imports = new ArrayList<String>();
+        mInterfaces = new HashMap<>();
+        imports = new ArrayList<>();
         className = "ClassTranslator";
         imports.add("ch.loway.oss.ari4java.ARI");
         imports.add("ch.loway.oss.ari4java.generated.actions.*");
@@ -44,14 +44,12 @@ public class ClassTranslator extends JavaPkgInfo {
         JavaGen.importClasses(sb, getBaseApiPackage(), imports);
         JavaGen.addBanner(sb, "This is a class translator." + "\n\n");
 
-        List<String> ifNames = new ArrayList<String>(mInterfaces.keySet());
+        List<String> ifNames = new ArrayList<>(mInterfaces.keySet());
         Collections.sort(ifNames);
 
-        sb.append(
-                "public class " + getImplName() + " implements ARI.ClassFactory {\n" +
-                        "\n" +
-                        "  @Override\n" +
-                        "  public Class getImplementationFor(Class interfaceClass) { \n");
+        sb.append("public class ").append(getImplName()).append(" implements ARI.ClassFactory {\n\n");
+        sb.append("  @Override\n" +
+                "  public Class getImplementationFor(Class interfaceClass) {\n");
 
         for (String ifName : ifNames) {
             String impl = mInterfaces.get(ifName);
@@ -60,18 +58,17 @@ public class ClassTranslator extends JavaPkgInfo {
                     + "\tif ( interfaceClass.equals(")
                     .append(ifName)
                     .append(".class) ) {\n"
-                            + "\t   return (")
+                            + "    return (")
                     .append(impl)
                     .append(".class);\n"
-                            + "\t} else \n");
+                            + "  } else \n");
         }
 
-        sb.append(
-                "    {\n" +
-                        "      return null;\n" +
-                        "    }\n" +
-                        "  }\n" +
-                        "}\n\n");
+        sb.append("    {\n" +
+                "      return null;\n" +
+                "    }\n" +
+                "  }\n" +
+                "}\n\n");
         return sb.toString();
     }
 

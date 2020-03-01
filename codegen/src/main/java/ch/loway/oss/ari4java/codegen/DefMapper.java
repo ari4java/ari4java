@@ -14,10 +14,10 @@ import ch.loway.oss.ari4java.codegen.models.ModelField;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.googlejavaformat.java.Formatter;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The model mapper keeps a list of interfaces and actual implementations.
@@ -39,36 +40,45 @@ import java.util.Set;
 public class DefMapper {
 
     private List<String> vers = new ArrayList<>();
-    private List<Model> mymodels = new ArrayList<>();
+    private List<Model> myModels = new ArrayList<>();
     private List<Apis> myAPIs = new ArrayList<>();
     private Map<String, JavaInterface> interfaces = new HashMap<>();
     private String outputFolder;
     private ObjectMapper om = new ObjectMapper();
+    private Formatter codeFormatter = new Formatter();
+    private Set<String> messageInterfaces = new HashSet<>();
 
     /**
      * Loads definitions from a module.
      *
      * @param f          The source .json file
      * @param apiVersion The version of the API we are working with
-     * @throws IOException
+     * @throws Exception when error
      */
-    public void parseJsonDefinition(File f, String apiVersion) throws IOException {
+    public void parseJsonDefinition(File f, String apiVersion) throws Exception {
 
         if (!vers.contains(apiVersion)) {
             vers.add(apiVersion);
         }
 
         JsonNode rootNode = om.readTree(f);
+
+        // check swagger version as the parser, Asterisk is currently using 1.1
+        String currentVer = rootNode.get("swaggerVersion").asText();
+        if (!"1.1".equalsIgnoreCase(currentVer) && !"1.2".equalsIgnoreCase(currentVer)) {
+            throw new RuntimeException("Unsupported Swagger Version: " + rootNode.get("swaggerVersion").asText() +
+                    " for file " + f.getAbsolutePath());
+        }
+
         List<Model> lModels = loadModels(rootNode.get("models"), f, apiVersion);
         Apis api1 = loadApis(rootNode.get("apis"), f, apiVersion);
-
-        mymodels.addAll(lModels);
+        myModels.addAll(lModels);
         myAPIs.add(api1);
 
         if ("events.json".equals(f.getName())) {
 
             Model typeMessage = null;
-            List<Model> otherModels = new ArrayList<Model>();
+            List<Model> otherModels = new ArrayList<>();
 
             for (Model m : lModels) {
                 if (m.className.equalsIgnoreCase("Message")) {
@@ -78,32 +88,35 @@ public class DefMapper {
                 }
             }
 
-            StringBuilder defs = new StringBuilder();
-            for (Model m : otherModels) {
-                if (defs.length() > 0) {
-                    defs.append(",\n");
+            if (typeMessage != null) {
+
+                StringBuilder defs = new StringBuilder();
+                for (Model m : otherModels) {
+                    if (defs.length() > 0) {
+                        defs.append(",\n");
+                    }
+                    defs.append("  @Type(value = ")
+                            .append(m.getImplName())
+                            .append(".class, name = \"")
+                            .append(m.getInterfaceName())
+                            .append("\")");
+                    messageInterfaces.add(m.getInterfaceName());
                 }
-                defs.append("  @Type(value = ")
-                        .append(m.getImplName())
-                        .append(".class, name = \"")
-                        .append(m.getInterfaceName())
-                        .append("\")");
+
+                typeMessage.additionalPreambleText = " @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,"
+                        + " property = \"type\", visible = true)\n "
+                        + "@JsonSubTypes({\n"
+                        + defs
+                        + "\n})\n";
+                typeMessage.imports.add("com.fasterxml.jackson.annotation.JsonSubTypes");
+                typeMessage.imports.add("com.fasterxml.jackson.annotation.JsonSubTypes.Type");
+                typeMessage.imports.add("com.fasterxml.jackson.annotation.JsonTypeInfo");
             }
-
-            typeMessage.additionalPreambleText = " @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,"
-                    + " property = \"type\", visible = true)\n "
-                    + "@JsonSubTypes({\n"
-                    + defs
-                    + "\n})\n";
-
-            typeMessage.imports.add("com.fasterxml.jackson.annotation.JsonSubTypes");
-            typeMessage.imports.add("com.fasterxml.jackson.annotation.JsonSubTypes.Type");
-            typeMessage.imports.add("com.fasterxml.jackson.annotation.JsonTypeInfo");
 
         }
 
         // Now generate the interface
-        for (Model m : mymodels) {
+        for (Model m : myModels) {
             JavaInterface jim = interfaces.get(m.getInterfaceName());
             if (jim == null) {
                 jim = new JavaInterface();
@@ -141,25 +154,23 @@ public class DefMapper {
 
     /**
      * Generate all files.
-     *
-     * @throws IOException
+     * @throws Exception when error
      */
-    public void generateAllClasses() throws IOException {
+    public void generateAllClasses() throws Exception {
         AriBuilderInterface abi = generateInterfaces();
         generateModels();
         generateApis();
         generateProperties(abi);
-        generateImplementationClasses(abi);
+        generateImplementationClasses();
+        generateAriWSCallback();
     }
 
     /**
      * Generate all interfaces.
-     *
-     * @throws IOException
+     * @return AriBuilderInterface
+     * @throws Exception when error
      */
-    public AriBuilderInterface generateInterfaces() throws IOException {
-//        System.out.println("generateInterfaces");
-
+    public AriBuilderInterface generateInterfaces() throws Exception {
         AriBuilderInterface abi = new AriBuilderInterface();
         for (String ifName : interfaces.keySet()) {
             JavaInterface ji = interfaces.get(ifName);
@@ -177,12 +188,10 @@ public class DefMapper {
     /**
      * Generates a model.
      * For each model. let's find out the minimal interface it should implement.
-     *
-     * @throws IOException
+     * @throws Exception when error
      */
-    public void generateModels() throws IOException {
-//        System.out.println("generateModels");
-        for (Model m : mymodels) {
+    public void generateModels() throws Exception {
+        for (Model m : myModels) {
             String minIf = m.getInterfaceName();
             JavaInterface ji = interfaces.get(minIf);
 
@@ -193,11 +202,9 @@ public class DefMapper {
 
     /**
      * Save APIs to disk.
-     *
-     * @throws IOException
+     * @throws Exception when error
      */
-    public void generateApis() throws IOException {
-//        System.out.println("generateApis");
+    public void generateApis() throws Exception {
         for (Apis api : myAPIs) {
             String minIf = api.getInterfaceName();
             JavaInterface ji = interfaces.get(minIf);
@@ -213,30 +220,26 @@ public class DefMapper {
 
     /**
      * Write a properties file for each API version.
-     *
-     * @throws IOException
+     * @param abi the builder interface
+     * @throws Exception when error
      */
-    public void generateProperties(AriBuilderInterface abi) throws IOException {
-//        System.out.println("generateProperties");
-
-        Map<String, Set<Model>> mM = new HashMap<String, Set<Model>>();
-        Map<String, Set<Apis>> mA = new HashMap<String, Set<Apis>>();
+    public void generateProperties(AriBuilderInterface abi) throws Exception {
+        Map<String, Set<Model>> mM = new HashMap<>();
+        Map<String, Set<Apis>> mA = new HashMap<>();
 
         for (Apis api : myAPIs) {
             String ver = api.apiVersion;
             if (!mA.containsKey(ver)) {
-                mA.put(ver, new HashSet<Apis>());
+                mA.put(ver, new HashSet<>());
             }
-
             mA.get(ver).add(api);
         }
 
-        for (Model mod : mymodels) {
+        for (Model mod : myModels) {
             String ver = mod.apiVersion;
             if (!mM.containsKey(ver)) {
-                mM.put(ver, new HashSet<Model>());
+                mM.put(ver, new HashSet<>());
             }
-
             mM.get(ver).add(mod);
         }
 
@@ -247,7 +250,7 @@ public class DefMapper {
         sbVerEnum.append("import ch.loway.oss.ari4java.generated.AriBuilder;\n");
 
         for (String ver : vers) {
-            writeAriBuilder(ver, abi, mA.get(ver), mM.get(ver));
+            writeAriBuilder(ver, abi, mA.get(ver));
             builderEnum(sbVerEnums, ver);
             sbVerEnum.append("import ch.loway.oss.ari4java.generated.").append(ver)
                     .append(".AriBuilder_impl_").append(ver).append(";\n");
@@ -266,7 +269,8 @@ public class DefMapper {
         sbVerEnum.append("  }\n\n");
         sbVerEnum.append("  public AriBuilder builder() {\n");
         sbVerEnum.append("    if (builder == null) {\n");
-        sbVerEnum.append("      throw new IllegalArgumentException(\"This version has no builder. Library error for \" + this.name());\n");
+        sbVerEnum.append("      throw new IllegalArgumentException(\"This version has no builder. ");
+        sbVerEnum.append("Library error for \" + this.name());\n");
         sbVerEnum.append("    } else {\n");
         sbVerEnum.append("      return builder;\n");
         sbVerEnum.append("    }\n");
@@ -303,14 +307,10 @@ public class DefMapper {
 
     /**
      * Generates the translators from the abstract class to the concrete one.
-     *
-     * @param abi
-     * @throws IOException
+     * @throws Exception when error
      */
-    public void generateImplementationClasses(AriBuilderInterface abi) throws IOException {
-//        System.out.println("generateImplementationClasses");
-
-        List<ClassTranslator> lTranslators = new ArrayList<ClassTranslator>();
+    public void generateImplementationClasses() throws Exception {
+        List<ClassTranslator> lTranslators = new ArrayList<>();
 
         for (Apis api : myAPIs) {
             String ver = api.apiVersion;
@@ -318,7 +318,7 @@ public class DefMapper {
             ct.setClass(api.className, api.className + "_impl_" + ver);
         }
 
-        for (Model mod : mymodels) {
+        for (Model mod : myModels) {
             String ver = mod.apiVersion;
             ClassTranslator ct = getClassTranslator(lTranslators, ver);
             ct.setClass(mod.className, mod.className + "_impl_" + ver);
@@ -341,17 +341,17 @@ public class DefMapper {
     }
 
     /**
-     * @param f
-     * @return
+     * @param f the file
+     * @return an action class name
      */
     private String genActionClassName(File f) {
         String fileName = f.getName().replace(".json", "");
         return JavaGen.addPrefixAndCapitalize("Action", fileName);
     }
 
-    private List<Model> loadModels(JsonNode models, File f, String apiVersion) throws IOException {
+    private List<Model> loadModels(JsonNode models, File f, String apiVersion) {
 
-        List<Model> lModelsAdded = new ArrayList<Model>();
+        List<Model> lModelsAdded = new ArrayList<>();
 
         for (JsonNode modelName : models) {
             // Creazione di un modello
@@ -399,12 +399,9 @@ public class DefMapper {
         return lModelsAdded;
     }
 
-    private Apis loadApis(JsonNode apis, File f, String apiVersion) throws IOException {
-
+    private Apis loadApis(JsonNode apis, File f, String apiVersion) {
         Apis api = new Apis();
-
         api.setPackageInfo(genActionClassName(f), apiVersion);
-
 
         for (JsonNode apiEntry : apis) {
 
@@ -436,6 +433,7 @@ public class DefMapper {
                         p.methodArgumentType = JavaPkgInfo.primitiveSignature.containsKey(p.javaType) ?
                                 JavaPkgInfo.primitiveSignature.get(p.javaType) : p.javaType;
                         p.name = txt(parameter.get("name"));
+                        p.description = txt(parameter.get("description"));
                         p.required = txt(parameter.get("required")).equalsIgnoreCase("true");
                         p.type = Operation.ParamType.build(txt(parameter.get("paramType")));
                         op.params.add(p);
@@ -463,38 +461,38 @@ public class DefMapper {
 
     }
 
-    public void saveToDisk(String pkgName, String className, String classText) throws IOException {
+    public void saveToDisk(String pkgName, String className, String classText) throws Exception {
         String fName = outputFolder
                 + pkgName.replace(".", "/")
                 + "/"
                 + className + ".java";
 
         File f = new File(fName);
+        //noinspection ResultOfMethodCallIgnored
         f.getParentFile().mkdirs();
-//        System.out.println("Saving: " + f.getAbsolutePath());
         FileWriter outFile = new FileWriter(f);
         PrintWriter out = new PrintWriter(outFile);
-        out.println(classText);
+        out.println(codeFormatter.formatSource(classText));
         out.close();
     }
 
-    public void saveToDisk(Model model) throws IOException {
+    public void saveToDisk(Model model) throws Exception {
         saveToDisk(model.getModelPackage(), model.getImplName(), model.toString());
     }
 
-    public void saveToDisk(Apis api) throws IOException {
+    public void saveToDisk(Apis api) throws Exception {
         saveToDisk(api.getActionsPackage(), api.getImplName(), api.toString());
     }
 
-    public void saveToDisk(Operation operation) throws IOException {
+    public void saveToDisk(Operation operation) throws Exception {
         saveToDisk(operation.getPackage(), operation.getImplName(), operation.toString());
     }
 
-    public void saveToDisk(JavaInterface ji) throws IOException {
+    public void saveToDisk(JavaInterface ji) throws Exception {
         saveToDisk(ji.pkgName, ji.className, ji.toString());
     }
 
-    public void saveToDisk(ClassTranslator ct) throws IOException {
+    public void saveToDisk(ClassTranslator ct) throws Exception {
         saveToDisk(ct.getBaseApiPackage(), ct.getImplName(), ct.toString());
     }
 
@@ -509,10 +507,12 @@ public class DefMapper {
                 if(f.isDirectory()) {
                     deleteFolder(f);
                 } else {
+                    //noinspection ResultOfMethodCallIgnored
                     f.delete();
                 }
             }
         }
+        //noinspection ResultOfMethodCallIgnored
         folder.delete();
     }
 
@@ -532,7 +532,7 @@ public class DefMapper {
     }
 
     public Set<String> subTypes(JsonNode model) {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         if (model.get("subTypes") != null) {
             JsonNode st = model.get("subTypes");
             if (st instanceof ArrayNode) {
@@ -558,7 +558,8 @@ public class DefMapper {
         String listAry = "List[";
 
         if (jsonType.startsWith(listAry)) {
-            return (concrete ? "List<" : "List<") + innerRemapType(jsonType.substring(listAry.length(), jsonType.length() - 1), concrete, apiVersion) + ">";
+            return (concrete ? "List<" : "List<") + innerRemapType(jsonType.substring(listAry.length(),
+                    jsonType.length() - 1), concrete, apiVersion) + ">";
         } else if (JavaPkgInfo.TypeMap.containsKey(jsonType.toLowerCase())) {
             return JavaPkgInfo.TypeMap.get(jsonType.toLowerCase());
         } else {
@@ -566,20 +567,17 @@ public class DefMapper {
         }
     }
 
-    private void writeAriBuilder(String apiVersion, AriBuilderInterface abi, Collection<Apis> apis, Collection<Model> models) throws IOException {
+    private void writeAriBuilder(String apiVersion, AriBuilderInterface abi, Collection<Apis> apis) throws Exception {
 
         String thisClass = "AriBuilder_impl_" + apiVersion;
-        List<String> ifToImplement = new ArrayList<String>(abi.knownInterfaces);
+        List<String> ifToImplement = new ArrayList<>(abi.knownInterfaces);
 
         StringBuilder sb = new StringBuilder();
         JavaGen.importClasses(sb, "ch.loway.oss.ari4java.generated." + apiVersion,
-                Arrays.asList(new String[]{
-                        "ch.loway.oss.ari4java.ARI",
+                Arrays.asList("ch.loway.oss.ari4java.ARI",
                         "ch.loway.oss.ari4java.generated.AriBuilder",
                         "ch.loway.oss.ari4java.generated.actions.*",
-                        "ch.loway.oss.ari4java.generated." + apiVersion + ".actions.*",
-                }));
-
+                        "ch.loway.oss.ari4java.generated." + apiVersion + ".actions.*"));
         sb.append("public class ").append(thisClass).append(" implements AriBuilder {\n\n");
 
         for (Apis api : apis) {
@@ -593,19 +591,52 @@ public class DefMapper {
             sb.append(AriBuilderInterface.getUnimplemented(ifc));
         }
 
-        sb.append("public ARI.ClassFactory getClassFactory() {\n"
-                + " return new ClassTranslator_impl_" + apiVersion + "();\n"
-                + "};\n\n"
-        );
-
-        sb.append("};");
+        sb.append("public ARI.ClassFactory getClassFactory() {\n return new ClassTranslator_impl_");
+        sb.append(apiVersion);
+        sb.append("();\n};\n\n};");
 
         saveToDisk("ch.loway.oss.ari4java.generated." + apiVersion, thisClass, sb.toString());
 
     }
 
+    private void generateAriWSCallback() throws Exception {
+        StringBuilder sb = new StringBuilder();
+        StringBuilder methods = new StringBuilder();
+        JavaGen.importClasses(sb, "ch.loway.oss.ari4java.generated",
+                Arrays.asList(
+                        "ch.loway.oss.ari4java.tools.AriConnectionEvent",
+                        "ch.loway.oss.ari4java.tools.AriWSCallback",
+                        "ch.loway.oss.ari4java.generated.models.*",
+                        "ch.loway.oss.ari4java.tools.RestException",
+                        "org.slf4j.Logger",
+                        "org.slf4j.LoggerFactory"));
+        sb.append("public abstract class AriWSHelper implements AriWSCallback<Message> {\n\n");
+        sb.append("private Logger logger = LoggerFactory.getLogger(AriWSHelper.class);\n\n");
+        sb.append("@Override\npublic void onSuccess(Message message) {\n");
+        AtomicBoolean first = new AtomicBoolean(true);
+        messageInterfaces.forEach(i -> {
+            if (!i.equals("Event")) {
+                if (first.get()) {
+                    first.set(false);
+                } else {
+                    sb.append(" else ");
+                }
+                sb.append("if (message instanceof ").append(i).append(") {\non").append(i).append("((").append(i).append(") message);\n}");
+                methods.append("protected void on").append(i).append("(final ").append(i).append(" message) {\n");
+                methods.append("logger.warn(\"Event ").append(i).append(" Unhandled\");\n");
+                methods.append("}\n\n");
+            }
+        });
+        sb.append(" else {\nlogger.error(\"Unknown Event - \" + message.getClass());\n}\n}\n\n");
+        sb.append("@Override\npublic void onFailure(RestException e) {\nlogger.error(\"Error: {}\", e.getMessage(), e);\n}\n\n");
+        sb.append("@Override\npublic void onConnectionEvent(AriConnectionEvent event) {\nlogger.debug(event.name());\n}\n\n");
+        sb.append(methods);
+        sb.append("\n}");
+        saveToDisk("ch.loway.oss.ari4java.generated", "AriWSHelper", sb.toString());
+    }
+
     /**
-     * @param outputFolder
+     * @param outputFolder the folder
      */
     void setOutputFolder(String outputFolder) {
         this.outputFolder = outputFolder;

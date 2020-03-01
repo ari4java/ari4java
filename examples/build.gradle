@@ -14,6 +14,11 @@ dependencies {
     compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.13.0'
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 //task runWeaselsExample(type: JavaExec) {
 //    classpath = sourceSets.main.runtimeClasspath
 //    main = 'ch.loway.oss.ari4java.examples.Weasels'
