@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The model mapper keeps a list of interfaces and actual implementations.
@@ -45,6 +46,7 @@ public class DefMapper {
     private String outputFolder;
     private ObjectMapper om = new ObjectMapper();
     private Formatter codeFormatter = new Formatter();
+    private Set<String> messageInterfaces = new HashSet<>();
 
     /**
      * Loads definitions from a module.
@@ -70,7 +72,6 @@ public class DefMapper {
 
         List<Model> lModels = loadModels(rootNode.get("models"), f, apiVersion);
         Apis api1 = loadApis(rootNode.get("apis"), f, apiVersion);
-
         myModels.addAll(lModels);
         myAPIs.add(api1);
 
@@ -87,19 +88,21 @@ public class DefMapper {
                 }
             }
 
-            StringBuilder defs = new StringBuilder();
-            for (Model m : otherModels) {
-                if (defs.length() > 0) {
-                    defs.append(",\n");
-                }
-                defs.append("  @Type(value = ")
-                        .append(m.getImplName())
-                        .append(".class, name = \"")
-                        .append(m.getInterfaceName())
-                        .append("\")");
-            }
-
             if (typeMessage != null) {
+
+                StringBuilder defs = new StringBuilder();
+                for (Model m : otherModels) {
+                    if (defs.length() > 0) {
+                        defs.append(",\n");
+                    }
+                    defs.append("  @Type(value = ")
+                            .append(m.getImplName())
+                            .append(".class, name = \"")
+                            .append(m.getInterfaceName())
+                            .append("\")");
+                    messageInterfaces.add(m.getInterfaceName());
+                }
+
                 typeMessage.additionalPreambleText = " @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,"
                         + " property = \"type\", visible = true)\n "
                         + "@JsonSubTypes({\n"
@@ -159,6 +162,7 @@ public class DefMapper {
         generateApis();
         generateProperties(abi);
         generateImplementationClasses();
+        generateAriWSCallback();
     }
 
     /**
@@ -187,7 +191,6 @@ public class DefMapper {
      * @throws Exception when error
      */
     public void generateModels() throws Exception {
-//        System.out.println("generateModels");
         for (Model m : myModels) {
             String minIf = m.getInterfaceName();
             JavaInterface ji = interfaces.get(minIf);
@@ -594,6 +597,42 @@ public class DefMapper {
 
         saveToDisk("ch.loway.oss.ari4java.generated." + apiVersion, thisClass, sb.toString());
 
+    }
+
+    private void generateAriWSCallback() throws Exception {
+        StringBuilder sb = new StringBuilder();
+        StringBuilder methods = new StringBuilder();
+        JavaGen.importClasses(sb, "ch.loway.oss.ari4java.generated",
+                Arrays.asList(
+                        "ch.loway.oss.ari4java.tools.AriConnectionEvent",
+                        "ch.loway.oss.ari4java.tools.AriWSCallback",
+                        "ch.loway.oss.ari4java.generated.models.*",
+                        "ch.loway.oss.ari4java.tools.RestException",
+                        "org.slf4j.Logger",
+                        "org.slf4j.LoggerFactory"));
+        sb.append("public abstract class AriWSHelper implements AriWSCallback<Message> {\n\n");
+        sb.append("private Logger logger = LoggerFactory.getLogger(AriWSHelper.class);\n\n");
+        sb.append("@Override\npublic void onSuccess(Message message) {\n");
+        AtomicBoolean first = new AtomicBoolean(true);
+        messageInterfaces.forEach(i -> {
+            if (!i.equals("Event")) {
+                if (first.get()) {
+                    first.set(false);
+                } else {
+                    sb.append(" else ");
+                }
+                sb.append("if (message instanceof ").append(i).append(") {\non").append(i).append("((").append(i).append(") message);\n}");
+                methods.append("protected void on").append(i).append("(final ").append(i).append(" message) {\n");
+                methods.append("logger.warn(\"Event ").append(i).append(" Unhandled\");\n");
+                methods.append("}\n\n");
+            }
+        });
+        sb.append(" else {\nlogger.error(\"Unknown Event - \" + message.getClass());\n}\n}\n\n");
+        sb.append("@Override\npublic void onFailure(RestException e) {\nlogger.error(\"Error: {}\", e.getMessage(), e);\n}\n\n");
+        sb.append("@Override\npublic void onConnectionEvent(AriConnectionEvent event) {\nlogger.debug(event.name());\n}\n\n");
+        sb.append(methods);
+        sb.append("\n}");
+        saveToDisk("ch.loway.oss.ari4java.generated", "AriWSHelper", sb.toString());
     }
 
     /**
