@@ -19,7 +19,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-//task runWeaselsExample(type: JavaExec) {
-//    classpath = sourceSets.main.runtimeClasspath
-//    main = 'ch.loway.oss.ari4java.examples.Weasels'
-//}
+task runWeaselsExample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'ch.loway.oss.ari4java.examples.Weasels'
+}
