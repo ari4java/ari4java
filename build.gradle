@@ -61,9 +61,11 @@ javadoc {
         'ch/loway/oss/ari4java/generated/actions/*',
         'ch/loway/oss/ari4java/generated/models/*',
         'ch/loway/oss/ari4java/*',
-        'ch/loway/oss/ari4java/tools/*'
+        'ch/loway/oss/ari4java/tools/*',
+        'ch/loway/oss/ari4java/tools/*/*'
     ]
     includes = inc.toSet()
+    options.overview = "src/overview.html"
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
