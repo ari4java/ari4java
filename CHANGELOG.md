@@ -1,7 +1,13 @@
 # ARI4Java Changelog
 
 ## [Unreleased]
-[Unreleased]: https://github.com/l3nz/ari4java/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/l3nz/ari4java/compare/v0.11.0...HEAD
+
+## [0.11.0]
+[0.11.0]: https://github.com/l3nz/ari4java/compare/v0.10.0...v0.11.0
+### Added
+- Unit tests to increase coverage #11
+- New ARI binding
 
 ## [0.10.0]
 [0.10.0]: https://github.com/l3nz/ari4java/compare/v0.9.1...v0.10.0
