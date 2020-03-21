@@ -1,7 +1,8 @@
 package ch.loway.oss.ari4java;
 
-import ch.loway.oss.ari4java.tools.RestException;
 import ch.loway.oss.ari4java.tools.http.NettyHttpClient;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.URISyntaxException;
 
@@ -11,6 +12,8 @@ import java.net.URISyntaxException;
  * @author lenz
  */
 public class AriFactory {
+
+    static NettyHttpClient nettyHttpClient = null;
 
     /**
      * Your default HTTP connector through Netty (without app).
@@ -43,6 +46,8 @@ public class AriFactory {
 
     /**
      * This connects to an application.
+     * If the version is set as IM_FEELING_LUCKY the AriFactory will determine the version by 1st connecting
+     * to the server and requesting the resources.json to extract the version number.
      *
      * @param uri            uri
      * @param login          login
@@ -54,26 +59,57 @@ public class AriFactory {
      * @throws URISyntaxException when error
      */
     public static ARI nettyHttp(String uri, String login, String pass, AriVersion version, String app, boolean testConnection) throws URISyntaxException {
-        if (AriVersion.IM_FEELING_LUCKY.equals(version)) {
-            throw new UnsupportedOperationException("IM_FEELING_LUCKY not a valid option here");
+        NettyHttpClient client;
+        if (nettyHttpClient != null) {
+            client = nettyHttpClient;
+        } else {
+            client = new NettyHttpClient();
+            client.initialize(uri, login, pass);
         }
         ARI ari = new ARI();
         ari.setAppName(app);
-        NettyHttpClient hc = new NettyHttpClient();
-        ari.setHttpClient(hc);
-        ari.setWsClient(hc);
-        ari.setVersion(version);
-        hc.initialize(uri, login, pass);
-        // ping was added in version 5 (Asterisk 16) and back ported to some... I'm only including 1.10.2 (Asterisk 13) from the back port...
-        int majorVer = Integer.parseInt(version.version().split("\\.")[0]);
-        if (testConnection && (majorVer >= 5 || AriVersion.ARI_1_10_2.equals(version))) {
-            try {
+        ari.setHttpClient(client);
+        ari.setWsClient(client);
+        if (AriVersion.IM_FEELING_LUCKY.equals(version)) {
+            ari.setVersion(detectAriVersion(client));
+        } else {
+            ari.setVersion(version);
+        }
+        try {
+            int majorVer = Integer.parseInt(ari.getVersion().version().split("\\.")[0]);
+            // ping was added in version 5 (Asterisk 16) and back ported to some... I'm only including 1.10.2 (Asterisk 13) from the back port...
+            if (testConnection && (majorVer >= 5 || AriVersion.ARI_1_10_2.equals(version))) {
                 ari.asterisk().ping();
-            } catch (RestException e) {
-                throw new RuntimeException("Failed to test connection: " + e.getMessage(), e);
             }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to test connection: " + e.getMessage(), e);
         }
         return ari;
+    }
+
+    /**
+     * Connect and detect the current ARI version.
+     * If the ARI version is not supported,
+     * will raise an exception as we have no bindings for it.
+     *
+     * @param client an instance of the NettyHttpClient
+     * @return the version of your server
+     * @throws RuntimeException if the version is not supported
+     */
+    protected static AriVersion detectAriVersion(NettyHttpClient client) {
+        try {
+            String response = client.httpActionSync("/api-docs/resources.json", "GET", null, null, null);
+            if (response != null && !response.isEmpty()) {
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode jsonNode = mapper.reader().readTree(response);
+                if (jsonNode.has("apiVersion")) {
+                    return AriVersion.fromVersionString(jsonNode.get("apiVersion").asText());
+                }
+            }
+            throw new RuntimeException("Could find apiVersion");
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
 }

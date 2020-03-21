@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class MessageQueue {
 
-    public List<Message> lEvents = new LinkedList<Message>();
+    private final List<Message> lEvents = new LinkedList<Message>();
 
     /**
      * Adds a message to the queue.

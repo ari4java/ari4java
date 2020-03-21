@@ -3,26 +3,27 @@ package ch.loway.oss.ari4java.tools.http;
 import ch.loway.oss.ari4java.generated.actions.requests.AsteriskPingGetRequest;
 import ch.loway.oss.ari4java.generated.ari_6_0_0.actions.requests.*;
 import ch.loway.oss.ari4java.generated.models.AsteriskPing;
-import ch.loway.oss.ari4java.tools.ARIEncoder;
-import ch.loway.oss.ari4java.tools.AriCallback;
-import ch.loway.oss.ari4java.tools.HttpParam;
-import ch.loway.oss.ari4java.tools.RestException;
+import ch.loway.oss.ari4java.tools.*;
+import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.DefaultChannelPromise;
+import io.netty.channel.*;
 import io.netty.channel.embedded.EmbeddedChannel;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.*;
-import org.junit.Before;
+import io.netty.handler.codec.http.websocketx.WebSocketVersion;
+import io.netty.util.concurrent.EventExecutor;
+import org.junit.After;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -32,8 +33,7 @@ public class NettyHttpClientTest {
     private NettyHttpClient client;
     private ChannelFuture cf;
 
-    @Before
-    public void setUp() throws URISyntaxException {
+    private void initTestClient() throws URISyntaxException {
         client = new NettyHttpClient() {
             protected void bootstrap() {
                 // for testing skip the bootstrapping
@@ -46,18 +46,28 @@ public class NettyHttpClientTest {
         client.initialize("http://localhost:8088/", "user", "p@ss");
     }
 
+    @After
+    public void tearDown() {
+        if (client != null) {
+            client.destroy();
+        }
+    }
+
     @Test(expected = URISyntaxException.class)
     public void testInitializeBadURL() throws URISyntaxException {
+        initTestClient();
         client.initialize(":", "", "");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInitializeInvalidURL() throws URISyntaxException {
+        initTestClient();
         client.initialize("ws://localhost:8088/", "", "");
     }
 
     @Test
-    public void testBuildURL() {
+    public void testBuildURL() throws Exception {
+        initTestClient();
         List<HttpParam> queryParams = new ArrayList<>();
         queryParams.add(HttpParam.build("a", "b/c"));
         queryParams.add(HttpParam.build("d", "e"));
@@ -65,7 +75,81 @@ public class NettyHttpClientTest {
         assertEquals("/ari/channels?a=b%2Fc&d=e", url);
     }
 
-    private void setupSync(NettyHttpClientHandler h) throws Exception {
+    @Test
+    public void testInitialize() throws Exception {
+        NettyHttpClient client = new NettyHttpClient();
+        client.initialize("http://localhost:8088/", "user", "p@ss");
+        client.destroy();
+    }
+
+    @Test
+    public void testHttpConnect() {
+        Bootstrap bootstrap = mock(Bootstrap.class);
+        NettyHttpClient client = new NettyHttpClient() {
+            {
+                bootstrap();
+            }
+            @Override
+            protected void bootstrap() {
+                bootStrap = bootstrap;
+                try {
+                    baseUri = new URI("http://localhost:8088/");
+                } catch (URISyntaxException e) {
+                    // oh well
+                }
+            }
+        };
+        when(bootstrap.connect(eq("localhost"), eq(8088))).thenReturn(mock(ChannelFuture.class));
+        ChannelFuture future = client.httpConnect();
+        assertNotNull("Expected ChannelFuture", future);
+        verify(bootstrap, times(1)).connect(anyString(), anyInt());
+        client.destroy();
+    }
+
+    @Test
+    public void testWsConnect() throws Exception {
+        Bootstrap bootstrap = mock(Bootstrap.class);
+        NettyWSClientHandler testHandler = mock(NettyWSClientHandler.class);
+        EmbeddedChannel channel = createTestChannel("ws-handler", testHandler);
+
+        FullHttpRequest req = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/events");
+        HttpHeaders headers = req.headers();
+        headers.set(HttpHeaderNames.UPGRADE, HttpHeaderValues.WEBSOCKET);
+        headers.set(HttpHeaderNames.SEC_WEBSOCKET_KEY, "dGhlIHNhbXBsZSBub25jZQ==");
+        headers.set(HttpHeaderNames.SEC_WEBSOCKET_VERSION, WebSocketVersion.V13);
+        cf = channel.closeFuture();
+        when(bootstrap.connect(eq("localhost"), eq(443))).thenReturn(cf);
+        ((DefaultChannelPromise) cf).setSuccess(null);
+
+        class TestNettyHttpClient extends NettyHttpClient {
+            @Override
+            public WsClientConnection connect(final HttpResponseHandler callback, final String url,
+                                              final List<HttpParam> lParamQuery) throws RestException {
+                try {
+                    baseUri = new URI("https://localhost/");
+                    this.auth = "123";
+                    getWsHandshake(url, lParamQuery); // here so the code is run for code coverage
+                } catch (URISyntaxException e) {
+                    // oh well
+                }
+                pingPeriod = 1;
+                pingTimeUnit = TimeUnit.SECONDS;
+                return connect(bootstrap, callback);
+            }
+            public void testWsFutureOperationComplete(ChannelFuture future) throws Exception {
+                this.wsHandler = testHandler;
+                wsFuture.operationComplete(future);
+            }
+        }
+        TestNettyHttpClient client = new TestNettyHttpClient();
+        WsClient.WsClientConnection connection = client.connect(mock(HttpResponseHandler.class), "/events", null);
+        assertNotNull("Expected WsClientConnection", connection);
+        channel.writeInbound(req);
+        Thread.sleep(10000);
+        client.destroy();
+    }
+
+    private void setupSync(NettyHttpClientHandler h) {
         cf = mock(ChannelFuture.class);
         when(cf.addListener(any())).thenReturn(cf);
         when(cf.syncUninterruptibly()).thenReturn(cf);
@@ -79,6 +163,7 @@ public class NettyHttpClientTest {
 
     @Test
     public void testHttpActionSync() throws Exception {
+        initTestClient();
         NettyHttpClientHandler h = new NettyHttpClientHandler();
         setupSync(h);
         h.responseStatus = HttpResponseStatus.OK;
@@ -88,12 +173,17 @@ public class NettyHttpClientTest {
     }
 
     private EmbeddedChannel createTestChannel() {
+        EmbeddedChannel channel = createTestChannel("http-handler", new NettyHttpClientHandler());
+        cf = channel.closeFuture();
+        ((DefaultChannelPromise) cf).setSuccess(null);
+        return channel;
+    }
+
+    private EmbeddedChannel createTestChannel(String name, ChannelHandler handler) {
         EmbeddedChannel channel = new EmbeddedChannel();
         channel.pipeline().addLast("http-codec", new HttpClientCodec());
         channel.pipeline().addLast("http-aggregator", new HttpObjectAggregator(NettyHttpClient.MAX_HTTP_REQUEST));
-        channel.pipeline().addLast("http-handler", new NettyHttpClientHandler());
-        cf = channel.closeFuture();
-        ((DefaultChannelPromise) cf).setSuccess(null);
+        channel.pipeline().addLast(name, handler);
         return channel;
     }
 
@@ -118,6 +208,7 @@ public class NettyHttpClientTest {
 
     @Test
     public void testHttpActionSyncPing() throws Exception {
+        initTestClient();
         EmbeddedChannel channel = createTestChannel();
         AsteriskPingGetRequest req = pingSetup(channel);
         AsteriskPing res = req.execute();
@@ -125,7 +216,8 @@ public class NettyHttpClientTest {
     }
 
     @Test
-    public void testHttpActionAsyncPing() throws InterruptedException {
+    public void testHttpActionAsyncPing() throws Exception {
+        initTestClient();
         EmbeddedChannel channel = createTestChannel();
         AsteriskPingGetRequest req = pingSetup(channel);
         final boolean[] callback = {false};
@@ -146,7 +238,8 @@ public class NettyHttpClientTest {
     }
 
     @Test
-    public void testHttpActionException() {
+    public void testHttpActionException() throws Exception {
+        initTestClient();
         EmbeddedChannel channel = createTestChannel();
         ApplicationsGetRequest_impl_ari_6_0_0 req = new ApplicationsGetRequest_impl_ari_6_0_0("test");
         req.setHttpClient(client);
@@ -175,7 +268,8 @@ public class NettyHttpClientTest {
     }
 
     @Test
-    public void testBodyFieldSerialisation() throws RestException {
+    public void testBodyFieldSerialisation() throws Exception {
+        initTestClient();
         EmbeddedChannel channel = createTestChannel();
         channel.writeInbound(new DefaultFullHttpResponse(
                 HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.copiedBuffer("[]", ARIEncoder.ENCODING)));
@@ -187,7 +281,8 @@ public class NettyHttpClientTest {
     }
 
     @Test
-    public void testBodyVariableSerialisation() throws RestException {
+    public void testBodyVariableSerialisation() throws Exception {
+        initTestClient();
         EmbeddedChannel channel = createTestChannel();
         channel.writeInbound(new DefaultFullHttpResponse(
                 HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.copiedBuffer("{}", ARIEncoder.ENCODING)));
@@ -199,7 +294,8 @@ public class NettyHttpClientTest {
     }
 
     @Test
-    public void testBodyObjectSerialisation() throws RestException {
+    public void testBodyObjectSerialisation() throws Exception {
+        initTestClient();
         EmbeddedChannel channel = createTestChannel();
         channel.writeInbound(new DefaultFullHttpResponse(
                 HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.copiedBuffer("{}", ARIEncoder.ENCODING)));
@@ -218,7 +314,7 @@ public class NettyHttpClientTest {
         if ("fields".equals(field)) {
             expected = "{\"fields\":[{\"attribute\":\"key1\",\"value\":\"val1\"},{\"attribute\":\"key2\",\"value\":\"val2\"}]}";
         }
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         ByteBuf data = channel.readOutbound();
         while (data != null) {
             if (data.readableBytes() > 0) {

@@ -26,6 +26,7 @@ public class ConnectAndDial {
     public static final String ASTERISK_ADDRESS = "http://192.168.99.100:18088/";
     public static final String ASTERISK_USER = "ari4java";
     public static final String ASTERISK_PASS = "yothere";
+    public static final String APP_NAME = "myapp";
 
     ARI ari = null;
     Bridge b = null;
@@ -71,7 +72,7 @@ public class ConnectAndDial {
         System.out.println("Connecting to: " + ASTERISK_ADDRESS
                 + " as " + ASTERISK_USER + ":" + ASTERISK_PASS);
 
-        ari = ARI.build(ASTERISK_ADDRESS, "myapp",
+        ari = ARI.build(ASTERISK_ADDRESS, APP_NAME,
                 ASTERISK_USER, ASTERISK_PASS,
                 AriVersion.IM_FEELING_LUCKY);
 
@@ -118,7 +119,7 @@ public class ConnectAndDial {
 
         long start = System.currentTimeMillis();
 
-        Channel chan = ari.channels().originate("Local/100@wdep")
+        Channel chan = ari.channels().originate("Local/100@wdep").setApp(APP_NAME)
                 .setExtension("100").setContext("wdep").setPriority(1).setTimeout(10000).execute();
         System.out.println("Channel:" + chan.getId() + " in state " + chan.getState());
 
