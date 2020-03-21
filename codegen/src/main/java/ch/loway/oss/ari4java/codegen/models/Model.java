@@ -97,15 +97,15 @@ public class Model extends JavaPkgInfo {
 
     public void registerInterfaces(JavaInterface j, String apiVersion) {
         for (ModelField mf : fields) {
+            // getter
             String signature = mf.getSignatureGet();
             String declaration = mf.getDeclarationGet();
             String comment = mf.comment + "\n@return " + mf.typeInterface;
             j.iKnow(signature, declaration, comment, apiVersion);
-        }
-        for (ModelField mf : fields) {
-            String signature = mf.getSignatureSet();
-            String declaration = mf.getDeclarationSet();
-            String comment = "@param val " + (mf.comment.trim().isEmpty() ? "the value" : mf.comment);
+            // setter
+            signature = mf.getSignatureSet();
+            declaration = mf.getDeclarationSet();
+            comment = "@param val " + (mf.comment.trim().isEmpty() ? "the value" : mf.comment);
             j.iKnow(signature, declaration, comment, apiVersion);
         }
     }
