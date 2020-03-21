@@ -163,10 +163,10 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                     wsPingTimer.cancel(true);
                     wsPingTimer = null;
                 }
-                if (wsClientConnection != null) {
-                    logger.debug("cancel wsClientConnection...");
+                if (wsConnectionTimeout != null) {
+                    logger.debug("cancel wsConnectionTimeout...");
                     wsConnectionTimeout.cancel(true);
-                    wsClientConnection = null;
+                    wsConnectionTimeout = null;
                 }
                 if (wsClientConnection != null) {
                     try {
