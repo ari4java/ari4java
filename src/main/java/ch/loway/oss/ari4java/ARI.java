@@ -261,6 +261,7 @@ public class ARI {
     /**
      * Create the events Websocket with the provided callback
      *
+     * @param callback AriCallback
      * @throws ARIException when error
      */
     public void eventsCallback(AriCallback<Message> callback) throws ARIException {
@@ -270,6 +271,8 @@ public class ARI {
     /**
      * Create the events Websocket with the provided callback
      *
+     * @param callback AriCallback
+     * @param subscribeAll subscribe to all
      * @throws ARIException when error
      */
     public void eventsCallback(AriCallback<Message> callback, boolean subscribeAll) throws ARIException {
