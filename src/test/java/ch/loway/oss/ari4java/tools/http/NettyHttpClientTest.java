@@ -136,10 +136,10 @@ public class NettyHttpClientTest {
                 pingTimeUnit = TimeUnit.SECONDS;
                 return connect(bootstrap, callback);
             }
-            public void testWsFutureOperationComplete(ChannelFuture future) throws Exception {
-                this.wsHandler = testHandler;
-                wsFuture.operationComplete(future);
-            }
+//            public void testWsFutureOperationComplete(ChannelFuture future) throws Exception {
+//                this.wsHandler = testHandler;
+//                wsFuture.operationComplete(future);
+//            }
         }
         TestNettyHttpClient client = new TestNettyHttpClient();
         WsClient.WsClientConnection connection = client.connect(mock(HttpResponseHandler.class), "/events", null);
