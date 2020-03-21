@@ -10,13 +10,13 @@ import java.util.Map;
  * @author lenz
  */
 public class HttpParam {
-    public String name = "";
-    public String value = "";
+    private String name;
+    private String value;
 
     public static HttpParam build(String n, String v) {
         HttpParam p = new HttpParam();
-        p.name = n;
-        p.value = v;
+        p.setName(n);
+        p.setValue(v);
         return p;
     }
 
@@ -49,6 +49,21 @@ public class HttpParam {
         return build(n, v ? "true" : "false");
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
 }
 
 // $Log$

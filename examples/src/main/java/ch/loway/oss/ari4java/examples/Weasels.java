@@ -7,6 +7,7 @@ import ch.loway.oss.ari4java.generated.models.AsteriskInfo;
 import ch.loway.oss.ari4java.generated.models.Message;
 import ch.loway.oss.ari4java.generated.models.PlaybackFinished;
 import ch.loway.oss.ari4java.generated.models.StasisStart;
+import ch.loway.oss.ari4java.tools.ARIException;
 import ch.loway.oss.ari4java.tools.AriConnectionEvent;
 import ch.loway.oss.ari4java.tools.AriWSCallback;
 import ch.loway.oss.ari4java.tools.RestException;
@@ -65,9 +66,9 @@ public class Weasels {
         return false;
     }
 
-    private void weasels() throws InterruptedException, RestException {
+    private void weasels() throws InterruptedException, ARIException {
         final ExecutorService threadPool = Executors.newFixedThreadPool(10);
-        ari.events().eventWebsocket(ARI_APP).execute(new AriWSHelper() {
+        ari.eventsCallback(new AriWSHelper() {
             @Override
             public void onSuccess(Message message) {
                 threadPool.execute(() -> super.onSuccess(message));

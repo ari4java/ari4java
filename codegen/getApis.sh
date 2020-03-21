@@ -11,7 +11,7 @@ then
 else
   cd tmp/asterisk
   git checkout master --force
-  git pull origin master
+  git pull origin
 fi
 
 git log --reverse --pretty=oneline --all -- rest-api/resources.json | while read log

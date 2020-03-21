@@ -1,12 +1,14 @@
 plugins {
-    id 'java'
-    id 'maven-publish'
-    id 'com.jfrog.bintray' version '1.8.4'
-    id 'com.github.spotbugs' version '3.0.0'
+    id "java"
+    id "jacoco"
+    id "maven-publish"
+    id "com.jfrog.bintray" version "1.8.4"
+    id "com.github.spotbugs" version "3.0.0"
+    id "org.sonarqube" version "2.7.1"
 }
 
-group = 'ch.loway.oss.ari4java'
-version = '0.10.0'
+group = "ch.loway.oss.ari4java"
+version = "0.11.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -16,7 +18,7 @@ java {
 sourceSets {
     main {
         java {
-            srcDir 'src/main/generated'
+            srcDir "src/main/generated"
         }
     }
 }
@@ -26,54 +28,56 @@ repositories {
 }
 
 dependencies {
-    compile 'com.fasterxml.jackson.core:jackson-core:2.10.1'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.10.1'
-    compile 'io.netty:netty-all:4.1.44.Final'
-    compile 'javax.xml.bind:jaxb-api:2.3.1'
-    compile 'org.slf4j:slf4j-api:1.7.30'
+    compile "com.fasterxml.jackson.core:jackson-core:2.10.1"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.10.1"
+    compile "com.fasterxml.jackson.core:jackson-annotations:2.10.1"
+    compile "io.netty:netty-all:4.1.44.Final"
+    compile "javax.xml.bind:jaxb-api:2.3.1"
+    compile "org.slf4j:slf4j-api:1.7.30"
 
-    testCompile 'junit:junit:4.10'
-    testImplementation 'org.mockito:mockito-core:2.28.2'
-    testImplementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.13.0'
+    testCompile "junit:junit:4.10"
+    testImplementation "org.mockito:mockito-core:2.28.2"
+    testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:2.13.0"
 
 }
 
-def build_number = 'x'
-if (System.getenv('BUILD_NUMBER') != null) {
-    build_number = System.getenv('BUILD_NUMBER')
+def build_number = "x"
+if (System.getenv("BUILD_NUMBER") != null) {
+    build_number = System.getenv("BUILD_NUMBER")
 }
 task buildProps(type: WriteProperties) {
-    outputFile file('src/main/resources/build.properties')
-    property 'BUILD_NUMBER', build_number
+    outputFile file("src/main/resources/build.properties")
+    property "BUILD_NUMBER", build_number
 }
 
 jar {
     manifest {
-        attributes 'Implementation-Title': project.name,
-                   'Implementation-Version': project.version
+        attributes "Implementation-Title": project.name,
+                   "Implementation-Version": project.version
     }
 }
 
 javadoc {
     def inc = [
-        'ch/loway/oss/ari4java/generated/AriVersion.java',
-        'ch/loway/oss/ari4java/generated/actions/*',
-        'ch/loway/oss/ari4java/generated/models/*',
-        'ch/loway/oss/ari4java/*',
-        'ch/loway/oss/ari4java/tools/*'
+        "ch/loway/oss/ari4java/generated/AriVersion.java",
+        "ch/loway/oss/ari4java/generated/actions/*",
+        "ch/loway/oss/ari4java/generated/models/*",
+        "ch/loway/oss/ari4java/*",
+        "ch/loway/oss/ari4java/tools/*",
+        "ch/loway/oss/ari4java/tools/*/*"
     ]
     includes = inc.toSet()
+    options.overview = "src/overview.html"
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    archiveClassifier.set('sources')
+    archiveClassifier.set("sources")
     from sourceSets.main.allSource
 }
 
 javadoc.failOnError = false
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    archiveClassifier.set('javadoc')
+    archiveClassifier.set("javadoc")
     from javadoc.destinationDir
 }
 
@@ -82,17 +86,67 @@ artifacts {
     archives javadocJar
 }
 
-def projectUrl = 'http://github.com/l3nz/ari4java'
+test {
+    jacoco {
+        excludes = ["**/generated/**"]
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.enabled true
+        xml.destination = file("${buildDir}/reports/jacocoTestReport.xml")
+        html.destination = file("${buildDir}/reports/jacocoTestReport/html")
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: "**/generated/**")
+        }))
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.3
+            }
+        }
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: "**/generated/**")
+        }))
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "ari4java"
+        property "sonar.organization", "ari4java"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.login", System.getenv("SONAR_LOGIN")
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacocoTestReport.xml"
+    }
+}
+
+test.finalizedBy jacocoTestReport
+check.dependsOn jacocoTestCoverageVerification
+
+def projectUrl = "http://github.com/l3nz/ari4java"
 def pomConfig = {
     licenses {
         license {
-            name 'LPGL-3.0'
+            name "LPGL-3.0"
         }
     }
     developers {
         developer {
-            name 'lenz e.'
-            email 'nomail@home'
+            name "lenz e."
+            email "nomail@home"
         }
     }
     scm {
@@ -113,9 +167,9 @@ publishing {
             }
             pom.withXml {
                 def root = asNode()
-                root.appendNode('description', 'Asterisk ARI interface bindings for Java')
-                root.appendNode('name', project.name)
-                root.appendNode('url', projectUrl)
+                root.appendNode("description", "Asterisk ARI interface bindings for Java")
+                root.appendNode("name", project.name)
+                root.appendNode("url", projectUrl)
                 root.children().last() + pomConfig
             }
         }
@@ -123,16 +177,16 @@ publishing {
 }
 
 bintray {
-    user = System.getenv('BINTRAY_USER')
-    key =  System.getenv('BINTRAY_KEY')
-    publications = ['mavenPublication']
+    user = System.getenv("BINTRAY_USER")
+    key =  System.getenv("BINTRAY_KEY")
+    publications = ["mavenPublication"]
     publish = true
     pkg {
-        repo = 'maven'
+        repo = "maven"
         name = project.name
         group = "ch.loway.oss.ari4java"
-        userOrg = 'ari4java'
-        licenses = ['LGPL-3.0']
+        userOrg = "ari4java"
+        licenses = ["LGPL-3.0"]
         vcsUrl = projectUrl
         version {
             name = project.version

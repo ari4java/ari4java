@@ -4,7 +4,6 @@ on:
   push:
     branches:
     - master
-    - gb-wip
   pull_request:
     branches: 
       - master

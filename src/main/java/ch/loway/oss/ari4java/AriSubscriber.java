@@ -48,7 +48,6 @@ public class AriSubscriber {
      * @return a string representation, e.g. "channel:1234"
      */
     public String toModelName(EventSource m) {
-
         if (m instanceof Bridge) {
             Bridge b = (Bridge) m;
             return "bridge:" + b.getId();
@@ -64,7 +63,6 @@ public class AriSubscriber {
         } else {
             throw new IllegalArgumentException("Cannot subscribe model " + m.getClass().getName());
         }
-
     }
 
 }

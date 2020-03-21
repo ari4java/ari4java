@@ -1,0 +1,27 @@
+<html>
+<body>
+A full getting started guide can be found on the <a href="https://github.com/l3nz/ari4java/wiki/Getting-Started">ARI4Java Wiki</a>
+<pre>
+    // create instance
+    ARI ari = ARI.build("http://192.168.56.44:8088/", "test-app", "ari4java", "yothere", AriVersion.IM_FEELING_LUCKY);
+    // get info
+    AsteriskInfo info = ari.asterisk().getInfo().execute();
+    // get event websocket
+    ari.events().eventWebsocket("test-app").execute(new AriWSCallback&lt;Message&lt;() {new AriWSCallback&lt;List&lt;Channel&gt;&gt;() {
+        &#64;Override
+        public void onSuccess(List&lt;Channel&gt; result) {
+            // code to handle the result ...
+        }
+        &#64;Override
+        public void onFailure(RestException e) {
+            e.printStackTrace();
+        }
+        &#64;Override
+        public void onConnectionEvent(AriConnectionEvent event) {
+            // if you wish to know the status (connected/disconnected) of the WS connection
+        }
+    });
+</pre>
+See <a href="ch/loway/oss/ari4java/ARI.html#method.summary">ch.loway.oss.ari4java.ARI Methods</a>
+</body>
+</html>
