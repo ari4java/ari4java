@@ -469,11 +469,14 @@ public class DefMapper {
 
         File f = new File(fName);
         //noinspection ResultOfMethodCallIgnored
-        f.getParentFile().mkdirs();
+        f.getParentFile().mkdirs(); //NOSONAR
         FileWriter outFile = new FileWriter(f);
         PrintWriter out = new PrintWriter(outFile);
-        out.println(codeFormatter.formatSource(classText));
-        out.close();
+        try {
+            out.println(codeFormatter.formatSource(classText));
+        } finally {
+            out.close();
+        }
     }
 
     public void saveToDisk(Model model) throws Exception {
@@ -508,12 +511,12 @@ public class DefMapper {
                     deleteFolder(f);
                 } else {
                     //noinspection ResultOfMethodCallIgnored
-                    f.delete();
+                    f.delete(); //NOSONAR
                 }
             }
         }
         //noinspection ResultOfMethodCallIgnored
-        folder.delete();
+        folder.delete(); //NOSONAR
     }
 
     private String txt(JsonNode n) {
@@ -554,11 +557,9 @@ public class DefMapper {
     }
 
     public String innerRemapType(String jsonType, boolean concrete, String apiVersion) {
-
         String listAry = "List[";
-
         if (jsonType.startsWith(listAry)) {
-            return (concrete ? "List<" : "List<") + innerRemapType(jsonType.substring(listAry.length(),
+            return "List<" + innerRemapType(jsonType.substring(listAry.length(),
                     jsonType.length() - 1), concrete, apiVersion) + ">";
         } else if (JavaPkgInfo.TypeMap.containsKey(jsonType.toLowerCase())) {
             return JavaPkgInfo.TypeMap.get(jsonType.toLowerCase());

@@ -3,11 +3,7 @@ package ch.loway.oss.ari4java.codegen.models;
 import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
 import ch.loway.oss.ari4java.codegen.genJava.JavaPkgInfo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class models a ClassTranslator.
@@ -80,5 +76,10 @@ public class ClassTranslator extends JavaPkgInfo {
             return this.apiVersion.equals(((ClassTranslator) obj).apiVersion);
         }
         return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.apiVersion.hashCode();
     }
 }
