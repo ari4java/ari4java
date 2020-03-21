@@ -380,6 +380,11 @@ public class DefMapper {
                 mf.typeInterface = javaType;
                 mf.typeConcrete = javaConcreteType;
                 mf.comment = comment;
+                // the API for TextMessage changed from returning an object to a list
+                if ("endpoints.json".equals(currentModel.comesFromFile) && "TextMessage".equals(thisModel) &&
+                        "variables".equals(field) && javaType.startsWith("List")) {
+                    mf.field = field + "List";
+                }
                 currentModel.fields.add(mf);
             }
 
