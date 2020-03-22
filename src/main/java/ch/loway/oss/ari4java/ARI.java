@@ -23,7 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class ARI {
 
-    private final static String ALLOWED_IN_UID = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String ALLOWED_IN_UID = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private String appName = "";
     private AriVersion version;
@@ -65,11 +65,11 @@ public class ARI {
      * Returns the current ARI version
      *
      * @return the version
-     * @throws RuntimeException when version null
+     * @throws ARIRuntimeException when version null
      */
     public AriVersion getVersion() {
         if (version == null) {
-            throw new RuntimeException("AriVersion not set");
+            throw new ARIRuntimeException("AriVersion not set");
         }
         return version;
     }
@@ -433,7 +433,7 @@ public class ARI {
      * @return an Action object on which we'll set the default clients.
      * @throws IllegalArgumentException when error
      */
-    private Object setupAction(Object a) throws IllegalArgumentException {
+    private Object setupAction(Object a) {
         if (a instanceof BaseAriAction) {
             BaseAriAction action = (BaseAriAction) a;
             if (httpClient == null || wsClient == null) {
@@ -456,8 +456,8 @@ public class ARI {
     public static void sleep(long ms) {
         try {
             Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            logger.warn("Interrupted: " + e.getMessage(), e); //NOSONAR
+        } catch (InterruptedException e) {//NOSONAR
+            logger.warn("Interrupted: {}", e.getMessage(), e);
         }
     }
 
@@ -474,7 +474,7 @@ public class ARI {
             if ((n % 5) == 0) {
                 sb.append(".");
             }
-            int pos = (int) (random.nextDouble() * ALLOWED_IN_UID.length());
+            int pos = random.nextInt(ALLOWED_IN_UID.length());
             sb.append(ALLOWED_IN_UID.charAt(pos));
         }
         return sb.toString();
@@ -516,10 +516,10 @@ public class ARI {
      * @return String
      */
     public String getBuildVersion() {
-        String version = "x";
+        String buildVersion = "x";
         try {
             if (getClass().getPackage().getImplementationVersion() != null) {
-                version = getClass().getPackage().getImplementationVersion();
+                buildVersion = getClass().getPackage().getImplementationVersion();
             }
         } catch (Exception e) {
             // oh well
@@ -530,9 +530,10 @@ public class ARI {
             if (stream != null) {
                 Properties p = new Properties();
                 p.load(stream);
-                if (p.containsKey("BUILD_NUMBER") && p.getProperty("BUILD_NUMBER") != null &&
-                        !"x".equalsIgnoreCase(p.getProperty("BUILD_NUMBER"))) {
-                    version += " (Build: " + p.getProperty("BUILD_NUMBER") + ")";
+                final String prop = "BUILD_NUMBER";
+                if (p.containsKey(prop) && p.getProperty(prop) != null &&
+                        !"x".equalsIgnoreCase(p.getProperty(prop))) {
+                    buildVersion += " (Build: " + p.getProperty(prop) + ")";
                 }
             }
         } catch (IOException e) {
@@ -546,7 +547,7 @@ public class ARI {
                 }
             }
         }
-        return version;
+        return buildVersion;
     }
 
     /**

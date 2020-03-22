@@ -114,6 +114,7 @@ public class ARITest {
     public void testCreateUid() {
         String v = ARI.getUID();
         assertTrue("UID created", v.length() > 0);
+        assertNotSame("new UID the same as previous", v, ARI.getUID());
     }
 
     @Test

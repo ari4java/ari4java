@@ -9,13 +9,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.embedded.EmbeddedChannel;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
-import io.netty.util.concurrent.EventExecutor;
 import org.junit.After;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -35,7 +32,7 @@ public class NettyHttpClientTest {
 
     private void initTestClient() throws URISyntaxException {
         client = new NettyHttpClient() {
-            protected void bootstrap() {
+            protected void initHttpBootstrap() {
                 // for testing skip the bootstrapping
             }
 
@@ -80,6 +77,7 @@ public class NettyHttpClientTest {
         NettyHttpClient client = new NettyHttpClient();
         client.initialize("http://localhost:8088/", "user", "p@ss");
         client.destroy();
+        assertNotNull(client.baseUri);
     }
 
     @Test
@@ -87,11 +85,11 @@ public class NettyHttpClientTest {
         Bootstrap bootstrap = mock(Bootstrap.class);
         NettyHttpClient client = new NettyHttpClient() {
             {
-                bootstrap();
+                initHttpBootstrap();
             }
             @Override
-            protected void bootstrap() {
-                bootStrap = bootstrap;
+            protected void initHttpBootstrap() {
+                httpBootstrap = bootstrap;
                 try {
                     baseUri = new URI("http://localhost:8088/");
                 } catch (URISyntaxException e) {
