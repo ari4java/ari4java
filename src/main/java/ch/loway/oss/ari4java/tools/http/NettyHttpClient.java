@@ -57,6 +57,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     private List<HttpParam> wsEventsParamQuery;
     private WsClientConnection wsClientConnection;
     private int reconnectCount = -1;
+    private int maxReconnectCount = 10; // -1 = infinite reconnect attempts
     private ChannelFuture wsChannelFuture;
     private ScheduledFuture<?> wsPingTimer = null;
     private ScheduledFuture<?> wsConnectionTimeout = null;
@@ -151,7 +152,8 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         return bootStrap.connect(baseUri.getHost(), getPort());
     }
 
-    public void destroy() {
+    @Override
+	public void destroy() {
         logger.debug("destroy...");
         // use a different event group to execute the shutdown to avoid deadlocks
         shutDownGroup.schedule(new Runnable() {
@@ -552,7 +554,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             wsPingTimer = null;
         }
 
-        if (!autoReconnect || reconnectCount == -1 || reconnectCount >= 10) {
+        if (!autoReconnect || (maxReconnectCount > -1 && reconnectCount >= maxReconnectCount)) {
             logger.warn("Cannot connect: {} - executing failure callback", cause.getMessage());
             wsCallback.onFailure(cause);
             return;
@@ -604,4 +606,22 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         NettyHttpClient.sslContext = sslContext;
     }
 
+    /**
+     * Checks if websocket is connected
+     * 
+     * @return true when connected, false otherwise
+     */
+    public boolean isWsConnected() {
+    	return wsClientConnection != null && wsChannelFuture != null &&
+    			!wsChannelFuture.isCancelled() && wsChannelFuture.channel() != null && wsChannelFuture.channel().isActive();
+    }
+
+    /**
+     * Sets maximal reconnect count
+     * 
+     * @param count max number of reconnect attempts, -1 for infinite reconnecting
+     */
+	public void setMaxReconnectCount(int count) {
+		maxReconnectCount = count;
+	}
 }
