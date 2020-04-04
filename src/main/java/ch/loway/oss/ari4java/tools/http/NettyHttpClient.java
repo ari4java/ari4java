@@ -424,13 +424,11 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                     wsHandler.handshakeFuture().addListener(new ChannelFutureListener() {
                         @Override
                         public void operationComplete(ChannelFuture future) throws Exception {
+                            // cancel the connection timeout
+                            cancelWsConnectionTimeout();
                             if (future.isSuccess()) {
                                 logger.debug("WS connected...");
-                                if (wsClientConnection != null) {
-                                    // cancel the connection timeout, start a ping and reset reconnect counter
-                                    wsConnectionTimeout.cancel(true);
-                                    wsConnectionTimeout = null;
-                                }
+                                // start a ping and reset reconnect counter
                                 startPing();
                                 reconnectCount = 0;
                                 callback.onChReadyToWrite();
@@ -446,6 +444,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                         }
                     });
                 } else {
+                    cancelWsConnectionTimeout();
                     if (future.cause() != null) {
                         logger.error("WS/HTTP Connection Error - {}", future.cause().getMessage(), future.cause());
                         reconnectWs(future.cause());
@@ -460,6 +459,13 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
         // Provide disconnection handle to client
         return createWsClientConnection();
+    }
+
+    private void cancelWsConnectionTimeout() {
+        if (wsConnectionTimeout != null) {
+            wsConnectionTimeout.cancel(true);
+            wsConnectionTimeout = null;
+        }
     }
 
     private void startPing() {
