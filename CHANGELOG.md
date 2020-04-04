@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 [Unreleased]: https://github.com/l3nz/ari4java/compare/v0.11.0...HEAD
+### Fixes
+- #156 
 
 ## [0.11.0]
 [0.11.0]: https://github.com/l3nz/ari4java/compare/v.0.10.0...v0.11.0
