@@ -19,4 +19,6 @@ public interface WsClient {
 
     void destroy();
 
+    boolean isWsConnected();
+
 }
