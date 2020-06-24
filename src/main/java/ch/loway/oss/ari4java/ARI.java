@@ -556,4 +556,15 @@ public class ARI {
     public interface ClassFactory {
         public Class<?> getImplementationFor(Class<?> interfaceClass);
     }
+
+    /**
+     * Is the Websocket is connected
+     * @return true if connected
+     */
+    public boolean isWsConnected() {
+        if (wsClient != null) {
+            return wsClient.isWsConnected();
+        }
+        return false;
+    }
 }

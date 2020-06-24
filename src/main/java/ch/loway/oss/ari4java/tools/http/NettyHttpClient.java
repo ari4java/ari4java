@@ -159,10 +159,10 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     }
 
     @Override
-	public void destroy() {
+    public void destroy() {
         logger.debug("destroy...");
         // use a different event group to execute the shutdown to avoid deadlocks
-        shutDownGroup.schedule(new Runnable() {
+        shutDownGroup.execute(new Runnable() {
             @Override
             public void run() {
                 logger.debug("running shutdown...");
@@ -192,7 +192,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                     logger.debug("group shutdown complete");
                 }
             }
-        }, 250L, TimeUnit.MILLISECONDS);
+        });
         shutDownGroup.shutdownGracefully(0, 5, TimeUnit.SECONDS).syncUninterruptibly();
         shutDownGroup = null;
         logger.debug("... destroyed");
@@ -386,6 +386,9 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
     @Override
     public WsClientConnection connect(final HttpResponseHandler callback, final String url, final List<HttpParam> lParamQuery) throws RestException {
+        if (isWsConnected()) {
+            return wsClientConnection;
+        }
         try {
             WebSocketClientHandshaker handshake = getWsHandshake(url, lParamQuery);
             logger.debug("WS Connect uri: {}", handshake.uri().toString());
@@ -476,34 +479,35 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             wsPingTimer = group.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
-                    if ((System.currentTimeMillis() - wsCallback.getLastResponseTime()) > 15000) {
-                        if (!wsChannelFuture.isCancelled() && wsChannelFuture.channel() != null) {
-                            WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer("ari4j".getBytes(ARIEncoder.ENCODING)));
-                            logger.debug("Send Ping at {}", System.currentTimeMillis());
-                            wsChannelFuture.channel().writeAndFlush(frame);
-                            boolean noPong = true;
-                            for (int i = 0; i < 10; i++) {
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {//NOSONAR
-                                    // probably from the reconnect, so stop running...
-                                    return;
-                                }
-                                if ((System.currentTimeMillis() - lastPong) < 10000) {
-                                    logger.debug("Pong at {}", lastPong);
-                                    pongFailureCount = 0;
-                                    noPong = false;
-                                    break;
-                                } else {
-                                    logger.warn("No Pong at {}", System.currentTimeMillis());
-                                }
+                    if (isWsConnected() && (System.currentTimeMillis() - wsCallback.getLastResponseTime()) > 15000) {
+                        WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer("ari4j".getBytes(ARIEncoder.ENCODING)));
+                        logger.debug("Send Ping at {}", System.currentTimeMillis());
+                        wsChannelFuture.channel().writeAndFlush(frame);
+                        boolean noPong = true;
+                        for (int i = 0; i < 10; i++) {
+                            if (wsHandler != null && wsHandler.isShuttingDown()) {
+                                break;
                             }
-                            if (noPong) {
-                                pongFailureCount++;
-                                if (pongFailureCount >= 1) {
-                                    logger.warn("No Ping response from server, reconnect...");
-                                    reconnectWs(new RestException("No Ping response from server"));
-                                }
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {//NOSONAR
+                                // probably from the reconnect, so stop running...
+                                return;
+                            }
+                            if ((System.currentTimeMillis() - lastPong) < 10000) {
+                                logger.debug("Pong at {}", lastPong);
+                                pongFailureCount = 0;
+                                noPong = false;
+                                break;
+                            } else {
+                                logger.warn("No Pong at {}", System.currentTimeMillis());
+                            }
+                        }
+                        if (noPong && wsHandler != null && !wsHandler.isShuttingDown()) {
+                            pongFailureCount++;
+                            if (pongFailureCount >= 1) {
+                                logger.warn("No Ping response from server, reconnect...");
+                                reconnectWs(new RestException("No Ping response from server"));
                             }
                         }
                     }
@@ -532,6 +536,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                         ch.close();
                     }
                     wsChannelFuture.removeListener(wsFuture);
+                    wsChannelFuture.cancel(true);
                 }
             };
         }
@@ -620,20 +625,20 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
     /**
      * Checks if websocket is connected
-     * 
+     *
      * @return true when connected, false otherwise
      */
     public boolean isWsConnected() {
-    	return wsClientConnection != null && wsChannelFuture != null &&
-    			!wsChannelFuture.isCancelled() && wsChannelFuture.channel() != null && wsChannelFuture.channel().isActive();
+        return wsClientConnection != null && wsHandler != null && !wsHandler.isShuttingDown() && wsChannelFuture != null &&
+                !wsChannelFuture.isCancelled() && wsChannelFuture.channel() != null && wsChannelFuture.channel().isActive();
     }
 
     /**
      * Sets maximal reconnect count
-     * 
+     *
      * @param count max number of reconnect attempts, -1 for infinite reconnecting
      */
-	public void setMaxReconnectCount(int count) {
-		maxReconnectCount = count;
-	}
+    public void setMaxReconnectCount(int count) {
+        maxReconnectCount = count;
+    }
 }

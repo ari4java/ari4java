@@ -94,6 +94,8 @@ public class Weasels {
         // usually we would not terminate and run indefinitely
         // waiting for 5 minutes before shutting down...
         threadPool.awaitTermination(5, TimeUnit.MINUTES);
+        ari.cleanup();
+        System.exit(0);
     }
 
     private void handleStart(StasisStart start) {
