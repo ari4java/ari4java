@@ -162,7 +162,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     public void destroy() {
         logger.debug("destroy...");
         // use a different event group to execute the shutdown to avoid deadlocks
-        shutDownGroup.schedule(new Runnable() {
+        shutDownGroup.execute(new Runnable() {
             @Override
             public void run() {
                 logger.debug("running shutdown...");
@@ -192,7 +192,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                     logger.debug("group shutdown complete");
                 }
             }
-        }, 250L, TimeUnit.MILLISECONDS);
+        });
         shutDownGroup.shutdownGracefully(0, 5, TimeUnit.SECONDS).syncUninterruptibly();
         shutDownGroup = null;
         logger.debug("... destroyed");
