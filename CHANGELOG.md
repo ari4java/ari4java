@@ -1,9 +1,13 @@
 # ARI4Java Changelog
 
 ## [Unreleased]
-[Unreleased]: https://github.com/l3nz/ari4java/compare/v0.11.0...HEAD
+[Unreleased]: https://github.com/l3nz/ari4java/compare/v0.12.0...HEAD
+
+## [0.12.0]
+[0.12.0]: https://github.com/l3nz/ari4java/compare/v0.11.0...v0.12.0
 ### Fixes
 - onFailure long after WS Connect error #156
+- execute shutdown immediately #159
 
 ### Added
 - WS reconnect count #158
