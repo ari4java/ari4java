@@ -1,7 +1,12 @@
 # ARI4Java Changelog
 
 ## [Unreleased]
-[Unreleased]: https://github.com/l3nz/ari4java/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/l3nz/ari4java/compare/v0.12.1...HEAD
+
+## [0.12.1]
+[0.12.1]: https://github.com/l3nz/ari4java/compare/v0.12.0...v0.12.1
+### Added
+- ARI 4.1.3, 5.1.1 & 7.0.0
 
 ## [0.12.0]
 [0.12.0]: https://github.com/l3nz/ari4java/compare/v0.11.0...v0.12.0
