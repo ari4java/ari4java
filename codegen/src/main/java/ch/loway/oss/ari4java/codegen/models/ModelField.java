@@ -1,7 +1,9 @@
 
 package ch.loway.oss.ari4java.codegen.models;
 
-import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
+import ch.loway.oss.ari4java.codegen.gen.JavaGen;
+
+import java.util.Objects;
 
 /**
  * $Id$
@@ -74,6 +76,23 @@ public class ModelField implements Comparable<ModelField> {
     @Override
     public int compareTo(ModelField o) {
         return field.compareTo(o.field);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ModelField that = (ModelField) o;
+        return required == that.required &&
+                Objects.equals(field, that.field) &&
+                Objects.equals(typeInterface, that.typeInterface) &&
+                Objects.equals(typeConcrete, that.typeConcrete) &&
+                Objects.equals(comment, that.comment);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(field, typeInterface, typeConcrete, required, comment);
     }
 
 }

@@ -1,5 +1,5 @@
 
-package ch.loway.oss.ari4java.codegen.genJava;
+package ch.loway.oss.ari4java.codegen.gen;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,8 +9,11 @@ import java.util.Map;
  */
 public class JavaPkgInfo {
 
-    public final static Map<String, String> TypeMap;
-    public final static Map<String, String> primitiveSignature;
+    public static final Map<String, String> TypeMap;
+    public static final Map<String, String> primitiveSignature;
+    public static final String BASE_PKG_NAME = "ch.loway.oss.ari4java";
+    public static final String GENERATED_PKG_NAME = BASE_PKG_NAME + ".generated";
+    public static final String CLAZZ_IMPL_STRING = "_impl_";
 
     static {
         TypeMap = new HashMap<>();
@@ -31,7 +34,6 @@ public class JavaPkgInfo {
         primitiveSignature.put("Double", "double");
     }
 
-    String base = "ch.loway.oss.ari4java.generated";
     public String className = "";
     public String apiVersion = "";
     public JavaInterface minimalIf = null;
@@ -42,7 +44,7 @@ public class JavaPkgInfo {
     }
 
     public String getBaseApiPackage() {
-        return base + "." + apiVersion;
+        return GENERATED_PKG_NAME + "." + apiVersion;
     }
 
     public String getModelPackage() {
@@ -58,7 +60,7 @@ public class JavaPkgInfo {
     }
 
     public String getImplName() {
-        return className + "_impl_" + apiVersion;
+        return className + CLAZZ_IMPL_STRING + apiVersion;
     }
 
     /**

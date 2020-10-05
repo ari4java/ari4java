@@ -1,5 +1,5 @@
 
-package ch.loway.oss.ari4java.codegen.genJava;
+package ch.loway.oss.ari4java.codegen.gen;
 
 import java.util.Date;
 import java.util.List;
@@ -10,6 +10,10 @@ import java.util.List;
  * @author lenz
  */
 public class JavaGen {
+
+    private JavaGen() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static void addPackage(StringBuilder sb, String myPackage) {
         sb.append("package ").append(myPackage).append(";\n\n");
@@ -33,9 +37,10 @@ public class JavaGen {
         sb.append("/**\n");
         for (String row : rows) {
             if (!row.isEmpty()) {
-                row = row.replaceAll("<br /><br />", "\n * ");
-                row = row.replaceAll("<br />", "\n * ");
-                row = row.replaceAll("<", "&gt;").replaceAll(">", "&lt;");
+                row = row.replace("<br /><br />", "\n * ");
+                row = row.replace("<br />", "\n * ");
+                row = row.replace("<", "&gt;");
+                row = row.replace(">", "&lt;");
                 sb.append(" * ").append(row).append("\n");
             }
         }

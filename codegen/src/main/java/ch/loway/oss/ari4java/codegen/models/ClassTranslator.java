@@ -1,7 +1,7 @@
 package ch.loway.oss.ari4java.codegen.models;
 
-import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
-import ch.loway.oss.ari4java.codegen.genJava.JavaPkgInfo;
+import ch.loway.oss.ari4java.codegen.gen.JavaGen;
+import ch.loway.oss.ari4java.codegen.gen.JavaPkgInfo;
 
 import java.util.*;
 
@@ -21,12 +21,12 @@ public class ClassTranslator extends JavaPkgInfo {
         mInterfaces = new HashMap<>();
         imports = new ArrayList<>();
         className = "ClassTranslator";
-        imports.add("ch.loway.oss.ari4java.ARI");
-        imports.add("ch.loway.oss.ari4java.generated.actions.*");
-        imports.add("ch.loway.oss.ari4java.generated.models.Module");
-        imports.add("ch.loway.oss.ari4java.generated.models.*");
-        imports.add("ch.loway.oss.ari4java.generated." + apiVersion + ".actions.*");
-        imports.add("ch.loway.oss.ari4java.generated." + apiVersion + ".models.*");
+        imports.add(JavaPkgInfo.BASE_PKG_NAME + ".ARI");
+        imports.add(JavaPkgInfo.GENERATED_PKG_NAME + ".actions.*");
+        imports.add(JavaPkgInfo.GENERATED_PKG_NAME + ".models.Module");
+        imports.add(JavaPkgInfo.GENERATED_PKG_NAME + ".models.*");
+        imports.add(JavaPkgInfo.GENERATED_PKG_NAME + "." + apiVersion + ".actions.*");
+        imports.add(JavaPkgInfo.GENERATED_PKG_NAME + "." + apiVersion + ".models.*");
     }
 
     public void setClass(String ifName, String implementation) {

@@ -42,14 +42,13 @@ public class NettyHttpClientHandler extends SimpleChannelInboundHandler<Object> 
             response.content().readBytes(responseBytes);
             responseStatus = response.status();
             HTTPLogger.traceResponse(response, responseBytes);
-            if (response.headers().get(HttpHeaderNames.CONTENT_LENGTH) != null) {
-                if (responseBytes.length != response.headers().getInt(HttpHeaderNames.CONTENT_LENGTH)) {
-                    logger.error("HTTP Content-Length: {}, but body read: {}",
-                            response.headers().getInt(HttpHeaderNames.CONTENT_LENGTH), responseBytes.length);
-                }
+            if (response.headers().get(HttpHeaderNames.CONTENT_LENGTH) != null &&
+                    responseBytes.length != response.headers().getInt(HttpHeaderNames.CONTENT_LENGTH)) {
+                logger.error("HTTP Content-Length: {}, but body read: {}",
+                        response.headers().getInt(HttpHeaderNames.CONTENT_LENGTH), responseBytes.length);
             }
         } else if (msg != null) {
-            logger.warn("Unexpected: {}", msg.toString());
+            logger.warn("Unexpected: {}", msg);
             throw new RestException("Unknown object: " + msg.getClass().getSimpleName() + ", expecting FullHttpResponse");
         }
     }

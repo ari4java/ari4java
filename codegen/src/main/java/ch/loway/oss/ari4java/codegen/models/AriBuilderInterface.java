@@ -1,7 +1,8 @@
 
 package ch.loway.oss.ari4java.codegen.models;
 
-import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
+import ch.loway.oss.ari4java.codegen.gen.JavaGen;
+import ch.loway.oss.ari4java.codegen.gen.JavaPkgInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,8 +22,8 @@ public class AriBuilderInterface {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         JavaGen.importClasses(sb, "ch.loway.oss.ari4java.generated",
-                Arrays.asList("ch.loway.oss.ari4java.ARI",
-                        "ch.loway.oss.ari4java.generated.actions.*")
+                Arrays.asList(JavaPkgInfo.BASE_PKG_NAME + ".ARI",
+                        JavaPkgInfo.GENERATED_PKG_NAME + ".actions.*")
         );
         sb.append("public interface AriBuilder {\n");
         Collections.sort(knownInterfaces);
