@@ -154,7 +154,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     }
 
     protected ChannelFuture httpConnect() {
-        logger.debug("HTTP Connect uri: {}", baseUri.toString());
+        logger.debug("HTTP Connect uri: {}", baseUri);
         return httpBootstrap.connect(baseUri.getHost(), getPort());
     }
 
@@ -401,12 +401,8 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                 pipeline.addLast("ws-handler", wsHandler);
             }
         });
-        wsConnectionTimeout = group.schedule(new Runnable() {
-            @Override
-            public void run() {
-                reconnectWs(new RestException("WS Connect Timeout"));
-            }
-        }, CONNECTION_TIMEOUT_SEC, TimeUnit.SECONDS);
+        wsConnectionTimeout = group.schedule(
+                () -> reconnectWs(new RestException("WS Connect Timeout")), CONNECTION_TIMEOUT_SEC, TimeUnit.SECONDS);
         wsChannelFuture = wsBootStrap.connect(baseUri.getHost(), getPort());
         wsFuture = new ChannelFutureListener() {
             @Override
@@ -535,16 +531,10 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
      * @return whether it is a 2XX code or not (error!)
      */
     private boolean httpResponseOkay(HttpResponseStatus status) {
-
-        if (HttpResponseStatus.OK.equals(status)
+        return HttpResponseStatus.OK.equals(status)
                 || HttpResponseStatus.NO_CONTENT.equals(status)
                 || HttpResponseStatus.ACCEPTED.equals(status)
-                || HttpResponseStatus.CREATED.equals(status)) {
-            return true;
-        } else {
-            return false;
-        }
-
+                || HttpResponseStatus.CREATED.equals(status);
     }
 
     @Override
@@ -568,17 +558,14 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             long timeout = reconnectCount >= timeouts.length ? timeouts[timeouts.length - 1] : timeouts[reconnectCount];
             reconnectCount++;
             logger.error("WS Connect Error: {}, reconnecting in {} seconds... try: {}", cause.getMessage(), timeout, reconnectCount);
-            shutDownGroup.schedule(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        // 1st close up
-                        wsClientConnection.disconnect();
-                        // then connect again
-                        connect(wsCallback, wsEventsUrl, wsEventsParamQuery);
-                    } catch (RestException e) {
-                        wsCallback.onFailure(e);
-                    }
+            shutDownGroup.schedule(() -> {
+                try {
+                    // 1st close up
+                    wsClientConnection.disconnect();
+                    // then connect again
+                    connect(wsCallback, wsEventsUrl, wsEventsParamQuery);
+                } catch (RestException e) {
+                    wsCallback.onFailure(e);
                 }
             }, timeout, TimeUnit.SECONDS);
         }
