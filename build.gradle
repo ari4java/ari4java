@@ -136,7 +136,7 @@ sonarqube {
 test.finalizedBy jacocoTestReport
 check.dependsOn jacocoTestCoverageVerification
 
-def projectUrl = "http://github.com/l3nz/ari4java"
+def projectUrl = "http://github.com/ari4java/ari4java"
 def pomConfig = {
     licenses {
         license {
@@ -144,6 +144,10 @@ def pomConfig = {
         }
     }
     developers {
+        developer {
+            name "Graham Brown"
+            email "grahambrown11@gmail.com"
+        }
         developer {
             name "lenz e."
             email "nomail@home"

@@ -46,7 +46,7 @@ public class HttpParam {
     public static HttpParam build(String n, Boolean v) {
         if (null == v)
             return build(n, (String)null);
-        return build(n, v ? "true" : "false");
+        return build(n, Boolean.TRUE.equals(v) ? "true" : "false");
     }
 
     public String getName() {

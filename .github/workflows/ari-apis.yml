@@ -1,0 +1,33 @@
+name: ARI4Java ARI APIs
+
+on:
+  schedule:
+    - cron:  '0 10 * * SAT'
+
+jobs:
+  getApis:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Grant execute permission for getApis
+        run: chmod +x codegen/getApis.sh
+
+      - name: Execute getApis
+        run: codegen/getApis.sh
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: ARI API Updates
+          branch: apis
+          delete-branch: true
+          title: ARI API Updates
+          body: New APIs
+
+      - name: Check outputs
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"

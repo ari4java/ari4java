@@ -1,9 +1,9 @@
 
 package ch.loway.oss.ari4java.codegen.models;
 
-import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
-import ch.loway.oss.ari4java.codegen.genJava.JavaInterface;
-import ch.loway.oss.ari4java.codegen.genJava.JavaPkgInfo;
+import ch.loway.oss.ari4java.codegen.gen.JavaGen;
+import ch.loway.oss.ari4java.codegen.gen.JavaInterface;
+import ch.loway.oss.ari4java.codegen.gen.JavaPkgInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,12 +26,12 @@ public class Apis extends JavaPkgInfo {
                 "java.util.Map",
                 "java.util.ArrayList",
                 "java.net.URLEncoder",
-                "ch.loway.oss.ari4java.ARI",
-                "ch.loway.oss.ari4java.tools.*",
-                "ch.loway.oss.ari4java.generated.actions.*",
-                "ch.loway.oss.ari4java.generated.actions.requests.*",
-                "ch.loway.oss.ari4java.generated.models.Module",
-                "ch.loway.oss.ari4java.generated.models.*",
+                JavaPkgInfo.BASE_PKG_NAME + ".ARI",
+                JavaPkgInfo.BASE_PKG_NAME + ".tools.*",
+                JavaPkgInfo.GENERATED_PKG_NAME + ".actions.*",
+                JavaPkgInfo.GENERATED_PKG_NAME + ".actions.requests.*",
+                JavaPkgInfo.GENERATED_PKG_NAME + ".models.Module",
+                JavaPkgInfo.GENERATED_PKG_NAME + ".models.*",
                 getActionsPackage() + ".requests.*",
                 getModelPackage() + ".*",
                 "com.fasterxml.jackson.core.type.TypeReference"));

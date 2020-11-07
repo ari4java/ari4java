@@ -1,9 +1,9 @@
 
 package ch.loway.oss.ari4java.codegen.models;
 
-import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
-import ch.loway.oss.ari4java.codegen.genJava.JavaInterface;
-import ch.loway.oss.ari4java.codegen.genJava.JavaPkgInfo;
+import ch.loway.oss.ari4java.codegen.gen.JavaGen;
+import ch.loway.oss.ari4java.codegen.gen.JavaInterface;
+import ch.loway.oss.ari4java.codegen.gen.JavaPkgInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,8 +30,8 @@ public class Model extends JavaPkgInfo {
         imports.add("java.util.Date");
         imports.add("java.util.List");
         imports.add("java.util.Map");
-        imports.add("ch.loway.oss.ari4java.generated.models.Module");
-        imports.add("ch.loway.oss.ari4java.generated.models.*");
+        imports.add(JavaPkgInfo.GENERATED_PKG_NAME + ".models.Module");
+        imports.add(JavaPkgInfo.GENERATED_PKG_NAME + ".models.*");
         imports.add("com.fasterxml.jackson.databind.annotation.JsonDeserialize");
         imports.add("com.fasterxml.jackson.annotation.JsonIgnore");
     }

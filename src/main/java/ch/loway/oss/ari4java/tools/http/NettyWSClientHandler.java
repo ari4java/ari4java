@@ -1,9 +1,6 @@
 package ch.loway.oss.ari4java.tools.http;
 
-import ch.loway.oss.ari4java.tools.ARIEncoder;
-import ch.loway.oss.ari4java.tools.HttpResponseHandler;
-import ch.loway.oss.ari4java.tools.RestException;
-import ch.loway.oss.ari4java.tools.WsClientAutoReconnect;
+import ch.loway.oss.ari4java.tools.*;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
@@ -58,12 +55,10 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        if (!shuttingDown) {
-            if (this.wsClient != null) {
-                logger.debug("WS channel inactive - {}", ctx.toString());
-                wsCallback.onDisconnect();
-                wsClient.reconnectWs(new RestException("WS channel inactive"));
-            }
+        if (!shuttingDown && this.wsClient != null) {
+            logger.debug("WS channel inactive - {}", ctx);
+            wsCallback.onDisconnect();
+            wsClient.reconnectWs(new RestException("WS channel inactive"));
         }
     }
 
@@ -85,7 +80,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
             }
             String error = "Unexpected FullHttpResponse (getStatus=" + response.status().toString() + ", content=" + getResponseText() + ')';
             logger.error(error);
-            throw new Exception(error);
+            throw new ARIException(error);
         }
 
         // call this so we can set the last received time
@@ -112,7 +107,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
             HTTPLogger.traceWebSocketFrame(msg.toString());
             String error = "Not expecting: " + msg.getClass().getSimpleName();
             logger.error(error);
-            throw new Exception(error);
+            throw new ARIException(error);
         }
     }
 

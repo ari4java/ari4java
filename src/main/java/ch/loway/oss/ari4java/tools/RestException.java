@@ -14,37 +14,48 @@ public class RestException extends ARIException {
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final long serialVersionUID = 1L;
-    private int code = 0;
-    private String message;
-    private String response;
+    private final int code;
+    private final String message;
+    private final String response;
 
     public RestException(String s) {
         super(s);
         message = s;
+        response = "";
+        code = 0;
     }
 
     public RestException(String s, int code) {
         super(s);
+        response = s;
         message = extractError(s);
         this.code = code;
     }
 
     public RestException(String s, String r, int code) {
-        this(s, code);
+        super(s);
+        this.code = code;
+        response = r;
         String msg = extractError(r);
         if (msg != null && !msg.equals(r)) {
             message = msg;
+        } else {
+            message = extractError(s);
         }
     }
 
     public RestException(Throwable cause) {
         super(cause);
         message = cause.toString();
+        response = "";
+        code = 0;
     }
 
     public RestException(String s, Throwable cause) {
         super(s, cause);
         message = s;
+        response = "";
+        code = 0;
     }
 
     /**
@@ -54,7 +65,6 @@ public class RestException extends ARIException {
      */
     private String extractError(String s) {
         if (s != null && s.indexOf("{") == 0) {
-            response = s;
             try {
                 JsonNode jsonNode = mapper.readTree(s);
                 if (jsonNode.has("message")) {
