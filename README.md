@@ -4,7 +4,7 @@ The Asterisk REST Interface (ARI) bindings for Java.
 
 [![Download](https://api.bintray.com/packages/ari4java/maven/ari4java/images/download.png)](https://bintray.com/ari4java/maven/ari4java/_latestVersion)
 [![javadoc](https://javadoc.io/badge2/ch.loway.oss.ari4java/ari4java/javadoc.svg)](https://javadoc.io/doc/ch.loway.oss.ari4java/ari4java)
-[![Build](https://github.com/l3nz/ari4java/workflows/ARI4Java%20Build/badge.svg?branch=master&event=push)](https://github.com/l3nz/ari4java/actions?query=workflow%3A%22ARI4Java+Build%22)
+[![Build](https://github.com/ari4java/ari4java/workflows/ARI4Java%20Build/badge.svg?branch=master&event=push)](https://github.com/ari4java/ari4java/actions?query=workflow%3A%22ARI4Java+Build%22)
 
 ## Description
 
@@ -21,9 +21,6 @@ across different versions.
 Simply add the library and an SLF4J implementation to your package config, here is an example using Gradle
 ```
 repositories {
-    maven {
-        url  "https://dl.bintray.com/ari4java/maven" 
-    }
     jcenter()
 }
 
@@ -32,15 +29,14 @@ dependencies {
     compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.13.0'
 }
 ```
-*The 1st repo declaration is temporary as we sort out moving from a private repo to an organization*
 
 ## Documentation
-- The [CHANGELOG](https://github.com/l3nz/ari4java/blob/master/CHANGELOG.md)
-- The [Wiki](https://github.com/l3nz/ari4java/wiki) has some more info on how to use the project
-    - [Getting Started](https://github.com/l3nz/ari4java/wiki/Getting-Started)
-    - [Examples](https://github.com/l3nz/ari4java/wiki/Examples)
+- The [CHANGELOG](https://github.com/ari4java/ari4java/blob/master/CHANGELOG.md)
+- The [Wiki](https://github.com/ari4java/ari4java/wiki) has some more info on how to use the project
+    - [Getting Started](https://github.com/ari4java/ari4java/wiki/Getting-Started)
+    - [Examples](https://github.com/ari4java/ari4java/wiki/Examples)
 
 ## Licensing
-The library is released under the GNU LGPL (see [LICENSE](https://github.com/l3nz/ari4java/blob/master/LICENSE) file).
+The library is released under the GNU LGPL (see [LICENSE](https://github.com/ari4java/ari4java/blob/master/LICENSE) file).
 Files under codegen-data come from the Asterisk project and are licensed under the GPLv2 (see LICENSE.asterisk file therein).
 They are only used to build the classes and are not distributed in any form with ARI4Java.
