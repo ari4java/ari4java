@@ -16,7 +16,7 @@ jobs:
         run: chmod +x codegen/getApis.sh
 
       - name: Execute getApis
-        run: codegen/getApis.sh
+        run: cd codegen && ./getApis.sh
 
       - name: Create Pull Request
         id: cpr
