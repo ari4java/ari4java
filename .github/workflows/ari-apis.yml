@@ -3,6 +3,7 @@ name: ARI4Java ARI APIs
 on:
   schedule:
     - cron:  '0 10 * * SAT'
+  workflow_dispatch:
 
 jobs:
   getApis:
