@@ -1,8 +1,14 @@
 # ARI4Java Changelog
 
 ## [Unreleased]
-[Unreleased]: https://github.com/l3nz/ari4java/compare/v0.12.1...HEAD
+[Unreleased]: https://github.com/l3nz/ari4java/compare/v0.12.2...HEAD
 
+## [0.12.2]
+[0.12.2]: https://github.com/l3nz/ari4java/compare/v0.12.1...v0.12.2
+### Changed
+- groupId changed from `ch.loway.oss.ari4java` to `io.github.ari4java`
+
+### Added
 ## [0.12.1]
 [0.12.1]: https://github.com/l3nz/ari4java/compare/v0.12.0...v0.12.1
 ### Added

@@ -3,9 +3,6 @@ plugins {
 }
 
 repositories {
-    maven {
-        url  "https://dl.bintray.com/ari4java/maven"
-    }
     jcenter()
 }
 

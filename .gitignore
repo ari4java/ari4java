@@ -28,3 +28,4 @@ codegen/tmp/
 codegen/versions.md
 
 .build-local
+oss.yaml

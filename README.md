@@ -21,11 +21,11 @@ across different versions.
 Simply add the library and an SLF4J implementation to your package config, here is an example using Gradle
 ```
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    compile 'ch.loway.oss.ari4java:ari4java:+'
+    compile 'io.github.ari4java:ari4java:+'
     compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.13.0'
 }
 ```
