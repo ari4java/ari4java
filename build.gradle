@@ -2,17 +2,25 @@ plugins {
     id "java"
     id "jacoco"
     id "maven-publish"
-    id "com.jfrog.bintray" version "1.8.4"
-    id "com.github.spotbugs" version "3.0.0"
+    id "signing"
+    id "com.github.spotbugs" version "4.7.0"
     id "org.sonarqube" version "2.7.1"
 }
 
-group = "ch.loway.oss.ari4java"
-version = "0.12.1"
+group = "io.github.ari4java"
+version = "0.12.2"
+
+def projectUrl = "http://github.com/ari4java/ari4java"
+def build_number = "x"
+if (System.getenv("BUILD_NUMBER") != null) {
+    build_number = System.getenv("BUILD_NUMBER")
+}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+    withJavadocJar()
+    withSourcesJar()
 }
 
 sourceSets {
@@ -24,27 +32,23 @@ sourceSets {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    compile "com.fasterxml.jackson.core:jackson-core:2.10.1"
-    compile "com.fasterxml.jackson.core:jackson-databind:2.10.1"
-    compile "com.fasterxml.jackson.core:jackson-annotations:2.10.1"
-    compile "io.netty:netty-all:4.1.44.Final"
-    compile "javax.xml.bind:jaxb-api:2.3.1"
-    compile "org.slf4j:slf4j-api:1.7.30"
+    implementation "com.fasterxml.jackson.core:jackson-core:2.10.1"
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.10.1"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:2.10.1"
+    implementation "io.netty:netty-all:4.1.44.Final"
+    implementation "javax.xml.bind:jaxb-api:2.3.1"
+    implementation "org.slf4j:slf4j-api:1.7.30"
 
-    testCompile "junit:junit:4.10"
+    testImplementation "junit:junit:4.10"
     testImplementation "org.mockito:mockito-core:2.28.2"
     testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:2.13.0"
 
 }
 
-def build_number = "x"
-if (System.getenv("BUILD_NUMBER") != null) {
-    build_number = System.getenv("BUILD_NUMBER")
-}
 task buildProps(type: WriteProperties) {
     outputFile file("src/main/resources/build.properties")
     property "BUILD_NUMBER", build_number
@@ -68,22 +72,7 @@ javadoc {
     ]
     includes = inc.toSet()
     options.overview = "src/overview.html"
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    archiveClassifier.set("sources")
-    from sourceSets.main.allSource
-}
-
-javadoc.failOnError = false
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    archiveClassifier.set("javadoc")
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
+    failOnError = false
 }
 
 test {
@@ -136,72 +125,75 @@ sonarqube {
 test.finalizedBy jacocoTestReport
 check.dependsOn jacocoTestCoverageVerification
 
-def projectUrl = "http://github.com/ari4java/ari4java"
-def pomConfig = {
-    licenses {
-        license {
-            name "LPGL-3.0"
-        }
-    }
-    developers {
-        developer {
-            name "Graham Brown"
-            email "grahambrown11@gmail.com"
-        }
-        developer {
-            name "lenz e."
-            email "nomail@home"
-        }
-    }
-    scm {
-        url projectUrl
-    }
-}
-
 publishing {
     publications {
-        mavenPublication(MavenPublication) {
+        maven(MavenPublication) {
             from components.java
-            groupId = "ch.loway.oss.ari4java"
-            artifact sourcesJar {
-                classifier "sources"
+            pom {
+                name = project.name
+                description = "Asterisk ARI interface bindings for Java"
+                url = projectUrl
+                licenses {
+                    license {
+                        name = "LPGL-3.0"
+                    }
+                }
+                developers {
+                    developer {
+                        name = "Graham Brown"
+                        email = "grahambrown11@gmail.com"
+                    }
+                    developer {
+                        name = "lenz e."
+                        email = "nomail@home"
+                    }
+                }
+                scm {
+                    url = projectUrl
+                }
             }
-            artifact javadocJar {
-                classifier "javadoc"
+        }
+    }
+    repositories {
+        maven {
+            name = "sonatype"
+            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = System.getenv("SONATYPE_USER")
+                password = System.getenv("SONATYPE_PASS")
             }
-            pom.withXml {
-                def root = asNode()
-                root.appendNode("description", "Asterisk ARI interface bindings for Java")
-                root.appendNode("name", project.name)
-                root.appendNode("url", projectUrl)
-                root.children().last() + pomConfig
-            }
+        }
+    }
+
+}
+
+signing {
+    def signingKeyId = System.getenv("PGP_ID")
+    def signingKey = System.getenv("PGP_KEY")
+    def signingPassword = System.getenv("PGP_PASS")
+    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+    sign publishing.publications
+}
+
+spotbugsMain {
+    reports {
+        html {
+            enabled = true
+        }
+        xml {
+            enabled = false
         }
     }
 }
 
-bintray {
-    user = System.getenv("BINTRAY_USER")
-    key =  System.getenv("BINTRAY_KEY")
-    publications = ["mavenPublication"]
-    publish = true
-    pkg {
-        repo = "maven"
-        name = project.name
-        group = "ch.loway.oss.ari4java"
-        userOrg = "ari4java"
-        licenses = ["LGPL-3.0"]
-        vcsUrl = projectUrl
-        version {
-            name = project.version
-            desc = project.version
-            released = new Date()
+spotbugsTest {
+    ignoreFailures = true
+    reports {
+        html {
+            enabled = true
+        }
+        xml {
+            enabled = false
         }
     }
-}
-
-// To generate an HTML report instead of XML
-tasks.withType(com.github.spotbugs.SpotBugsTask) {
-    reports.xml.enabled = false
-    reports.html.enabled = true
 }
