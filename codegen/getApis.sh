@@ -27,3 +27,19 @@ do
 done
 
 cd ${START_DIR}
+
+curl -s http://downloads.asterisk.org/pub/telephony/asterisk/ | \
+    awk -v RS='(<[^>]+>|[:space:]]+)' -v ORS='\n' '$1~/current.tar.gz$/{print$1}' | while read file; do
+  mkdir -p tmp/${file%-current*}
+  curl -s http://downloads.asterisk.org/pub/telephony/asterisk/$file | \
+  tar -C tmp/${file%-current*} -zx --xform='s,asterisk-[0-9\.]*/,,' --wildcards */rest-api
+  (
+    cd tmp/${file%-current*}
+    VER=`cat rest-api/resources.json | jq -r '.apiVersion'`
+    FOLDER="${VER//./_}"
+    echo $FOLDER
+    rm -rf ${START_DIR}/src/main/resources/codegen-data/ari_${FOLDER}
+    mkdir -p ${START_DIR}/src/main/resources/codegen-data/ari_${FOLDER}
+    cp rest-api/api-docs/*.json ${START_DIR}/src/main/resources/codegen-data/ari_${FOLDER}
+  )
+done
