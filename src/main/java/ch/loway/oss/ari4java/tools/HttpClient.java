@@ -15,4 +15,6 @@ public interface HttpClient {
 
     void httpActionAsync(String uri, String method, List<HttpParam> parametersQuery, String body, List<HttpResponse> errors, HttpResponseHandler responseHandler, boolean binary) throws RestException;
 
+    void destroy();
+
 }

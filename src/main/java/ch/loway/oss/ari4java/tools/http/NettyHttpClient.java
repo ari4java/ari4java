@@ -17,8 +17,6 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import io.netty.handler.timeout.ReadTimeoutHandler;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
 import io.netty.util.concurrent.ScheduledFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,28 +44,38 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     public static final int MAX_HTTP_REQUEST = 16 * 1024 * 1024; // 16MB
     public static final int MAX_HTTP_BIN_REQUEST = 150 * 1024 * 1024; // 150MB
 
+    private static final String HTTP = "http";
+    private static final String HTTPS = "https";
+    private static final String HTTP_CODEC = "http-codec";
+    private static final String HTTP_AGGREGATOR = "http-aggregator";
+    private static final String HTTP_HANDLER = "http-handler";
+
     private Logger logger = LoggerFactory.getLogger(NettyHttpClient.class);
 
-    private Bootstrap bootStrap;
-    private URI baseUri;
+    protected Bootstrap httpBootstrap;
+    protected URI baseUri;
     private EventLoopGroup group;
     private EventLoopGroup shutDownGroup;
-    private String auth;
+    protected String auth;
 
     private HttpResponseHandler wsCallback;
     private String wsEventsUrl;
     private List<HttpParam> wsEventsParamQuery;
     private WsClientConnection wsClientConnection;
     private int reconnectCount = -1;
+    private int maxReconnectCount = 10; // -1 = infinite reconnect attempts
     private ChannelFuture wsChannelFuture;
     private ScheduledFuture<?> wsPingTimer = null;
-    private NettyWSClientHandler wsHandler;
-    private ChannelFutureListener wsFuture;
+    private ScheduledFuture<?> wsConnectionTimeout = null;
+    protected NettyWSClientHandler wsHandler;
+    protected ChannelFutureListener wsFuture;
     private static SslContext sslContext;
 
     private int pongFailureCount = 0;
     private long lastPong = 0;
     private static boolean autoReconnect = true;
+    protected int pingPeriod = 5;
+    protected TimeUnit pingTimeUnit = TimeUnit.MINUTES;
 
     public NettyHttpClient() {
         group = new NioEventLoopGroup();
@@ -75,39 +83,44 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     }
 
     public void initialize(String baseUrl, String username, String password) throws URISyntaxException {
+        if (!baseUrl.endsWith("/")) {
+            baseUrl = baseUrl + "/";
+        }
         logger.debug("initialize url: {}, user: {}", baseUrl, username);
         baseUri = new URI(baseUrl);
         String protocol = baseUri.getScheme();
-        if (!"http".equalsIgnoreCase(protocol) && !"https".equalsIgnoreCase(protocol)) {
+        if (!HTTP.equalsIgnoreCase(protocol) && !HTTPS.equalsIgnoreCase(protocol)) {
             logger.warn("Not http(s), protocol: {}", protocol);
             throw new IllegalArgumentException("Unsupported protocol: " + protocol);
         }
         this.auth = "Basic " + Base64.encode(Unpooled.copiedBuffer((username + ":" + password), ARIEncoder.ENCODING)).toString(ARIEncoder.ENCODING);
-        bootstrap();
+        initHttpBootstrap();
     }
 
-    protected void bootstrap() {
-        // Bootstrap is the factory for HTTP connections
-        logger.debug("Bootstrap with\n" +
-                        " connection timeout: {},\n" +
-                        " read timeout: {},\n" +
-                        " aggregator max-length: {}",
-                CONNECTION_TIMEOUT_SEC,
-                READ_TIMEOUT_SEC,
-                MAX_HTTP_REQUEST);
-        bootStrap = new Bootstrap();
-        bootstrapOptions(bootStrap);
-        bootStrap.handler(new ChannelInitializer<SocketChannel>() {
-            @Override
-            public void initChannel(SocketChannel ch) throws Exception {
-                ChannelPipeline pipeline = ch.pipeline();
-                addSSLIfRequired(pipeline);
-                pipeline.addLast("read-timeout", new ReadTimeoutHandler(READ_TIMEOUT_SEC));
-                pipeline.addLast("http-codec", new HttpClientCodec());
-                pipeline.addLast("http-aggregator", new HttpObjectAggregator(MAX_HTTP_REQUEST));
-                pipeline.addLast("http-handler", new NettyHttpClientHandler());
-            }
-        });
+    protected void initHttpBootstrap() {
+        if (httpBootstrap == null) {
+            // Bootstrap is the factory for HTTP connections
+            logger.debug("Bootstrap with\n" +
+                            " connection timeout: {},\n" +
+                            " read timeout: {},\n" +
+                            " aggregator max-length: {}",
+                    CONNECTION_TIMEOUT_SEC,
+                    READ_TIMEOUT_SEC,
+                    MAX_HTTP_REQUEST);
+            httpBootstrap = new Bootstrap();
+            bootstrapOptions(httpBootstrap);
+            httpBootstrap.handler(new ChannelInitializer<SocketChannel>() {
+                @Override
+                public void initChannel(SocketChannel ch) throws Exception {
+                    ChannelPipeline pipeline = ch.pipeline();
+                    addSSLIfRequired(pipeline, baseUri);
+                    pipeline.addLast("read-timeout", new ReadTimeoutHandler(READ_TIMEOUT_SEC));
+                    pipeline.addLast(HTTP_CODEC, new HttpClientCodec());
+                    pipeline.addLast(HTTP_AGGREGATOR, new HttpObjectAggregator(MAX_HTTP_REQUEST));
+                    pipeline.addLast(HTTP_HANDLER, new NettyHttpClientHandler());
+                }
+            });
+        }
     }
 
     private void bootstrapOptions(Bootstrap bootStrap) {
@@ -119,8 +132,8 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         bootStrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, CONNECTION_TIMEOUT_SEC * 1000);
     }
 
-    private void addSSLIfRequired(ChannelPipeline pipeline) throws SSLException {
-        if ("https".equalsIgnoreCase(baseUri.getScheme())) {
+    private static synchronized void addSSLIfRequired(ChannelPipeline pipeline, URI baseUri) throws SSLException {
+        if (HTTPS.equalsIgnoreCase(baseUri.getScheme())) {
             if (sslContext == null) {
                 sslContext = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
             }
@@ -131,9 +144,9 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     private int getPort() {
         int port = baseUri.getPort();
         if (port == -1) {
-            if ("http".equalsIgnoreCase(baseUri.getScheme())) {
+            if (HTTP.equalsIgnoreCase(baseUri.getScheme())) {
                 port = 80;
-            } else if ("https".equalsIgnoreCase(baseUri.getScheme())) {
+            } else if (HTTPS.equalsIgnoreCase(baseUri.getScheme())) {
                 port = 443;
             }
         }
@@ -141,46 +154,45 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     }
 
     protected ChannelFuture httpConnect() {
-        logger.debug("HTTP Connect uri: {}", baseUri.toString());
-        return bootStrap.connect(baseUri.getHost(), getPort());
+        logger.debug("HTTP Connect uri: {}", baseUri);
+        return httpBootstrap.connect(baseUri.getHost(), getPort());
     }
 
+    @Override
     public void destroy() {
         logger.debug("destroy...");
         // use a different event group to execute the shutdown to avoid deadlocks
-        shutDownGroup.schedule(new Runnable() {
-            @Override
-            public void run() {
-                logger.debug("running shutdown...");
-                if (wsPingTimer != null) {
-                    logger.debug("cancel ping...");
-                    wsPingTimer.cancel(true);
-                    wsPingTimer = null;
-                }
-                if (wsClientConnection != null) {
-                    try {
-                        logger.debug("there is a web socket, disconnect...");
-                        wsClientConnection.disconnect();
-                        wsClientConnection = null;
-                    } catch (RestException e) {
-                        // not bubbling exception up, just ignoring
-                    }
-                }
-                if (group != null && !group.isShuttingDown()) {
-                    logger.debug("shutdownGracefully");
-                    group.shutdownGracefully(5, 10, TimeUnit.SECONDS).addListener(new GenericFutureListener() {
-                        @Override
-                        public void operationComplete(Future future) throws Exception {
-                            logger.debug("group shutdown complete");
-                            shutDownGroup.shutdownGracefully(5, 10, TimeUnit.SECONDS);
-                            shutDownGroup = null;
-                        }
-                    }).syncUninterruptibly();
-                    group = null;
-                    logger.debug("shutdown complete");
+        shutDownGroup.execute(() -> {
+            logger.debug("running shutdown...");
+            if (wsPingTimer != null) {
+                logger.debug("cancel ping...");
+                wsPingTimer.cancel(true);
+                wsPingTimer = null;
+            }
+            if (wsConnectionTimeout != null) {
+                logger.debug("cancel wsConnectionTimeout...");
+                wsConnectionTimeout.cancel(true);
+                wsConnectionTimeout = null;
+            }
+            if (wsClientConnection != null) {
+                try {
+                    logger.debug("there is a web socket, disconnect...");
+                    wsClientConnection.disconnect();
+                    wsClientConnection = null;
+                } catch (RestException e) {
+                    // not bubbling exception up, just ignoring
                 }
             }
-        }, 250L, TimeUnit.MILLISECONDS);
+            if (group != null && !group.isShuttingDown()) {
+                logger.debug("group shutdownGracefully");
+                group.shutdownGracefully(0, 1, TimeUnit.SECONDS).syncUninterruptibly();
+                group = null;
+                logger.debug("group shutdown complete");
+            }
+        });
+        shutDownGroup.shutdownGracefully(0, 5, TimeUnit.SECONDS).syncUninterruptibly();
+        shutDownGroup = null;
+        logger.debug("... destroyed");
     }
 
     protected String buildURL(String path, List<HttpParam> parametersQuery, boolean withAddress) {
@@ -195,16 +207,16 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         boolean first = true;
         if (parametersQuery != null) {
             for (HttpParam hp : parametersQuery) {
-                if (hp.value != null && !hp.value.isEmpty()) {
+                if (hp.getValue() != null && !hp.getValue().isEmpty()) {
                     if (first) {
                         uriBuilder.append("?");
                         first = false;
                     } else {
                         uriBuilder.append("&");
                     }
-                    uriBuilder.append(hp.name);
+                    uriBuilder.append(hp.getName());
                     uriBuilder.append("=");
-                    uriBuilder.append(ARIEncoder.encodeUrl(hp.value));
+                    uriBuilder.append(ARIEncoder.encodeUrl(hp.getValue()));
                 }
             }
         }
@@ -212,22 +224,17 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     }
 
     // Factory for WS handshakes
-    private WebSocketClientHandshaker getWsHandshake(String path, List<HttpParam> parametersQuery) {
+    protected WebSocketClientHandshaker getWsHandshake(String path, List<HttpParam> parametersQuery) throws URISyntaxException {
         String url = buildURL(path, parametersQuery, true);
-        try {
-            if (url.regionMatches(true, 0, "http", 0, 4)) {
-                // http(s):// -> ws(s)://
-                url = "ws" + url.substring(4);
-            }
-            URI uri = new URI(url);
-            HttpHeaders headers = new DefaultHttpHeaders();
-            headers.set(HttpHeaderNames.AUTHORIZATION, this.auth);
-            return WebSocketClientHandshakerFactory.newHandshaker(
-                    uri, WebSocketVersion.V13, null, false, headers);
-        } catch (URISyntaxException e) {
-            logger.warn("WSHandshake error, returning null", e);
-            return null;
+        if (url.regionMatches(true, 0, HTTP, 0, 4)) {
+            // http(s):// -> ws(s)://
+            url = "ws" + url.substring(4);
         }
+        URI uri = new URI(url);
+        HttpHeaders headers = new DefaultHttpHeaders();
+        headers.set(HttpHeaderNames.AUTHORIZATION, this.auth);
+        return WebSocketClientHandshakerFactory.newHandshaker(
+                uri, WebSocketVersion.V13, null, false, headers);
     }
 
     // Build the HTTP request based on the given parameters
@@ -257,8 +264,8 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
         if (errors != null) {
             for (HttpResponse hr : errors) {
-                if (hr.code == status.code()) {
-                    return new RestException(hr.description, response, status.code());
+                if (hr.getCode() == status.code()) {
+                    return new RestException(hr.getDescription(), response, status.code());
                 }
             }
         }
@@ -289,22 +296,19 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
 
     private NettyHttpClientHandler httpActionSyncHandler(String uri, String method, List<HttpParam> parametersQuery,
                                                          String body, List<HttpResponse> errors, boolean binary) throws RestException {
-        logger.debug("Sync Action, uri: {}, method: {}", uri, method);
         HttpRequest request = buildRequest(uri, method, parametersQuery, body);
-        Channel ch = httpConnect().addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
-                if (future.isSuccess()) {
-                    logger.debug("HTTP connected");
-                    replaceAggregator(binary, future.channel());
-                } else if (future.cause() != null) {
-                    logger.error("HTTP Connection Error - {}", future.cause().getMessage(), future.cause());
-                } else {
-                    logger.error("HTTP Connection Error - Unknown");
-                }
+        logger.debug("Sync Action - {} to {}", request.method(), request.uri());
+        Channel ch = httpConnect().addListener((ChannelFutureListener) future -> {
+            if (future.isSuccess()) {
+                logger.debug("HTTP connected");
+                replaceAggregator(binary, future.channel());
+            } else if (future.cause() != null) {
+                logger.error("HTTP Connection Error - {}", future.cause().getMessage(), future.cause());
+            } else {
+                logger.error("HTTP Connection Error - Unknown");
             }
         }).syncUninterruptibly().channel();
-        NettyHttpClientHandler handler = (NettyHttpClientHandler) ch.pipeline().get("http-handler");
+        NettyHttpClientHandler handler = (NettyHttpClientHandler) ch.pipeline().get(HTTP_HANDLER);
         ch.writeAndFlush(request);
         ch.closeFuture().syncUninterruptibly();
         if (handler.getException() != null) {
@@ -320,7 +324,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         if (binary) {
             logger.debug("Is Binary, replace http-aggregator ...");
             ch.pipeline().replace(
-                    "http-aggregator", "http-aggregator", new HttpObjectAggregator(MAX_HTTP_BIN_REQUEST));
+                    HTTP_AGGREGATOR, HTTP_AGGREGATOR, new HttpObjectAggregator(MAX_HTTP_BIN_REQUEST));
         }
     }
 
@@ -330,79 +334,75 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                                 String body, final List<HttpResponse> errors,
                                 final HttpResponseHandler responseHandler, boolean binary) {
 
-        logger.debug("Async Action, uri: {}, method: {}", uri, method);
         final HttpRequest request = buildRequest(uri, method, parametersQuery, body);
+        logger.debug("Async Action - {} to {}", request.method(), request.uri());
         // Get future channel
         ChannelFuture cf = httpConnect();
-        cf.addListener(new ChannelFutureListener() {
-
-            @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
-                if (future.isSuccess()) {
-                    logger.debug("HTTP connected");
-                    Channel ch = future.channel();
-                    replaceAggregator(binary, ch);
-                    responseHandler.onChReadyToWrite();
-                    ch.writeAndFlush(request);
-                    ch.closeFuture().addListener(new ChannelFutureListener() {
-                        @Override
-                        public void operationComplete(ChannelFuture future) throws Exception {
-                            responseHandler.onResponseReceived();
-                            if (future.isSuccess()) {
-                                NettyHttpClientHandler handler = (NettyHttpClientHandler) future.channel().pipeline().get("http-handler");
-                                if (handler.getException() != null) {
-                                    responseHandler.onFailure(new RestException(handler.getException()));
-                                } else if (httpResponseOkay(handler.getResponseStatus())) {
-                                    if (binary) {
-                                        responseHandler.onSuccess(handler.getResponseBytes());
-                                    } else {
-                                        responseHandler.onSuccess(handler.getResponseText());
-                                    }
-                                } else {
-                                    responseHandler.onFailure(makeException(handler.getResponseStatus(), handler.getResponseText(), errors));
-                                }
+        cf.addListener((ChannelFutureListener) future1 -> {
+            if (future1.isSuccess()) {
+                logger.debug("HTTP connected");
+                Channel ch = future1.channel();
+                replaceAggregator(binary, ch);
+                responseHandler.onChReadyToWrite();
+                ch.writeAndFlush(request);
+                ch.closeFuture().addListener((ChannelFutureListener) future2 -> {
+                    responseHandler.onResponseReceived();
+                    if (future2.isSuccess()) {
+                        NettyHttpClientHandler handler = (NettyHttpClientHandler) future2.channel().pipeline().get(HTTP_HANDLER);
+                        if (handler.getException() != null) {
+                            responseHandler.onFailure(new RestException(handler.getException()));
+                        } else if (httpResponseOkay(handler.getResponseStatus())) {
+                            if (binary) {
+                                responseHandler.onSuccess(handler.getResponseBytes());
                             } else {
-                                responseHandler.onFailure(future.cause());
+                                responseHandler.onSuccess(handler.getResponseText());
                             }
+                        } else {
+                            responseHandler.onFailure(makeException(handler.getResponseStatus(), handler.getResponseText(), errors));
                         }
-                    });
-                } else {
-                    responseHandler.onFailure(future.cause());
-                }
+                    } else {
+                        responseHandler.onFailure(future2.cause());
+                    }
+                });
+            } else {
+                responseHandler.onFailure(future1.cause());
             }
         });
     }
     // WsClient implementation - connect to WebSocket server
 
     @Override
-    public WsClientConnection connect(final HttpResponseHandler callback, final String url, final List<HttpParam> lParamQuery) {
+    public WsClientConnection connect(final HttpResponseHandler callback, final String url, final List<HttpParam> lParamQuery) throws RestException {
+        if (isWsConnected()) {
+            return wsClientConnection;
+        }
+        try {
+            WebSocketClientHandshaker handshake = getWsHandshake(url, lParamQuery);
+            logger.debug("WS Connect uri: {}", handshake.uri());
+            this.wsEventsUrl = url;
+            this.wsEventsParamQuery = lParamQuery;
+            this.wsHandler = new NettyWSClientHandler(handshake, callback, this);
+            this.wsCallback = callback;
+            return connect(new Bootstrap(), callback);
+        } catch (Exception e) {
+            throw new RestException("WS Connection Error - " + e.getMessage(), e);
+        }
+    }
 
-        WebSocketClientHandshaker handshake = getWsHandshake(url, lParamQuery);
-        logger.debug("WS Connect uri: {}", handshake.uri().toString());
-        this.wsHandler = new NettyWSClientHandler(handshake, callback, this);
-        this.wsCallback = callback;
-        this.wsEventsUrl = url;
-        this.wsEventsParamQuery = lParamQuery;
-
-        Bootstrap wsBootStrap = new Bootstrap();
+    protected WsClientConnection connect(Bootstrap wsBootStrap, final HttpResponseHandler callback) {
         bootstrapOptions(wsBootStrap);
         wsBootStrap.handler(new ChannelInitializer<SocketChannel>() {
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
-                addSSLIfRequired(pipeline);
-                pipeline.addLast("http-codec", new HttpClientCodec());
-                pipeline.addLast("http-aggregator", new HttpObjectAggregator(MAX_HTTP_REQUEST));
+                addSSLIfRequired(pipeline, baseUri);
+                pipeline.addLast(HTTP_CODEC, new HttpClientCodec());
+                pipeline.addLast(HTTP_AGGREGATOR, new HttpObjectAggregator(MAX_HTTP_REQUEST));
                 pipeline.addLast("ws-handler", wsHandler);
             }
         });
-
-        final ScheduledFuture<?> connectionTimeout = group.schedule(new Runnable() {
-            @Override
-            public void run() {
-                reconnectWs(new RestException("WS Connect Timeout"));
-            }
-        }, CONNECTION_TIMEOUT_SEC, TimeUnit.SECONDS);
+        wsConnectionTimeout = group.schedule(
+                () -> reconnectWs(new RestException("WS Connect Timeout")), CONNECTION_TIMEOUT_SEC, TimeUnit.SECONDS);
         wsChannelFuture = wsBootStrap.connect(baseUri.getHost(), getPort());
         wsFuture = new ChannelFutureListener() {
             @Override
@@ -412,10 +412,11 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                     wsHandler.handshakeFuture().addListener(new ChannelFutureListener() {
                         @Override
                         public void operationComplete(ChannelFuture future) throws Exception {
+                            // cancel the connection timeout
+                            cancelWsConnectionTimeout();
                             if (future.isSuccess()) {
                                 logger.debug("WS connected...");
-                                // cancel the connection timeout, start a ping and reset reconnect counter
-                                connectionTimeout.cancel(true);
+                                // start a ping and reset reconnect counter
                                 startPing();
                                 reconnectCount = 0;
                                 callback.onChReadyToWrite();
@@ -431,6 +432,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                         }
                     });
                 } else {
+                    cancelWsConnectionTimeout();
                     if (future.cause() != null) {
                         logger.error("WS/HTTP Connection Error - {}", future.cause().getMessage(), future.cause());
                         reconnectWs(future.cause());
@@ -447,45 +449,50 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         return createWsClientConnection();
     }
 
+    private void cancelWsConnectionTimeout() {
+        if (wsConnectionTimeout != null) {
+            wsConnectionTimeout.cancel(true);
+            wsConnectionTimeout = null;
+        }
+    }
+
     private void startPing() {
         if (wsPingTimer == null) {
             pongFailureCount = 0;
-            wsPingTimer = group.scheduleAtFixedRate(new Runnable() {
-                @Override
-                public void run() {
-                    if ((System.currentTimeMillis() - wsCallback.getLastResponseTime()) > 15000) {
-                        if (!wsChannelFuture.isCancelled() && wsChannelFuture.channel() != null) {
-                            WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer("ari4j".getBytes(ARIEncoder.ENCODING)));
-                            logger.debug("Send Ping at {}", System.currentTimeMillis());
-                            wsChannelFuture.channel().writeAndFlush(frame);
-                            boolean noPong = true;
-                            for (int i = 0; i < 10; i++) {
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    // probably from the reconnect, so stop running...
-                                    return;
-                                }
-                                if ((System.currentTimeMillis() - lastPong) < 10000) {
-                                    logger.debug("Pong at {}", lastPong);
-                                    pongFailureCount = 0;
-                                    noPong = false;
-                                    break;
-                                } else {
-                                    logger.warn("No Pong at {}", System.currentTimeMillis());
-                                }
-                            }
-                            if (noPong) {
-                                pongFailureCount++;
-                                if (pongFailureCount >= 1) {
-                                    logger.warn("No Ping response from server, reconnect...");
-                                    reconnectWs(new RestException("No Ping response from server"));
-                                }
-                            }
+            wsPingTimer = group.scheduleAtFixedRate(() -> {
+                if (isWsConnected() && (System.currentTimeMillis() - wsCallback.getLastResponseTime()) > 15000) {
+                    WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer("ari4j".getBytes(ARIEncoder.ENCODING)));
+                    logger.debug("Send Ping at {}", System.currentTimeMillis());
+                    wsChannelFuture.channel().writeAndFlush(frame);
+                    boolean noPong = true;
+                    for (int i = 0; i < 10; i++) {
+                        if (wsHandler != null && wsHandler.isShuttingDown()) {
+                            break;
+                        }
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {//NOSONAR
+                            // probably from the reconnect, so stop running...
+                            return;
+                        }
+                        if ((System.currentTimeMillis() - lastPong) < 10000) {
+                            logger.debug("Pong at {}", lastPong);
+                            pongFailureCount = 0;
+                            noPong = false;
+                            break;
+                        } else {
+                            logger.warn("No Pong at {}", System.currentTimeMillis());
+                        }
+                    }
+                    if (noPong && wsHandler != null && !wsHandler.isShuttingDown()) {
+                        pongFailureCount++;
+                        if (pongFailureCount >= 1) {
+                            logger.warn("No Ping response from server, reconnect...");
+                            reconnectWs(new RestException("No Ping response from server"));
                         }
                     }
                 }
-            }, 1, 5, TimeUnit.MINUTES);
+            }, 1, pingPeriod, pingTimeUnit);
         }
     }
 
@@ -509,6 +516,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
                         ch.close();
                     }
                     wsChannelFuture.removeListener(wsFuture);
+                    wsChannelFuture.cancel(true);
                 }
             };
         }
@@ -523,16 +531,10 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
      * @return whether it is a 2XX code or not (error!)
      */
     private boolean httpResponseOkay(HttpResponseStatus status) {
-
-        if (HttpResponseStatus.OK.equals(status)
+        return HttpResponseStatus.OK.equals(status)
                 || HttpResponseStatus.NO_CONTENT.equals(status)
                 || HttpResponseStatus.ACCEPTED.equals(status)
-                || HttpResponseStatus.CREATED.equals(status)) {
-            return true;
-        } else {
-            return false;
-        }
-
+                || HttpResponseStatus.CREATED.equals(status);
     }
 
     @Override
@@ -543,7 +545,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             wsPingTimer = null;
         }
 
-        if (!autoReconnect || reconnectCount == -1 || reconnectCount >= 10) {
+        if (!autoReconnect || (maxReconnectCount > -1 && reconnectCount >= maxReconnectCount)) {
             logger.warn("Cannot connect: {} - executing failure callback", cause.getMessage());
             wsCallback.onFailure(cause);
             return;
@@ -556,17 +558,14 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
             long timeout = reconnectCount >= timeouts.length ? timeouts[timeouts.length - 1] : timeouts[reconnectCount];
             reconnectCount++;
             logger.error("WS Connect Error: {}, reconnecting in {} seconds... try: {}", cause.getMessage(), timeout, reconnectCount);
-            shutDownGroup.schedule(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        // 1st close up
-                        wsClientConnection.disconnect();
-                        // then connect again
-                        connect(wsCallback, wsEventsUrl, wsEventsParamQuery);
-                    } catch (RestException e) {
-                        wsCallback.onFailure(e);
-                    }
+            shutDownGroup.schedule(() -> {
+                try {
+                    // 1st close up
+                    wsClientConnection.disconnect();
+                    // then connect again
+                    connect(wsCallback, wsEventsUrl, wsEventsParamQuery);
+                } catch (RestException e) {
+                    wsCallback.onFailure(e);
                 }
             }, timeout, TimeUnit.SECONDS);
         }
@@ -595,4 +594,22 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         NettyHttpClient.sslContext = sslContext;
     }
 
+    /**
+     * Checks if websocket is connected
+     *
+     * @return true when connected, false otherwise
+     */
+    public boolean isWsConnected() {
+        return wsClientConnection != null && wsHandler != null && !wsHandler.isShuttingDown() && wsChannelFuture != null &&
+                !wsChannelFuture.isCancelled() && wsChannelFuture.channel() != null && wsChannelFuture.channel().isActive();
+    }
+
+    /**
+     * Sets maximal reconnect count
+     *
+     * @param count max number of reconnect attempts, -1 for infinite reconnecting
+     */
+    public void setMaxReconnectCount(int count) {
+        maxReconnectCount = count;
+    }
 }

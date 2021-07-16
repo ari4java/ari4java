@@ -1,8 +1,9 @@
 
 package ch.loway.oss.ari4java.codegen.models;
 
-import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
-import ch.loway.oss.ari4java.codegen.genJava.JavaInterface;
+import ch.loway.oss.ari4java.codegen.gen.JavaGen;
+import ch.loway.oss.ari4java.codegen.gen.JavaInterface;
+import ch.loway.oss.ari4java.codegen.gen.JavaPkgInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,27 +22,33 @@ public class Operation {
     public String responseConcreteClass = "";
     public String responseInterface = "";
     public String description = "";
-    public List<Param> params = new ArrayList<Param>();
-    public List<ErrorResp> errorCodes = new ArrayList<ErrorResp>();
+    public List<Param> params = new ArrayList<>();
+    public List<ErrorResp> errorCodes = new ArrayList<>();
     public String apiVersion;
     public Action action;
     private JavaInterface ji;
 
-    private String toParmList(boolean withType, boolean onlyRequired) {
+    private String toParmList(boolean withType, boolean forComment) {
         StringBuilder sb = new StringBuilder();
         boolean firstItem = true;
         for (Param p : params) {
-            if (onlyRequired && !p.required) {
-                continue;
+            if (p.required) {
+                if (forComment) {
+                    sb.append(p.getParamComment(null));
+                } else {
+                    if (firstItem) {
+                        firstItem = false;
+                    } else {
+                        sb.append(", ");
+                    }
+                    if (withType)
+                        sb.append(p.javaType).append(" ");
+                    sb.append(p.name);
+                }
             }
-            if (firstItem) {
-                firstItem = false;
-            } else {
-                sb.append(", ");
-            }
-            if (withType)
-                sb.append(p.javaType).append(" ");
-            sb.append(p.name);
+        }
+        if (forComment) {
+            sb.append("@return ").append(getInterfaceName()).append("\n");
         }
         return sb.toString();
     }
@@ -49,25 +56,23 @@ public class Operation {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        JavaGen.importClasses(sb, getPackage(), Arrays.asList(new String[]{
-                "java.util.Date",
+        JavaGen.importClasses(sb, getPackage(), Arrays.asList("java.util.Date",
                 "java.util.List",
                 "java.util.Map",
                 "java.util.HashMap",
                 "java.util.ArrayList",
                 "java.net.URLEncoder",
-                "ch.loway.oss.ari4java.ARI",
-                "ch.loway.oss.ari4java.tools.*",
                 "com.fasterxml.jackson.core.type.TypeReference",
-                "ch.loway.oss.ari4java.generated.*",
-                "ch.loway.oss.ari4java.generated.actions.*",
-                "ch.loway.oss.ari4java.generated.actions.requests.*",
-                "ch.loway.oss.ari4java.generated.models.Module",
-                "ch.loway.oss.ari4java.generated.models.*",
-                "ch.loway.oss.ari4java.generated." + apiVersion + ".actions.*",
-                "ch.loway.oss.ari4java.generated." + apiVersion + ".actions.requests.*",
-                "ch.loway.oss.ari4java.generated." + apiVersion + ".models.*"
-        }));
+                JavaPkgInfo.BASE_PKG_NAME + ".ARI",
+                JavaPkgInfo.BASE_PKG_NAME + ".tools.*",
+                JavaPkgInfo.GENERATED_PKG_NAME + ".*",
+                JavaPkgInfo.GENERATED_PKG_NAME + ".actions.*",
+                JavaPkgInfo.GENERATED_PKG_NAME + ".actions.requests.*",
+                JavaPkgInfo.GENERATED_PKG_NAME + ".models.Module",
+                JavaPkgInfo.GENERATED_PKG_NAME + ".models.*",
+                JavaPkgInfo.GENERATED_PKG_NAME + "." + apiVersion + ".actions.*",
+                JavaPkgInfo.GENERATED_PKG_NAME + "." + apiVersion + ".actions.requests.*",
+                JavaPkgInfo.GENERATED_PKG_NAME + "." + apiVersion + ".models.*"));
 
         JavaGen.emptyLines(sb, 2);
 
@@ -79,32 +84,67 @@ public class Operation {
         for (Param p : params) {
             sb.append("  private ").append(p.javaType).append(" ").append(p.name).append(";\n");
         }
-        sb.append("\n  ").append(getConstructorDefinition()).append(" {\n");
-        for (Param p : params) {
-            if (p.required) {
-                sb.append("    this.").append(p.name).append(" = ").append(p.name).append(";\n");
+        generateConstructor(sb);
+        generateParams(sb, interfaces);
+
+        // 1. Private build method
+        generateBuildMethod(sb);
+        // 2. Synchronous execute method
+        generateActionSync(sb, interfaces);
+        // 3. Asynchronous execute method
+        generateActionAsync(sb, interfaces);
+        // 4. Missing methods
+        sb.append(interfaces.getCodeToImplementMissingSignatures());
+
+        sb.append("}\n");
+        return sb.toString();
+
+    }
+
+    private void generateActionAsync(StringBuilder sb, JavaInterface interfaces) {
+        sb.append("  ").append(getAsyncExecuteDefinition()).append(" {\n");
+        sb.append("    httpActionAsync(build(), callback");
+        if (!responseInterface.equalsIgnoreCase("void")) {
+            String deserializationType = responseConcreteClass + ".class";
+            if (responseConcreteClass.startsWith("List<")) {
+                deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
+            }
+            sb.append(", ");
+            sb.append(deserializationType);
+        }
+        sb.append(");\n");
+        sb.append("  }\n\n");
+        interfaces.removeSignature(getAsyncExecuteSignature());
+    }
+
+    private void generateActionSync(StringBuilder sb, JavaInterface interfaces) {
+        sb.append("  ").append(getSyncExecuteDefinition()).append(" {\n");
+        if (wsUpgrade) {
+            // Websocket dummy sync method
+            sb.append("    throw new RestException(\"No synchronous operation on WebSocket\");\n");
+        } else if (responseInterface.equalsIgnoreCase("byte[]")) {
+            sb.append("    return httpActionSyncAsBytes(build());\n");
+        } else if (responseInterface.equalsIgnoreCase("void")) {
+                sb.append("    httpActionSync(build());\n");
+        } else {
+            sb.append("    String json = httpActionSync(build());\n");
+            String deserializationType = responseConcreteClass + ".class";
+            if (responseConcreteClass.startsWith("List<")) {
+                deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
+                sb.append("    return deserializeJsonAsAbstractList(json, ")
+                        .append(deserializationType)
+                        .append(");\n");
+            } else {
+                sb.append("    return deserializeJson(json, ")
+                        .append(deserializationType)
+                        .append(");\n");
             }
         }
         sb.append("  }\n\n");
-        for (Param p : params) {
-            sb.append(p.getDefinition(getInterfaceName())).append(" {\n")
-                    .append("    this.").append(p.name).append(" = ").append(p.name).append(";\n")
-                    .append("    return this;\n")
-                    .append("  }\n\n");
-            interfaces.removeSignature(p.getSignature(getInterfaceName()));
-            if (p.javaType.equals("Map<String,String>")) {
-                sb.append(p.getDefinitionForAddToMap(getInterfaceName())).append(" {\n")
-                        .append("    if (this.").append(p.name).append(" == null) {\n")
-                        .append("        this.").append(p.name).append(" = new HashMap<>();\n")
-                        .append("    }\n")
-                        .append("    this.").append(p.name).append(".put(key, value);\n")
-                        .append("    return this;\n")
-                        .append("  }\n\n");
-                interfaces.removeSignature(p.getSignatureForAddToMap(getInterfaceName()));
-            }
-        }
+        interfaces.removeSignature(getSyncExecuteSignature());
+    }
 
-        // 1. Private build method
+    private void generateBuildMethod(StringBuilder sb) {
         // search and replace URI parameters
         String stUri = action.path;
         for (Param p : params) {
@@ -132,80 +172,52 @@ public class Operation {
         }
         sb.append("    return ariRequest;\n");
         sb.append("  }\n\n");
+    }
 
-        // 2. Synchronous execute method
-        sb.append("  ").append(getSyncExecuteDefinition()).append(" {\n");
-        if (wsUpgrade) {
-            // Websocket dummy sync method
-            sb.append("    throw new RestException(\"No synchronous operation on WebSocket\");\n");
-        } else {
-            if (responseInterface.equalsIgnoreCase("byte[]")) {
-                sb.append("    return httpActionSyncAsBytes(build());\n");
-            } else {
-                if (responseInterface.equalsIgnoreCase("void")) {
-                    sb.append("    httpActionSync(build());\n");
-                } else {
-                    sb.append("    String json = httpActionSync(build());\n");
-                    String deserializationType = responseConcreteClass + ".class";
-                    if (responseConcreteClass.startsWith("List<")) {
-                        deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
-                        sb.append("    return deserializeJsonAsAbstractList(json, ")
-                                .append(deserializationType)
-                                .append(");\n");
-                    } else {
-                        sb.append("    return deserializeJson(json, ")
-                                .append(deserializationType)
-                                .append(");\n");
-                    }
-                }
+    private void generateParams(StringBuilder sb, JavaInterface interfaces) {
+        for (Param p : params) {
+            sb.append(p.getDefinition(getInterfaceName())).append(" {\n")
+                    .append("    this.").append(p.name).append(" = ").append(p.name).append(";\n")
+                    .append("    return this;\n")
+                    .append("  }\n\n");
+            interfaces.removeSignature(p.getSignature(getInterfaceName()));
+            if (p.javaType.equals("Map<String,String>")) {
+                sb.append(p.getDefinitionForAddToMap(getInterfaceName())).append(" {\n")
+                        .append("    if (this.").append(p.name).append(" == null) {\n")
+                        .append("        this.").append(p.name).append(" = new HashMap<>();\n")
+                        .append("    }\n")
+                        .append("    this.").append(p.name).append(".put(key, value);\n")
+                        .append("    return this;\n")
+                        .append("  }\n\n");
+                interfaces.removeSignature(p.getSignatureForAddToMap(getInterfaceName()));
+            }
+        }
+    }
+
+    private void generateConstructor(StringBuilder sb) {
+        sb.append("\n  ").append(getConstructorDefinition()).append(" {\n");
+        for (Param p : params) {
+            if (p.required) {
+                sb.append("    this.").append(p.name).append(" = ").append(p.name).append(";\n");
             }
         }
         sb.append("  }\n\n");
-        interfaces.removeSignature(getSyncExecuteSignature());
-
-        // 3. Asynchronous execute method
-        sb.append("  ").append(getAsyncExecuteDefinition()).append(" {\n");
-        sb.append("    httpActionAsync(build(), callback");
-        if (!responseInterface.equalsIgnoreCase("void")) {
-            String deserializationType = responseConcreteClass + ".class";
-            if (responseConcreteClass.startsWith("List<")) {
-                deserializationType = "new TypeReference<" + responseConcreteClass + ">() {}";
-            }
-            sb.append(", " + deserializationType);
-        }
-        sb.append(");\n");
-        sb.append("  }\n\n");
-        interfaces.removeSignature(getAsyncExecuteSignature());
-
-        sb.append(interfaces.getCodeToImplementMissingSignatures());
-
-        sb.append("}\n");
-        return sb.toString();
-
     }
 
     private String getSyncExecuteSignature() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(responseInterface).append(" execute");
-        return sb.toString();
+        return responseInterface + " execute";
     }
 
     private String getSyncExecuteDefinition() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("public ").append(responseInterface).append(" execute() throws RestException");
-        return sb.toString();
+        return "public " + responseInterface + " execute() throws RestException";
     }
 
     private String getAsyncExecuteSignature() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("void execute ").append(JavaGen.addAsyncCallback(responseInterface));
-        return sb.toString();
+        return "void execute " + JavaGen.addAsyncCallback(responseInterface);
     }
 
     private String getAsyncExecuteDefinition() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("public void execute(").append(JavaGen.addAsyncCallback(responseInterface)).append(")");
-        return sb.toString();
+        return "public void execute(" + JavaGen.addAsyncCallback(responseInterface) + ")";
     }
 
     public String getPackage() {
@@ -221,7 +233,7 @@ public class Operation {
         sb.append(getDefinition());
         sb.append(" {\n  ");
         sb.append(getImplName()).append("  request = new ").append(getImplName()).append("(");
-        sb.append(toParmList(false, true)).append(");\n");
+        sb.append(toParmList(false, false)).append(");\n");
         sb.append("  request.setHttpClient(this.getHttpClient());\n");
         sb.append("  request.setWsClient(this.getWsClient());\n");
         sb.append("  request.setLiveActionList(this.getLiveActionList());\n");
@@ -247,23 +259,12 @@ public class Operation {
     }
 
     public String getConstructorDefinition() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("public ").append(getImplName()).append("(")
-                .append(toParmList(true, true)).append(")");
-        return sb.toString();
+        return "public " + getImplName() + "(" + toParmList(true, false) + ")";
     }
 
     public String getDefinition() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("public ").append(getInterfaceName())
-                .append(" ").append(nickname)
-                .append("(");
-
-        sb.append(toParmList(true, true));
-
-        sb.append(") throws RestException");
-        return sb.toString();
+        return "public " + getInterfaceName() + " " + nickname + "(" + toParmList(true, false) +
+                ") throws RestException";
     }
 
     public String getInterfaceName() {
@@ -285,15 +286,25 @@ public class Operation {
         for (Param p : params) {
             String javaSignature = p.getSignature(getInterfaceName());
             String definition = p.getDefinition(getInterfaceName());
-            j.iKnow(javaSignature, definition, "", apiVersion);
+            j.iKnow(javaSignature, definition,p.getParamComment(getInterfaceName()), apiVersion);
             if (p.javaType.equals("Map<String,String>")) {
                 javaSignature = p.getSignatureForAddToMap(getInterfaceName());
                 definition = p.getDefinitionForAddToMap(getInterfaceName());
-                j.iKnow(javaSignature, definition, "", apiVersion);
+                j.iKnow(javaSignature, definition, "@param key the attribute name\n" +
+                        "@param value the attribute value\n" +
+                        "@return " + getInterfaceName() + "\n", apiVersion);
             }
         }
-        j.iKnow(getSyncExecuteSignature(), getSyncExecuteDefinition(), "", apiVersion);
-        j.iKnow(getAsyncExecuteSignature(), getAsyncExecuteDefinition(), "", apiVersion);
+        String returnComment = "\n@return " + responseInterface;
+        if ("void".equalsIgnoreCase(responseInterface)) {
+            returnComment = "";
+        }
+        j.iKnow(getSyncExecuteSignature(), getSyncExecuteDefinition(), "@throws RestException an error" + returnComment, apiVersion);
+        j.iKnow(getAsyncExecuteSignature(), getAsyncExecuteDefinition(), "@param callback AriCallback&gt;" + responseInterface.replaceAll("^void$", "Void") + "&lt;", apiVersion);
+    }
+
+    public String getComment() {
+        return description + "\n" + toParmList(false, true) + "\n@throws RestException an error";
     }
 
     /**
@@ -301,41 +312,47 @@ public class Operation {
      */
     public static class Param {
         public String name = "";
+        public String description = "";
         public ParamType type = ParamType.PATH;
         public String javaType = "";
         public String methodArgumentType = "";
         public boolean required = true;
 
         public String getSignature(String returnType) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(returnType).append(" ").append(JavaGen.addPrefixAndCapitalize("set", name));
-            sb.append(" ").append(javaType);
-            return sb.toString();
+            return returnType + " " + JavaGen.addPrefixAndCapitalize("set", name) + " " + javaType;
         }
         
         public String getDefinition(String returnType) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("  public ").append(returnType).append(" ").append(JavaGen.addPrefixAndCapitalize("set", name))
-                    .append("(").append(methodArgumentType).append(" ").append(name).append(")");
-            return sb.toString();
+            return "  public " + returnType + " " + JavaGen.addPrefixAndCapitalize("set", name) +
+                    "(" + methodArgumentType + " " + name + ")";
         }
 
         public String getSignatureForAddToMap(String returnType) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(returnType).append(" ").append(JavaGen.addPrefixAndCapitalize("add", name));
-            sb.append(" ").append(javaType);
-            return sb.toString();
+            return returnType + " " + JavaGen.addPrefixAndCapitalize("add", name) + " " + javaType;
         }
 
         public String getDefinitionForAddToMap(String returnType) {
+            return "  public " + returnType + " " + JavaGen.addPrefixAndCapitalize("add", name) +
+                    "(String key, String value)";
+        }
+
+        public String getParamComment(String returnType) {
             StringBuilder sb = new StringBuilder();
-            sb.append("  public ").append(returnType).append(" ").append(JavaGen.addPrefixAndCapitalize("add", name))
-                    .append("(String key, String value)");
+            sb.append("@param ").append(name).append(" ");
+            if (description == null || description.trim().isEmpty()) {
+                sb.append(name);
+            } else {
+                sb.append(description);
+            }
+            sb.append("\n");
+            if (returnType != null) {
+                sb.append("@return ").append(returnType).append("\n");
+            }
             return sb.toString();
         }
     }
 
-    public static enum ParamType {
+    public enum ParamType {
         PATH,
         QUERY,
         BODY,
@@ -364,6 +381,3 @@ public class Operation {
     }
 
 }
-
-// $Log$
-//

@@ -2,10 +2,12 @@ package ch.loway.oss.ari4java.examples;
 
 import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.AriVersion;
+import ch.loway.oss.ari4java.generated.AriWSHelper;
 import ch.loway.oss.ari4java.generated.models.AsteriskInfo;
 import ch.loway.oss.ari4java.generated.models.Message;
 import ch.loway.oss.ari4java.generated.models.PlaybackFinished;
 import ch.loway.oss.ari4java.generated.models.StasisStart;
+import ch.loway.oss.ari4java.tools.ARIException;
 import ch.loway.oss.ari4java.tools.AriConnectionEvent;
 import ch.loway.oss.ari4java.tools.AriWSCallback;
 import ch.loway.oss.ari4java.tools.RestException;
@@ -64,24 +66,12 @@ public class Weasels {
         return false;
     }
 
-    private void weasels() throws InterruptedException, RestException {
+    private void weasels() throws InterruptedException, ARIException {
         final ExecutorService threadPool = Executors.newFixedThreadPool(10);
-        ari.events().eventWebsocket(ARI_APP).execute(new AriWSCallback<Message>() {
+        ari.eventsCallback(new AriWSHelper() {
             @Override
             public void onSuccess(Message message) {
-                threadPool.execute(() -> {
-                    try {
-                        if (message instanceof StasisStart) {
-                            handleStart((StasisStart) message);
-                        } else if (message instanceof PlaybackFinished) {
-                            handlePlaybackFinished((PlaybackFinished) message);
-                        } else {
-                            logger.info("Unhandled Event - {}", message.getType());
-                        }
-                    } catch (Throwable e) {
-                        logger.error("Error: {}", e.getMessage(), e);
-                    }
-                });
+                threadPool.execute(() -> super.onSuccess(message));
             }
 
             @Override
@@ -91,28 +81,44 @@ public class Weasels {
             }
 
             @Override
-            public void onConnectionEvent(AriConnectionEvent event) {
-                logger.debug(event.name());
+            protected void onStasisStart(StasisStart message) {
+                handleStart(message);
             }
+
+            @Override
+            protected void onPlaybackFinished(PlaybackFinished message) {
+                handlePlaybackFinished(message);
+            }
+
         });
         // usually we would not terminate and run indefinitely
         // waiting for 5 minutes before shutting down...
         threadPool.awaitTermination(5, TimeUnit.MINUTES);
+        ari.cleanup();
+        System.exit(0);
     }
 
-    private void handleStart(StasisStart start) throws RestException {
+    private void handleStart(StasisStart start) {
         logger.info("Stasis Start Channel: {}", start.getChannel().getId());
         ARI.sleep(300); // a slight pause before we start the playback ...
-        ari.channels().play(start.getChannel().getId(), "sound:weasels-eaten-phonesys").execute();
+        try {
+            ari.channels().play(start.getChannel().getId(), "sound:weasels-eaten-phonesys").execute();
+        } catch (Throwable e) {
+            logger.error("Error: {}", e.getMessage(), e);
+        }
     }
 
-    private void handlePlaybackFinished(PlaybackFinished playback) throws RestException {
+    private void handlePlaybackFinished(PlaybackFinished playback) {
         logger.info("PlaybackFinished - {}", playback.getPlayback().getTarget_uri());
         if (playback.getPlayback().getTarget_uri().indexOf("channel:") == 0) {
-            String chanId = playback.getPlayback().getTarget_uri().split(":")[1];
-            logger.info("Hangup Channel: {}", chanId);
-            ARI.sleep(300); // a slight pause before we hangup ...
-            ari.channels().hangup(chanId).execute();
+            try {
+                String chanId = playback.getPlayback().getTarget_uri().split(":")[1];
+                logger.info("Hangup Channel: {}", chanId);
+                ARI.sleep(300); // a slight pause before we hangup ...
+                ari.channels().hangup(chanId).execute();
+            } catch (Throwable e) {
+                logger.error("Error: {}", e.getMessage(), e);
+            }
         } else {
             logger.error("Cannot handle URI - {}", playback.getPlayback().getTarget_uri());
         }

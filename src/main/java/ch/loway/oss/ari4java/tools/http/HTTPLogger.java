@@ -11,9 +11,13 @@ import java.util.Map;
 
 public class HTTPLogger {
 
+    private HTTPLogger() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static Logger logger = LoggerFactory.getLogger(HTTPLogger.class);
 
-    private static final int maxLen = 1000;
+    private static final int MAX_LEN = 1000;
 
     public static void traceRequest(FullHttpRequest request, String body) {
         if (logger.isTraceEnabled()) {
@@ -62,11 +66,11 @@ public class HTTPLogger {
                     data.append("[binary data...]");
                 } else {
                     int len = responseBytes.length;
-                    if (len > maxLen) {
-                        len = maxLen;
+                    if (len > MAX_LEN) {
+                        len = MAX_LEN;
                     }
                     data.append(new String(Arrays.copyOf(responseBytes, len), ARIEncoder.ENCODING));
-                    if (responseBytes.length > maxLen) {
+                    if (responseBytes.length > MAX_LEN) {
                         data.append("[truncated...]");
                     }
                 }
@@ -77,8 +81,8 @@ public class HTTPLogger {
 
     public static void traceWebSocketFrame(String text) {
         if (logger.isTraceEnabled()) {
-            if (text.length() > maxLen) {
-                logger.trace("WS Frame:\n{}", text.substring(0, maxLen));
+            if (text.length() > MAX_LEN) {
+                logger.trace("WS Frame:\n{}", text.substring(0, MAX_LEN));
             } else {
                 logger.trace("WS Frame:\n{}", text);
             }

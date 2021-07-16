@@ -1,10 +1,48 @@
 # ARI4Java Changelog
 
 ## [Unreleased]
-[Unreleased]: https://github.com/l3nz/ari4java/compare/REL-0.9.1...HEAD
+[Unreleased]: https://github.com/l3nz/ari4java/compare/v0.12.2...HEAD
+
+## [0.12.2]
+[0.12.2]: https://github.com/l3nz/ari4java/compare/v0.12.1...v0.12.2
+### Changed
+- groupId changed from `ch.loway.oss.ari4java` to `io.github.ari4java`
+
+### Added
+## [0.12.1]
+[0.12.1]: https://github.com/l3nz/ari4java/compare/v0.12.0...v0.12.1
+### Added
+- ARI 4.1.3, 5.1.1 & 7.0.0
+
+## [0.12.0]
+[0.12.0]: https://github.com/l3nz/ari4java/compare/v0.11.0...v0.12.0
+### Fixes
+- onFailure long after WS Connect error #156
+- execute shutdown immediately #159
+
+### Added
+- WS reconnect count #158
+
+## [0.11.0]
+[0.11.0]: https://github.com/l3nz/ari4java/compare/v.0.10.0...v0.11.0
+### Added
+- Unit tests to increase coverage #11
+- New ARI binding
+
+## [0.10.0]
+[0.10.0]: https://github.com/l3nz/ari4java/compare/v0.9.1...v.0.10.0
+### Fixed
+- UnsupportedOperationException #15
+- Javadoc warnings #149
+- If Url doesn't end with a slash add one #150
+- Set `codegen` and `examples` to Java8 compatibility
+### Added
+- toString for generated model if there is an `id` or `name` field
+- `AriWSHelper` class for convenient `onMessage` methods for each type #23
+- Script to map Asterisk versions to ARI version
 
 ## [0.9.1] - 2020-02-23
-[0.9.1]: https://github.com/l3nz/ari4java/compare/REL-0.9.0...REL-0.9.1
+[0.9.1]: https://github.com/l3nz/ari4java/compare/REL-0.9.0...v0.9.1
 ### Added
 - Test connection when creating ARI #19
 ### Fixed

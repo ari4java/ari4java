@@ -1,5 +1,5 @@
 
-package ch.loway.oss.ari4java.codegen.genJava;
+package ch.loway.oss.ari4java.codegen.gen;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,11 +9,14 @@ import java.util.Map;
  */
 public class JavaPkgInfo {
 
-    public final static Map<String, String> TypeMap;
-    public final static Map<String, String> primitiveSignature;
+    public static final Map<String, String> TypeMap;
+    public static final Map<String, String> primitiveSignature;
+    public static final String BASE_PKG_NAME = "ch.loway.oss.ari4java";
+    public static final String GENERATED_PKG_NAME = BASE_PKG_NAME + ".generated";
+    public static final String CLAZZ_IMPL_STRING = "_impl_";
 
     static {
-        TypeMap = new HashMap<String, String>();
+        TypeMap = new HashMap<>();
         TypeMap.put("string", "String");
         TypeMap.put("long", "Long");
         TypeMap.put("int", "Integer");
@@ -24,14 +27,13 @@ public class JavaPkgInfo {
         TypeMap.put("binary", "byte[]");
         TypeMap.put("containers", "Map<String,String>");
         
-        primitiveSignature = new HashMap<String, String>();
+        primitiveSignature = new HashMap<>();
         primitiveSignature.put("Boolean", "boolean");
         primitiveSignature.put("Integer", "int");
         primitiveSignature.put("Long", "long");
         primitiveSignature.put("Double", "double");
     }
 
-    String base = "ch.loway.oss.ari4java.generated";
     public String className = "";
     public String apiVersion = "";
     public JavaInterface minimalIf = null;
@@ -41,12 +43,8 @@ public class JavaPkgInfo {
         apiVersion = apiV;
     }
 
-    public String getInterfacePackage() {
-        return base + "." + className;
-    }
-
     public String getBaseApiPackage() {
-        return base + "." + apiVersion;
+        return GENERATED_PKG_NAME + "." + apiVersion;
     }
 
     public String getModelPackage() {
@@ -58,18 +56,16 @@ public class JavaPkgInfo {
     }
 
     public String getInterfaceName() {
-        String s = className.substring(0, 1).toUpperCase() + className.substring(1);
-        return s;
+        return className.substring(0, 1).toUpperCase() + className.substring(1);
     }
 
     public String getImplName() {
-        return className + "_impl_" + apiVersion;
+        return className + CLAZZ_IMPL_STRING + apiVersion;
     }
 
     /**
      * This is a "minimal" interface that has to be implemented at all costs.
-     *
-     * @param i
+     * @param i interface
      */
     public void setMinimalInterface(JavaInterface i) {
         minimalIf = i;
@@ -78,8 +74,7 @@ public class JavaPkgInfo {
     /**
      * Gets a copy of the current base interface.
      * This is meant to have signatures removed as they are written.
-     *
-     * @return
+     * @return JavaInterface
      */
     public JavaInterface getBaseInterface() {
         if (minimalIf == null) {

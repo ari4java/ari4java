@@ -6,6 +6,11 @@ package ch.loway.oss.ari4java.codegen;
  * @author lenz
  */
 public class VERSION {
-    public static final String VER = "0.5";
+
+    private VERSION() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    public static final String VER = "0.7";
 }
 

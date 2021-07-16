@@ -1,7 +1,9 @@
 
 package ch.loway.oss.ari4java.codegen.models;
 
-import ch.loway.oss.ari4java.codegen.genJava.JavaGen;
+import ch.loway.oss.ari4java.codegen.gen.JavaGen;
+
+import java.util.Objects;
 
 /**
  * $Id$
@@ -19,21 +21,15 @@ public class ModelField implements Comparable<ModelField> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-
-        sb.append("  /**  ")
-                .append(comment)
-                .append("  */\n");
         sb.append("  private ").append(typeInterface).append(" ").append(field).append(";\n");
-
-        sb.append(getDeclarationGet()).append(" {\n");
+        sb.append("  ").append(getDeclarationGet()).append(" {\n");
         sb.append("    return ");
         if ("Date".equals(typeConcrete)) {
             sb.append("new Date(").append(field).append(".getTime())");
         } else {
             sb.append(field);
         }
-        sb.append(";\n  }\n");
-
+        sb.append(";\n  }\n\n");
         if (typeConcrete.startsWith("List")) {
             String innerType = typeConcrete.substring(5, typeConcrete.length() - 1);
             sb.append("  @JsonDeserialize( contentAs=").append(innerType).append(".class )\n");
@@ -42,7 +38,7 @@ public class ModelField implements Comparable<ModelField> {
         } else {
             sb.append("  @JsonDeserialize( as=").append(typeConcrete).append(".class )\n");
         }
-        sb.append(getDeclarationSet()).append("  {\n");
+        sb.append("  ").append(getDeclarationSet()).append("  {\n");
         sb.append("    ").append(field);
         if ("Date".equals(typeConcrete)) {
             sb.append(" = new Date(val.getTime())");
@@ -50,7 +46,6 @@ public class ModelField implements Comparable<ModelField> {
             sb.append(" = val");
         }
         sb.append(";\n  }\n\n");
-
         return sb.toString();
     }
 
@@ -71,22 +66,33 @@ public class ModelField implements Comparable<ModelField> {
     }
 
     public String getDeclarationGet() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  public ").append(typeInterface).append(" ").append(getterName(field)).append("()");
-        return sb.toString();
+        return "public " + typeInterface + " " + getterName(field) + "()";
     }
 
     public String getDeclarationSet() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  public void ").append(setterName(field)).append("(").append(typeInterface).append(" val )");
-        return sb.toString();
+        return "public void " + setterName(field) + "(" + typeInterface + " val)";
     }
 
     @Override
     public int compareTo(ModelField o) {
-        ModelField mf2 = o;
-        return field.compareTo(mf2.field);
+        return field.compareTo(o.field);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ModelField that = (ModelField) o;
+        return required == that.required &&
+                Objects.equals(field, that.field) &&
+                Objects.equals(typeInterface, that.typeInterface) &&
+                Objects.equals(typeConcrete, that.typeConcrete) &&
+                Objects.equals(comment, that.comment);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(field, typeInterface, typeConcrete, required, comment);
     }
 
 }
-

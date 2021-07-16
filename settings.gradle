@@ -1,2 +1,2 @@
-rootProject.name = 'ari4java'
-include 'codegen'
+rootProject.name = "ari4java"
+include "codegen"

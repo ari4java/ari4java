@@ -25,5 +25,7 @@ build.xml
 src/main/generated/
 src/main/resources/build.properties
 codegen/tmp/
+codegen/versions.md
 
 .build-local
+oss.yaml

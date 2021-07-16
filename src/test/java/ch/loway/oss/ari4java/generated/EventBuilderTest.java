@@ -7,8 +7,8 @@ import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
 /**
  * @author lenz
@@ -68,7 +68,7 @@ public class EventBuilderTest {
         BaseAriAction action = new BaseAriAction();
         Message msg = action.deserializeEvent(jsonStasisStartEvent, Message_impl_ari_0_0_1.class);
 
-        assertTrue("Type: StasisStart", msg instanceof StasisStart);
+        assertThat("Type: StasisStart", msg, instanceOf(StasisStart.class));
 
         StasisStart ss = (StasisStart) msg;
 
