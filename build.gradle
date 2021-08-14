@@ -36,17 +36,16 @@ repositories {
 }
 
 dependencies {
-    implementation "com.fasterxml.jackson.core:jackson-core:2.10.1"
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.10.1"
-    implementation "com.fasterxml.jackson.core:jackson-annotations:2.10.1"
-    implementation "io.netty:netty-all:4.1.44.Final"
-    implementation "javax.xml.bind:jaxb-api:2.3.1"
-    implementation "org.slf4j:slf4j-api:1.7.30"
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.12.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.3'
+    implementation 'io.netty:netty-all:4.1.65.Final'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'org.slf4j:slf4j-api:1.7.30'
 
-    testImplementation "junit:junit:4.10"
-    testImplementation "org.mockito:mockito-core:2.28.2"
-    testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:2.13.0"
-
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:2.28.2'
+    testImplementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.14.1'
 }
 
 task buildProps(type: WriteProperties) {
