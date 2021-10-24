@@ -104,7 +104,6 @@ public class ARITest {
         assertEquals(ActionDeviceStates_impl_ari_1_0_0.class.toString(), ari.deviceStates().getClass().toString());
         assertEquals(ActionEndpoints_impl_ari_1_0_0.class.toString(), ari.endpoints().getClass().toString());
         assertEquals(ActionEvents_impl_ari_1_0_0.class.toString(), ari.events().getClass().toString());
-        assertEquals(ActionMailboxes_impl_ari_1_0_0.class.toString(), ari.mailboxes().getClass().toString());
         assertEquals(ActionPlaybacks_impl_ari_1_0_0.class.toString(), ari.playbacks().getClass().toString());
         assertEquals(ActionRecordings_impl_ari_1_0_0.class.toString(), ari.recordings().getClass().toString());
         assertEquals(ActionSounds_impl_ari_1_0_0.class.toString(), ari.sounds().getClass().toString());
