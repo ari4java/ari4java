@@ -414,8 +414,7 @@
 									"normal",
 									"busy",
 									"congestion",
-									"no_answer",
-									"answered_elsewhere"
+									"no_answer"
 								]
 							}
 						}
