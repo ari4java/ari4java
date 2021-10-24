@@ -1,7 +1,12 @@
 # ARI4Java Changelog
 
 ## [Unreleased]
-[Unreleased]: https://github.com/ari4java/ari4java/compare/v0.12.2...HEAD
+[Unreleased]: https://github.com/ari4java/ari4java/compare/v0.14.0...HEAD
+
+## [0.14.0]
+[0.14.0]: https://github.com/ari4java/ari4java/compare/v0.13.0...v0.14.0
+### Fixed
+- ARI API resource inconsistency due to using git history on `resource.json`, now git tags (aka released versions) are used
 
 ## [0.13.0]
 [0.13.0]: https://github.com/ari4java/ari4java/compare/v0.12.2...v0.13.0

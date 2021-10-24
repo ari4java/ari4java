@@ -14,9 +14,19 @@ else
   git pull origin
 fi
 
-git log --reverse --pretty=oneline --all -- rest-api/resources.json | while read log
+git log --tags --no-walk --reverse --pretty='%H %D' | while read log
 do
   IFS=' ' read -r -a array <<< "$log"
+  # skip 0.x 1.x, 10.x and 11.x
+  if [ "${array[2]:0:2}" = "0." ] || [ "${array[2]:0:2}" = "1." ] || \
+     [ "${array[2]:0:3}" = "10." ] || [ "${array[2]:0:3}" = "11." ] || \
+     [ "${array[2]:0:12}" = "certified/1." ] || [ "${array[2]:0:13}" = "certified/11." ]; then
+    continue
+  fi
+  # skip any -alpha -beta & -rc
+  if [[ "${array[2]}" == "-alpha" ]] || [[ "${array[2]}" == "-beta" ]] || [[ "${array[2]}" == "-rc" ]]; then
+    continue
+  fi
   git checkout ${array[0]} --force > /dev/null
   VER=`cat rest-api/resources.json | jq -r '.apiVersion'`
   FOLDER="${VER//./_}"
