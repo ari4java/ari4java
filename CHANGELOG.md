@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 [Unreleased]: https://github.com/ari4java/ari4java/compare/v0.14.0...HEAD
+
+## [0.15.0]
+[0.15.0]: https://github.com/ari4java/ari4java/compare/v0.14.0...v0.15.0
 ### Changed
 - Library updates
 - Refactoring test to use JUnit 5
