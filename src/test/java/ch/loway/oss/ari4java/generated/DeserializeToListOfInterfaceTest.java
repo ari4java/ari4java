@@ -3,11 +3,11 @@ package ch.loway.oss.ari4java.generated;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test how we can deserialize a Json blob to a List of Interface.
@@ -28,9 +28,9 @@ public class DeserializeToListOfInterfaceTest {
                 new TypeReference<List<Tuple_impl>>() {
                 });
 
-        assertEquals("Size", 2, l.size());
-        assertEquals("El 1 A", "x1", l.get(0).getA());
-        assertEquals("El 2 B", "y2", l.get(1).getB());
+        assertEquals(2, l.size());
+        assertEquals("x1", l.get(0).getA());
+        assertEquals("y2", l.get(1).getB());
     }
 
     /**
@@ -46,9 +46,9 @@ public class DeserializeToListOfInterfaceTest {
                 }
         );
 
-        assertEquals("Size", 2, l.size());
-        assertEquals("El 1 A", "x1", l.get(0).getA());
-        assertEquals("El 2 B", "y2", l.get(1).getB());
+        assertEquals(2, l.size());
+        assertEquals("x1", l.get(0).getA());
+        assertEquals("y2", l.get(1).getB());
     }
 
     public static final String STR_TUPLE = "[\n" +

@@ -11,13 +11,13 @@ import ch.loway.oss.ari4java.generated.models.Bridge;
 import ch.loway.oss.ari4java.generated.models.Mailbox;
 import ch.loway.oss.ari4java.tools.*;
 import ch.loway.oss.ari4java.tools.http.NettyHttpClient;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -27,7 +27,7 @@ public class ARITest {
 
     static NettyHttpClient client;
 
-    @BeforeClass
+    @BeforeAll
     public static void start() {
         client = mock(NettyHttpClient.class);
         AriFactory.nettyHttpClient = client;
@@ -54,15 +54,15 @@ public class ARITest {
         } catch (ARIException e) {
             exception = e.getMessage().contains("No concrete implementation");
         }
-        assertTrue("Expected 'No concrete implementation' exception for getModelImpl(String.class)", exception);
+        assertTrue(exception, "Expected 'No concrete implementation' exception for getModelImpl(String.class)");
         exception = false;
         try {
             ari.getModelImpl(String.class);
         } catch (ARIException e) {
             exception = e.getMessage().contains("Invalid Class");
         }
-        assertTrue("Expected 'Invalid Class' exception for getModelImpl(String.class)", exception);
-        assertNotNull("Expected Action", ari.getActionImpl(ActionEvents.class));
+        assertTrue(exception, "Expected 'Invalid Class' exception for getModelImpl(String.class)");
+        assertNotNull(ari.getActionImpl(ActionEvents.class), "Expected Action");
         try {
             ari.getActionImpl(String.class);
             fail("Expected exception");
@@ -90,13 +90,13 @@ public class ARITest {
         ari.setVersion(AriVersion.ARI_1_0_0);
         asterisk = ari.asterisk();
         assertEquals(ActionAsterisk_impl_ari_1_0_0.class.toString(), asterisk.getClass().toString());
-        assertNotNull("Expecting HttpClient to be set", ((ActionAsterisk_impl_ari_1_0_0)asterisk).getHttpClient());
-        assertNotNull("Expecting WsClient to be set", ((ActionAsterisk_impl_ari_1_0_0)asterisk).getWsClient());
+        assertNotNull(((ActionAsterisk_impl_ari_1_0_0)asterisk).getHttpClient(), "Expecting HttpClient to be set");
+        assertNotNull(((ActionAsterisk_impl_ari_1_0_0)asterisk).getWsClient(), "Expecting WsClient to be set");
 
         asterisk = ari.getActionImpl(ActionAsterisk.class);
         assertEquals(ActionAsterisk_impl_ari_1_0_0.class.toString(), asterisk.getClass().toString());
-        assertNotNull("Expecting HttpClient to be set", ((ActionAsterisk_impl_ari_1_0_0)asterisk).getHttpClient());
-        assertNotNull("Expecting WsClient to be set", ((ActionAsterisk_impl_ari_1_0_0)asterisk).getWsClient());
+        assertNotNull(((ActionAsterisk_impl_ari_1_0_0)asterisk).getHttpClient(), "Expecting HttpClient to be set");
+        assertNotNull(((ActionAsterisk_impl_ari_1_0_0)asterisk).getWsClient(), "Expecting WsClient to be set");
 
         assertEquals(ActionApplications_impl_ari_1_0_0.class.toString(), ari.applications().getClass().toString());
         assertEquals(ActionBridges_impl_ari_1_0_0.class.toString(), ari.bridges().getClass().toString());
@@ -112,14 +112,14 @@ public class ARITest {
     @Test
     public void testCreateUid() {
         String v = ARI.getUID();
-        assertTrue("UID created", v.length() > 0);
-        assertNotSame("new UID the same as previous", v, ARI.getUID());
+        assertTrue(v.length() > 0, "UID created");
+        assertNotSame(v, ARI.getUID(), "new UID the same as previous");
     }
 
     @Test
     public void testBuildVersion() {
         String v = new ARI().getBuildVersion();
-        assertNotNull("Build Version cannot be null", v);
+        assertNotNull(v, "Build Version cannot be null");
     }
 
     @Test
@@ -151,7 +151,7 @@ public class ARITest {
             ari.closeAction(new Object());
             fail("Expecting exception");
         } catch (ARIException e) {
-            assertTrue("Expecting an implementation error", e.getMessage().contains("is not an Action implementation"));
+            assertTrue(e.getMessage().contains("is not an Action implementation"), "Expecting an implementation error");
         }
         AtomicBoolean disconnected = new AtomicBoolean(false);
         ari.closeAction(new BaseAriAction() {
@@ -160,10 +160,10 @@ public class ARITest {
                 disconnected.set(true);
             }
         });
-        assertTrue("Expected disconnectWs to be called", disconnected.get());
+        assertTrue(disconnected.get(), "Expected disconnectWs to be called");
     }
 
-    @AfterClass
+    @AfterAll
     public static void end() {
         AriFactory.nettyHttpClient = null;
     }

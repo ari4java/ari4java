@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 [Unreleased]: https://github.com/ari4java/ari4java/compare/v0.14.0...HEAD
+### Changed
+- Library updates
+- Refactoring test to use JUnit 5
+
+### Fixed
+- Map `local_ssrc` & `remote_ssrc` in `RTPstat` model to `Long` instead of `Integer` #180
 
 ## [0.14.0]
 [0.14.0]: https://github.com/ari4java/ari4java/compare/v0.13.0...v0.14.0

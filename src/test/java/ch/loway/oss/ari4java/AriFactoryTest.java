@@ -1,10 +1,10 @@
 package ch.loway.oss.ari4java;
 
 import ch.loway.oss.ari4java.tools.http.NettyHttpClient;
-import org.junit.AfterClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -42,7 +42,7 @@ public class AriFactoryTest {
         assertEquals(AriVersion.ARI_0_0_1, ver);
     }
 
-    @AfterClass
+    @AfterAll
     public static void end() {
         AriFactory.nettyHttpClient = null;
     }

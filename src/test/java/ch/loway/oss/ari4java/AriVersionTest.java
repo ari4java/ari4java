@@ -1,9 +1,9 @@
 package ch.loway.oss.ari4java;
 
 import ch.loway.oss.ari4java.generated.ari_0_0_1.AriBuilder_impl_ari_0_0_1;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AriVersionTest {
 
