@@ -5,75 +5,65 @@ import ch.loway.oss.ari4java.generated.models.Message;
 import ch.loway.oss.ari4java.generated.models.StasisStart;
 import ch.loway.oss.ari4java.tools.BaseAriAction;
 import ch.loway.oss.ari4java.tools.RestException;
-import org.junit.Test;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author lenz
  */
-public class EventBuilderTest {
+public class EventBuilderTest extends BaseActionTest<Message> {
 
-    static final String jsonStasisStartEvent = requoteString(""
-            + " {   "
-            + "   'application': 'hello',   "
-            + "   'args': [   "
-            + "     'world'   "
-            + "   ],   "
-            + "   'channel': {   "
-            + "     'accountcode': '',   "
-            + "     'caller': {   "
-            + "       'name': 'blink',   "
-            + "       'number': 'blink'   "
-            + "     },   "
-            + "     'connected': {   "
-            + "       'name': '',   "
-            + "       'number': ''   "
-            + "     },   "
-            + "     'creationtime': '2013-10-15T15:54:12.625-0500',   "
-            + "     'dialplan': {   "
-            + "       'context': 'default',   "
-            + "       'exten': '7000',   "
-            + "       'priority': 2   "
-            + "     },   "
-            + "     'id': '1381870452.0',   "
-            + "     'name': 'SIP/blink-00000000',   "
-            + "     'state': 'Ring'   "
-            + "   },   "
-            + "   'timestamp': '2013-10-15T15:54:12.626-0500',   "
-            + "   'type': 'StasisStart'   "
-            + " }   ");
-
-
-    /**
-     * Strings in a JSON object need the double quotes.
-     * Unfortunately using double quotes in Java is a PITA.
-     * So...
-     *
-     * @param s
-     * @return Translating 's to "s
-     */
-    public static String requoteString(String s) {
-        return s.replace("'", "\"");
+    @Override
+    protected String getJson() {
+        return requoteString(""
+                + " {"
+                + "   'application': 'hello',"
+                + "   'args': ["
+                + "     'world'"
+                + "   ],"
+                + "   'channel': {"
+                + "     'accountcode': '',"
+                + "     'caller': {"
+                + "       'name': 'blink',"
+                + "       'number': 'blink'"
+                + "     },"
+                + "     'connected': {"
+                + "       'name': '',"
+                + "       'number': ''"
+                + "     },"
+                + "     'creationtime': '2013-10-15T15:54:12.625-0500',"
+                + "     'dialplan': {"
+                + "       'context': 'default',"
+                + "       'exten': '7000',"
+                + "       'priority': 2"
+                + "     },"
+                + "     'id': '1381870452.0',"
+                + "     'name': 'SIP/blink-00000000',"
+                + "     'state': 'Ring'"
+                + "   },"
+                + "   'timestamp': '2013-10-15T15:54:12.626-0500',"
+                + "   'type': 'StasisStart'"
+                + " }");
     }
 
+    @Override
+    protected Message getInstance() {
+        try {
+            return BaseAriAction.deserializeEvent(getJson(), Message_impl_ari_0_0_1.class);
+        } catch (RestException e) {
+            fail("Error deserializing event", e);
+            return null;
+        }
+    }
 
-    /**
-     * Tries creating an event out of the response.
-     */
-    @Test
-    public void generateStatsiStartOutOfData() throws RestException {
+    protected Message createWForcedResponse() {
+        return getInstance();
+    }
 
-        BaseAriAction action = new BaseAriAction();
-        Message msg = action.deserializeEvent(jsonStasisStartEvent, Message_impl_ari_0_0_1.class);
-
-        assertThat("Type: StasisStart", msg, instanceOf(StasisStart.class));
-
+    @Override
+    protected void ariActionTest(Message msg) throws RestException {
+        assertInstanceOf(StasisStart.class, msg);
         StasisStart ss = (StasisStart) msg;
-
-        assertEquals("Caller ID", "blink", ss.getChannel().getCaller().getName());
-
+        assertEquals("blink", ss.getChannel().getCaller().getName());
     }
-
 }

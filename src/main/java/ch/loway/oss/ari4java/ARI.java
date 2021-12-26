@@ -281,7 +281,7 @@ public class ARI {
         }
         EventsEventWebsocketGetRequest eventsRequest = events().eventWebsocket(appName);
         try {
-            eventsRequest.setSubscribeAll(subscribeAll);
+            if (subscribeAll) eventsRequest.setSubscribeAll(true);
         } catch (UnsupportedOperationException e) {
             logger.warn(e.getMessage(), e);
         }
