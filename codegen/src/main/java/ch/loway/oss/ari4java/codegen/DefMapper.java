@@ -396,8 +396,15 @@ public class DefMapper {
                 String field = propNames.next();
                 JsonNode property = properties.get(field);
 
-                String javaType = remapAbstractType(txt(property.get("type")));
-                String javaConcreteType = remapConcreteType(txt(property.get("type")), apiVersion);
+                String type = txt(property.get("type"));
+                // BUG #180 RTPStat map int to long for local_ssrc & remote_ssrc
+                if ("channels.json".equals(currentModel.comesFromFile) && "RTPstat".equals(thisModel) &&
+                        ("local_ssrc".equals(field) || "remote_ssrc".equals(field)) &&
+                        "int".equalsIgnoreCase(type)) {
+                    type = "long";
+                }
+                String javaType = remapAbstractType(type);
+                String javaConcreteType = remapConcreteType(type, apiVersion);
 
                 String comment = txt(property.get("description"));
                 ModelField mf = new ModelField();
