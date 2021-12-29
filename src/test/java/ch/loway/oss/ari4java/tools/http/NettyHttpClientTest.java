@@ -53,19 +53,17 @@ public class NettyHttpClientTest {
     }
 
     @Test
-    public void testInitializeBadURL() {
-        assertThrows(URISyntaxException.class, () -> {
-            setupTestClient(false);
-            client.initialize(":", "", "");
-        });
+    public void testInitializeBadURL() throws URISyntaxException {
+        setupTestClient(false);
+        assertThrows(URISyntaxException.class, () ->
+                client.initialize(":", "", ""));
     }
 
     @Test
-    public void testInitializeInvalidURL() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            setupTestClient(false);
-            client.initialize("ws://localhost:8088/", "", "");
-        });
+    public void testInitializeInvalidURL() throws URISyntaxException {
+        setupTestClient(false);
+        assertThrows(IllegalArgumentException.class, () ->
+                client.initialize("ws://localhost:8088/", "", ""));
     }
 
     @Test
