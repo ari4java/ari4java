@@ -2,10 +2,24 @@
 
 START_DIR=`pwd`
 
-cd tmp/asterisk
+if [ ! -d "tmp/wiki" ]
+then
+  mkdir -p ${START_DIR}/tmp/wiki
+fi
 
-echo "| Asterisk | ARI |" > ${START_DIR}/versions.md
-echo "| :-- | :-- |" >> ${START_DIR}/versions.md
+if [ ! -d "tmp/asterisk" ]
+then
+  mkdir tmp
+  cd tmp
+  git clone "https://gerrit.asterisk.org/asterisk"
+  cd asterisk
+else
+  cd tmp/asterisk
+  git checkout master --force
+  git pull origin
+fi
+
+cat ${START_DIR}/versions-template.md > ${START_DIR}/tmp/wiki/Asterisk-Version-to-ARI-Version.md
 
 git show-ref --tags | while read tags
 do
@@ -21,7 +35,7 @@ do
   if [ -f "rest-api/resources.json" ]; then
     VER=`cat rest-api/resources.json | jq -r '.apiVersion'`
     echo ${VER}
-    echo "| ${array[1]:10} | ${VER} |" >> ${START_DIR}/versions.md
+    echo "| ${array[1]:10} | ${VER} |" >> ${START_DIR}/tmp/wiki/Asterisk-Version-to-ARI-Version.md
   fi
 done
 
