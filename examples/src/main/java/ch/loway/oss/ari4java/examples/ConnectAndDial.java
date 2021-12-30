@@ -11,8 +11,8 @@ import ch.loway.oss.ari4java.generated.models.StasisStart;
 import ch.loway.oss.ari4java.tools.AriCallback;
 import ch.loway.oss.ari4java.tools.MessageQueue;
 import ch.loway.oss.ari4java.tools.RestException;
-
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class opens up an ARI application that creates a bridge with MOH.
@@ -23,10 +23,12 @@ import java.util.List;
  */
 public class ConnectAndDial {
 
-    public static final String ASTERISK_ADDRESS = "http://192.168.99.100:18088/";
+    private final Logger logger = LoggerFactory.getLogger(ConnectAndDial.class);
+
+    public static final String ASTERISK_ADDRESS = "http://192.168.56.44:8088/";
     public static final String ASTERISK_USER = "ari4java";
     public static final String ASTERISK_PASS = "yothere";
-    public static final String APP_NAME = "myapp";
+    public static final String APP_NAME = "connect-and-dail-app";
 
     ARI ari = null;
     Bridge b = null;
@@ -43,44 +45,35 @@ public class ConnectAndDial {
      * This is the app...
      */
     public void start() {
-
         try {
-
             connect();
             createBridge();
-
             processEvents();
-
             removeBridge();
-
         } catch (ARIException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             if (ari != null) {
-                try {
-                    ARI.sleep(500);
-                    ari.cleanup();
-                } catch (Throwable t) {
-                }
+                ARI.sleep(500);
+                ari.cleanup();
             }
         }
-
     }
 
     public void connect() throws ARIException {
 
-        System.out.println("Connecting to: " + ASTERISK_ADDRESS
+        logger.info("Connecting to: " + ASTERISK_ADDRESS
                 + " as " + ASTERISK_USER + ":" + ASTERISK_PASS);
 
         ari = ARI.build(ASTERISK_ADDRESS, APP_NAME,
                 ASTERISK_USER, ASTERISK_PASS,
                 AriVersion.IM_FEELING_LUCKY);
 
-        System.out.println("Connected through ARI: " + ari.getVersion());
+        logger.info("Connected through ARI: " + ari.getVersion());
 
-        // let's raise an exeption if the connection is not valid
+        // let's raise an exception if the connection is not valid
         AsteriskInfo ai = ari.asterisk().getInfo().execute();
-        System.out.println("Hey! We're connected! Asterisk Version: " + ai.getSystem().getVersion());
+        logger.info("Hey! We're connected! Asterisk Version: " + ai.getSystem().getVersion());
 
     }
 
@@ -88,22 +81,13 @@ public class ConnectAndDial {
 
         // create a bridge and start playing MOH on it
         // UGLY: we should have a constant for the allowed bridge types
-        System.out.println("Creating a bridge");
-        b = ari.bridges().create().setType("a4j-bridge1").setName("myBridge").execute();
-        System.out.println("Bridge ID:" + b.getId() + " Name:" + b.getName() + " Tech:" + b.getTechnology() + " Creator:" + b.getCreator());
+        logger.info("Creating a bridge");
+        b = ari.bridges().create().setName("myBridge").execute();
+        logger.info("Bridge ID:" + b.getId() + " Name:" + b.getName() + " Tech:" + b.getTechnology() + " Creator:" + b.getCreator());
 
         // start MOH on the bridge
-        System.out.println("Starting MOH on bridge");
+        logger.info("Starting MOH on bridge");
         ari.bridges().startMoh(b.getId()).execute();
-
-        // check which bridges are available
-        System.out.println("Listing bridges");
-        List<Bridge> bridges = ari.bridges().list().execute();
-
-        for (Bridge bb : bridges) {
-            printBridge(bb);
-        }
-
     }
 
 
@@ -113,80 +97,48 @@ public class ConnectAndDial {
      * @throws ARIException
      */
     public void processEvents() throws ARIException {
-
-        System.out.println("Starting events... ");
+        logger.info("Starting events... ");
         MessageQueue mq = ari.getWebsocketQueue();
 
-        long start = System.currentTimeMillis();
+        Channel chan = ari.channels().originate("Local/123@from-internal").setApp(APP_NAME)
+                .setExtension("123").setContext("from-internal").setPriority(1).setTimeout(10000).execute();
+        logger.info("Channel:" + chan.getId() + " in state " + chan.getState());
 
-        Channel chan = ari.channels().originate("Local/100@wdep").setApp(APP_NAME)
-                .setExtension("100").setContext("wdep").setPriority(1).setTimeout(10000).execute();
-        System.out.println("Channel:" + chan.getId() + " in state " + chan.getState());
-
-        while ((System.currentTimeMillis() - start) < 10 * 1000L) {
-
-            Message m = mq.dequeueMax(100, 20);
+        long lastTime = System.currentTimeMillis();
+        while ((System.currentTimeMillis() - lastTime) < 10 * 1000L) {
+            Message m = mq.dequeueMax(10, 200);
             if (m != null) {
-
-                long now = System.currentTimeMillis() - start;
-                System.out.println(now + ": " + m);
-
+                logger.info("Message: {}", m.getType());
+                lastTime = System.currentTimeMillis();
                 if (m instanceof StasisStart) {
                     StasisStart event = (StasisStart) m;
-                    System.out.println("Channel found: " + event.getChannel().getId() + " State:" + event.getChannel().getState());
-
-                    ari.bridges().addChannel(b.getId(), event.getChannel().getId()).execute();
+                    if (event.getChannel().getId().equals(chan.getId())) {
+                        logger.info("Channel found, adding to bridge (BridgeId: {}, ChanId:{}, ChanState: {})",
+                                b.getId(), event.getChannel().getId(), event.getChannel().getState());
+                        ari.bridges().addChannel(b.getId(), event.getChannel().getId()).execute();
+                    }
                 }
             }
         }
-
-        System.out.println("No more events... ");
+        logger.info("No more events... ");
     }
 
 
     public void removeBridge() throws ARIException {
-
-        System.out.println(threadName() + "Removing bridge....");
-
+        logger.info("Removing bridge....");
         ari.bridges().destroy(b.getId()).execute(new AriCallback<Void>() {
 
             @Override
             public void onSuccess(Void result) {
                 // Let's do something with the returned value
-                System.out.println(threadName() + "Bridge destroyed ");
+                logger.info("Bridge destroyed");
             }
 
             @Override
             public void onFailure(RestException e) {
-                System.out.println(threadName() + "Failure in removeBridge() ");
-                e.printStackTrace();
+                logger.info("Failure in removeBridge()", e);
             }
         });
     }
 
-    /**
-     * Dumps a bridge to string.
-     * Should we have a default toString that makes more sense?
-     *
-     * @param b the bridge
-     */
-    private void printBridge(Bridge b) {
-        System.out.println(". BridgeID:" + b.getId()
-                + " Name:" + b.getName()
-                + " Tech:" + b.getTechnology()
-                + " Creator:" + b.getCreator()
-                + " Class: " + b.getBridge_class()
-                + " Type: " + b.getBridge_type()
-                + " Chans: " + b.getChannels().size());
-        for (String s : b.getChannels()) {
-            System.out.println(" - ChannelID: " + s);
-        }
-    }
-
-    /**
-     * @return the name of the current thread
-     */
-    private String threadName() {
-        return "[Thread:" + Thread.currentThread().getName() + "] ";
-    }
 }
