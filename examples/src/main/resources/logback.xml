@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %cyan(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %green(%c{1}): %msg%n%throwable
+            </Pattern>
+        </layout>
+    </appender>
+    <logger name="ch.loway.oss.ari4java" level="trace"/>
+    <logger name="ch.loway.oss.ari4java.generated.AriWSHelper" level="error"/>
+    <logger name="io.netty" level="error"/>
+    <root level="info">
+        <appender-ref ref="Console"/>
+    </root>
+</configuration>

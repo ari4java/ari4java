@@ -6,10 +6,6 @@ The Asterisk REST Interface (ARI) bindings for Java.
 [![javadoc](https://javadoc.io/badge2/io.github.ari4java/ari4java/javadoc.svg)](https://javadoc.io/doc/io.github.ari4java/ari4java)
 [![Build](https://github.com/ari4java/ari4java/workflows/ARI4Java%20Build/badge.svg?branch=master&event=push)](https://github.com/ari4java/ari4java/actions?query=workflow%3A%22ARI4Java+Build%22)
 
-## :star: Existing Users Please Note :bangbang:
-Due to the sun setting of JCenter the jar is now publish through Sonatype to Maven Central but in the process of verifying ownership the groupId had to change.
-The groupId is now `io.github.ari4java` so make sure you update your build files.
-
 ## Description
 
 ARI is an interface available on Asterisk 11+ that lets you write applications
@@ -22,17 +18,20 @@ across different versions.
 
 ### Getting started
 
-Simply add the library and an SLF4J implementation to your package config, here is an example using Gradle
+Simply add the library and an SLF4J logger to your package config, here is an example using Gradle
 ```
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile 'io.github.ari4java:ari4java:+'
-    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.13.0'
+    implementation 'io.github.ari4java:ari4java:+'
+    implementation 'ch.qos.logback:logback-classic:1.2.10'
 }
 ```
+
+Due to the sun setting of JCenter the jar is now publish through Sonatype to Maven Central but under a new groupId.
+The groupId is now `io.github.ari4java` make sure you update your build files if you used `ch.loway.oss.ari4java`.
 
 ## Documentation
 - The [CHANGELOG](https://github.com/ari4java/ari4java/blob/master/CHANGELOG.md)

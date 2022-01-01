@@ -1,0 +1,33 @@
+name: ARI4Java ARI Versions Wiki Update
+
+on:
+  schedule:
+    - cron:  '0 10 * * SAT'
+  workflow_dispatch:
+
+jobs:
+  getApis:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v2
+      - name: Checkout Wiki
+        uses: actions/checkout@v2
+        with:
+          repository: ${{github.repository}}.wiki
+          path: codegen/tmp/wiki
+
+      - name: Execute getVersions
+        run: |
+          cd codegen
+          chmod +x getVersions.sh
+          ./getVersions.sh
+
+      - name: Push Wiki
+        run: |
+          cd codegen/tmp/wiki
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Update Versions" && git push

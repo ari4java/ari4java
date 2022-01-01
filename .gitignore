@@ -29,3 +29,6 @@ codegen/versions.md
 
 .build-local
 oss.yaml
+
+# vagrant state folder
+.vagrant

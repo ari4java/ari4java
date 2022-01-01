@@ -1,4 +1,4 @@
-name: ARI4Java ARI APIs
+name: ARI4Java ARI APIs PR
 
 on:
   schedule:
@@ -7,16 +7,16 @@ on:
 
 jobs:
   getApis:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Grant execute permission for getApis
-        run: chmod +x codegen/getApis.sh
-
       - name: Execute getApis
-        run: cd codegen && ./getApis.sh
+        run: |
+          cd codegen
+          chmod +x getApis.sh
+          ./getApis.sh
 
       - name: Create Pull Request
         id: cpr

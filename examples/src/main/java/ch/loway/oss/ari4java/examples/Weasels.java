@@ -8,8 +8,6 @@ import ch.loway.oss.ari4java.generated.models.Message;
 import ch.loway.oss.ari4java.generated.models.PlaybackFinished;
 import ch.loway.oss.ari4java.generated.models.StasisStart;
 import ch.loway.oss.ari4java.tools.ARIException;
-import ch.loway.oss.ari4java.tools.AriConnectionEvent;
-import ch.loway.oss.ari4java.tools.AriWSCallback;
 import ch.loway.oss.ari4java.tools.RestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +21,7 @@ public class Weasels {
     private static final String ARI_APP = "weasels-app";
 
     private ARI ari;
-    private Logger logger = LoggerFactory.getLogger(Weasels.class);
+    private final Logger logger = LoggerFactory.getLogger(Weasels.class);
 
     public static void main(String[] args) throws Exception {
         if (args.length < 3) {
