@@ -1,0 +1,20 @@
+[Unit]
+Description=Asterisk PBX And Telephony Daemon
+After=network.target
+
+[Service]
+User=asterisk
+Group=asterisk
+PermissionsStartOnly=true
+ExecStartPre=-/bin/mkdir -p /var/run/asterisk
+ExecStartPre=/bin/chown -R asterisk:asterisk /var/run/asterisk/
+Environment=HOME=/var/lib/asterisk
+WorkingDirectory=/var/lib/asterisk
+ExecStart=/usr/sbin/asterisk -vvvd -f -C /etc/asterisk/asterisk.conf
+ExecStop=/usr/sbin/asterisk -rx 'core stop now'
+ExecReload=/usr/sbin/asterisk -rx 'core reload'
+PIDFile=/var/run/asterisk/asterisk.pid
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

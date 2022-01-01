@@ -7,8 +7,9 @@ repositories {
 }
 
 dependencies {
-    compile 'ch.loway.oss.ari4java:ari4java:+'
-    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.17.0'
+    implementation 'ch.loway.oss.ari4java:ari4java:+'
+    implementation 'ch.qos.logback:logback-classic:1.2.10'
+    implementation 'io.netty:netty-all:4.1.72.Final'
 }
 
 java {
@@ -17,6 +18,13 @@ java {
 }
 
 task runWeaselsExample(type: JavaExec) {
+    dependsOn build
     classpath = sourceSets.main.runtimeClasspath
-    main = 'ch.loway.oss.ari4java.examples.Weasels'
+    mainClass = 'ch.loway.oss.ari4java.examples.Weasels'
+}
+
+task runComprehensiveExample(type: JavaExec) {
+    dependsOn build
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'ch.loway.oss.ari4java.examples.comprehensive.Boot'
 }
