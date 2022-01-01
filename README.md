@@ -18,15 +18,15 @@ across different versions.
 
 ### Getting started
 
-Simply add the library and an SLF4J implementation to your package config, here is an example using Gradle
+Simply add the library and an SLF4J logger to your package config, here is an example using Gradle
 ```
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile 'io.github.ari4java:ari4java:+'
-    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.17.0'
+    implementation 'io.github.ari4java:ari4java:+'
+    implementation 'ch.qos.logback:logback-classic:1.2.10'
 }
 ```
 
