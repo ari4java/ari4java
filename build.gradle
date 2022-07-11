@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.github.ari4java"
-version = "0.15.0"
+version = "0.16.0"
 
 def projectUrl = "http://github.com/ari4java/ari4java"
 def build_number = "x"
