@@ -1,7 +1,14 @@
 # ARI4Java Changelog
 
 ## [Unreleased]
-[Unreleased]: https://github.com/ari4java/ari4java/compare/v0.14.0...HEAD
+[Unreleased]: https://github.com/ari4java/ari4java/compare/v0.16.0...HEAD
+
+## [0.16.0]
+[0.16.0]: https://github.com/ari4java/ari4java/compare/v0.15.0...v0.16.0
+### Added
+- `AriVersion.ARI_4_1_4`
+- `AriVersion.ARI_6_0_1`
+- `AriVersion.ARI_7_0_1`
 
 ## [0.15.0]
 [0.15.0]: https://github.com/ari4java/ari4java/compare/v0.14.0...v0.15.0
