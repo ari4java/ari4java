@@ -108,7 +108,7 @@
     let audioOutput = new Audio();
     audioOutput.setSinkId('default');
     audioOutput.load();
-    let server = '192.168.56.44';
+    let server = window.location.hostname;
     let phone = undefined;
     let session = undefined;
     function login(exten) {
