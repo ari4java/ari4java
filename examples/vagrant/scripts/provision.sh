@@ -40,7 +40,7 @@ adduser --system --group --no-create-home asterisk
 mkdir -p /var/{lib,log,spool}/asterisk
 
 # goto home folder, download and build Asterisk using the version specified in AST_VER
-AST_VER=18.13.0
+AST_VER=16.27.0
 echo "Download, compile & setup Asterisk $AST_VER ..."
 cd ~
 wget http://downloads.asterisk.org/pub/telephony/asterisk/releases/asterisk-$AST_VER.tar.gz
@@ -104,7 +104,11 @@ mkdir -p /etc/asterisk/keys
 openssl genrsa -des3 -out /etc/asterisk/keys/ca.key -passout pass:asterisk 4096 > /dev/null
 openssl req -batch -new -x509 -days 3650 -subj "/O=ARI4Java/CN=ARI4Java CA" -key /etc/asterisk/keys/ca.key -passin pass:asterisk -out /etc/asterisk/keys/ca.crt > /dev/null
 openssl genrsa -out /etc/asterisk/keys/asterisk.key 2048 > /dev/null
-openssl req -batch -new -subj "/O=ARI4Java/CN=192.168.56.44" -key /etc/asterisk/keys/asterisk.key -out /etc/asterisk/keys/asterisk.csr > /dev/null
+SUBJECT="/O=ARI4Java/CN=192.168.56.44"
+if [ "$DOCKER" == "true" ]; then
+  SUBJECT="/O=ARI4Java/CN=localhost"
+fi
+openssl req -batch -new -subj "$SUBJECT" -key /etc/asterisk/keys/asterisk.key -out /etc/asterisk/keys/asterisk.csr > /dev/null
 openssl x509 -req -days 3650 -in /etc/asterisk/keys/asterisk.csr -CA /etc/asterisk/keys/ca.crt -CAkey /etc/asterisk/keys/ca.key -passin pass:asterisk -set_serial 01 -out /etc/asterisk/keys/asterisk.crt > /dev/null
 chown -R asterisk:asterisk /etc/asterisk/keys
 
