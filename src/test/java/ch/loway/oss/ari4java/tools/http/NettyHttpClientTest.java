@@ -11,8 +11,10 @@ import io.netty.channel.*;
 import io.netty.channel.embedded.EmbeddedChannel;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
+import io.netty.util.concurrent.Future;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -20,7 +22,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -29,19 +34,35 @@ public class NettyHttpClientTest {
 
     private NettyHttpClient client;
     private ChannelFuture cf;
+    private Future<Channel> fc;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    private void setupTestClient(boolean init) throws URISyntaxException {
+    private void setupTestClient(boolean init, Channel ch) throws URISyntaxException {
         client = new NettyHttpClient() {
             protected void initHttpBootstrap() {
                 // for testing skip the bootstrapping
             }
 
-            protected ChannelFuture httpConnect() {
-                return cf;
+            @Override
+            protected Future<Channel> poolAcquire() {
+                return fc;
+            }
+
+            @Override
+            protected void poolRelease(Channel ch) {
+                // for testing skip
             }
         };
         if (init) {
             client.initialize("http://localhost:8088/", "user", "p@ss");
+        }
+        if (ch instanceof EmbeddedChannel) {
+            fc = ch.eventLoop().newSucceededFuture(ch);
+        } else {
+            //noinspection unchecked
+            fc = (Future<Channel>) mock(Future.class);
+            when(fc.syncUninterruptibly()).thenReturn(fc);
+            when(fc.getNow()).thenReturn(ch);
         }
     }
 
@@ -54,21 +75,21 @@ public class NettyHttpClientTest {
 
     @Test
     public void testInitializeBadURL() throws URISyntaxException {
-        setupTestClient(false);
+        setupTestClient(false, null);
         assertThrows(URISyntaxException.class, () ->
                 client.initialize(":", "", ""));
     }
 
     @Test
     public void testInitializeInvalidURL() throws URISyntaxException {
-        setupTestClient(false);
+        setupTestClient(false, null);
         assertThrows(IllegalArgumentException.class, () ->
                 client.initialize("ws://localhost:8088/", "", ""));
     }
 
     @Test
     public void testBuildURL() throws Exception {
-        setupTestClient(true);
+        setupTestClient(true, null);
         List<HttpParam> queryParams = new ArrayList<>();
         queryParams.add(HttpParam.build("a", "b/c"));
         queryParams.add(HttpParam.build("d", "e"));
@@ -85,35 +106,12 @@ public class NettyHttpClientTest {
     }
 
     @Test
-    public void testHttpConnect() {
-        Bootstrap bootstrap = mock(Bootstrap.class);
-        NettyHttpClient client = new NettyHttpClient() {
-            {
-                initHttpBootstrap();
-            }
-            @Override
-            protected void initHttpBootstrap() {
-                httpBootstrap = bootstrap;
-                try {
-                    baseUri = new URI("http://localhost:8088/");
-                } catch (URISyntaxException e) {
-                    // oh well
-                }
-            }
-        };
-        when(bootstrap.connect(eq("localhost"), eq(8088))).thenReturn(mock(ChannelFuture.class));
-        ChannelFuture future = client.httpConnect();
-        assertNotNull(future, "Expected ChannelFuture");
-        verify(bootstrap, times(1)).connect(anyString(), anyInt());
-        client.destroy();
-    }
-
-    @Test
     public void testWsConnect() throws Exception {
         Bootstrap bootstrap = mock(Bootstrap.class);
         NettyWSClientHandler testHandler = mock(NettyWSClientHandler.class);
+        ChannelFuture handshakeFuture = mock(ChannelFuture.class);
+        when(testHandler.handshakeFuture()).thenReturn(handshakeFuture);
         EmbeddedChannel channel = createTestChannel("ws-handler", testHandler);
-
         FullHttpRequest req = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/events");
         HttpHeaders headers = req.headers();
         headers.set(HttpHeaderNames.UPGRADE, HttpHeaderValues.WEBSOCKET);
@@ -122,11 +120,12 @@ public class NettyHttpClientTest {
         cf = channel.closeFuture();
         when(bootstrap.connect(eq("localhost"), eq(443))).thenReturn(cf);
         ((DefaultChannelPromise) cf).setSuccess(null);
-
+        HttpResponseHandler testWsCallback = mock(HttpResponseHandler.class);
+        when(testWsCallback.getLastResponseTime()).thenReturn(0L);
         class TestNettyHttpClient extends NettyHttpClient {
             @Override
             public WsClientConnection connect(final HttpResponseHandler callback, final String url,
-                                              final List<HttpParam> lParamQuery) throws RestException {
+                                              final List<HttpParam> lParamQuery) {
                 try {
                     baseUri = new URI("https://localhost/");
                     this.auth = "123";
@@ -136,38 +135,43 @@ public class NettyHttpClientTest {
                 }
                 pingPeriod = 1;
                 pingTimeUnit = TimeUnit.SECONDS;
+                wsHandler = testHandler;
+                wsCallback = testWsCallback;
                 return connect(bootstrap, callback);
             }
-//            public void testWsFutureOperationComplete(ChannelFuture future) throws Exception {
-//                this.wsHandler = testHandler;
-//                wsFuture.operationComplete(future);
-//            }
         }
         TestNettyHttpClient client = new TestNettyHttpClient();
         WsClient.WsClientConnection connection = client.connect(mock(HttpResponseHandler.class), "/events", null);
         assertNotNull(connection, "Expected WsClientConnection");
         channel.writeInbound(req);
-        Thread.sleep(10000);
+        ArgumentCaptor<ChannelFutureListener> captor = ArgumentCaptor.forClass(ChannelFutureListener.class);
+        verify(handshakeFuture).addListener(captor.capture());
+        captor.getValue().operationComplete(channel.newSucceededFuture());
+        client.onWSPong();
+        Thread.sleep(2500);
+        System.out.println(channel.inboundMessages().toString());
+        channel.readOutbound();
         client.destroy();
-    }
-
-    private void setupSync(NettyHttpClientHandler h) {
-        cf = mock(ChannelFuture.class);
-        when(cf.addListener(any())).thenReturn(cf);
-        when(cf.syncUninterruptibly()).thenReturn(cf);
-        Channel ch = mock(Channel.class);
-        when(ch.closeFuture()).thenReturn(cf);
-        when(cf.channel()).thenReturn(ch);
-        ChannelPipeline p = mock(ChannelPipeline.class);
-        when(p.get("http-handler")).thenReturn(h);
-        when(ch.pipeline()).thenReturn(p);
     }
 
     @Test
     public void testHttpActionSync() throws Exception {
-        setupTestClient(true);
-        NettyHttpClientHandler h = new NettyHttpClientHandler();
-        setupSync(h);
+        Channel ch = mock(Channel.class);
+        ChannelPipeline p = mock(ChannelPipeline.class);
+        when(ch.pipeline()).thenReturn(p);
+        setupTestClient(true, ch);
+        NettyHttpClientHandler h = new NettyHttpClientHandler() {
+            @Override
+            public void reset() {
+                // dont reset for this test
+            }
+
+            @Override
+            public void waitForResponse(int timeout) {
+                // dont wait for test
+            }
+        };
+        when(p.get("http-handler")).thenReturn(h);
         h.responseStatus = HttpResponseStatus.OK;
         h.responseBytes = "testing".getBytes(ARIEncoder.ENCODING);
         String res = client.httpActionSync("", "GET", null, null, null);
@@ -189,11 +193,25 @@ public class NettyHttpClientTest {
         return channel;
     }
 
+    private void delayedWriteInbound(EmbeddedChannel channel, HttpResponseStatus status, String data) {
+        delayedWriteInbound(channel, status, data, 200);
+    }
+
+    private void delayedWriteInbound(EmbeddedChannel channel, HttpResponseStatus status, String data, long sleep) {
+        executor.submit(() -> {
+            try {
+                Thread.sleep(sleep);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            channel.writeInbound(new DefaultFullHttpResponse(
+                    HttpVersion.HTTP_1_1, status, Unpooled.copiedBuffer(data, ARIEncoder.ENCODING)));
+        });
+    }
+
     private AsteriskPingGetRequest pingSetup(EmbeddedChannel channel) {
-        channel.writeInbound(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK,
-                Unpooled.copiedBuffer(
-                        "{\"ping\":\"pong\",\"timestamp\":\"2020-01-01T00:00:00.000+0000\",\"asterisk_id\":\"test_asterisk\"}",
-                        ARIEncoder.ENCODING)));
+        delayedWriteInbound(channel, HttpResponseStatus.OK,
+                "{\"ping\":\"pong\",\"timestamp\":\"2020-01-01T00:00:00.000+0000\",\"asterisk_id\":\"test_asterisk\"}", 500);
         AsteriskPingGetRequest_impl_ari_6_0_0 req = new AsteriskPingGetRequest_impl_ari_6_0_0();
         req.setHttpClient(client);
         return req;
@@ -210,8 +228,8 @@ public class NettyHttpClientTest {
 
     @Test
     public void testHttpActionSyncPing() throws Exception {
-        setupTestClient(true);
         EmbeddedChannel channel = createTestChannel();
+        setupTestClient(true, channel);
         AsteriskPingGetRequest req = pingSetup(channel);
         AsteriskPing res = req.execute();
         pingValidate(channel, res);
@@ -219,15 +237,15 @@ public class NettyHttpClientTest {
 
     @Test
     public void testHttpActionAsyncPing() throws Exception {
-        setupTestClient(true);
         EmbeddedChannel channel = createTestChannel();
+        setupTestClient(true, channel);
         AsteriskPingGetRequest req = pingSetup(channel);
-        final boolean[] callback = {false};
+        final AtomicBoolean callback = new AtomicBoolean(false);
         req.execute(new AriCallback<AsteriskPing>() {
             @Override
             public void onSuccess(AsteriskPing res) {
                 pingValidate(channel, res);
-                callback[0] = true;
+                callback.set(true);
             }
 
             @Override
@@ -235,19 +253,19 @@ public class NettyHttpClientTest {
                 fail(e.toString());
             }
         });
+        Thread.sleep(550);
         channel.runPendingTasks();
-        assertTrue(callback[0], "No onSuccess Callback");
+        assertTrue(callback.get(), "No onSuccess Callback");
     }
 
     @Test
     public void testHttpActionException() throws Exception {
-        setupTestClient(true);
         EmbeddedChannel channel = createTestChannel();
+        setupTestClient(true, channel);
         ApplicationsGetRequest_impl_ari_6_0_0 req = new ApplicationsGetRequest_impl_ari_6_0_0("test");
         req.setHttpClient(client);
         // when the response is JSON error then return the error from the server
-        channel.writeInbound(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND,
-                Unpooled.copiedBuffer("{\"message\":\"a test error\"}", ARIEncoder.ENCODING)));
+        delayedWriteInbound(channel, HttpResponseStatus.NOT_FOUND, "{\"message\":\"a test error\"}");
         boolean exception = false;
         try {
             req.execute();
@@ -257,8 +275,7 @@ public class NettyHttpClientTest {
         }
         assertTrue(exception, "Expecting an exception");
         // when the response is not JSON and there is an error definition from the API then return API definition
-        channel.writeInbound(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND,
-                Unpooled.copiedBuffer("Not found", ARIEncoder.ENCODING)));
+        delayedWriteInbound(channel, HttpResponseStatus.NOT_FOUND, "Not found");
         exception = false;
         try {
             req.execute();
@@ -271,10 +288,9 @@ public class NettyHttpClientTest {
 
     @Test
     public void testBodyFieldSerialisation() throws Exception {
-        setupTestClient(true);
         EmbeddedChannel channel = createTestChannel();
-        channel.writeInbound(new DefaultFullHttpResponse(
-                HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.copiedBuffer("[]", ARIEncoder.ENCODING)));
+        setupTestClient(true, channel);
+        delayedWriteInbound(channel, HttpResponseStatus.OK, "[]");
         AsteriskUpdateObjectPutRequest_impl_ari_6_0_0 req = new AsteriskUpdateObjectPutRequest_impl_ari_6_0_0(
                 "cc", "ot", "id");
         req.setHttpClient(client);
@@ -284,11 +300,9 @@ public class NettyHttpClientTest {
 
     @Test
     public void testBodyVariableSerialisation() throws Exception {
-        setupTestClient(true);
         EmbeddedChannel channel = createTestChannel();
-        channel.writeInbound(new DefaultFullHttpResponse(
-                HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.copiedBuffer("{}", ARIEncoder.ENCODING)));
-
+        setupTestClient(true, channel);
+        delayedWriteInbound(channel, HttpResponseStatus.OK, "{}");
         EndpointsSendMessagePutRequest_impl_ari_6_0_0 req = new EndpointsSendMessagePutRequest_impl_ari_6_0_0("to", "from");
         req.setHttpClient(client);
         req.addVariables("key1", "val1").addVariables("key2", "val2").execute();
@@ -297,11 +311,9 @@ public class NettyHttpClientTest {
 
     @Test
     public void testBodyObjectSerialisation() throws Exception {
-        setupTestClient(true);
-        EmbeddedChannel channel = createTestChannel();
-        channel.writeInbound(new DefaultFullHttpResponse(
-                HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.copiedBuffer("{}", ARIEncoder.ENCODING)));
-
+        final EmbeddedChannel channel = createTestChannel();
+        setupTestClient(true, channel);
+        delayedWriteInbound(channel, HttpResponseStatus.OK, "{}");
         Map<String, String> map = new HashMap<>();
         map.put("key1", "val1");
         map.put("key2", "val2");

@@ -15,7 +15,7 @@ public class HTTPLogger {
         throw new IllegalStateException("Utility class");
     }
 
-    private static Logger logger = LoggerFactory.getLogger(HTTPLogger.class);
+    private static final Logger logger = LoggerFactory.getLogger(HTTPLogger.class);
 
     private static final int MAX_LEN = 1000;
 

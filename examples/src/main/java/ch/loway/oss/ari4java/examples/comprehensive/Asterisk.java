@@ -4,6 +4,7 @@ import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.AriVersion;
 import ch.loway.oss.ari4java.generated.AriWSHelper;
 import ch.loway.oss.ari4java.generated.models.*;
+import ch.loway.oss.ari4java.tools.AriCallback;
 import ch.loway.oss.ari4java.tools.RestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,10 +44,19 @@ public class Asterisk {
         logger.info("Starting ARI...");
         try {
             ari = ARI.build(address, ARI_APP_NAME, user, pass, version);
-            AsteriskInfo info = ari.asterisk().getInfo().execute();
+            ari.asterisk().getInfo().execute(new AriCallback<AsteriskInfo>() {
+                @Override
+                public void onSuccess(AsteriskInfo info) {
+                    logger.info("Asterisk {}", info.getSystem().getVersion());
+                }
+
+                @Override
+                public void onFailure(RestException e) {
+                    logger.error("Error getting Asterisk version: {}", e.getMessage(), e);
+                }
+            });
             threadPool = Executors.newFixedThreadPool(5);
             ari.events().eventWebsocket(ARI_APP_NAME).execute(new Handler());
-            logger.info("Connected to Asterisk {}", info.getSystem().getVersion());
             return true;
         } catch (Throwable t) {
             logger.error("Error: {}", t.getMessage(), t);
@@ -123,7 +133,17 @@ public class Asterisk {
         if (channelId != null) {
             if (lookups.containsKey(channelId)) {
                 try {
-                    ari.channels().hangup(channelId).execute();
+                    ari.channels().hangup(channelId).execute(new AriCallback<Void>() {
+                        @Override
+                        public void onSuccess(Void result) {
+                            logger.debug("hanging up channel");
+                        }
+
+                        @Override
+                        public void onFailure(RestException e) {
+                            logger.error("Error hanging up channel", e);
+                        }
+                    });
                 } catch (RestException e) {
                     logger.error("Error hanging up channel", e);
                 }
@@ -139,10 +159,23 @@ public class Asterisk {
      * @throws RestException raised by ARI interactions
      */
     private void createBridgeAndAddChannel1(State state) throws RestException {
-        Bridge bridge = ari.bridges().create().execute();
-        logger.debug("Bridge created id: {}", bridge.getId());
-        state.bridge = bridge.getId();
-        addChannelToBridge(state.bridge, state.channel1);
+        ari.bridges().create().execute(new AriCallback<Bridge>() {
+            @Override
+            public void onSuccess(Bridge bridge) {
+                logger.debug("Bridge created id: {}", bridge.getId());
+                state.bridge = bridge.getId();
+                try {
+                    addChannelToBridge(state.bridge, state.channel1);
+                } catch (RestException e) {
+                    logger.error("Error adding channel to bridge: {}", e.getMessage(), e);
+                }
+            }
+
+            @Override
+            public void onFailure(RestException e) {
+                logger.error("Error creating bridge: {}", e.getMessage(), e);
+            }
+        });
     }
 
     /**
@@ -151,7 +184,17 @@ public class Asterisk {
      * @throws RestException raised by ARI interactions
      */
     private void addChannelToBridge(String bridgeId, String channelId) throws RestException {
-        ari.bridges().addChannel(bridgeId, channelId).execute();
+        ari.bridges().addChannel(bridgeId, channelId).execute(new AriCallback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                logger.debug("Channel {}, added to Bridge {}", channelId, bridgeId);
+            }
+
+            @Override
+            public void onFailure(RestException e) {
+                logger.debug("Error adding Channel {} to Bridge {}: {}", channelId, bridgeId, e.getMessage(), e);
+            }
+        });
     }
 
     /**
@@ -231,7 +274,7 @@ public class Asterisk {
         @Override
         protected void onStasisStart(StasisStart message) {
             // StasisStart is created by both the Stasis dialplan app and a call to the channels API in ARI,
-            // so we check an argument set in the create channel code and ignore
+            // so we check an argument set in the createChannel code and ignore
             logger.debug("onStasisStart, chan id: {}, name: {}", message.getChannel().getId(), message.getChannel().getName());
             if (message.getArgs() != null && !message.getArgs().isEmpty() && "me".equals(message.getArgs().get(0))) {
                 logger.debug("started by me, not processing...");
@@ -259,18 +302,6 @@ public class Asterisk {
                 createBridgeAndAddChannel1(state);
             } catch (RestException e) {
                 logger.error("Error creating bridge", e);
-                hangupChannel(state.channel1);
-                return;
-            }
-            // create the 2nd channel to the desired endpoint
-            try {
-                state.channel2 = createChannel(state.to, "Inbound " + state.from);
-                logger.debug("channel2: {}", state.channel2);
-                synchronized (lookups) {
-                    lookups.put(state.channel2, state.id);
-                }
-            } catch (RestException e) {
-                logger.error("Error creating channel", e);
                 hangupChannel(state.channel1);
             }
         }
@@ -301,17 +332,6 @@ public class Asterisk {
                     } catch (RestException e) {
                         logger.error("Error creating bridge", e);
                         hangupChannel(state.channel1);
-                        return;
-                    }
-                    try {
-                        state.channel2 = createChannel(state.to, state.from);
-                        synchronized (lookups) {
-                            lookups.put(state.channel2, state.id);
-                        }
-                        logger.debug("channel2: {}", state.channel2);
-                    } catch (RestException e) {
-                        logger.error("Error creating channel2", e);
-                        hangupChannel(state.channel1);
                     }
                 } else if ("Ringing".equals(message.getChannel().getState()) && message.getChannel().getId().equals(state.channel2)) {
                     // the channel state has changed to Ringing and is channel2 in the State object ...
@@ -337,6 +357,24 @@ public class Asterisk {
                 }
             } else {
                 logger.error("Could not find state for channel {}", message.getChannel().getId());
+            }
+        }
+
+        @Override
+        protected void onChannelEnteredBridge(ChannelEnteredBridge message) {
+            logger.debug("onChannelEnteredBridge {} {}", message.getBridge().getId(), message.getChannel().getId());
+            State state = lookupState(message.getChannel().getId());
+            if (message.getChannel().getId().equals(state.channel1)) {
+                try {
+                    state.channel2 = createChannel(state.to, state.from);
+                    synchronized (lookups) {
+                        lookups.put(state.channel2, state.id);
+                    }
+                    logger.debug("channel2: {}", state.channel2);
+                } catch (RestException e) {
+                    logger.error("Error creating channel2", e);
+                    hangupChannel(state.channel1);
+                }
             }
         }
 
