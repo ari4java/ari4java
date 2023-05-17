@@ -26,6 +26,7 @@ Vagrant.configure("2") do |config|
     d.has_ssh = true
     d.privileged = true
     override.vm.network :forwarded_port, guest: 8089, host: 8089
+    override.vm.network :forwarded_port, guest: 5060, host: 5060, protocol: "udp"
     for i in 20000..20010
         override.vm.network :forwarded_port, guest: i, host: i, protocol: "udp"
     end
