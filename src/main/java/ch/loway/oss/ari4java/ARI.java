@@ -9,6 +9,10 @@ import ch.loway.oss.ari4java.tools.tags.EventSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cleartalks.ari.myari.ARI;
+import com.cleartalks.ari.myari.AriFactory;
+import com.cleartalks.ari.myari.AriVersion;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.SecureRandom;
@@ -161,7 +165,18 @@ public class ARI {
     public static ARI build(String url, String app, String user, String pass, AriVersion version) throws ARIException {
         return build(url, app, user, pass, version, true);
     }
+    
+    public static ARI build(String url, String app, String user, String pass, AriVersion version, int reconnectCount, int maxReconnectCount, long timeout) throws ARIException {
+		return build(url, app, user, pass, version, true, reconnectCount, maxReconnectCount, timeout);
+	}
 
+	public static ARI build(String url, String app, String user, String pass, AriVersion version, boolean testConnection, int reconnectCount, int maxReconnectCount, Long timeout) throws ARIException {
+		try {
+			return AriFactory.nettyHttp(url, user, pass, version, app, testConnection, reconnectCount, maxReconnectCount, timeout);
+		} catch (Exception e) {
+			throw new ARIException(e.getMessage(), e);
+		} 
+	}
     /**
      * Helper to build an instance of ARI.
      * If the version is set as IM_FEELING_LUCKY the AriFactory will determine the version by 1st connecting

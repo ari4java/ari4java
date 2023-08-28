@@ -64,6 +64,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     private WsClientConnection wsClientConnection;
     private int reconnectCount = -1;
     private int maxReconnectCount = 10; // -1 = infinite reconnect attempts
+    private Long reconnectDelay = 5L;
     private ChannelFuture wsChannelFuture;
     private ScheduledFuture<?> wsPingTimer = null;
     private ScheduledFuture<?> wsConnectionTimeout = null;
@@ -97,6 +98,23 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         initHttpBootstrap();
     }
 
+	public void initializeModified(String baseUrl, String username, String password, int reconnectCount, int maxReconnectCount, Long timeout) throws URISyntaxException {
+		this.reconnectDelay=timeout;
+		this.reconnectCount=reconnectCount;
+		this.maxReconnectCount=maxReconnectCount;
+		if (!baseUrl.endsWith("/")) {
+			baseUrl = baseUrl + "/";
+		}
+		logger.debug("initialize url: {}, user: {}", baseUrl, username);
+		baseUri = new URI(baseUrl);
+		String protocol = baseUri.getScheme();
+		if (!HTTP.equalsIgnoreCase(protocol) && !HTTPS.equalsIgnoreCase(protocol)) {
+			logger.warn("Not http(s), protocol: {}", protocol);
+			throw new IllegalArgumentException("Unsupported protocol: " + protocol);
+		}
+		this.auth = "Basic " + Base64.encode(Unpooled.copiedBuffer((username + ":" + password), ARIEncoder.ENCODING)).toString(ARIEncoder.ENCODING);
+		initHttpBootstrap();
+	}
     protected void initHttpBootstrap() {
         if (httpBootstrap == null) {
             // Bootstrap is the factory for HTTP connections
@@ -554,7 +572,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
         // if not shutdown reconnect, note the check not on the shutDownGroup
         if (!group.isShuttingDown()) {
             // schedule reconnect after a 2,5,10 seconds
-            long[] timeouts = {2L, 5L, 10L};
+            long[] timeouts = {2L, 5L, this.reconnectDelay};
             long timeout = reconnectCount >= timeouts.length ? timeouts[timeouts.length - 1] : timeouts[reconnectCount];
             reconnectCount++;
             logger.error("WS Connect Error: {}, reconnecting in {} seconds... try: {}", cause.getMessage(), timeout, reconnectCount);

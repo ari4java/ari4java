@@ -1,6 +1,10 @@
 package ch.loway.oss.ari4java;
 
+import ch.loway.oss.ari4java.tools.WsClient;
 import ch.loway.oss.ari4java.tools.http.NettyHttpClient;
+
+import com.cleartalks.ari.myari.ARI;
+import com.cleartalks.ari.myari.AriVersion;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -86,6 +90,33 @@ public class AriFactory {
         }
         return ari;
     }
+    
+	public static ARI nettyHttp(String uri, String login, String pass, AriVersion version, String app, boolean testConnection, int reconnectCount, int maxReconnectCount, Long reconnectDelay) throws URISyntaxException {
+		NettyHttpClient client;
+		if (nettyHttpClient != null) {
+			client = nettyHttpClient;
+		} else {
+			client = new NettyHttpClient();
+			client.initializeModified(uri, login, pass, reconnectCount, maxReconnectCount, reconnectDelay);
+		} 
+		ARI ari = new ARI();
+		ari.setAppName(app);
+        ari.setHttpClient(client);
+		ari.setWsClient((WsClient)client);
+		if (AriVersion.IM_FEELING_LUCKY.equals(version)) {
+			ari.setVersion(detectAriVersion(client));
+		} else {
+			ari.setVersion(version);
+		} 
+		try {
+			int majorVer = Integer.parseInt(ari.getVersion().version().split("\\.")[0]);
+			if (testConnection && (majorVer >= 5 || AriVersion.ARI_1_10_2.equals(version)))
+				ari.asterisk().ping(); 
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to test connection: " + e.getMessage(), e);
+		} 
+		return ari;
+	}
 
     /**
      * Connect and detect the current ARI version.
