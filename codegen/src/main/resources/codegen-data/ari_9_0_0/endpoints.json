@@ -31,7 +31,7 @@
 					"parameters": [
 						{
 							"name": "to",
-							"description": "The endpoint resource or technology specific URI to send the message to. Valid resources are sip, pjsip, and xmpp.",
+							"description": "The endpoint resource or technology specific URI to send the message to. Valid resources are pjsip, and xmpp.",
 							"paramType": "query",
 							"required": true,
 							"allowMultiple": false,
@@ -39,7 +39,7 @@
 						},
 						{
 							"name": "from",
-							"description": "The endpoint resource or technology specific identity to send this message from. Valid resources are sip, pjsip, and xmpp.",
+							"description": "The endpoint resource or technology specific identity to send this message from. Valid resources are pjsip, and xmpp.",
 							"paramType": "query",
 							"required": true,
 							"allowMultiple": false,
@@ -152,7 +152,7 @@
 					"parameters": [
 						{
 							"name": "tech",
-							"description": "Technology of the endpoints (sip,iax2,...)",
+							"description": "Technology of the endpoints (pjsip,iax2,...)",
 							"paramType": "path",
 							"dataType": "string"
 						}
@@ -226,7 +226,7 @@
 						},
 						{
 							"name": "from",
-							"description": "The endpoint resource or technology specific identity to send this message from. Valid resources are sip, pjsip, and xmpp.",
+							"description": "The endpoint resource or technology specific identity to send this message from. Valid resources are pjsip and xmpp.",
 							"paramType": "query",
 							"required": true,
 							"allowMultiple": false,
@@ -373,12 +373,12 @@
 			"properties": {
 				"from": {
 					"type": "string",
-					"description": "A technology specific URI specifying the source of the message. For sip and pjsip technologies, any SIP URI can be specified. For xmpp, the URI must correspond to the client connection being used to send the message.",
+					"description": "A technology specific URI specifying the source of the message. For pjsip technology, any SIP URI can be specified. For xmpp, the URI must correspond to the client connection being used to send the message.",
 					"required": true
 				},
 				"to": {
 					"type": "string",
-					"description": "A technology specific URI specifying the destination of the message. Valid technologies include sip, pjsip, and xmp. The destination of a message should be an endpoint.",
+					"description": "A technology specific URI specifying the destination of the message. Valid technologies include pjsip, and xmp. The destination of a message should be an endpoint.",
 					"required": true
 				},
 				"body": {
