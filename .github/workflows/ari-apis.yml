@@ -7,10 +7,10 @@ on:
 
 jobs:
   getApis:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Execute getApis
         run: |
@@ -20,7 +20,7 @@ jobs:
 
       - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v6
         with:
           commit-message: ARI API Updates
           branch: apis

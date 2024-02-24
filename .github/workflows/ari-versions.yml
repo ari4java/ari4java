@@ -7,13 +7,13 @@ on:
 
 jobs:
   getApis:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout Project
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Checkout Wiki
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: ${{github.repository}}.wiki
           path: codegen/tmp/wiki
