@@ -6,7 +6,7 @@ if [ ! -d "tmp/asterisk" ]
 then
   mkdir tmp
   cd tmp
-  git clone "https://gerrit.asterisk.org/asterisk"
+  git clone "https://github.com/asterisk/asterisk"
   cd asterisk
 else
   cd tmp/asterisk
