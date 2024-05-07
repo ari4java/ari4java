@@ -62,7 +62,7 @@ public class NettyHttpClient implements HttpClient, WsClient, WsClientAutoReconn
     private String wsEventsUrl;
     private List<HttpParam> wsEventsParamQuery;
     private WsClientConnection wsClientConnection;
-    private int reconnectCount = -1;
+    private int reconnectCount = 0;
     private int maxReconnectCount = 10; // -1 = infinite reconnect attempts
     private ChannelFuture wsChannelFuture;
     private ScheduledFuture<?> wsPingTimer = null;
