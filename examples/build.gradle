@@ -7,9 +7,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'ch.loway.oss.ari4java:ari4java:+'
+    implementation project(':')  // Use the local project
     implementation 'ch.qos.logback:logback-classic:1.2.10'
-    implementation 'io.netty:netty-all:4.1.72.Final'
+    implementation 'io.netty:netty-all:4.1.112.Final'
 }
 
 java {
