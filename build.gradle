@@ -31,6 +31,16 @@ sourceSets {
     }
 }
 
+// Task to run code generation before compilation
+task generateAriApi(type: GradleBuild) {
+    description = 'Generate ARI API sources from JSON definitions'
+    buildFile = 'codegen/build.gradle'
+    tasks = ['runCodegen']
+}
+
+// Make Java compilation depend on code generation
+compileJava.dependsOn generateAriApi
+
 repositories {
     mavenCentral()
 }
@@ -39,7 +49,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-core:2.13.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.1'
-    implementation 'io.netty:netty-all:4.1.72.Final'
+    // Bumped to a modern Netty release to avoid reflective access to JDK internals on Java 22+
+    implementation 'io.netty:netty-all:4.1.112.Final'
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
     implementation 'org.slf4j:slf4j-api:1.7.32'
 
@@ -84,11 +95,11 @@ test {
 
 jacocoTestReport {
     reports {
-        xml.enabled true
-        csv.enabled false
-        html.enabled true
-        xml.destination = file("${buildDir}/reports/jacocoTestReport.xml")
-        html.destination = file("${buildDir}/reports/jacocoTestReport/html")
+        xml.required.set(true)
+        csv.required.set(false)
+        html.required.set(true)
+        xml.outputLocation.set(file("${buildDir}/reports/jacocoTestReport.xml"))
+        html.outputLocation.set(file("${buildDir}/reports/jacocoTestReport/html"))
     }
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {

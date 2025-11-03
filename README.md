@@ -30,6 +30,23 @@ dependencies {
 }
 ```
 
+### Building from Source
+
+The project uses code generation to create ARI bindings from Asterisk's Swagger API definitions. To build:
+
+1. Clone the repository
+```bash
+git clone https://github.com/ari4java/ari4java.git
+cd ari4java
+```
+
+2. Build (this will automatically generate ARI bindings)
+```bash
+./gradlew build
+```
+
+The code generator task runs automatically before compilation to ensure the ARI bindings are up to date.
+
 Due to the sun setting of JCenter the jar is now publish through Sonatype to Maven Central but under a new groupId.
 The groupId is now `io.github.ari4java` make sure you update your build files if you used `ch.loway.oss.ari4java`.
 

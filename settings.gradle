@@ -1,2 +1,3 @@
 rootProject.name = "ari4java"
 include "codegen"
+include "examples"
