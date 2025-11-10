@@ -1,7 +1,8 @@
 # ARI4Java Changelog
 
 ## [Unreleased]
-[Unreleased]: https://github.com/ari4java/ari4java/compare/v0.16.0...HEAD
+[Unreleased]: https://github.com/ari4java/ari4java/compare/v0.17.0...HEAD
+
 ### Added
 - Connection Pooling using Netty's FixedChannelPool
 - Examples have a Docker provider for Vagrant (in order to work around VirtualBox compatibility on Apple Silicon)
@@ -9,6 +10,12 @@
 ### Changed
 - Cannot wait for connection close due to using connection keep-alive (aka pooling)
 - Some methods in the Examples use the async approach
+
+## [0.17.0]
+[0.17.0]: https://github.com/ari4java/ari4java/compare/v0.16.0...v0.17.0
+### Added
+- `AriVersion.ARI_8_0_0`
+- `AriVersion.ARI_9_0_0`
 
 ## [0.16.0]
 [0.16.0]: https://github.com/ari4java/ari4java/compare/v0.15.0...v0.16.0

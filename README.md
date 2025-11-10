@@ -4,7 +4,7 @@ The Asterisk REST Interface (ARI) bindings for Java.
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.ari4java/ari4java/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.ari4java/ari4java)
 [![javadoc](https://javadoc.io/badge2/io.github.ari4java/ari4java/javadoc.svg)](https://javadoc.io/doc/io.github.ari4java/ari4java)
-[![Build](https://github.com/ari4java/ari4java/workflows/ARI4Java%20Build/badge.svg?branch=master&event=push)](https://github.com/ari4java/ari4java/actions?query=workflow%3A%22ARI4Java+Build%22)
+[![Build](https://github.com/ari4java/ari4java/actions/workflows/gradle.yml/badge.svg?branch=master)](https://github.com/ari4java/ari4java/actions?query=workflow%3A%22ARI4Java+Build%22)
 
 ## Description
 
