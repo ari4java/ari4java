@@ -6,6 +6,9 @@
 	"swaggerVersion": "1.2",
 	"basePath": "http://localhost:8088/ari",
 	"resourcePath": "/api-docs/events.{format}",
+	"since": [
+		"12.0.0"
+	],
 	"requiresModules": [
 		"res_http_websocket"
 	],
@@ -16,6 +19,9 @@
 			"operations": [
 				{
 					"httpMethod": "GET",
+					"since": [
+						"12.0.0"
+					],
 					"upgrade": "websocket",
 					"websocketProtocol": "ari",
 					"summary": "WebSocket connection for events.",
@@ -48,6 +54,9 @@
 			"operations": [
 				{
 					"httpMethod": "POST",
+					"since": [
+						"12.3.0"
+					],
 					"summary": "Generate a user event.",
 					"nickname": "userEvent",
 					"responseClass": "void",
@@ -160,6 +169,8 @@
 				"RecordingFinished",
 				"RecordingFailed",
 				"ApplicationMoveFailed",
+				"ApplicationRegistered",
+				"ApplicationUnregistered",
 				"ApplicationReplaced",
 				"BridgeCreated",
 				"BridgeDestroyed",
@@ -189,7 +200,9 @@
 				"StasisStart",
 				"TextMessageReceived",
 				"ChannelConnectedLine",
-				"PeerStatusChange"
+				"PeerStatusChange",
+				"ChannelTransfer",
+				"RESTResponse"
 			]
 		},
 		"ContactInfo": {
@@ -354,6 +367,16 @@
 					"description": "Arguments to the application"
 				}
 			}
+		},
+		"ApplicationRegistered": {
+			"id": "ApplicationRegistered",
+			"description": "Notification that a Stasis app has been registered.",
+			"properties": {}
+		},
+		"ApplicationUnregistered": {
+			"id": "ApplicationUnregistered",
+			"description": "Notification that a Stasis app has been unregistered.",
+			"properties": {}
 		},
 		"ApplicationReplaced": {
 			"id": "ApplicationReplaced",
@@ -555,6 +578,10 @@
 					"description": "Text representation of the cause of the hangup",
 					"type": "string"
 				},
+				"tech_cause": {
+					"type": "int",
+					"description": "Integer representation of the technology-specific off-nominal cause of the hangup."
+				},
 				"channel": {
 					"required": true,
 					"type": "Channel"
@@ -699,6 +726,10 @@
 				"cause": {
 					"type": "int",
 					"description": "Integer representation of the cause of the hangup."
+				},
+				"tech_cause": {
+					"type": "int",
+					"description": "Integer representation of the technology-specific off-nominal cause of the hangup."
 				},
 				"soft": {
 					"type": "boolean",
@@ -911,6 +942,229 @@
 					"required": true,
 					"type": "Channel",
 					"description": "The channel whose connected line has changed."
+				}
+			}
+		},
+		"ChannelTransfer": {
+			"id": "ChannelTransfer",
+			"description": "transfer on a channel.",
+			"properties": {
+				"state": {
+					"required": false,
+					"type": "string",
+					"description": "Transfer State"
+				},
+				"refer_to": {
+					"required": true,
+					"type": "ReferTo",
+					"description": "Refer-To information with optionally both affected channels"
+				},
+				"referred_by": {
+					"required": true,
+					"type": "ReferredBy",
+					"description": "Referred-By SIP Header according rfc3892"
+				}
+			}
+		},
+		"ReferTo": {
+			"id": "ReferTo",
+			"description": "transfer destination requested by transferee",
+			"properties": {
+				"requested_destination": {
+					"required": true,
+					"type": "RequiredDestination"
+				},
+				"destination_channel": {
+					"required": false,
+					"type": "Channel",
+					"description": "The Channel Object, that is to be replaced"
+				},
+				"connected_channel": {
+					"required": false,
+					"type": "Channel",
+					"description": "Channel, connected to the to be replaced channel"
+				},
+				"bridge": {
+					"required": false,
+					"type": "Bridge",
+					"description": "Bridge connecting both destination channels"
+				}
+			}
+		},
+		"ReferredBy": {
+			"id": "ReferredBy",
+			"description": "transfer destination requested by transferee",
+			"properties": {
+				"source_channel": {
+					"required": true,
+					"type": "Channel",
+					"description": "The channel on which the refer was received"
+				},
+				"connected_channel": {
+					"required": false,
+					"type": "Channel",
+					"description": "Channel, Connected to the channel, receiving the transfer request on."
+				},
+				"bridge": {
+					"required": false,
+					"type": "Bridge",
+					"description": "Bridge connecting both Channels"
+				}
+			}
+		},
+		"RequiredDestination": {
+			"id": "RequiredDestination",
+			"description": "Information about the requested destination",
+			"properties": {
+				"protocol_id": {
+					"required": false,
+					"type": "string",
+					"description": "the requested protocol-id by the referee in case of SIP channel, this is a SIP Call ID, Mutually exclusive to destination"
+				},
+				"destination": {
+					"required": false,
+					"type": "string",
+					"description": "Destination User Part. Only for Blind transfer. Mutually exclusive to protocol_id"
+				},
+				"additional_protocol_params": {
+					"required": false,
+					"type": "List[AdditionalParam]",
+					"description": "List of additional protocol specific information"
+				}
+			}
+		},
+		"AdditionalParam": {
+			"id": "AdditionalParam",
+			"description": "Protocol specific additional parameter",
+			"properties": {
+				"parameter_name": {
+					"required": true,
+					"type": "string",
+					"description": "Name of the parameter"
+				},
+				"parameter_value": {
+					"required": true,
+					"type": "string",
+					"description": "Value of the parameter"
+				}
+			}
+		},
+		"RESTHeader": {
+			"id": "RESTHeader",
+			"description": "REST over Websocket header",
+			"properties": {
+				"name": {
+					"type": "string",
+					"description": "Header name",
+					"required": true
+				},
+				"value": {
+					"required": true,
+					"type": "string",
+					"description": "Header value"
+				}
+			}
+		},
+		"RESTQueryStringParameter": {
+			"id": "RESTQueryStringParameter",
+			"description": "REST over Websocket Query String Parameter",
+			"properties": {
+				"name": {
+					"type": "string",
+					"description": "Parameter name",
+					"required": true
+				},
+				"value": {
+					"required": true,
+					"type": "string",
+					"description": "Parameter value"
+				}
+			}
+		},
+		"RESTRequest": {
+			"id": "RESTRequest",
+			"description": "REST over Websocket Request.",
+			"properties": {
+				"type": {
+					"type": "string",
+					"description": "Message type.  Must be 'RESTRequest'",
+					"required": true
+				},
+				"transaction_id": {
+					"type": "string",
+					"description": "Opaque transaction id.  Can be any valid string.  Will be returned in any response to this request.",
+					"required": true
+				},
+				"request_id": {
+					"type": "string",
+					"description": "Opaque request id.  Can be any valid string.  Will be returned in any response to this request.",
+					"required": true
+				},
+				"method": {
+					"required": true,
+					"type": "string",
+					"description": "HTTP method (GET, PUT, POST, DELETE, etc.)"
+				},
+				"uri": {
+					"required": true,
+					"type": "string",
+					"description": "Resource URI with optional query string parameters."
+				},
+				"content_type": {
+					"required": false,
+					"type": "string",
+					"description": "The Content-Type of the message body."
+				},
+				"query_strings": {
+					"required": false,
+					"type": "List[RESTQueryStringParameter]",
+					"description": "Request query string parameters."
+				},
+				"message_body": {
+					"required": false,
+					"type": "string",
+					"description": "Request message body. Only content types application/json and application/x-www-form-urlencoded are supported."
+				}
+			}
+		},
+		"RESTResponse": {
+			"id": "RESTResponse",
+			"description": "REST over Websocket Response.",
+			"properties": {
+				"transaction_id": {
+					"type": "string",
+					"description": "Opaque transaction id.  Will be whatever was specified on the original request.",
+					"required": true
+				},
+				"request_id": {
+					"type": "string",
+					"description": "Opaque request id.  Will be whatever was specified on the original request.",
+					"required": true
+				},
+				"status_code": {
+					"required": true,
+					"type": "int",
+					"description": "HTTP status code"
+				},
+				"reason_phrase": {
+					"required": true,
+					"type": "string",
+					"description": "HTTP reason phrase"
+				},
+				"uri": {
+					"required": true,
+					"type": "string",
+					"description": "Original request resource URI"
+				},
+				"content_type": {
+					"required": false,
+					"type": "string",
+					"description": "The Content-Type of the message body."
+				},
+				"message_body": {
+					"required": false,
+					"type": "string",
+					"description": "Response message body"
 				}
 			}
 		}
