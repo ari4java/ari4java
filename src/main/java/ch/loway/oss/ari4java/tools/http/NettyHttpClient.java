@@ -72,7 +72,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
     private String wsEventsUrl;
     private List<HttpParam> wsEventsParamQuery;
     private WsClientConnection wsClientConnection;
-    private int reconnectCount = -1;
+    private int reconnectCount = 0;
     private int maxReconnectCount = 10; // -1 = infinite reconnect attempts
     private ChannelFuture wsChannelFuture;
     private ScheduledFuture<?> wsPingTimer = null;
@@ -567,16 +567,15 @@ public class NettyHttpClient implements HttpClient, WsClient {
 
                 @Override
                 public void disconnect() throws RestException {
-                    wsHandler.setShuttingDown(true);
                     Channel ch = wsChannelFuture.channel();
                     if (ch != null) {
                         // if connected send CloseWebSocketFrame as NettyWSClientHandler will close the connection when the server responds to it
-                        if (reconnectCount == 0) {
+                        // only when not shutdown yet, so we don't try to send another close frame
+                        if (!wsHandler.isShuttingDown()) {
                             logger.debug("Send CloseWebSocketFrame ...");
-                            // set to -1 so we don't try send another close frame
-                            reconnectCount = -1;
                             ch.writeAndFlush(new CloseWebSocketFrame());
                         }
+                        wsHandler.setShuttingDown(true);
                         // if the server is no longer there then close any way
                         ch.close();
                     }
