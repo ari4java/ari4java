@@ -7,13 +7,12 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.pool.ChannelPool;
 import io.netty.channel.pool.ChannelPoolHandler;
 import io.netty.channel.pool.FixedChannelPool;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.base64.Base64;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.handler.logging.ByteBufFormat;
@@ -40,10 +39,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * HTTP and WebSocket client implementation based on netty.io.
  * <p>
- * Threading is handled by NioEventLoopGroup, which selects on multiple
+ * Threading is handled by MultiThreadIoEventLoopGroup, which selects on multiple
  * sockets and provides threads to handle the events on the sockets.
  * <p>
- * Requires netty-all-4.0.12.Final.jar
+ * Requires netty
  *
  * @author mwalton
  */
@@ -87,15 +86,15 @@ public class NettyHttpClient implements HttpClient, WsClient {
     protected int pingPeriod = 5;
     protected TimeUnit pingTimeUnit = TimeUnit.MINUTES;
     protected ChannelPool pool;
-    private int threadCount;
+    private final int threadCount;
 
     public NettyHttpClient() {
         // use at least 3 threads
-        threadCount = Math.max(3, SystemPropertyUtil.getInt(
+        threadCount = Math.min(3, SystemPropertyUtil.getInt(
                 "io.netty.eventLoopThreads", NettyRuntime.availableProcessors() * 2));
         logger.debug("Starting NioEventLoopGroup with {} threads", threadCount);
-        group = new NioEventLoopGroup(threadCount);
-        shutDownGroup = new NioEventLoopGroup(1);
+        group = new MultiThreadIoEventLoopGroup(threadCount, NioIoHandler.newFactory());
+        shutDownGroup = new MultiThreadIoEventLoopGroup(1, NioIoHandler.newFactory());
     }
 
     public void initialize(String baseUrl, String username, String password) throws URISyntaxException {
@@ -109,17 +108,18 @@ public class NettyHttpClient implements HttpClient, WsClient {
             logger.warn("Not http(s), protocol: {}", protocol);
             throw new IllegalArgumentException("Unsupported protocol: " + protocol);
         }
-        this.auth = "Basic " + Base64.encode(Unpooled.copiedBuffer((username + ":" + password), ARIEncoder.ENCODING)).toString(ARIEncoder.ENCODING);
+        this.auth = ARIEncoder.encodeCreds(username, password);
         initHttpBootstrap();
     }
 
     protected void initHttpBootstrap() {
         if (httpBootstrap == null) {
             // Bootstrap is the factory for HTTP connections
-            logger.debug("Bootstrap with\n" +
-                            " connection timeout: {},\n" +
-                            " read timeout: {},\n" +
-                            " aggregator max-length: {}",
+            logger.debug("""
+                            Bootstrap with
+                             connection timeout: {},
+                             read timeout: {},
+                             aggregator max-length: {}""",
                     CONNECTION_TIMEOUT_SEC,
                     READ_TIMEOUT_SEC,
                     MAX_HTTP_REQUEST);
@@ -396,28 +396,28 @@ public class NettyHttpClient implements HttpClient, WsClient {
                 final NettyHttpClientHandler handler = (NettyHttpClientHandler) ch.pipeline().get(HTTP_HANDLER);
                 handler.reset();
                 ch.writeAndFlush(request).addListener(future2 ->
-                    group.execute(() -> {
-                        try {
-                            logger.debug("Wait for response...");
-                            handler.waitForResponse(READ_TIMEOUT_SEC);
-                            if (handler.getException() != null) {
-                                logger.debug("got an error: {}", handler.getException().toString());
-                                onFailure(responseHandler, new RestException(handler.getException()));
-                            } else if (httpResponseOkay(handler.getResponseStatus())) {
-                                logger.debug("got OK response");
-                                if (binary) {
-                                    responseHandler.onSuccess(handler.getResponseBytes());
+                        group.execute(() -> {
+                            try {
+                                logger.debug("Wait for response...");
+                                handler.waitForResponse(READ_TIMEOUT_SEC);
+                                if (handler.getException() != null) {
+                                    logger.debug("got an error: {}", handler.getException().toString());
+                                    onFailure(responseHandler, new RestException(handler.getException()));
+                                } else if (httpResponseOkay(handler.getResponseStatus())) {
+                                    logger.debug("got OK response");
+                                    if (binary) {
+                                        responseHandler.onSuccess(handler.getResponseBytes());
+                                    } else {
+                                        responseHandler.onSuccess(handler.getResponseText());
+                                    }
                                 } else {
-                                    responseHandler.onSuccess(handler.getResponseText());
+                                    logger.debug("...done waiting");
+                                    onFailure(responseHandler, makeException(handler.getResponseStatus(), handler.getResponseText(), errors));
                                 }
-                            } else {
-                                logger.debug("...done waiting");
-                                onFailure(responseHandler, makeException(handler.getResponseStatus(), handler.getResponseText(), errors));
+                            } finally {
+                                poolRelease(ch);
                             }
-                        } finally {
-                            poolRelease(ch);
-                        }
-                    })
+                        })
                 );
             } else {
                 onFailure(responseHandler, future1.cause());
@@ -591,7 +591,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
      * Checks if a response is okay.
      * All 2XX responses are supposed to be okay.
      *
-     * @param status
+     * @param status http status
      * @return whether it is a 2XX code or not (error!)
      */
     private boolean httpResponseOkay(HttpResponseStatus status) {

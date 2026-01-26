@@ -39,6 +39,9 @@ The groupId is now `io.github.ari4java` make sure you update your build files if
     - [Getting Started](https://github.com/ari4java/ari4java/wiki/Getting-Started)
     - [Examples](https://github.com/ari4java/ari4java/wiki/Examples)
 
+## Development
+Please find the [Development Wiki](https://github.com/ari4java/ari4java/wiki/Development)
+
 ## Licensing
 The library is released under the GNU LGPL (see [LICENSE](https://github.com/ari4java/ari4java/blob/master/LICENSE) file).
 Files under codegen-data come from the Asterisk project and are licensed under the GPLv2 (see LICENSE.asterisk file therein).
