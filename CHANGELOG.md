@@ -3,6 +3,9 @@
 ## [Unreleased]
 [Unreleased]: https://github.com/ari4java/ari4java/compare/v0.17.0...HEAD
 
+## [0.18.0]
+[0.18.0]: https://github.com/ari4java/ari4java/compare/v0.17.0...v0.18.0
+
 ### Added
 - Connection Pooling using Netty's FixedChannelPool
 - Examples have a Docker provider for Vagrant (in order to work around VirtualBox compatibility on Apple Silicon)
