@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.Map;
 
-public class HTTPLogger {
+public final class HTTPLogger {
 
     private HTTPLogger() {
         throw new IllegalStateException("Utility class");

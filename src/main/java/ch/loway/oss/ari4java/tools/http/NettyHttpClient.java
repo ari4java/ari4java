@@ -35,6 +35,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * HTTP and WebSocket client implementation based on netty.io.
@@ -71,7 +72,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
     private String wsEventsUrl;
     private List<HttpParam> wsEventsParamQuery;
     private WsClientConnection wsClientConnection;
-    private int reconnectCount = 0;
+    private final AtomicInteger reconnectCount = new AtomicInteger(0);
     private int maxReconnectCount = 10; // -1 = infinite reconnect attempts
     private ChannelFuture wsChannelFuture;
     private ScheduledFuture<?> wsPingTimer = null;
@@ -481,7 +482,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
                                 logger.debug("WS connected...");
                                 // start a ping and reset reconnect counter
                                 startPing();
-                                reconnectCount = 0;
+                                reconnectCount.set(0);
                                 if (!group.isShuttingDown()) {
                                     group.execute(callback::onChReadyToWrite);
                                 }
@@ -612,7 +613,7 @@ public class NettyHttpClient implements HttpClient, WsClient {
             wsPingTimer = null;
         }
 
-        if (!autoReconnect || (maxReconnectCount > -1 && reconnectCount >= maxReconnectCount)) {
+        if (!autoReconnect || (maxReconnectCount > -1 && reconnectCount.get() >= maxReconnectCount)) {
             logger.warn("Cannot connect: {} - executing failure callback", cause.getMessage());
             if (!group.isShuttingDown()) {
                 group.execute(() -> wsCallback.onFailure(cause));
@@ -624,9 +625,9 @@ public class NettyHttpClient implements HttpClient, WsClient {
         if (!group.isShuttingDown()) {
             // schedule reconnect after a 2,5,10 seconds
             long[] timeouts = {2L, 5L, 10L};
-            long timeout = reconnectCount >= timeouts.length ? timeouts[timeouts.length - 1] : timeouts[reconnectCount];
-            reconnectCount++;
-            logger.error("WS Connect Error: {}, reconnecting in {} seconds... try: {}", cause.getMessage(), timeout, reconnectCount);
+            long timeout = reconnectCount.get() >= timeouts.length ? timeouts[timeouts.length - 1] : timeouts[reconnectCount.get()];
+            reconnectCount.incrementAndGet();
+            logger.error("WS Connect Error: {}, reconnecting in {} seconds... try: {}", cause.getMessage(), timeout, reconnectCount.get());
             shutDownGroup.schedule(() -> {
                 try {
                     // 1st close up
