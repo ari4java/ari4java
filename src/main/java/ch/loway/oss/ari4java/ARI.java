@@ -30,9 +30,10 @@ public class ARI {
     private HttpClient httpClient;
     private WsClient wsClient;
     private ActionEvents liveActionEvent = null;
-    private AriSubscriber subscriptions = new AriSubscriber();
+    private final AriSubscriber subscriptions = new AriSubscriber();
     private final CopyOnWriteArrayList<BaseAriAction> liveActionList = new CopyOnWriteArrayList<>();
-    private static Logger logger = LoggerFactory.getLogger(ARI.class);
+    private static final Logger logger = LoggerFactory.getLogger(ARI.class);
+    private static final SecureRandom random = new SecureRandom();
 
     /**
      * Sets the client
@@ -469,7 +470,6 @@ public class ARI {
     public static String getUID() {
         StringBuilder sb = new StringBuilder(20);
         sb.append("a4j");
-        SecureRandom random = new SecureRandom();
         for (int n = 0; n < 15; n++) {
             if ((n % 5) == 0) {
                 sb.append(".");

@@ -1,0 +1,17 @@
+[req]
+default_bits = 2048
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+prompt = no
+
+[req_distinguished_name]
+O = ARI4Java
+CN = ari4java.localhost
+
+[v3_req]
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = localhost
+IP.1 = 127.0.0.1
+IP.2 = 192.168.56.44

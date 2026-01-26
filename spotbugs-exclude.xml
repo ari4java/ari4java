@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <Match>
+        <Bug code="EI,EI2" />
+    </Match>
+    <Match>
+        <Class name="ch.loway.oss.ari4java.tools.http.NettyHttpClient" />
+        <Or>
+            <Method name="setAutoReconnect" />
+            <Method name="setMaxReconnectCount" />
+        </Or>
+        <Bug code="AT" />
+    </Match>
+</FindBugsFilter>

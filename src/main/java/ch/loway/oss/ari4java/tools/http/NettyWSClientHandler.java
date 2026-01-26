@@ -24,19 +24,13 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
     
     final WebSocketClientHandshaker handshaker;
     private ChannelPromise handshakeFuture;
-    final HttpResponseHandler wsCallback;
-    private WsClientAutoReconnect wsClient = null;
+    private NettyHttpClient client = null;
     private boolean shuttingDown = false;
-    private Logger logger = LoggerFactory.getLogger(NettyWSClientHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(NettyWSClientHandler.class);
 
-    public NettyWSClientHandler(WebSocketClientHandshaker handshaker, HttpResponseHandler wsCallback, WsClientAutoReconnect wsClient) {
-        this(handshaker, wsCallback);
-        this.wsClient = wsClient;
-    }
-
-    public NettyWSClientHandler(WebSocketClientHandshaker handshaker, HttpResponseHandler wsCallback) {
+    public NettyWSClientHandler(WebSocketClientHandshaker handshaker, NettyHttpClient client) {
         this.handshaker = handshaker;
-        this.wsCallback = wsCallback;
+        this.client = client;
     }
 
     public ChannelFuture handshakeFuture() {
@@ -44,21 +38,20 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
     }
 
     @Override
-    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+    public void handlerAdded(ChannelHandlerContext ctx) {
         handshakeFuture = ctx.newPromise();
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) {
         handshaker.handshake(ctx.channel());
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        if (!shuttingDown && this.wsClient != null) {
+    public void channelInactive(ChannelHandlerContext ctx) {
+        if (!shuttingDown) {
             logger.debug("WS channel inactive - {}", ctx);
-            wsCallback.onDisconnect();
-            wsClient.reconnectWs(new RestException("WS channel inactive"));
+            client.reconnectWs(new RestException("WS channel inactive"));
         }
     }
 
@@ -84,25 +77,21 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
         }
 
         // call this so we can set the last received time
-        wsCallback.onResponseReceived();
+        client.onWSResponseReceived();
 
         if (msg instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) msg;
             String text = textFrame.content().toString(ARIEncoder.ENCODING);
             HTTPLogger.traceWebSocketFrame(text);
             responseBytes = text.getBytes(ARIEncoder.ENCODING);
-            wsCallback.onSuccess(text);
+            client.onWSSuccess(text);
         } else if (msg instanceof CloseWebSocketFrame) {
             ch.close();
             if (!shuttingDown) {
-                if (this.wsClient != null) {
-                    wsClient.reconnectWs(new RestException("CloseWebSocketFrame received"));
-                } else {
-                    wsCallback.onDisconnect();
-                }
+                client.reconnectWs(new RestException("CloseWebSocketFrame received"));
             }
         } else if (msg instanceof PongWebSocketFrame) {
-            wsClient.pong();
+            client.onWSPong();
         } else {
             HTTPLogger.traceWebSocketFrame(msg.toString());
             String error = "Not expecting: " + msg.getClass().getSimpleName();
@@ -112,7 +101,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         if (!shuttingDown)
             return;
         logger.error("exceptionCaught: {}", cause.getMessage(), cause);
@@ -121,7 +110,7 @@ public class NettyWSClientHandler extends NettyHttpClientHandler {
         }
         ctx.fireExceptionCaught(cause);
         ctx.close();
-        wsCallback.onFailure(cause);
+        client.onWSFailure(cause);
     }
 
     public boolean isShuttingDown() {

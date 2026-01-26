@@ -7,7 +7,7 @@
     <link href="bootstrap.min.css" rel="stylesheet">
     <link href="bootstrap-nightfall.min.css" rel="stylesheet" media="(prefers-color-scheme: dark)">
     <script src="bootstrap.bundle.min.js"></script>
-    <script src="jssip-3.8.2.min.js"></script>
+    <script src="jssip-3.10.1.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -88,6 +88,7 @@
         </div>
     </div>
 </div>
+</body>
 <script>
     function showToast(message) {
         let toast = document.getElementById('toast');
@@ -108,7 +109,7 @@
     let audioOutput = new Audio();
     audioOutput.setSinkId('default');
     audioOutput.load();
-    let server = '192.168.56.44';
+    let server = window.location.hostname;
     let phone = undefined;
     let session = undefined;
     function login(exten) {
@@ -120,11 +121,14 @@
         let configuration = {
             sockets: [socket],
             uri: 'sip:' + exten + '@' + server,
+            contact_uri: 'sip:' + exten + '@' + server,
             authorization_user: exten,
             password: 'abc123',
             register: true,
+            register_expires: 300,
             registrar_server: 'sip:' + server,
             session_timers: true,
+            hack_ip_in_contact: true
         };
         phone = new JsSIP.UA(configuration);
         phone.on('connected', function (e) {
@@ -352,22 +356,30 @@
             document.getElementById('number').value = '';
             let url = document.getElementById('server').value + '/start/' + e.target.dataset.number1 + '/' + e.target.dataset.number2;
             fetch(url).then(response => {
-                if (!response.ok) {
-                    console.log('Rest call failed', response);
-                    let msg = response.statusText;
-                    if (response.message) {
-                        msg = response.message;
+                return response.clone().json().catch(() => response.text())
+                  .then(data => {
+                    if (!response.ok) {
+                      const error = new Error(response.statusText);
+                      error.responseContent = data;
+                      throw error;
                     }
-                    showToast('Rest failed: ' + msg);
-                }
-                return response.json();
+                    return data;
+                  });
             }).then(json => {
                 console.log('Rest response json', json);
-                document.getElementById('rest_end').dataset.state = json.id;
-                document.getElementById('rest_end').style.display = '';
+                if (json.id) {
+                    document.getElementById('rest_end').dataset.state = json.id;
+                    document.getElementById('rest_end').style.display = '';
+                } else if (json.error) {
+                    showToast('Rest failed: ' + json.error);
+                }
             }).catch(error => {
-                console.error('Rest error:', error);
-                showToast('Rest failed: ' + error);
+                let msg = error;
+                if (error.responseContent && error.responseContent.message) {
+                    msg = error.responseContent.message;
+                }
+                console.error('Rest error:', msg);
+                showToast('Rest failed: ' + msg);
             });
         });
     });
@@ -413,5 +425,4 @@
         }
     }
 </script>
-</body>
 </html>

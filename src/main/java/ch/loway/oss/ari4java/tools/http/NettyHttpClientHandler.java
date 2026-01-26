@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * HttpClientHandler handles the asynchronous response from the remote
@@ -26,10 +28,12 @@ public class NettyHttpClientHandler extends SimpleChannelInboundHandler<Object> 
     protected byte[] responseBytes;
     protected HttpResponseStatus responseStatus;
     private Throwable exception;
+    private CountDownLatch latch = new CountDownLatch(1);
 
-    private Logger logger = LoggerFactory.getLogger(NettyHttpClientHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(NettyHttpClientHandler.class);
 
     public void reset() {
+        latch = new CountDownLatch(1);
         responseBytes = null;
         responseStatus = null;
     }
@@ -48,9 +52,11 @@ public class NettyHttpClientHandler extends SimpleChannelInboundHandler<Object> 
                         response.headers().getInt(HttpHeaderNames.CONTENT_LENGTH), responseBytes.length);
             }
         } else if (msg != null) {
+            latch.countDown();
             logger.warn("Unexpected: {}", msg);
             throw new RestException("Unknown object: " + msg.getClass().getSimpleName() + ", expecting FullHttpResponse");
         }
+        latch.countDown();
     }
 
     public String getResponseText() {
@@ -76,13 +82,21 @@ public class NettyHttpClientHandler extends SimpleChannelInboundHandler<Object> 
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         this.exception = cause;
         if (!(cause instanceof ReadTimeoutException)) {
             logger.error("Not a read timeout", cause);
         }
         ctx.fireExceptionCaught(cause);
         ctx.close();
+    }
+
+    public void waitForResponse(int timeout) {
+        try {
+            latch.await(timeout, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
 }

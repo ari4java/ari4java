@@ -3,12 +3,12 @@ plugins {
     id "jacoco"
     id "maven-publish"
     id "signing"
-    id "com.github.spotbugs" version "4.7.0"
+    id "com.github.spotbugs" version "6.4.8"
     id "org.sonarqube" version "2.7.1"
 }
 
 group = "io.github.ari4java"
-version = "0.17.0"
+version = "0.18.0"
 
 def projectUrl = "http://github.com/ari4java/ari4java"
 def build_number = "x"
@@ -17,8 +17,8 @@ if (System.getenv("BUILD_NUMBER") != null) {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
     withJavadocJar()
     withSourcesJar()
 }
@@ -36,20 +36,20 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.1'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.1'
-    implementation 'io.netty:netty-all:4.1.72.Final'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.21.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.21.0'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.21'
+    implementation 'io.netty:netty-all:4.2.9.Final'
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
-    implementation 'org.slf4j:slf4j-api:1.7.32'
+    implementation 'org.slf4j:slf4j-api:2.0.17'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     testImplementation 'org.mockito:mockito-core:4.2.0'
-    testImplementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.17.0'
+    testImplementation 'ch.qos.logback:logback-classic:1.5.25'
 }
 
-task buildProps(type: WriteProperties) {
+tasks.register('buildProps', WriteProperties) {
     outputFile file("src/main/resources/build.properties")
     property "BUILD_NUMBER", build_number
 }
@@ -84,11 +84,11 @@ test {
 
 jacocoTestReport {
     reports {
-        xml.enabled true
-        csv.enabled false
-        html.enabled true
-        xml.destination = file("${buildDir}/reports/jacocoTestReport.xml")
-        html.destination = file("${buildDir}/reports/jacocoTestReport/html")
+        xml.required.set(true)
+        csv.required.set(false)
+        html.required.set(true)
+        xml.outputLocation.set(file("${buildDir}/reports/jacocoTestReport.xml"))
+        html.outputLocation.set(file("${buildDir}/reports/jacocoTestReport/html"))
     }
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
@@ -177,24 +177,17 @@ signing {
 }
 
 spotbugsMain {
+    excludeFilter = file("spotbugs-exclude.xml")
     reports {
-        html {
-            enabled = true
-        }
-        xml {
-            enabled = false
-        }
+        xml.required.set(true)
+        html.required.set(true)
     }
 }
 
 spotbugsTest {
     ignoreFailures = true
     reports {
-        html {
-            enabled = true
-        }
-        xml {
-            enabled = false
-        }
+        xml.required.set(false)
+        html.required.set(true)
     }
 }

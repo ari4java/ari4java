@@ -9,13 +9,13 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.Map;
 
-public class HTTPLogger {
+public final class HTTPLogger {
 
     private HTTPLogger() {
         throw new IllegalStateException("Utility class");
     }
 
-    private static Logger logger = LoggerFactory.getLogger(HTTPLogger.class);
+    private static final Logger logger = LoggerFactory.getLogger(HTTPLogger.class);
 
     private static final int MAX_LEN = 1000;
 

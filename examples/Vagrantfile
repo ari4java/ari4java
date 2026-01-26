@@ -4,18 +4,32 @@
 # use NET_BRIDGE=on to create a bridge interface with dynamic ip from your network.
 # Used for testing from an external source like a cell phone with Zoiper or the like
 # Note: Wifi with WPA2-Enterprise does not work, the interface doesn't get an IP
+# Note: for M1 Mac use the --provider docker flag, the NET_BRIDGE is not compatible with docker
 if not ENV["NET_BRIDGE"] then ENV["NET_BRIDGE"] = "off" end
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/focal64"
-  config.vm.provider "virtualbox" do |v|
+  config.vm.box = "cloud-image/ubuntu-24.04"
+  config.vm.synced_folder "./vagrant", "/vagrant"
+  config.vm.provider "virtualbox" do |v, override|
     v.memory = 1024
     v.cpus = 2
+    override.vm.network "private_network", ip: "192.168.56.44"
+    if ENV["NET_BRIDGE"] == "on" then
+      override.vm.network "public_network", use_dhcp_assigned_default_route: false
+    end
+    override.vm.provision :shell, :path => "vagrant/scripts/provision.sh"
   end
-  config.vm.network "private_network", ip: "192.168.56.44"
-  if ENV["NET_BRIDGE"] == "on" then
-    config.vm.network "public_network", use_dhcp_assigned_default_route: false
+  config.vm.provider "docker" do |d, override|
+    override.vm.box = nil
+    d.build_dir = "."
+    override.ssh.insert_key = true
+    d.has_ssh = true
+    d.privileged = true
+    override.vm.network :forwarded_port, guest: 8089, host: 8089
+    override.vm.network :forwarded_port, guest: 5060, host: 5060, protocol: "udp"
+    for i in 20000..20010
+        override.vm.network :forwarded_port, guest: i, host: i, protocol: "udp"
+    end
+    override.vm.provision :shell, :path => "vagrant/scripts/provision.sh", :args => ["docker"]
   end
-  config.vm.synced_folder "./vagrant", "/vagrant"
-  config.vm.provision :shell, :path => "vagrant/scripts/provision.sh"
 end

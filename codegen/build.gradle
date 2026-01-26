@@ -7,15 +7,15 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.6'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.6'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.20.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.0'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.20'
     implementation 'com.google.googlejavaformat:google-java-format:1.7'
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 task runCodegen(type: JavaExec) {

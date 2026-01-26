@@ -3,6 +3,17 @@
 ## [Unreleased]
 [Unreleased]: https://github.com/ari4java/ari4java/compare/v0.17.0...HEAD
 
+### Added
+- Connection Pooling using Netty's FixedChannelPool
+- Examples have a Docker provider for Vagrant (in order to work around VirtualBox compatibility on Apple Silicon)
+- `AriVersion.ARI_10_0_0`
+
+### Changed
+- :exclamation: Changed java compatibility to Java 17 in preparation for Jackson 3 which will be in the next release
+- Library updates
+- Cannot wait for connection close due to using connection keep-alive (aka pooling)
+- Some methods in the Examples use the async approach
+
 ## [0.17.0]
 [0.17.0]: https://github.com/ari4java/ari4java/compare/v0.16.0...v0.17.0
 ### Added
