@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id "java"
 }
 
 repositories {
@@ -7,24 +7,28 @@ repositories {
 }
 
 dependencies {
-    implementation 'ch.loway.oss.ari4java:ari4java:+'
-    implementation 'ch.qos.logback:logback-classic:1.2.10'
-    implementation 'io.netty:netty-all:4.1.72.Final'
+    if (file("../.inc-examples").exists()) {
+        implementation project(":")
+    } else {
+        implementation "ch.loway.oss.ari4java:ari4java:+"
+    }
+    implementation "ch.qos.logback:logback-classic:1.5.25"
+    implementation "io.netty:netty-all:4.2.9.Final"
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 task runWeaselsExample(type: JavaExec) {
     dependsOn build
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'ch.loway.oss.ari4java.examples.Weasels'
+    mainClass = "ch.loway.oss.ari4java.examples.Weasels"
 }
 
 task runComprehensiveExample(type: JavaExec) {
     dependsOn build
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'ch.loway.oss.ari4java.examples.comprehensive.Boot'
+    mainClass = "ch.loway.oss.ari4java.examples.comprehensive.Boot"
 }

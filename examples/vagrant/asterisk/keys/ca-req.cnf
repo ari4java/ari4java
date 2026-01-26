@@ -1,0 +1,10 @@
+[req]
+distinguished_name = req_distinguished_name
+prompt = no
+
+[req_distinguished_name]
+O = ARI4JavaCA
+CN = ari4java.localhost
+
+[ext]
+basicConstraints=CA:TRUE

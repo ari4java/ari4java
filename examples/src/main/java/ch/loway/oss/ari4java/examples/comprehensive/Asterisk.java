@@ -44,6 +44,20 @@ public class Asterisk {
         logger.info("Starting ARI...");
         try {
             ari = ARI.build(address, ARI_APP_NAME, user, pass, version);
+            // execute syncronously to validate ARI before starting the event websocket
+            AsteriskInfo info = ari.asterisk().getInfo().execute();
+            logger.info("Asterisk {}", info.getSystem().getVersion());
+            threadPool = Executors.newFixedThreadPool(5);
+            ari.events().eventWebsocket(ARI_APP_NAME).execute(new Handler());
+            return true;
+        } catch (Throwable t) {
+            logger.error("Error: {}", t.getMessage(), t);
+        }
+        return false;
+    }
+
+    private void getAsteriskInfo() {
+        try {
             ari.asterisk().getInfo().execute(new AriCallback<AsteriskInfo>() {
                 @Override
                 public void onSuccess(AsteriskInfo info) {
@@ -55,13 +69,9 @@ public class Asterisk {
                     logger.error("Error getting Asterisk version: {}", e.getMessage(), e);
                 }
             });
-            threadPool = Executors.newFixedThreadPool(5);
-            ari.events().eventWebsocket(ARI_APP_NAME).execute(new Handler());
-            return true;
         } catch (Throwable t) {
             logger.error("Error: {}", t.getMessage(), t);
         }
-        return false;
     }
 
     /**

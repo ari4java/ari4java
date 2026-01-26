@@ -12,6 +12,8 @@ if [ "$DOCKER" == "false" ]; then
   sed -i 's/ubuntu-focal$/localpbx/g' /etc/hosts
   systemctl restart systemd-logind.service
   hostnamectl set-hostname localpbx
+else
+  sed -i 's/localhost$/localhost ari4java.localhost/g' /etc/hosts
 fi
 
 # get the latest packages and upgrade them
@@ -23,13 +25,15 @@ apt -y upgrade
 # install some pre-requisites
 echo "Installing some pre-requisites ..."
 apt -y install \
-    curl \
-    wget \
     sox \
     lame \
     mpg123 \
     libopusfile-dev \
-    autoconf
+    autoconf \
+    ca-certificates
+
+# update CAs
+update-ca-certificates
 
 # set the timezone
 ln -snf /usr/share/zoneinfo/$(curl https://ipapi.co/timezone) /etc/localtime
@@ -40,7 +44,11 @@ adduser --system --group --no-create-home asterisk
 mkdir -p /var/{lib,log,spool}/asterisk
 
 # goto home folder, download and build Asterisk using the version specified in AST_VER
-AST_VER=16.27.0
+AST_VER=16.27.0 # works but old Jun-2022
+#AST_VER=18.26.4 # Aug-2025
+#AST_VER=20.0.3 # what different use... May-2023
+AST_VER=20.18.0 # LTS Jan-2026
+#AST_VER=22.8.0 # latest LTS Jan-2026, but JsSIP doesn't work on this version
 echo "Download, compile & setup Asterisk $AST_VER ..."
 cd ~
 wget http://downloads.asterisk.org/pub/telephony/asterisk/releases/asterisk-$AST_VER.tar.gz
@@ -67,20 +75,16 @@ fi
 make menuselect.makeopts
 if [ "$DOCKER" == "true" ]; then
   menuselect/menuselect \
-  --enable CORE-SOUNDS-EN-SLN16 \
-  --enable EXTRA-SOUNDS-EN-G722 \
+  --enable CORE-SOUNDS-EN-WAV \
   --enable EXTRA-SOUNDS-EN-WAV \
-  --enable EXTRA-SOUNDS-EN-SLN16 \
   --enable format_mp3 \
   --disable chan_sip \
   --disable BUILD_NATIVE \
   menuselect.makeopts
 else
   menuselect/menuselect \
-  --enable CORE-SOUNDS-EN-SLN16 \
-  --enable EXTRA-SOUNDS-EN-G722 \
+  --enable CORE-SOUNDS-EN-WAV \
   --enable EXTRA-SOUNDS-EN-WAV \
-  --enable EXTRA-SOUNDS-EN-SLN16 \
   --enable codec_opus \
   --enable format_mp3 \
   --disable chan_sip \
@@ -99,18 +103,20 @@ if [ "$DOCKER" == "true" ]; then
   sed -i 's/format_ogg_opus/format_ogg_opus_open_source/g' /etc/asterisk/modules.conf
 fi
 # create keys for TLS
-echo "Creating TLS keys ..."
-mkdir -p /etc/asterisk/keys
-openssl genrsa -des3 -out /etc/asterisk/keys/ca.key -passout pass:asterisk 4096 > /dev/null
-openssl req -batch -new -x509 -days 3650 -subj "/O=ARI4Java/CN=ARI4Java CA" -key /etc/asterisk/keys/ca.key -passin pass:asterisk -out /etc/asterisk/keys/ca.crt > /dev/null
-openssl genrsa -out /etc/asterisk/keys/asterisk.key 2048 > /dev/null
-SUBJECT="/O=ARI4Java/CN=192.168.56.44"
-if [ "$DOCKER" == "true" ]; then
-  SUBJECT="/O=ARI4Java/CN=localhost"
+echo "TLS keys ..."
+if [ ! -f /vagrant/asterisk/keys/asterisk.crt ]; then
+  openssl genrsa -des3 -out /vagrant/asterisk/keys/ca.key -passout pass:asterisk 4096 > /dev/null
+  openssl req -batch -new -x509 -days 3650 -config /vagrant/scripts/ca-req.cnf extensions v3_ca -key /vagrant/asterisk/keys/ca.key -passin pass:asterisk -out /vagrant/asterisk/keys/ca.crt > /dev/null
+  openssl genrsa -noenc -out /vagrant/asterisk/keys/asterisk.key 2048 > /dev/null
+  openssl req -batch -new -config /vagrant/scripts/cert-req.cnf -key /vagrant/asterisk/keys/asterisk.key -out /vagrant/asterisk/keys/asterisk.csr > /dev/null
+  openssl x509 -req -days 3650 -in /vagrant/asterisk/keys/asterisk.csr -CA /vagrant/asterisk/keys/ca.crt -CAkey /vagrant/asterisk/keys/ca.key -passin pass:asterisk -set_serial 01 -out /vagrant/asterisk/keys/asterisk.crt -extensions v3_req -extfile /vagrant/scripts/cert-req.cnf > /dev/null
 fi
-openssl req -batch -new -subj "$SUBJECT" -key /etc/asterisk/keys/asterisk.key -out /etc/asterisk/keys/asterisk.csr > /dev/null
-openssl x509 -req -days 3650 -in /etc/asterisk/keys/asterisk.csr -CA /etc/asterisk/keys/ca.crt -CAkey /etc/asterisk/keys/ca.key -passin pass:asterisk -set_serial 01 -out /etc/asterisk/keys/asterisk.crt > /dev/null
+mkdir -p /etc/asterisk/keys
+cp /vagrant/asterisk/keys/ca.crt /etc/asterisk/keys/
+cp /vagrant/asterisk/keys/asterisk.{key,crt} /etc/asterisk/keys/
 chown -R asterisk:asterisk /etc/asterisk/keys
+chmod 400 /etc/asterisk/keys/*.key
+chmod 444 /etc/asterisk/keys/*.crt
 
 # add to systemd & start
 echo "Setup & Start Asterisk Service"

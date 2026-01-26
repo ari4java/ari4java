@@ -1,14 +1,14 @@
 # Docker image to use with Vagrant
 # Aims to be as similar to normal Vagrant usage as possible
-# Adds Puppet, SSH daemon, Systemd
+# Adds SSH daemon, Systemd
 # Adapted from https://github.com/BashtonLtd/docker-vagrant-images/blob/master/ubuntu1404/Dockerfile
 
-FROM ubuntu:focal
+FROM ubuntu:noble
 ENV container docker
 RUN apt update && apt -y upgrade
 
 # Install system dependencies, you may not need all of these
-RUN apt install -y --no-install-recommends ssh sudo libffi-dev systemd openssh-client nano
+RUN apt install -y --no-install-recommends ssh sudo libffi-dev systemd openssh-client nano wget curl less
 
 # Add vagrant user and key for SSH
 RUN useradd --create-home -s /bin/bash vagrant

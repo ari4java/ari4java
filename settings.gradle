@@ -1,2 +1,5 @@
 rootProject.name = "ari4java"
 include "codegen"
+if (file(".inc-examples").exists()) {
+  include "examples"
+}
