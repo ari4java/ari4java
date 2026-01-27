@@ -2,7 +2,7 @@
 
 The Asterisk REST Interface (ARI) bindings for Java.
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.ari4java/ari4java/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.ari4java/ari4java)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.ari4java/ari4java)
 [![javadoc](https://javadoc.io/badge2/io.github.ari4java/ari4java/javadoc.svg)](https://javadoc.io/doc/io.github.ari4java/ari4java)
 [![Build](https://github.com/ari4java/ari4java/actions/workflows/gradle.yml/badge.svg?branch=master)](https://github.com/ari4java/ari4java/actions?query=workflow%3A%22ARI4Java+Build%22)
 
@@ -26,12 +26,12 @@ repositories {
 
 dependencies {
     implementation 'io.github.ari4java:ari4java:+'
-    implementation 'ch.qos.logback:logback-classic:1.2.10'
+    implementation 'ch.qos.logback:logback-classic:1.5.26'
 }
 ```
 
 Due to the sun setting of JCenter the jar is now publish through Sonatype to Maven Central but under a new groupId.
-The groupId is now `io.github.ari4java` make sure you update your build files if you used `ch.loway.oss.ari4java`.
+Since 0.12.2 the groupId is now `io.github.ari4java` make sure you update your build files if you used `ch.loway.oss.ari4java`.
 
 ## Documentation
 - The [CHANGELOG](https://github.com/ari4java/ari4java/blob/master/CHANGELOG.md)

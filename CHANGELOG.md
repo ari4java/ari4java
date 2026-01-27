@@ -3,7 +3,7 @@
 ## [Unreleased]
 [Unreleased]: https://github.com/ari4java/ari4java/compare/v0.17.0...HEAD
 
-## [0.18.0]
+## [0.18.0] - 2026-01-26
 [0.18.0]: https://github.com/ari4java/ari4java/compare/v0.17.0...v0.18.0
 
 ### Added
@@ -17,20 +17,20 @@
 - Cannot wait for connection close due to using connection keep-alive (aka pooling)
 - Some methods in the Examples use the async approach
 
-## [0.17.0]
+## [0.17.0] - 2024-02-24
 [0.17.0]: https://github.com/ari4java/ari4java/compare/v0.16.0...v0.17.0
 ### Added
 - `AriVersion.ARI_8_0_0`
 - `AriVersion.ARI_9_0_0`
 
-## [0.16.0]
+## [0.16.0] - 2022-06-11
 [0.16.0]: https://github.com/ari4java/ari4java/compare/v0.15.0...v0.16.0
 ### Added
 - `AriVersion.ARI_4_1_4`
 - `AriVersion.ARI_6_0_1`
 - `AriVersion.ARI_7_0_1`
 
-## [0.15.0]
+## [0.15.0] - 2021-12-26
 [0.15.0]: https://github.com/ari4java/ari4java/compare/v0.14.0...v0.15.0
 ### Changed
 - Library updates
@@ -39,12 +39,12 @@
 ### Fixed
 - Map `local_ssrc` & `remote_ssrc` in `RTPstat` model to `Long` instead of `Integer` #180
 
-## [0.14.0]
+## [0.14.0] - 2021-10-24
 [0.14.0]: https://github.com/ari4java/ari4java/compare/v0.13.0...v0.14.0
 ### Fixed
 - ARI API resource inconsistency due to using git history on `resource.json`, now git tags (aka released versions) are used
 
-## [0.13.0]
+## [0.13.0] - 2021-08-14
 [0.13.0]: https://github.com/ari4java/ari4java/compare/v0.12.2...v0.13.0
 ### Changed
 - Library updates
@@ -52,18 +52,18 @@
 ### Added
 - `AriVersion.ARI_8_0_0`
 
-## [0.12.2]
+## [0.12.2] - 2021-03-25
 [0.12.2]: https://github.com/ari4java/ari4java/compare/v0.12.1...v0.12.2
 ### Changed
 - groupId changed from `ch.loway.oss.ari4java` to `io.github.ari4java`
 
 ### Added
-## [0.12.1]
+## [0.12.1] - 2020-09-23
 [0.12.1]: https://github.com/ari4java/ari4java/compare/v0.12.0...v0.12.1
 ### Added
 - ARI 4.1.3, 5.1.1 & 7.0.0
 
-## [0.12.0]
+## [0.12.0] - 2020-06-24
 [0.12.0]: https://github.com/ari4java/ari4java/compare/v0.11.0...v0.12.0
 ### Fixes
 - onFailure long after WS Connect error #156
@@ -72,13 +72,13 @@
 ### Added
 - WS reconnect count #158
 
-## [0.11.0]
+## [0.11.0] - 2020-03-21
 [0.11.0]: https://github.com/ari4java/ari4java/compare/v.0.10.0...v0.11.0
 ### Added
 - Unit tests to increase coverage #11
 - New ARI binding
 
-## [0.10.0]
+## [0.10.0] - 2020-02-23
 [0.10.0]: https://github.com/ari4java/ari4java/compare/v0.9.1...v.0.10.0
 ### Fixed
 - UnsupportedOperationException #15

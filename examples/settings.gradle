@@ -1,7 +1,7 @@
 if (file("../.build-examples").exists()) {
     includeBuild("../") {
         dependencySubstitution {
-            substitute(module("ch.loway.oss.ari4java:ari4java")).using(project(":"))
+            substitute(module("io.github.ari4java:ari4java")).using(project(":"))
         }
     }
 }

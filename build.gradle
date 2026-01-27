@@ -5,6 +5,7 @@ plugins {
     id "signing"
     id "com.github.spotbugs" version "6.4.8"
     id "org.sonarqube" version "2.7.1"
+    id "org.jreleaser" version "1.22.0"
 }
 
 group = "io.github.ari4java"
@@ -46,7 +47,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     testImplementation 'org.mockito:mockito-core:4.2.0'
-    testImplementation 'ch.qos.logback:logback-classic:1.5.25'
+    testImplementation 'ch.qos.logback:logback-classic:1.5.26'
 }
 
 tasks.register('buildProps', WriteProperties) {
@@ -112,6 +113,22 @@ jacocoTestCoverageVerification {
     }
 }
 
+spotbugsMain {
+    excludeFilter = file("spotbugs-exclude.xml")
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+}
+
+spotbugsTest {
+    ignoreFailures = true
+    reports {
+        xml.required.set(false)
+        html.required.set(true)
+    }
+}
+
 sonarqube {
     properties {
         property "sonar.projectKey", "ari4java"
@@ -157,37 +174,33 @@ publishing {
     }
     repositories {
         maven {
-            name = "sonatype"
-            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            credentials {
-                username = System.getenv("SONATYPE_USER")
-                password = System.getenv("SONATYPE_PASS")
-            }
+            name = "staging-deploy"
+            url = layout.buildDirectory.dir("staging-deploy")
         }
     }
 
 }
 
-signing {
-    def signingKeyId = System.getenv("PGP_ID")
-    def signingKey = System.getenv("PGP_KEY")
-    def signingPassword = System.getenv("PGP_PASS")
-    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-    sign publishing.publications
-}
-
-spotbugsMain {
-    excludeFilter = file("spotbugs-exclude.xml")
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
+jreleaser {
+    signing {
+        active = "ALWAYS"
+        armored = true
+        // Keys via Environment Variables:
+        // JRELEASER_GPG_SECRET_KEY JRELEASER_GPG_PASSPHRASE JRELEASER_GPG_PUBLIC_KEY
     }
-}
-
-spotbugsTest {
-    ignoreFailures = true
-    reports {
-        xml.required.set(false)
-        html.required.set(true)
+    deploy {
+        maven {
+            mavenCentral {
+                sonatype {
+                    active = "ALWAYS"
+                    url = "https://central.sonatype.com/api/v1/publisher"
+                    authorization = "BASIC"
+                    // user & pass via Environment Variables:
+                    // JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME JRELEASER_MAVENCENTRAL_SONATYPE_PASSWORD
+                    applyMavenCentralRules = true
+                    stagingRepository("build/staging-deploy")
+                }
+            }
+        }
     }
 }

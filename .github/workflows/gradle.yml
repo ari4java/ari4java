@@ -7,8 +7,8 @@ on:
   pull_request:
     branches: 
       - master
-#  release:
-#    types: [published]
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -37,7 +37,7 @@ jobs:
         BUILD_NUMBER: ${{ env.GITHUB_RUN_NUMBER }}
         BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
         BINTRAY_KEY: ${{ secrets.BINTRAY_KEY }}
-      run: ./gradlew clean :codegen:runCodegen buildProps build bintrayUpload
+      run: ./gradlew clean :codegen:runCodegen buildProps build publish jreleaserDeploy
       if: github.event_name == 'release'
     - name: Archive Reports
       uses: actions/upload-artifact@v4

@@ -27,14 +27,12 @@ src/main/resources/build.properties
 codegen/tmp/
 codegen/versions.md
 
-.build-local
-oss.yaml
-
 # vagrant state folder
 .vagrant
 
-# local build examples
+# local build
 .inc-examples
+oss.yaml
 # exclude keys
 examples/vagrant/asterisk/keys/*.key
 examples/vagrant/asterisk/keys/*.crt
